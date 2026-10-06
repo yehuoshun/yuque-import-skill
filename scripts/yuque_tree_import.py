@@ -15,6 +15,7 @@
   - 每节点落盘一次: 中断最多丢 1 个节点（血泪教训: 批量落盘会丢一批节点+挂错父级）
   - 限流重试: 429/5xx 指数退避
   - 内容格式: .md 原样 / .cs → ```csharp / 其余 → ``` 纯文本
+  - 超限自动处理: 二进制文件→占位说明; 文本超 3.4MB→自动截断+注记(语雀 body 上限 4MB)
 """
 import argparse, json, os, sys, time, urllib.request, urllib.error
 
@@ -63,16 +64,27 @@ def walk(root):
 
 def fmt_content(path):
     ext = os.path.splitext(path)[1].lower()
+    raw = open(path, "rb").read()
+    size = len(raw)
+    # 二进制检测: NUL 字节或无效 UTF-8 比例过高 → 占位说明(乱码文本化会膨胀超限且无意义)
     try:
-        with open(path, encoding="utf-8", errors="replace") as f:
-            text = f.read()
-    except Exception as e:
-        text = f"<读取失败: {e}>"
+        text = raw.decode("utf-8")
+        binary = "\x00" in text or sum(1 for _ in raw if _ > 127) / max(size, 1) > 0.9
+    except UnicodeDecodeError:
+        binary = True
+    if binary:
+        return "<!-- 二进制文件 %d MB, 跳过内容导入(语雀 body 上限 4MB), 原文件见 GitHub -->\n" % (size // 1048576)
     if ext == ".md":
-        return text
-    if ext == ".cs":
-        return "```csharp\n" + text + "\n```"
-    return "```\n" + text + "\n```"
+        body = text
+    elif ext == ".cs":
+        body = "```csharp\n" + text + "\n```"
+    else:
+        body = "```\n" + text + "\n```"
+    # 超限自动截断(留 20% 余量给 JSON 转义膨胀, 实测 3MB 内安全)
+    if len(body.encode("utf-8")) > 3_400_000:
+        keep = 3_300_000
+        body = body[:keep] + "\n\n<!-- 超限截断: 原文件 %d MB 超语雀 4MB body 上限, 仅导入前部 -->\n" % (size // 1048576)
+    return body
 
 def find_node(toc, parent_uuid, title=None, doc_id=None):
     for n in toc:
