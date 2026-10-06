@@ -235,7 +235,7 @@ def main():
     ap.add_argument("--user-id", default="25689388", help="语雀用户 ID(上传 attachable_id)")
     ap.add_argument("--dry", action="store_true")
     ap.add_argument("--test", type=int, default=0, help="只导前 N 个节点(试水)")
-    ap.add_argument("--pend-sleep", type=float, default=600, help="节点失败后静置秒数再重试(语雀 TOC 写路径积压自愈等待, 实测 10 分钟足够)")
+    ap.add_argument("--pend-sleep", type=float, default=600, help="失败静置基础秒数, 按轮次递增(第n次等待 = pend_sleep×n, 默认 600 → 10/20/30 分钟)")
     ap.add_argument("--pend-retries", type=int, default=3, help="失败静置重试最大轮数(超出则记 fail 跳过)")
     args = ap.parse_args()
 
@@ -278,8 +278,9 @@ def main():
             except Exception as e:
                 last_err = str(e)[:150]
                 if attempt < args.pend_retries:
-                    print(f"  ⚠ 失败 [{rel}] → {last_err}; 静置 {args.pend_sleep}s 后重试 ({attempt}/{args.pend_retries})", flush=True)
-                    time.sleep(args.pend_sleep)
+                    wait = args.pend_sleep * attempt  # 递增: 600/1200/1800 (10/20/30 分钟)
+                    print(f"  ⚠ 失败 [{rel}] → {last_err}; 静置 {wait}s 后重试 ({attempt}/{args.pend_retries})", flush=True)
+                    time.sleep(wait)
                     # 静置后清理可能残留的同名节点(避免重复创建), 断点续传账本不动
                     cleanup_leftover(token, args.base, args.book, rel, is_dir, parent_uuid)
         if record is None:
