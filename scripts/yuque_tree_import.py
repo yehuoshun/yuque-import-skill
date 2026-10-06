@@ -82,8 +82,8 @@ def fmt_content(path):
     else:
         wrap = lambda s: "```\n" + s + "\n```"
     body = wrap(text)
-    # 超限自动分段(留余量给 JSON 转义膨胀, 实测 3MB 内安全)
-    MAX_BODY = 3_400_000
+    # 超限自动分段(留余量给 JSON 转义膨胀, 实测 2MB 内极安全)
+    MAX_BODY = 2_000_000
     if len(body.encode("utf-8")) <= MAX_BODY:
         return [("", body)]
     # 按字符边界切段, 每段(含包装+注记)不超 MAX_BODY

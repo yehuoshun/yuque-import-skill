@@ -38,6 +38,7 @@ python3 scripts/yuque_tree_import.py --root /path/to/dir --book <book_id> --prog
 
 - token 来源：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/credentials.env` 的 `export TOKEN_L91="..."`，**脚本不硬编码 token**
 - 内容格式：`.md` 原样 / `.cs` → ` ```csharp ` 代码块 / 其余 → 纯文本代码块
+- 超限自动处理：二进制（NUL/无效 UTF-8 占比高）→ 占位说明；文本超 2MB → 自动拆成多文档 `xxx (1/N)` `(2/N)` …，内容零丢失
 - 中断后重跑同一命令即续传，跳过已完成节点
 
 ### 二、对账修复（scripts/yuque_toc_reconcile.py）
@@ -65,7 +66,7 @@ python3 scripts/yuque_toc_reconcile.py --root /path/to/dir --book <book_id> --pr
 
 | 操作 | 方法/路径 | 关键参数 |
 |------|----------|---------|
-| 创建文档 | POST `/repos/{book}/docs` | title, format=markdown, body（≤4MB，超限自动分段） |
+| 创建文档 | POST `/repos/{book}/docs` | title, format=markdown, body（≤4MB，超 2MB 自动分段） |
 | 挂载/移动/删除节点 | PUT `/repos/{book}/toc` | action: appendNode/prependNode/editNode/removeNode; action_mode: sibling/child; type: DOC/TITLE/LINK |
 | 建分组 | PUT toc | action=appendNode, action_mode=child, type=TITLE, title=分组名 |
 | 建文档节点 | PUT toc | action=appendNode, action_mode=child, type=DOC, doc_ids=[doc_id] |
