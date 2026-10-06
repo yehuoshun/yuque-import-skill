@@ -66,5 +66,5 @@ def build_path_map(toc):
 
 - 断点文件建议放工作目录外（如 tmp/），每节点一次 `os.replace` 原子落盘
 - 语雀无严格 QPS 限制，但 429 偶发，指数退避 2^n×1.5s + 1s，4 次重试足够
-- 单文档 body 上限 4MB（2026-10-06 Shadowbus 实战确认）：>4MB 报 HTTP 400 `body is too large`。二进制文件（如 PNG）会被 `errors=replace` 文本化膨胀放大（3.4MB PNG → 6MB body），超大文件需先截断/占位再导入
+- 单文档 body 上限 4MB（2026-10-06 Shadowbus 实战确认）：>4MB 报 HTTP 400 `body is too large`。文本超限已自动多段拆分（标题 `xxx (1/2)`/`(2/2)`，每段 <3.4MB 留 JSON 转义余量，内容零丢失）；二进制文件（如 PNG）会被 `errors=replace` 文本化膨胀放大（3.4MB PNG → 6MB body），已自动占位说明
 - walk 不排除 .git：clone 的仓库直接导入会把 .git 也导进去，先 rsync/cp 排除 .git 或用干净副本

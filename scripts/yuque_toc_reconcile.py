@@ -83,15 +83,22 @@ def main():
 
     # 期望路径: progress 账本优先(与导入一致), 缺失的节点从本地 walk 兜底
     prog = json.load(open(args.progress, encoding="utf-8"))
-    expect = {v["uuid"]: rel for rel, v in prog["nodes"].items()}
+    expect = {}
+    for rel, v in prog["nodes"].items():
+        segs = v.get("segments") if isinstance(v, dict) else None
+        if segs and len(segs) > 1:
+            for i, s in enumerate(segs, 1):
+                expect[s["uuid"]] = f"{rel} ({i}/{len(segs)})"
+        else:
+            expect[v["uuid"]] = rel
 
     moves = []
     for n in toc:
-        if n.get("type") != "DOC":
-            actual = path_of[n["uuid"]]
-            wanted = expect.get(n["uuid"])
-            if wanted and actual != wanted:
-                moves.append((n["title"], actual, wanted, n["uuid"]))
+        # 全量查错位(DOC/TITLE/LINK 都查): 原实现 `!= "DOC"` 只查目录节点, 文档挂根错位漏检
+        actual = path_of[n["uuid"]]
+        wanted = expect.get(n["uuid"])
+        if wanted and actual != wanted:
+            moves.append((n["title"], actual, wanted, n["uuid"]))
     print(f"TOC 节点: {len(toc)}, 错位 DOC: {len(moves)}", flush=True)
     for t, a, w, _ in moves[:10]:
         print(f"  {t}: 实际[{a}] → 期望[{w}]", flush=True)

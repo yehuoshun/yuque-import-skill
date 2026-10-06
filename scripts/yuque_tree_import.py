@@ -63,6 +63,7 @@ def walk(root):
     return nodes
 
 def fmt_content(path):
+    """返回 [(标题后缀, body), ...]: 超限文本自动多段拆分, 二进制→占位说明."""
     ext = os.path.splitext(path)[1].lower()
     raw = open(path, "rb").read()
     size = len(raw)
@@ -73,18 +74,34 @@ def fmt_content(path):
     except UnicodeDecodeError:
         binary = True
     if binary:
-        return "<!-- 二进制文件 %d MB, 跳过内容导入(语雀 body 上限 4MB), 原文件见 GitHub -->\n" % (size // 1048576)
+        return [("", "<!-- 二进制文件 %d MB, 跳过内容导入(语雀 body 上限 4MB), 原文件见 GitHub -->\n" % (size // 1048576))]
     if ext == ".md":
-        body = text
+        wrap = lambda s: s
     elif ext == ".cs":
-        body = "```csharp\n" + text + "\n```"
+        wrap = lambda s: "```csharp\n" + s + "\n```"
     else:
-        body = "```\n" + text + "\n```"
-    # 超限自动截断(留 20% 余量给 JSON 转义膨胀, 实测 3MB 内安全)
-    if len(body.encode("utf-8")) > 3_400_000:
-        keep = 3_300_000
-        body = body[:keep] + "\n\n<!-- 超限截断: 原文件 %d MB 超语雀 4MB body 上限, 仅导入前部 -->\n" % (size // 1048576)
-    return body
+        wrap = lambda s: "```\n" + s + "\n```"
+    body = wrap(text)
+    # 超限自动分段(留余量给 JSON 转义膨胀, 实测 3MB 内安全)
+    MAX_BODY = 3_400_000
+    if len(body.encode("utf-8")) <= MAX_BODY:
+        return [("", body)]
+    # 按字符边界切段, 每段(含包装+注记)不超 MAX_BODY
+    limit = MAX_BODY - 512
+    segs, cur, cur_bytes = [], [], 0
+    for ch in text:
+        b = len(ch.encode("utf-8"))
+        if cur_bytes + b > limit and cur:
+            segs.append("".join(cur)); cur, cur_bytes = [], 0
+        cur.append(ch); cur_bytes += b
+    if cur:
+        segs.append("".join(cur))
+    out = []
+    for i, s in enumerate(segs):
+        note = "\n\n<!-- 分段 %d/%d: 原文件 %d MB 超语雀 4MB body 上限, 已拆分为多文档 -->\n" % (i + 1, len(segs), size // 1048576)
+        suffix = " (%d/%d)" % (i + 1, len(segs)) if len(segs) > 1 else ""
+        out.append((suffix, wrap(s) + note))
+    return out
 
 def find_node(toc, parent_uuid, title=None, doc_id=None):
     for n in toc:
@@ -155,20 +172,25 @@ def main():
                 prog["nodes"][rel] = {"type": "dir", "uuid": n["uuid"]}
                 stats["dir"] += 1
             else:
-                body = fmt_content(os.path.join(args.root, rel))
-                created = api(token, args.base, "POST", f"/repos/{args.book}/docs", {
-                    "title": os.path.basename(rel), "format": "markdown", "body": body,
-                })
-                doc_id = created["data"]["id"]
-                toc = api(token, args.base, "PUT", f"/repos/{args.book}/toc", {
-                    "action": "appendNode", "action_mode": "child",
-                    "type": "DOC", "doc_ids": [doc_id],
-                    **({"target_uuid": parent_uuid} if parent_uuid else {}),
-                })["data"]
-                n = find_node(toc, parent_uuid, doc_id=doc_id)
-                if not n:
-                    raise RuntimeError("DOC 节点未挂载成功")
-                prog["nodes"][rel] = {"type": "doc", "uuid": n["uuid"], "doc_id": doc_id}
+                segs = fmt_content(os.path.join(args.root, rel))
+                records = []
+                for suffix, body in segs:
+                    title = os.path.basename(rel) + suffix
+                    created = api(token, args.base, "POST", f"/repos/{args.book}/docs", {
+                        "title": title, "format": "markdown", "body": body,
+                    })
+                    doc_id = created["data"]["id"]
+                    toc = api(token, args.base, "PUT", f"/repos/{args.book}/toc", {
+                        "action": "appendNode", "action_mode": "child",
+                        "type": "DOC", "doc_ids": [doc_id],
+                        **({"target_uuid": parent_uuid} if parent_uuid else {}),
+                    })["data"]
+                    n = find_node(toc, parent_uuid, doc_id=doc_id)
+                    if not n:
+                        raise RuntimeError("DOC 节点未挂载成功")
+                    records.append({"uuid": n["uuid"], "doc_id": doc_id, "title": title})
+                prog["nodes"][rel] = {"type": "doc", "uuid": records[0]["uuid"],
+                                       "doc_id": records[0]["doc_id"], "segments": records}
                 stats["doc"] += 1
         except Exception as e:
             stats["fail"].append((rel, str(e)[:150]))

@@ -65,7 +65,7 @@ python3 scripts/yuque_toc_reconcile.py --root /path/to/dir --book <book_id> --pr
 
 | 操作 | 方法/路径 | 关键参数 |
 |------|----------|---------|
-| 创建文档 | POST `/repos/{book}/docs` | title, format=markdown, body |
+| 创建文档 | POST `/repos/{book}/docs` | title, format=markdown, body（≤4MB，超限自动分段） |
 | 挂载/移动/删除节点 | PUT `/repos/{book}/toc` | action: appendNode/prependNode/editNode/removeNode; action_mode: sibling/child; type: DOC/TITLE/LINK |
 | 建分组 | PUT toc | action=appendNode, action_mode=child, type=TITLE, title=分组名 |
 | 建文档节点 | PUT toc | action=appendNode, action_mode=child, type=DOC, doc_ids=[doc_id] |
