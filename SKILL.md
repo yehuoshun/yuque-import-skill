@@ -32,11 +32,14 @@ python3 scripts/yuque_tree_import.py --root /path/to/dir --book <book_id> --prog
 # 试水前 6 个节点（验证 API/结构）
 python3 scripts/yuque_tree_import.py --root /path/to/dir --book <book_id> --progress ./progress.json --test 6
 
-# 全量导入（后台跑，断点续传）
+# 全量导入（后台跑，断点续传；失败自动静置重试）
 python3 scripts/yuque_tree_import.py --root /path/to/dir --book <book_id> --progress ./progress.json
+# 可选：调整失败静置策略（默认 --pend-sleep 600 --pend-retries 3）
+python3 scripts/yuque_tree_import.py --root /path/to/dir --book <book_id> --progress ./progress.json --pend-sleep 300 --pend-retries 5
 ```
 
 - token 来源：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/credentials.env` 的 `export TOKEN_L91="..."`，**脚本不硬编码 token**
+- 失败静置重试：单个节点挂载失败（如 `TITLE 节点未在返回目录中找到`）→ 静置 `--pend-sleep` 秒（默认 600）→ 清理残留同名节点 → 重试，最多 `--pend-retries` 轮（默认 3）；仍失败才记 fail。**背景（2026-10-07 实验证实）**：高频连续创建（几百节点不间断）会让语雀 TOC 写路径积压，新建空目录挂子静默失败（响应乐观回显但实际挂根）；静置 ~10 分钟自愈，节流（每请求间隔 1.5s + 每百节点休息）可完全规避。故默认保持高频 + 失败静置重试，不主动降速，除非想稳到底（用 `--pend-sleep` 调小）+ 外部节流。
 - 内容格式：`.md` 原样 / `.cs` → ` ```csharp ` 代码块 / 其余 → 纯文本代码块
 - 超限自动处理：二进制（NUL/无效 UTF-8 占比高）→ 图片类（png/jpg/gif/webp/svg…）自动上传语雀 CDN 并 `![文件名](cdn_url)` 嵌入（需 cookie/ctoken，见 `--cookie-config`）；非图片 → 占位说明；文本超 2MB → 自动拆成多文档 `xxx (1/N)` `(2/N)` …，内容零丢失
 - 中断后重跑同一命令即续传，跳过已完成节点

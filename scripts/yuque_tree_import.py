@@ -164,6 +164,60 @@ def load_prog(path):
         return json.load(open(path, encoding="utf-8"))
     return {"nodes": {}}
 
+def cleanup_leftover(token, base, book, rel, is_dir, parent_uuid):
+    """静置重试前清理可能残留的同名节点(避免重复创建)。
+    只清「目标父下」和「根」的同名节点; 父链其他地方的同名(理论上不可能)不动。"""
+    import urllib.request as _u
+    title = os.path.basename(rel)
+    try:
+        d = api(token, base, "GET", f"/repos/{book}/toc")
+        toc = d.get("data", [])
+    except Exception:
+        return
+    for n in toc:
+        if n.get("title") != title:
+            continue
+        pu = n.get("parent_uuid") or ""
+        if pu == (parent_uuid or "") or pu == "":
+            try:
+                api(token, base, "PUT", f"/repos/{book}/toc", {
+                    "action": "removeNode", "action_mode": "child", "node_uuid": n["uuid"]})
+                print(f"    清理残留节点: {title} (parent={pu!r})", flush=True)
+            except Exception:
+                pass
+
+def create_node(token, base, book, root, rel, is_dir, up, parent_uuid):
+    """创建并挂载单个节点, 返回 progress 记录块; 失败抛异常。"""
+    if is_dir:
+        toc = api(token, base, "PUT", f"/repos/{book}/toc", {
+            "action": "appendNode", "action_mode": "child",
+            "type": "TITLE", "title": os.path.basename(rel),
+            **({"target_uuid": parent_uuid} if parent_uuid else {}),
+        })["data"]
+        n = find_node(toc, parent_uuid, title=os.path.basename(rel))
+        if not n:
+            raise RuntimeError("TITLE 节点未在返回目录中找到")
+        return {"type": "dir", "uuid": n["uuid"]}
+    segs = fmt_content(os.path.join(root, rel), up)
+    records = []
+    for suffix, body in segs:
+        title = os.path.basename(rel) + suffix
+        created = api(token, base, "POST", f"/repos/{book}/docs", {
+            "title": title, "format": "markdown", "body": body,
+        })
+        doc_id = created["data"]["id"]
+        toc = api(token, base, "PUT", f"/repos/{book}/toc", {
+            "action": "appendNode", "action_mode": "child",
+            "type": "DOC", "doc_ids": [doc_id],
+            **({"target_uuid": parent_uuid} if parent_uuid else {}),
+        })["data"]
+        n = find_node(toc, parent_uuid, doc_id=doc_id)
+        if not n:
+            raise RuntimeError("DOC 节点未挂载成功")
+        records.append({"uuid": n["uuid"], "doc_id": doc_id, "title": title})
+    return {"type": "doc", "uuid": records[0]["uuid"],
+            "doc_id": records[0]["doc_id"], "segments": records}
+
 def save_prog(prog, path):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     tmp = path + ".tmp"
@@ -181,6 +235,8 @@ def main():
     ap.add_argument("--user-id", default="25689388", help="语雀用户 ID(上传 attachable_id)")
     ap.add_argument("--dry", action="store_true")
     ap.add_argument("--test", type=int, default=0, help="只导前 N 个节点(试水)")
+    ap.add_argument("--pend-sleep", type=float, default=600, help="节点失败后静置秒数再重试(语雀 TOC 写路径积压自愈等待, 实测 10 分钟足够)")
+    ap.add_argument("--pend-retries", type=int, default=3, help="失败静置重试最大轮数(超出则记 fail 跳过)")
     args = ap.parse_args()
 
     token = load_token(args.token_env)
@@ -213,42 +269,28 @@ def main():
         if parent_rel and parent is None:
             stats["fail"].append((rel, "缺父节点映射"))
             continue
-        try:
-            if is_dir:
-                toc = api(token, args.base, "PUT", f"/repos/{args.book}/toc", {
-                    "action": "appendNode", "action_mode": "child",
-                    "type": "TITLE", "title": os.path.basename(rel),
-                    **({"target_uuid": parent_uuid} if parent_uuid else {}),
-                })["data"]
-                n = find_node(toc, parent_uuid, title=os.path.basename(rel))
-                if not n:
-                    raise RuntimeError("TITLE 节点未在返回目录中找到")
-                prog["nodes"][rel] = {"type": "dir", "uuid": n["uuid"]}
-                stats["dir"] += 1
-            else:
-                segs = fmt_content(os.path.join(args.root, rel), up)
-                records = []
-                for suffix, body in segs:
-                    title = os.path.basename(rel) + suffix
-                    created = api(token, args.base, "POST", f"/repos/{args.book}/docs", {
-                        "title": title, "format": "markdown", "body": body,
-                    })
-                    doc_id = created["data"]["id"]
-                    toc = api(token, args.base, "PUT", f"/repos/{args.book}/toc", {
-                        "action": "appendNode", "action_mode": "child",
-                        "type": "DOC", "doc_ids": [doc_id],
-                        **({"target_uuid": parent_uuid} if parent_uuid else {}),
-                    })["data"]
-                    n = find_node(toc, parent_uuid, doc_id=doc_id)
-                    if not n:
-                        raise RuntimeError("DOC 节点未挂载成功")
-                    records.append({"uuid": n["uuid"], "doc_id": doc_id, "title": title})
-                prog["nodes"][rel] = {"type": "doc", "uuid": records[0]["uuid"],
-                                       "doc_id": records[0]["doc_id"], "segments": records}
-                stats["doc"] += 1
-        except Exception as e:
-            stats["fail"].append((rel, str(e)[:150]))
-            time.sleep(1)
+        record = None
+        last_err = None
+        for attempt in range(1, args.pend_retries + 1):
+            try:
+                record = create_node(token, args.base, args.book, args.root, rel, is_dir, up, parent_uuid)
+                break
+            except Exception as e:
+                last_err = str(e)[:150]
+                if attempt < args.pend_retries:
+                    print(f"  ⚠ 失败 [{rel}] → {last_err}; 静置 {args.pend_sleep}s 后重试 ({attempt}/{args.pend_retries})", flush=True)
+                    time.sleep(args.pend_sleep)
+                    # 静置后清理可能残留的同名节点(避免重复创建), 断点续传账本不动
+                    cleanup_leftover(token, args.base, args.book, rel, is_dir, parent_uuid)
+        if record is None:
+            stats["fail"].append((rel, last_err))
+            continue
+        if record["type"] == "dir":
+            prog["nodes"][rel] = record
+            stats["dir"] += 1
+        else:
+            prog["nodes"][rel] = record
+            stats["doc"] += 1
         save_prog(prog, args.progress)  # 每节点落盘一次(防中断丢批)
         if (stats["dir"] + stats["doc"]) % 25 == 0:
             print(f"  进度: 目录{stats['dir']} 文档{stats['doc']} 跳过{stats['skip']} 失败{len(stats['fail'])}", flush=True)
