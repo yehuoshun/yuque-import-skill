@@ -38,7 +38,7 @@ python3 scripts/yuque_tree_import.py --root /path/to/dir --book <book_id> --prog
 
 - token 来源：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/credentials.env` 的 `export TOKEN_L91="..."`，**脚本不硬编码 token**
 - 内容格式：`.md` 原样 / `.cs` → ` ```csharp ` 代码块 / 其余 → 纯文本代码块
-- 超限自动处理：二进制（NUL/无效 UTF-8 占比高）→ 占位说明；文本超 2MB → 自动拆成多文档 `xxx (1/N)` `(2/N)` …，内容零丢失
+- 超限自动处理：二进制（NUL/无效 UTF-8 占比高）→ 图片类（png/jpg/gif/webp/svg…）自动上传语雀 CDN 并 `![文件名](cdn_url)` 嵌入（需 cookie/ctoken，见 `--cookie-config`）；非图片 → 占位说明；文本超 2MB → 自动拆成多文档 `xxx (1/N)` `(2/N)` …，内容零丢失
 - 中断后重跑同一命令即续传，跳过已完成节点
 
 ### 二、对账修复（scripts/yuque_toc_reconcile.py）

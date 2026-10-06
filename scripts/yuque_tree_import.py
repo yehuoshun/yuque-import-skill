@@ -17,7 +17,48 @@
   - 内容格式: .md 原样 / .cs → ```csharp / 其余 → ``` 纯文本
   - 超限自动处理: 二进制文件→占位说明; 文本超 3.4MB→自动截断+注记(语雀 body 上限 4MB)
 """
-import argparse, json, os, sys, time, urllib.request, urllib.error
+import argparse, json, os, sys, time, urllib.request, urllib.error, uuid
+
+IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg", ".bmp"}
+
+
+def upload_image(cookie, ctoken, user_id, path):
+    """语雀 Web API 上传图片 → CDN URL。失败返回 None(回退占位说明)."""
+    ext = os.path.splitext(path)[1].lower()
+    boundary = "----YuqueImport" + uuid.uuid4().hex
+    with open(path, "rb") as f:
+        data = f.read()
+    parts = []
+    parts.append(('--' + boundary).encode())
+    parts.append(('Content-Disposition: form-data; name="file"; filename="%s"' % os.path.basename(path)).encode())
+    parts.append(("Content-Type: image/%s" % ext.lstrip(".")).encode())
+    parts.append(b"")
+    parts.append(data)
+    parts.append(('--' + boundary + '--').encode())
+    body = b"\r\n".join(parts)
+    url = "https://www.yuque.com/api/upload/attach?attachable_type=User&attachable_id=%s&type=image&ctoken=%s" % (user_id, ctoken)
+    req = urllib.request.Request(url, data=body, method="POST")
+    req.add_header("Content-Type", "multipart/form-data; boundary=" + boundary)
+    req.add_header("Cookie", cookie)
+    req.add_header("Referer", "https://www.yuque.com/")
+    req.add_header("Origin", "https://www.yuque.com")
+    try:
+        with urllib.request.urlopen(req, timeout=60) as r:
+            d = json.loads(r.read().decode())
+        return d.get("data", {}).get("url") or None
+    except Exception:
+        return None
+
+
+def load_upload_cfg(cookie_config):
+    """读语雀 MCP config.json 的 cookie/ctoken; 失败返回 None(图片回退占位)."""
+    try:
+        c = json.load(open(os.path.expanduser(cookie_config), encoding="utf-8"))
+        if c.get("cookie") and c.get("ctoken"):
+            return c
+    except Exception:
+        pass
+    return None
 
 def load_token(env):
     t = os.environ.get(env)
@@ -62,7 +103,7 @@ def walk(root):
             nodes.append((p, False))
     return nodes
 
-def fmt_content(path):
+def fmt_content(path, up=None):
     """返回 [(标题后缀, body), ...]: 超限文本自动多段拆分, 二进制→占位说明."""
     ext = os.path.splitext(path)[1].lower()
     raw = open(path, "rb").read()
@@ -74,6 +115,11 @@ def fmt_content(path):
     except UnicodeDecodeError:
         binary = True
     if binary:
+        if ext in IMAGE_EXTS and up and up.get("cfg"):
+            url = upload_image(up["cfg"]["cookie"], up["cfg"]["ctoken"], up["user_id"], path)
+            if url:
+                name = os.path.basename(path)
+                return [("", "![%s](%s)\n\n<!-- 图片 %d MB 已上传语雀 CDN, 展示见上 -->\n" % (name, url, size // 1048576))]
         return [("", "<!-- 二进制文件 %d MB, 跳过内容导入(语雀 body 上限 4MB), 原文件见 GitHub -->\n" % (size // 1048576))]
     if ext == ".md":
         wrap = lambda s: s
@@ -131,11 +177,19 @@ def main():
     ap.add_argument("--base", default="https://www.yuque.com/api/v2")
     ap.add_argument("--token-env", default="TOKEN_L91")
     ap.add_argument("--progress", required=True, help="进度文件路径,如 ./progress.json")
+    ap.add_argument("--cookie-config", default="~/.openclaw/workspace/skills/yuque-ai-mcp/config/config.json", help="语雀 MCP config.json(含 cookie/ctoken), 图片自动上传 CDN 用")
+    ap.add_argument("--user-id", default="25689388", help="语雀用户 ID(上传 attachable_id)")
     ap.add_argument("--dry", action="store_true")
     ap.add_argument("--test", type=int, default=0, help="只导前 N 个节点(试水)")
     args = ap.parse_args()
 
     token = load_token(args.token_env)
+    cfg = load_upload_cfg(args.cookie_config)
+    up = {"cfg": cfg, "user_id": args.user_id} if cfg else None
+    if up:
+        print("图片自动上传: 已启用(cookie 就绪)", flush=True)
+    else:
+        print("图片自动上传: 未启用(无 cookie/ctoken, 图片回退占位说明)", flush=True)
     rels = [(os.path.relpath(p, args.root), d) for p, d in walk(args.root)]
     print(f"节点总数: {len(rels)} (目录 {sum(1 for _, d in rels if d)} / 文件 {sum(1 for _, d in rels if not d)})", flush=True)
 
@@ -172,7 +226,7 @@ def main():
                 prog["nodes"][rel] = {"type": "dir", "uuid": n["uuid"]}
                 stats["dir"] += 1
             else:
-                segs = fmt_content(os.path.join(args.root, rel))
+                segs = fmt_content(os.path.join(args.root, rel), up)
                 records = []
                 for suffix, body in segs:
                     title = os.path.basename(rel) + suffix
