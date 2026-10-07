@@ -111,6 +111,9 @@ def fmt_content(path, up=None):
     ext = os.path.splitext(path)[1].lower()
     raw = open(path, "rb").read()
     size = len(raw)
+    # 空文件: 语雀 body 必填, 直接占位注释(实遇 free-programming-books 的空 md 撞 422)
+    if size == 0:
+        return [("", "<!-- 源仓库中该文件为空 -->\n")]
     # 二进制检测: NUL 字节或无效 UTF-8 比例过高 → 占位说明(乱码文本化会膨胀超限且无意义)
     try:
         text = raw.decode("utf-8")
