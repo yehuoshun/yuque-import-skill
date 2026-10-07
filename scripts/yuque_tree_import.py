@@ -93,14 +93,17 @@ def api(token, base, method, path, payload=None, retries=4):
     raise RuntimeError("retries exhausted")
 
 def walk(root):
+    """同级内目录在前、文件在后，各自按名称排序（Windows 资源管理器习惯）."""
     nodes = []
-    for name in sorted(os.listdir(root)):
+    names = sorted(os.listdir(root))
+    dirs = [n for n in names if os.path.isdir(os.path.join(root, n))]
+    files = [n for n in names if not os.path.isdir(os.path.join(root, n))]
+    for name in dirs:
         p = os.path.join(root, name)
-        if os.path.isdir(p):
-            nodes.append((p, True))
-            nodes.extend(walk(p))
-        else:
-            nodes.append((p, False))
+        nodes.append((p, True))
+        nodes.extend(walk(p))
+    for name in files:
+        nodes.append((os.path.join(root, name), False))
     return nodes
 
 def fmt_content(path, up=None):
