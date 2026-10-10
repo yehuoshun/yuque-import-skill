@@ -92,18 +92,25 @@ def api(token, base, method, path, payload=None, retries=4):
             time.sleep(2 ** i * 1.5 + 1)
     raise RuntimeError("retries exhausted")
 
-def walk(root):
-    """同级内目录在前、文件在后，各自按名称排序（Windows 资源管理器习惯）."""
+def walk(root, excludes=None):
+    """同级内目录在前、文件在后，各自按名称排序（Windows 资源管理器习惯）.
+    excludes: 绝对路径集合，遍历时跳过（用于排除自身账本/临时文件，防自污染）."""
+    excludes = excludes or set()
     nodes = []
     names = sorted(os.listdir(root))
     dirs = [n for n in names if os.path.isdir(os.path.join(root, n))]
     files = [n for n in names if not os.path.isdir(os.path.join(root, n))]
     for name in dirs:
         p = os.path.join(root, name)
+        if p in excludes:
+            continue
         nodes.append((p, True))
-        nodes.extend(walk(p))
+        nodes.extend(walk(p, excludes))
     for name in files:
-        nodes.append((os.path.join(root, name), False))
+        p = os.path.join(root, name)
+        if p in excludes:
+            continue
+        nodes.append((p, False))
     return nodes
 
 def fmt_content(path, up=None):
@@ -252,7 +259,14 @@ def main():
         print("图片自动上传: 已启用(cookie 就绪)", flush=True)
     else:
         print("图片自动上传: 未启用(无 cookie/ctoken, 图片回退占位说明)", flush=True)
-    rels = [(os.path.relpath(p, args.root), d) for p, d in walk(args.root)]
+    # 自身产物防自污染: 账本(及其 .tmp)落在导入树内时排除, 不再被当文档导入
+    excludes = set()
+    root_abs, prog_abs = os.path.abspath(args.root), os.path.abspath(args.progress)
+    if prog_abs.startswith(root_abs + os.sep):
+        excludes.add(prog_abs)
+        excludes.add(prog_abs + ".tmp")
+        print(f"已排除自身账本: {args.progress} (位于导入树内, 防止被当文档导入)", flush=True)
+    rels = [(os.path.relpath(p, args.root), d) for p, d in walk(args.root, excludes)]
     print(f"节点总数: {len(rels)} (目录 {sum(1 for _, d in rels if d)} / 文件 {sum(1 for _, d in rels if not d)})", flush=True)
 
     if args.dry:
