@@ -151,8 +151,9 @@ def cmd_move_stack(args):
                 {"targetStackId": int(args.stack_id), "targetBookIds": [int(args.book_id)]})
     print(f"[move-stack] 移动响应: {json.dumps(d, ensure_ascii=False)[:200]}")
     # 验证：move 接口成功/失败都返回 200+{}，必须回查 book_stacks 确认落在目标分组（带重试）
-    for attempt in range(3):
-        time.sleep(1.5)
+    # 2026-10-12 gitmagic 实测: PUT 生效但需 ~3s 才在 book_stacks 可见, 3x1.5s 不够 → 6x3s
+    for attempt in range(6):
+        time.sleep(3)
         stacks = web_api(cfg, "GET", "https://www.yuque.com/api/mine/book_stacks")
         def find_stack(o):
             if isinstance(o, dict):
