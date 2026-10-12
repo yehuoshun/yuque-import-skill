@@ -1,6 +1,6 @@
 ---
 name: yuque-import-skill
-description: 语雀知识库全量目录导入与对账修复技能。把本地目录树整棵导入语雀（文件夹=TITLE 目录节点、文件=文档，DFS 先序保持层级，断点续传），导入后对账修复错位节点。当用户要求「把这个目录/代码库/资料树导入语雀」「按目录结构建语雀知识库」「语雀导入遇到挂错层级/重复节点」时使用。
+description: 语雀知识库全量目录导入与对账修复技能。把本地目录树整棵导入语雀（文件夹=TITLE 目录节点、文件=文档，DFS 先序保持层级，断点续传），导入后对账修复错位节点。当用户要求「把这个目录/代码库/资料树导入语雀」「按目录结构建语雀知识库」「把 GitHub 项目/开源仓库导入语雀」「按开源项目流程到语雀」「语雀导入遇到挂错层级/重复节点」时使用。
 ---
 
 # 语雀全量目录导入 — AI 工作流
@@ -89,6 +89,22 @@ python3 scripts/yuque_toc_reconcile.py --root /path/to/dir --book <book_id> --pr
 - **知识库分组 ≠ TOC 分组**：TOC 分组是文档树目录；知识库分组（stack）是把整个知识库归类到个人空间书架（如「开源项目」）。v2 token 拿不到 stack 接口，必须 cookie/ctoken（yuque-mcp 已内置，用 `yuque_update_book_stack(book_id, stack_id)`；手动版 `PUT /api/books/{id}` + `{"stack_id": N}`）。2026-10-12 踩坑：误把 stack 36149506（文章收集）当开源项目，靠 MCP `get_book_stacks` 才发现真分组是 57018723。**移动后必须用 get_book_stacks 验证分组名而非只看 stack_id 数值**
 - 同名文件在不同路径（如 eng/orbs.json 与 zhs/orbs.json）：语雀自动处理，实测无冲突
 
+## 开源项目导入（GitHub repo → 语雀，2026-10-12 老板固化）
+
+触发模板：「把 `<repo>` 按开源项目流程到语雀」。规范：库名 `项目名（commit id）`、分组「开源项目」（stack 57018723）、描述 `<url> @ <commit>`。
+
+```bash
+# 1. 克隆/更新 + 干净副本 + 节点数
+python3 scripts/yuque_repo_import.py prep --url <git-url> --dir /home/admin/.openclaw/workspace/tmp
+# 2. dry-run 核数 → 3. 建库 → 4. 移分组（内置等待+验证）
+python3 scripts/yuque_repo_import.py create-book --name "<项目名>（<commit>）" --slug <项目名>-<commit> --desc "<url> @ <commit>"
+python3 scripts/yuque_repo_import.py move-stack --book-id <book_id> --stack-id 57018723
+# 5. test 6 → 全量（后台+心跳 25/50/75/完成）→ 对账 → 验收四查
+python3 scripts/yuque_tree_import.py --root <clean_dir> --book <book_id> --progress <账本> --test 6
+```
+
+完整 SOP + 坑清单：`references/github-repo-to-yuque.md`（必读，含 7 条踩过的坑）。
+
 ## 使用方式
 
-一句触发：「把 X 目录整棵导入语雀知识库 Y」「按目录结构建库」。执行：dry → test → 全量（后台+进度心跳）→ 对账 → 验收汇报。
+一句触发：「把 X 目录整棵导入语雀知识库 Y」「按目录结构建库」「把 X 仓库按开源项目流程到语雀」。执行：dry → test → 全量（后台+进度心跳）→ 对账 → 验收汇报。开源项目类走 `references/github-repo-to-yuque.md` SOP。

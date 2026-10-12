@@ -17,6 +17,13 @@ python3 scripts/yuque_tree_import.py --root <本地目录> --book <知识库ID> 
 # 2. 对账修复（导入后必做）
 python3 scripts/yuque_toc_reconcile.py --root <本地目录> --book <知识库ID> --progress ./progress.json
 python3 scripts/yuque_toc_reconcile.py --root <本地目录> --book <知识库ID> --progress ./progress.json --fix
+
+# 3.（可选）GitHub 开源项目 → 语雀 固化流程
+#    库名 = 项目名（commit id），分组 = 开源项目（stack 57018723）
+python3 scripts/yuque_repo_import.py prep        --url git@github.com:xxx/yyy.git --dir /path/to/work
+python3 scripts/yuque_repo_import.py create-book --name "yyy（abc12345）" --slug yyy-abc12345 --desc "https://github.com/xxx/yyy @ abc12345"
+python3 scripts/yuque_repo_import.py move-stack  --book-id <知识库ID> --stack-id 57018723
+# 完整 SOP：references/github-repo-to-yuque.md
 ```
 
 Token：环境变量 `TOKEN_L91`（或 `~/.openclaw/secrets/credentials.env`），脚本不硬编码。
@@ -29,6 +36,9 @@ references/api-notes.md     API 要点 + 实战事故复盘
 scripts/
   yuque_tree_import.py      导入（DFS 先序、断点续传、每节点落盘）
   yuque_toc_reconcile.py    对账修复（路径重建、错位移动）
+  yuque_repo_import.py      GitHub 开源项目 wrapper（prep/create-book/move-stack）
+references/
+  github-repo-to-yuque.md   开源项目导入 SOP + 坑清单（2026-10-12 老板固化）
 ```
 
 ## 验证记录
