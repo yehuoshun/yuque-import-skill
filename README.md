@@ -45,6 +45,7 @@ scripts/
   yuque_repo_import.py      GitHub 开源项目 wrapper（prep/create-book/move-stack）
   yuque_repair_placeholders.py  占位文档回填修复（二进制误判事故善后）
   yuque_website_crawl.py    网站抓取通用模板（正文窗口定位 + 图片传 CDN）
+  yuque_toc_organize.py     TOC 目录整理（平铺 → 分组, plan.json 驱动）
 references/
   github-repo-to-yuque.md   开源项目导入 SOP + 坑清单（2026-10-12 老板固化）
   website-crawl-to-yuque.md 网站抓取导入 SOP + 窗口定位方法论（2026-10-13 固化）

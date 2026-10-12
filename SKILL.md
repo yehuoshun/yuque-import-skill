@@ -113,6 +113,10 @@ python3 scripts/yuque_tree_import.py --root <clean_dir> --book <book_id> --progr
 
 核心铁律：**先剥 script/style 再切窗；窗口终点用标签形式标记（禁裸字符串 find）；链接重写正则 group(1)=文字 group(2)=URL；验证只看产物不看日志**。
 
+## TOC 目录整理（平铺 → 分组，2026-10-13 固化）
+
+网站抓取默认平铺，老板要求按章节建目录。`scripts/yuque_toc_organize.py --book <id> --plan <plan.json>`：建根级 TITLE 分组（sibling 模式防坏节点）→ node_uuid 形式移文档 → GET /toc 复查。plan.json 见脚本 docstring。坑：响应里根节点 parent_uuid 是 null 不是 ""；removeNode 只认 sibling（传 child 报 invalid action）；复用分组也要进 created_groups 列表（复查 zip 对齐）。
+
 ## 使用方式
 
 一句触发：「把 X 目录整棵导入语雀知识库 Y」「按目录结构建库」「把 X 仓库按开源项目流程到语雀」。执行：dry → test → 全量（后台+进度心跳）→ 对账 → 验收汇报。开源项目类走 `references/github-repo-to-yuque.md` SOP。
