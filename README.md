@@ -30,6 +30,12 @@ python3 scripts/yuque_repo_import.py move-stack  --book-id <知识库ID> --stack
 python3 scripts/yuque_repair_placeholders.py --book <知识库ID> --source <本地源目录>
 python3 scripts/yuque_repair_placeholders.py --book <知识库ID> --github <owner/repo> [--prefix <子目录>]
 # 完整 SOP：references/github-repo-to-yuque.md
+
+# 5.（2026-10-13）批量编排 + GitHub Actions 全自动（手动触发, 快照制）
+#    repos.json 清单 → 账本去重（commit 没变跳过）→ 建库/移分组/导入/四查/钉钉汇报
+python3 scripts/yuque_import_all.py --repos repos.json --ledger last-imported.json \
+    --workdir /home/admin/.openclaw/workspace/tmp --dry --no-notify   # 本地试跑
+#    GitHub 页面 Actions → yuque-import → Run workflow（不设 schedule, 2026-10-13 老板拍板）
 ```
 
 Token：环境变量 `TOKEN_L91`（或 `~/.openclaw/secrets/credentials.env`），脚本不硬编码。
@@ -46,6 +52,12 @@ scripts/
   yuque_repair_placeholders.py  占位文档回填修复（二进制误判事故善后）
   yuque_website_crawl.py    网站抓取通用模板（正文窗口定位 + 图片传 CDN）
   yuque_toc_organize.py     TOC 目录整理（平铺 → 分组, plan.json 驱动）
+  yuque_import_all.py       批量编排器（清单/账本/四查/钉钉, GitHub Actions 用）
+repos.json                  开源项目导入清单（url/enabled/watch）
+last-imported.json          导入账本（commit/book_id/book_url, 成功才更新）
+.github/workflows/
+  import-repos.yml          开源项目批量导入（workflow_dispatch, 账本去重+镜像缓存）
+  notify.yml                钉钉事件通知（仓库标配）
 references/
   github-repo-to-yuque.md   开源项目导入 SOP + 坑清单（2026-10-12 老板固化）
   website-crawl-to-yuque.md 网站抓取导入 SOP + 窗口定位方法论（2026-10-13 固化）

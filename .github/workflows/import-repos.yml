@@ -1,0 +1,64 @@
+# 开源项目 → 语雀 批量导入（手动触发, 快照制）
+# 触发: GitHub 页面 Actions → yuque-import → Run workflow
+#   - repos 留空 = 导入 repos.json 全部; 填关键词 = 只导匹配的 repo
+# 设计要点:
+#   - 不设 schedule: 库名带 commit id 是快照制, 导入时机由人决定（2026-10-13 老板拍板）
+#   - 账本去重: last-imported.json 记每个 repo 已导 commit, HEAD 没变直接跳过
+#   - 镜像缓存: actions/cache 保克隆, 每次 run 增量 fetch
+#   - 失败即红 + 钉钉告警, 账本只在成功时更新
+name: yuque-import
+
+on:
+  workflow_dispatch:
+    inputs:
+      repos:
+        description: '只导匹配该关键词的 repo（留空=repos.json 全部）'
+        required: false
+        type: string
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 缓存上游镜像
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/yuque-import
+          key: yuque-import-${{ github.run_id }}
+          restore-keys: |
+            yuque-import-
+
+      - name: 开源项目导入
+        env:
+          TOKEN_L91: ${{ secrets.TOKEN_L91 }}
+          YUQUE_COOKIE: ${{ secrets.YUQUE_COOKIE }}
+          YUQUE_CTOKEN: ${{ secrets.YUQUE_CTOKEN }}
+          DINGTALK_WEBHOOK: ${{ secrets.DINGTALK_WEBHOOK }}
+        run: |
+          python3 scripts/yuque_import_all.py --repos repos.json \
+            --ledger last-imported.json \
+            --workdir "${{ runner.temp }}/yuque-import" \
+            --pend-sleep 60 --pend-retries 3 \
+            --only "${{ inputs.repos }}"
+
+      - name: 提交账本
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name yehuoshun
+          git config user.email yehuoshun@users.noreply.github.com
+          git add last-imported.json repos.json
+          git diff --cached --quiet || git commit -m "chore: 更新开源项目导入账本"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/yehuoshun/yuque-import-skill.git"
+          git push origin main
