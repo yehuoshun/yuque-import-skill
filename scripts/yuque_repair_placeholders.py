@@ -96,6 +96,10 @@ def raw_github(owner_repo, path, prefix=""):
 def update_doc(token, book, doc_id, title, body):
     d = api(token, BASE, "PUT", f"/repos/{book}/docs/{doc_id}",
             {"title": title, "format": "markdown", "body": body})
+    # 单篇校验(2026-10-13): 更新响应带 word_count, 真实正文必须 >0
+    wc = (d.get("data", d).get("word_count") or 0)
+    if body.strip() and wc <= 0:
+        raise RuntimeError(f"回填校验失败: {title} word_count={wc}")
     return d
 
 

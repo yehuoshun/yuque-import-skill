@@ -222,6 +222,14 @@ def create_node(token, base, book, root, rel, is_dir, up, parent_uuid):
             "title": title, "format": "markdown", "body": body,
         })
         doc_id = created["data"]["id"]
+        # 单篇内容校验(2026-10-13 老板定): 创建/更新响应都带 word_count,
+        # 真实文本正文必须 >0, 否则正文没进去(曾静默丢成占位注释: hi-byte 误判事故)。
+        # 占位/图片段(以 <!-- 或 ![ 开头)与纯空白允许 0。
+        sb = body.strip()
+        if sb and not sb.startswith(("<!--", "![")):
+            wc = (created.get("data", {}).get("word_count") or 0)
+            if wc <= 0:
+                raise RuntimeError(f"内容校验失败: {title} 发送 {len(body)} 字符但 word_count={wc}")
         toc = api(token, base, "PUT", f"/repos/{book}/toc", {
             "action": "appendNode", "action_mode": "child",
             "type": "DOC", "doc_ids": [doc_id],
