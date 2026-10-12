@@ -72,7 +72,7 @@ python3 scripts/yuque_toc_reconcile.py --root /path/to/dir --book <book_id> --pr
 | 创建文档 | POST `/repos/{book}/docs` | title, format=markdown, body（≤4MB，超 2MB 自动分段） |
 | 挂载/移动/删除节点 | PUT `/repos/{book}/toc` | action: appendNode/prependNode/editNode/removeNode; action_mode: sibling/child; type: DOC/TITLE/LINK |
 | 建分组 | PUT toc | action=appendNode, action_mode=child, type=TITLE, title=分组名 |
-| 知识库分组（书架 stack）移动 | PUT `/api/books/{id}` body `{"stack_id": 数字}` | stack_id 是语雀分组（书架）ID，非 TOC 分组；需 cookie/ctoken 认证（v2 token 不支持） |
+| 知识库分组（书架 stack）移动 | PUT `/api/mine/book_stack/move`（Web API，cookie/ctoken）body `{"targetStackId": 数字, "targetBookIds": [book_id]}`；**旧 `PUT /api/books/{id}` + `{"stack_id": N}` 返回成功但不生效（2026-08-31 修，2026-10-12 实踩复现）** | stack_id 是语雀分组（书架）ID，非 TOC 分组；需 cookie/ctoken 认证（v2 token 不支持）；移动后必须回查 book_stacks 验证 |
 | 查全部分组 | `yuque_get_book_stacks`（yuque-mcp 工具） | 返回所有 stack：id/name/books；MCP 全组工具：create/rename/delete/sort/update_book_stack |
 | 建文档节点 | PUT toc | action=appendNode, action_mode=child, type=DOC, doc_ids=[doc_id] |
 | 移动 | PUT toc | action=appendNode, action_mode=child, target_uuid=新父, node_uuid=当前 |

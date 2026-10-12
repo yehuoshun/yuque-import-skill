@@ -145,32 +145,36 @@ def cmd_move_stack(args):
         # 新建库立刻移动会失败（2026-10-12 实踩），先等几秒
         print(f"[move-stack] 等待 {args.wait}s（新建库移动有时序坑）")
         time.sleep(args.wait)
-    d = web_api(cfg, "PUT", f"https://www.yuque.com/api/books/{args.book_id}",
-                {"stack_id": int(args.stack_id)})
+    # ⚠️ 正确端点是 PUT /api/mine/book_stack/move（2026-08-31 MCP 源码修复实捶）：
+    # 旧实现 PUT /api/books/{id} + {"stack_id": N} 返回成功但实际不生效（本 wrapper 初版实踩：库落进「其他」分组）
+    d = web_api(cfg, "PUT", "https://www.yuque.com/api/mine/book_stack/move",
+                {"targetStackId": int(args.stack_id), "targetBookIds": [int(args.book_id)]})
     print(f"[move-stack] 移动响应: {json.dumps(d, ensure_ascii=False)[:200]}")
-    # 验证：get_book_stacks 里目标分组必须出现该库（别只看 stack_id 数值，2026-10-12 踩坑）
-    stacks = web_api(cfg, "GET", "https://www.yuque.com/api/mine/book_stacks")
-    def find_stack(o):
-        if isinstance(o, dict):
-            if o.get("id") == int(args.stack_id) or o.get("name") == "开源项目":
-                return o
-            for v in o.values():
-                r = find_stack(v)
-                if r:
-                    return r
-        elif isinstance(o, list):
-            for v in o:
-                r = find_stack(v)
-                if r:
-                    return r
-        return None
-    s = find_stack(stacks)
-    books = s.get("books", []) if isinstance(s, dict) else []
-    ok = any(str(b.get("id")) == str(args.book_id) for b in books)
-    if not ok:
-        raise RuntimeError(f"验证失败: 库 {args.book_id} 不在分组 {args.stack_id}({s and s.get('name')})")
-    print(f"[move-stack] 验证通过: {args.book_id} ∈ {s.get('name')} (stack {args.stack_id}) ✅")
-    return 0
+    # 验证：move 接口成功/失败都返回 200+{}，必须回查 book_stacks 确认落在目标分组（带重试）
+    for attempt in range(3):
+        time.sleep(1.5)
+        stacks = web_api(cfg, "GET", "https://www.yuque.com/api/mine/book_stacks")
+        def find_stack(o):
+            if isinstance(o, dict):
+                if o.get("id") == int(args.stack_id):
+                    return o
+                for v in o.values():
+                    r = find_stack(v)
+                    if r:
+                        return r
+            elif isinstance(o, list):
+                for v in o:
+                    r = find_stack(v)
+                    if r:
+                        return r
+            return None
+        s = find_stack(stacks)
+        books = s.get("books", []) if isinstance(s, dict) else []
+        if any(str(b.get("id")) == str(args.book_id) for b in books):
+            print(f"[move-stack] 验证通过: {args.book_id} ∈ {s.get('name')} (stack {args.stack_id}) ✅")
+            return 0
+        print(f"[move-stack] 验证第 {attempt + 1} 次未通过，重试...")
+    raise RuntimeError(f"验证失败: 库 {args.book_id} 不在分组 {args.stack_id}({s and s.get('name')})")
 
 
 def main():
