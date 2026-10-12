@@ -23,6 +23,12 @@ python3 scripts/yuque_toc_reconcile.py --root <本地目录> --book <知识库ID
 python3 scripts/yuque_repo_import.py prep        --url git@github.com:xxx/yyy.git --dir /path/to/work
 python3 scripts/yuque_repo_import.py create-book --name "yyy（abc12345）" --slug yyy-abc12345 --desc "https://github.com/xxx/yyy @ abc12345"
 python3 scripts/yuque_repo_import.py move-stack  --book-id <知识库ID> --stack-id 57018723
+
+# 4. 占位文档修复（二进制误判事故善后，2026-10-12）
+#    旧版 hi-byte>0.9 启发式曾把中文密集文本误判为二进制 → 正文丢失；v1.1.3 已删启发式
+#    已受损库用 TOC 路径映射回填真实内容：
+python3 scripts/yuque_repair_placeholders.py --book <知识库ID> --source <本地源目录>
+python3 scripts/yuque_repair_placeholders.py --book <知识库ID> --github <owner/repo> [--prefix <子目录>]
 # 完整 SOP：references/github-repo-to-yuque.md
 ```
 
@@ -37,6 +43,7 @@ scripts/
   yuque_tree_import.py      导入（DFS 先序、断点续传、每节点落盘）
   yuque_toc_reconcile.py    对账修复（路径重建、错位移动）
   yuque_repo_import.py      GitHub 开源项目 wrapper（prep/create-book/move-stack）
+  yuque_repair_placeholders.py  占位文档回填修复（二进制误判事故善后）
 references/
   github-repo-to-yuque.md   开源项目导入 SOP + 坑清单（2026-10-12 老板固化）
 ```
