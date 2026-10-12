@@ -121,10 +121,13 @@ def fmt_content(path, up=None):
     # 空文件: 语雀 body 必填, 直接占位注释(实遇 free-programming-books 的空 md 撞 422)
     if size == 0:
         return [("", "<!-- 源仓库中该文件为空 -->\n")]
-    # 二进制检测: NUL 字节或无效 UTF-8 比例过高 → 占位说明(乱码文本化会膨胀超限且无意义)
+    # 二进制检测: NUL 字节或解码失败 → 二进制。
+    # ⚠️ 2026-10-12 删掉 hi-byte>0.9 启发式: 中文 UTF-8 三字节全 >127, 中文密集文本(.md/.cs 注释)比例轻易超 0.9
+    #    被误判成二进制 → 占位文档(HowToCook 23 篇/Nulab 12 篇/sts2 45 篇等 10+ 库中招)。
+    #    能正常 UTF-8 解码且无 NUL 就是文本; 真二进制(图片/压缩包)由 NUL/解码失败捕获。
     try:
         text = raw.decode("utf-8")
-        binary = "\x00" in text or sum(1 for _ in raw if _ > 127) / max(size, 1) > 0.9
+        binary = "\x00" in text
     except UnicodeDecodeError:
         binary = True
     if binary:
