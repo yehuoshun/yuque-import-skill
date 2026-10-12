@@ -72,6 +72,8 @@ python3 scripts/yuque_toc_reconcile.py --root /path/to/dir --book <book_id> --pr
 | 创建文档 | POST `/repos/{book}/docs` | title, format=markdown, body（≤4MB，超 2MB 自动分段） |
 | 挂载/移动/删除节点 | PUT `/repos/{book}/toc` | action: appendNode/prependNode/editNode/removeNode; action_mode: sibling/child; type: DOC/TITLE/LINK |
 | 建分组 | PUT toc | action=appendNode, action_mode=child, type=TITLE, title=分组名 |
+| 知识库分组（书架 stack）移动 | PUT `/api/books/{id}` body `{"stack_id": 数字}` | stack_id 是语雀分组（书架）ID，非 TOC 分组；需 cookie/ctoken 认证（v2 token 不支持） |
+| 查全部分组 | `yuque_get_book_stacks`（yuque-mcp 工具） | 返回所有 stack：id/name/books；MCP 全组工具：create/rename/delete/sort/update_book_stack |
 | 建文档节点 | PUT toc | action=appendNode, action_mode=child, type=DOC, doc_ids=[doc_id] |
 | 移动 | PUT toc | action=appendNode, action_mode=child, target_uuid=新父, node_uuid=当前 |
 | 拉全量 TOC | GET `/repos/{book}/toc` | 返回扁平数组，parent_uuid 链重建树 |
@@ -82,6 +84,7 @@ python3 scripts/yuque_toc_reconcile.py --root /path/to/dir --book <book_id> --pr
 - `removeNode`+`appendNode` 会产生新 uuid，旧 uuid 不可复用
 - `editNode` 改 prev_uuid/sibling_uuid 不生效，排序只能用 prependNode
 - 限流：429/5xx 指数退避重试（脚本已内置 4 次）
+- **知识库分组 ≠ TOC 分组**：TOC 分组是文档树目录；知识库分组（stack）是把整个知识库归类到个人空间书架（如「开源项目」）。v2 token 拿不到 stack 接口，必须 cookie/ctoken（yuque-mcp 已内置，用 `yuque_update_book_stack(book_id, stack_id)`；手动版 `PUT /api/books/{id}` + `{"stack_id": N}`）。2026-10-12 踩坑：误把 stack 36149506（文章收集）当开源项目，靠 MCP `get_book_stacks` 才发现真分组是 57018723。**移动后必须用 get_book_stacks 验证分组名而非只看 stack_id 数值**
 - 同名文件在不同路径（如 eng/orbs.json 与 zhs/orbs.json）：语雀自动处理，实测无冲突
 
 ## 使用方式
