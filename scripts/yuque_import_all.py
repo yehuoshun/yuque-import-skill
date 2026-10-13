@@ -200,7 +200,8 @@ def import_one(url, workdir, ledger, args):
     progress = os.path.join(workdir, f"{repo}-{commit}-progress.json")
     r = run_script("yuque_tree_import.py",
                    ["--root", info["clean_dir"], "--book", str(book_id), "--progress", progress,
-                    "--pend-sleep", str(args.pend_sleep), "--pend-retries", str(args.pend_retries)]
+                    "--pend-sleep", str(args.pend_sleep), "--pend-retries", str(args.pend_retries),
+                    "--max-body", str(args.max_body)]
                    + cc_args)
     m = re.search(r'=== 完成 === (\{.*\})', r.stdout)
     stats = json.loads(m.group(1)) if m else {}
@@ -224,6 +225,7 @@ def main():
     ap.add_argument("--login", default=DEFAULT_LOGIN)
     ap.add_argument("--pend-sleep", type=float, default=60, help="失败静置秒数(CI 里比默认 600 小)")
     ap.add_argument("--pend-retries", type=int, default=3)
+    ap.add_argument("--max-body", type=int, default=200_000, help="单文档 body 上限(字节), 透传给 tree_import; 默认 200KB(2026-10-13 老板定)")
     ap.add_argument("--only", default="", help="只导匹配该子串的 repo")
     ap.add_argument("--dry", action="store_true", help="只跑 prep+账本去重, 不写语雀")
     ap.add_argument("--no-notify", action="store_true", help="不发钉钉")

@@ -15,7 +15,7 @@
   - 每节点落盘一次: 中断最多丢 1 个节点（血泪教训: 批量落盘会丢一批节点+挂错父级）
   - 限流重试: 429/5xx 指数退避
   - 内容格式: .md 原样 / .cs → ```csharp / 其余 → ``` 纯文本
-  - 超限自动处理: 二进制文件→占位说明; 文本超 3.4MB→自动截断+注记(语雀 body 上限 4MB)
+  - 超限自动处理: 二进制文件→占位说明; 文本超 200KB(可调 --max-body)→自动切块+注记(语雀端渲染卡顿阈值, 2026-10-13 老板定)
 """
 import argparse, json, os, sys, time, urllib.request, urllib.error, uuid
 
@@ -113,7 +113,7 @@ def walk(root, excludes=None):
         nodes.append((p, False))
     return nodes
 
-def fmt_content(path, up=None):
+def fmt_content(path, up=None, max_body=200_000):
     """返回 [(标题后缀, body), ...]: 超限文本自动多段拆分, 二进制→占位说明."""
     ext = os.path.splitext(path)[1].lower()
     raw = open(path, "rb").read()
@@ -144,8 +144,8 @@ def fmt_content(path, up=None):
     else:
         wrap = lambda s: "```\n" + s + "\n```"
     body = wrap(text)
-    # 超限自动分段(留余量给 JSON 转义膨胀, 实测 2MB 内极安全)
-    MAX_BODY = 2_000_000
+    # 超限自动分段(留余量给 JSON 转义膨胀): 200KB 默认(语雀端渲染卡顿阈值, 老板 2026-10-13 定), 可 --max-body 调
+    MAX_BODY = max_body
     if len(body.encode("utf-8")) <= MAX_BODY:
         return [("", body)]
     # 按字符边界切段, 每段(含包装+注记)不超 MAX_BODY
@@ -160,7 +160,7 @@ def fmt_content(path, up=None):
         segs.append("".join(cur))
     out = []
     for i, s in enumerate(segs):
-        note = "\n\n<!-- 分段 %d/%d: 原文件 %d MB 超语雀 4MB body 上限, 已拆分为多文档 -->\n" % (i + 1, len(segs), size // 1048576)
+        note = "\n\n<!-- 分段 %d/%d: 原文件 %d MB 超 %dKB 渲染阈值, 已拆分为多文档 -->\n" % (i + 1, len(segs), size // 1048576, MAX_BODY // 1024)
         suffix = " (%d/%d)" % (i + 1, len(segs)) if len(segs) > 1 else ""
         out.append((suffix, wrap(s) + note))
     return out
@@ -202,7 +202,7 @@ def cleanup_leftover(token, base, book, rel, is_dir, parent_uuid):
             except Exception:
                 pass
 
-def create_node(token, base, book, root, rel, is_dir, up, parent_uuid):
+def create_node(token, base, book, root, rel, is_dir, up, parent_uuid, max_body=200_000):
     """创建并挂载单个节点, 返回 progress 记录块; 失败抛异常。"""
     if is_dir:
         toc = api(token, base, "PUT", f"/repos/{book}/toc", {
@@ -214,7 +214,7 @@ def create_node(token, base, book, root, rel, is_dir, up, parent_uuid):
         if not n:
             raise RuntimeError("TITLE 节点未在返回目录中找到")
         return {"type": "dir", "uuid": n["uuid"]}
-    segs = fmt_content(os.path.join(root, rel), up)
+    segs = fmt_content(os.path.join(root, rel), up, max_body)
     records = []
     for suffix, body in segs:
         title = os.path.basename(rel) + suffix
@@ -260,6 +260,7 @@ def main():
     ap.add_argument("--dry", action="store_true")
     ap.add_argument("--test", type=int, default=0, help="只导前 N 个节点(试水)")
     ap.add_argument("--pend-sleep", type=float, default=600, help="失败静置基础秒数, 按轮次递增(第n次等待 = pend_sleep×n, 默认 600 → 10/20/30 分钟)")
+    ap.add_argument("--max-body", type=int, default=200_000, help="单文档 body 上限(字节), 超限自动切块; 默认 200KB=语雀端渲染卡顿阈值(2026-10-13 老板定), 结构镜像强迫症可调 2_000_000")
     ap.add_argument("--pend-retries", type=int, default=3, help="失败静置重试最大轮数(超出则记 fail 跳过)")
     args = ap.parse_args()
 
@@ -304,7 +305,7 @@ def main():
         last_err = None
         for attempt in range(1, args.pend_retries + 1):
             try:
-                record = create_node(token, args.base, args.book, args.root, rel, is_dir, up, parent_uuid)
+                record = create_node(token, args.base, args.book, args.root, rel, is_dir, up, parent_uuid, args.max_body)
                 break
             except Exception as e:
                 last_err = str(e)[:150]

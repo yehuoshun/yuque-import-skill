@@ -1,0 +1,42 @@
+import	开源项目导入	﻿2026-10-13T12:45:13.1114682Z ##[group]Run python3 scripts/yuque_import_all.py --repos repos.json \
+import	开源项目导入	2026-10-13T12:45:13.1115330Z [36;1mpython3 scripts/yuque_import_all.py --repos repos.json \[0m
+import	开源项目导入	2026-10-13T12:45:13.1116108Z [36;1m  --ledger last-imported.json \[0m
+import	开源项目导入	2026-10-13T12:45:13.1116554Z [36;1m  --workdir "/home/runner/work/_temp/yuque-import" \[0m
+import	开源项目导入	2026-10-13T12:45:13.1116968Z [36;1m  --pend-sleep 60 --pend-retries 3 \[0m
+import	开源项目导入	2026-10-13T12:45:13.1117301Z [36;1m  --only ""[0m
+import	开源项目导入	2026-10-13T12:45:13.1424149Z shell: /usr/bin/bash -e {0}
+import	开源项目导入	2026-10-13T12:45:13.1424497Z env:
+import	开源项目导入	2026-10-13T12:45:13.1424828Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+import	开源项目导入	2026-10-13T12:45:13.1425319Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+import	开源项目导入	2026-10-13T12:45:13.1425975Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+import	开源项目导入	2026-10-13T12:45:13.1426402Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+import	开源项目导入	2026-10-13T12:45:13.1426811Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+import	开源项目导入	2026-10-13T12:45:13.1427287Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+import	开源项目导入	2026-10-13T12:45:13.1428057Z   TOKEN_L91: ***
+import	开源项目导入	2026-10-13T12:45:13.1433174Z   YUQUE_COOKIE: ***
+import	开源项目导入	2026-10-13T12:45:13.1433460Z   YUQUE_CTOKEN: ***
+import	开源项目导入	2026-10-13T12:45:13.1434112Z   DINGTALK_WEBHOOK: ***
+import	开源项目导入	2026-10-13T12:45:13.1434391Z ##[endgroup]
+import	开源项目导入	2026-10-13T12:45:14.9392950Z [SKIP] free-programming-books @ 2574d859 已导入过(或 dry)
+import	开源项目导入	2026-10-13T12:45:17.0120004Z Traceback (most recent call last):
+import	开源项目导入	2026-10-13T12:45:17.0130920Z   File "/home/runner/work/yuque-import-skill/yuque-import-skill/scripts/yuque_import_all.py", line 281, in <module>
+import	开源项目导入	2026-10-13T12:45:17.0132049Z     main()
+import	开源项目导入	2026-10-13T12:45:17.0132925Z   File "/home/runner/work/yuque-import-skill/yuque-import-skill/scripts/yuque_import_all.py", line 244, in main
+import	开源项目导入	2026-10-13T12:45:17.0134155Z     status, repo, commit, book_id, book_url, errors = import_one(url, args.workdir, ledger, args)
+import	开源项目导入	2026-10-13T12:45:17.0135053Z                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+import	开源项目导入	2026-10-13T12:45:17.0136154Z   File "/home/runner/work/yuque-import-skill/yuque-import-skill/scripts/yuque_import_all.py", line 187, in import_one
+import	开源项目导入	2026-10-13T12:45:17.0136805Z     r = run_script("yuque_repo_import.py",
+import	开源项目导入	2026-10-13T12:45:17.0137129Z         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+import	开源项目导入	2026-10-13T12:45:17.0137735Z   File "/home/runner/work/yuque-import-skill/yuque-import-skill/scripts/yuque_import_all.py", line 41, in run_script
+import	开源项目导入	2026-10-13T12:45:17.0138418Z     return subprocess.run([sys.executable, os.path.join(HERE, name)] + args,
+import	开源项目导入	2026-10-13T12:45:17.0138851Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+import	开源项目导入	2026-10-13T12:45:17.0139386Z   File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 548, in run
+import	开源项目导入	2026-10-13T12:45:17.0252912Z     with Popen(*popenargs, **kwargs) as process:
+import	开源项目导入	2026-10-13T12:45:17.0253827Z          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+import	开源项目导入	2026-10-13T12:45:17.0254912Z   File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 1026, in __init__
+import	开源项目导入	2026-10-13T12:45:17.0256253Z     self._execute_child(args, executable, preexec_fn, close_fds,
+import	开源项目导入	2026-10-13T12:45:17.0257521Z   File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 1885, in _execute_child
+import	开源项目导入	2026-10-13T12:45:17.0260393Z     self.pid = _fork_exec(
+import	开源项目导入	2026-10-13T12:45:17.0260946Z                ^^^^^^^^^^^
+import	开源项目导入	2026-10-13T12:45:17.0261619Z TypeError: expected str, bytes or os.PathLike object, not int
+import	开源项目导入	2026-10-13T12:45:17.0369436Z ##[error]Process completed with exit code 1.

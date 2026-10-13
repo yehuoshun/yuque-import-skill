@@ -42,7 +42,7 @@ python3 scripts/yuque_tree_import.py --root /path/to/dir --book <book_id> --prog
 - token 来源：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/credentials.env` 的 `export TOKEN_L91="..."`，**脚本不硬编码 token**
 - 失败静置重试：单个节点挂载失败（如 `TITLE 节点未在返回目录中找到`）→ 静置 `--pend-sleep` 秒（默认 600）→ 清理残留同名节点 → 重试，最多 `--pend-retries` 轮（默认 3）；仍失败才记 fail。**背景（2026-10-07 实验证实）**：高频连续创建（几百节点不间断）会让语雀 TOC 写路径积压，新建空目录挂子静默失败（响应乐观回显但实际挂根）；静置 ~10 分钟自愈，节流（每请求间隔 1.5s + 每百节点休息）可完全规避。故默认保持高频 + 失败静置重试，不主动降速，除非想稳到底（用 `--pend-sleep` 调小）+ 外部节流。
 - 内容格式：`.md` 原样 / `.cs` → ` ```csharp ` 代码块 / 其余 → 纯文本代码块
-- 超限自动处理：二进制（NUL/无效 UTF-8 占比高）→ 图片类（png/jpg/gif/webp/svg…）自动上传语雀 CDN 并 `![文件名](cdn_url)` 嵌入（需 cookie/ctoken，见 `--cookie-config`）；非图片 → 占位说明；文本超 2MB → 自动拆成多文档 `xxx (1/N)` `(2/N)` …，内容零丢失
+- 超限自动处理：二进制（NUL/无效 UTF-8 占比高）→ 图片类（png/jpg/gif/webp/svg…）自动上传语雀 CDN 并 `![文件名](cdn_url)` 嵌入（需 cookie/ctoken，见 `--cookie-config`）；非图片 → 占位说明；文本超 200KB（`--max-body` 可调，语雀端渲染卡顿阈值，2026-10-13 老板定）→ 自动拆成多文档 `xxx (1/N)` `(2/N)` …，内容零丢失
 - 中断后重跑同一命令即续传，跳过已完成节点
 
 ### 二、对账修复（scripts/yuque_toc_reconcile.py）
@@ -70,7 +70,7 @@ python3 scripts/yuque_toc_reconcile.py --root /path/to/dir --book <book_id> --pr
 
 | 操作 | 方法/路径 | 关键参数 |
 |------|----------|---------|
-| 创建文档 | POST `/repos/{book}/docs` | title, format=markdown, body（≤4MB，超 2MB 自动分段） |
+| 创建文档 | POST `/repos/{book}/docs` | title, format=markdown, body（≤4MB，超 200KB 自动分段，`--max-body` 可调） |
 | 挂载/移动/删除节点 | PUT `/repos/{book}/toc` | action: appendNode/prependNode/editNode/removeNode; action_mode: sibling/child; type: DOC/TITLE/LINK |
 | 建分组 | PUT toc | action=appendNode, action_mode=child, type=TITLE, title=分组名 |
 | 知识库分组（书架 stack）移动 | PUT `/api/mine/book_stack/move`（Web API，cookie/ctoken）body `{"targetStackId": 数字, "targetBookIds": [book_id]}`；**旧 `PUT /api/books/{id}` + `{"stack_id": N}` 返回成功但不生效（2026-08-31 修，2026-10-12 实踩复现）** | stack_id 是语雀分组（书架）ID，非 TOC 分组；需 cookie/ctoken 认证（v2 token 不支持）；移动后必须回查 book_stacks 验证 |
