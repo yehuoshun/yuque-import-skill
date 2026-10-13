@@ -52,6 +52,7 @@ scripts/
   yuque_repair_placeholders.py  占位文档回填修复（二进制误判事故善后）
   yuque_website_crawl.py    网站抓取通用模板（正文窗口定位 + 图片传 CDN）
   yuque_toc_organize.py     TOC 目录整理（平铺 → 分组, plan.json 驱动）
+  yuque_rst_convert.py      Sphinx/reST 工程 → Markdown（docutils 中间层, 2026-10-13）
   yuque_import_all.py       批量编排器（清单/账本/四查/钉钉, GitHub Actions 用）
 repos.json                  开源项目导入清单（url/enabled/watch）
 last-imported.json          导入账本（commit/book_id/book_url, 成功才更新）
