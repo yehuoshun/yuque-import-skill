@@ -1,6 +1,6 @@
 ---
 name: yuque-import-skill
-description: 语雀知识库全量目录导入与对账修复技能。把本地目录树整棵导入语雀（文件夹=TITLE 目录节点、文件=文档，DFS 先序保持层级，断点续传），导入后对账修复错位节点。当用户要求「把这个目录/代码库/资料树导入语雀」「按目录结构建语雀知识库」「把 GitHub 项目/开源仓库导入语雀」「按开源项目流程到语雀」「把网站/教程站抓取到语雀」「网页抓取导入语雀」「语雀导入遇到挂错层级/重复节点」时使用。
+description: 语雀知识库全量目录导入与对账修复技能。把本地目录树整棵导入语雀（文件夹=TITLE 目录节点、文件=文档，DFS 先序保持层级，断点续传），导入后对账修复错位节点。当用户要求「把这个目录/代码库/资料树导入语雀」「按目录结构建语雀知识库」「把 GitHub 项目/开源仓库导入语雀」「按开源项目流程到语雀」「把网站/教程站抓取到语雀」「网页抓取导入语雀」「语雀导入遇到挂错层级/重复节点」「把小说/这本 txt/epub 导入语雀」「小说导入语雀」时使用。
 ---
 
 # 语雀全量目录导入 — AI 工作流
@@ -117,6 +117,25 @@ python3 scripts/yuque_tree_import.py --root <clean_dir> --book <book_id> --progr
 
 网站抓取默认平铺，老板要求按章节建目录。`scripts/yuque_toc_organize.py --book <id> --plan <plan.json>`：建根级 TITLE 分组（sibling 模式防坏节点）→ node_uuid 形式移文档 → GET /toc 复查。plan.json 见脚本 docstring。坑：响应里根节点 parent_uuid 是 null 不是 ""；removeNode 只认 sibling（传 child 报 invalid action）；复用分组也要进 created_groups 列表（复查 zip 对齐）。
 
+## 小说导入（txt / epub，2026-10-14 并入）
+
+触发模板：「把这本小说导入语雀」「这本书导入语雀」（本地 txt/epub 文件）。完整 SOP：`references/novel-txt-epub-to-yuque.md`（必读）。
+
+```bash
+# 建新库 + 导入 + 修 TOC（epub 书名/作者/简介从元数据自动带出）
+python3 scripts/yuque_novel_import.py --file /path/to/novel.epub --create
+python3 scripts/yuque_novel_import.py --txt /path/to/novel.txt --title "书名" --author "作者" --description "简介"
+# 已有库续导（进度按 book_id 隔离，自动断点续传）
+python3 scripts/yuque_novel_import.py --txt novel.txt --book-id <book_id>
+# 只预览章节（导入前必做，确认切分正确）
+python3 scripts/yuque_novel_import.py --txt novel.txt --dry-run
+```
+
+- 链路：mcporter + yuque-mcp（非 HTTP 直连，无需 TOKEN_L91）；依赖 OpenClaw 环境已配 yuque-mcp
+- 导入前先 `--dry-run` 看章节预览，再正式导；导入后自动校验内容（乱码/HTML 残留）并修 TOC
+- 大文件分批：`--start 1 --end 200` 续导；中途断网重跑同命令即续传
+- 回归单测：`cd scripts && python3 test_novel_toc_fix_retry.py`（5 项，不联网）
+
 ## 使用方式
 
-一句触发：「把 X 目录整棵导入语雀知识库 Y」「按目录结构建库」「把 X 仓库按开源项目流程到语雀」。执行：dry → test → 全量（后台+进度心跳）→ 对账 → 验收汇报。开源项目类走 `references/github-repo-to-yuque.md` SOP。
+一句触发：「把 X 目录整棵导入语雀知识库 Y」「按目录结构建库」「把 X 仓库按开源项目流程到语雀」「把 X 小说导入语雀」。执行：dry → test → 全量（后台+进度心跳）→ 对账 → 验收汇报。开源项目类走 `references/github-repo-to-yuque.md` SOP，小说类走 `references/novel-txt-epub-to-yuque.md` SOP。
