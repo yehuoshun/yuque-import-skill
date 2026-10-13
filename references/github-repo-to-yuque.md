@@ -37,7 +37,7 @@
    # 拿到 book_id 后：
    python3 scripts/yuque_repo_import.py move-stack --book-id <book_id> --stack-id 57018723
    ```
-   - move-stack 内置 10s 等待（新建库立刻移动会失败，2026-10-12 实踩）+ 移动后自动验证分组
+   - move-stack 内置 30s 等待（新建库立刻移动会失败，2026-10-12 实踩；10-13 两次复现后从 10s→30s、验证 6→10 轮）+ 移动后自动验证分组
 4. **test 6 试水** → 全量导入（**后台跑**，禁 nohup——exec-guard 会拦；用 exec `background=true`）
    ```bash
    python3 scripts/yuque_tree_import.py --root <clean_dir> --book <book_id> \
@@ -71,7 +71,7 @@
 ```
 yuque_repo_import.py prep         --url <git-url> --dir <工作目录>
 yuque_repo_import.py create-book  --name <项目名（commit）> --slug <项目名-commit> --desc <url @ commit> [--login yehuoshun] [--stack-id 57018723]
-yuque_repo_import.py move-stack   --book-id <id> --stack-id 57018723 [--wait 10] [--no-wait]
+yuque_repo_import.py move-stack   --book-id <id> --stack-id 57018723 [--wait 30] [--no-wait]
 ```
 
 token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/credentials.env`；cookie 默认读

@@ -193,7 +193,7 @@ def import_one(url, workdir, ledger, args):
 
     r = run_script("yuque_repo_import.py",
                    ["move-stack", "--book-id", str(book_id), "--stack-id", str(args.stack_id),
-                    "--wait", "10"] + cc_args)
+                    "--wait", "30"] + cc_args)
     if r.returncode != 0:
         return "fail", repo, commit, book_id, None, [f"move-stack 失败: {r.stderr[-300:] or r.stdout[-300:]}"]
 

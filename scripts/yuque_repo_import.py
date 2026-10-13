@@ -152,7 +152,9 @@ def cmd_move_stack(args):
     print(f"[move-stack] 移动响应: {json.dumps(d, ensure_ascii=False)[:200]}")
     # 验证：move 接口成功/失败都返回 200+{}，必须回查 book_stacks 确认落在目标分组（带重试）
     # 2026-10-12 gitmagic 实测: PUT 生效但需 ~3s 才在 book_stacks 可见, 3x1.5s 不够 → 6x3s
-    for attempt in range(6):
+    # 2026-10-13 两次实踩（free-programming-books/github-help）: 新建库 10s+6x3s 仍不够,
+    #   库落「其他」; 等 ~45s 后重跑才归位 → 验证轮次 6→10 (总窗口 ≈ 30s+30s=60s)
+    for attempt in range(10):
         time.sleep(3)
         stacks = web_api(cfg, "GET", "https://www.yuque.com/api/mine/book_stacks")
         def find_stack(o):
@@ -201,7 +203,8 @@ def main():
     p.add_argument("--stack-id", type=int, default=DEFAULT_STACK)
     p.add_argument("--cookie-config",
                    default=os.path.expanduser("~/.openclaw/workspace/skills/yuque-ai-mcp/config/config.json"))
-    p.add_argument("--wait", type=int, default=10)
+    p.add_argument("--wait", type=int, default=30,
+                  help="建库后等待秒数(默认 30; 2026-10-13 两次实踩需 ~45s+ 才可移, 旧默认 10 不够)")
     p.add_argument("--no-wait", action="store_true", help="跳过移动前等待（重复移动用）")
     p.set_defaults(fn=cmd_move_stack)
 
