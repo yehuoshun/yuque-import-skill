@@ -9,6 +9,11 @@
       "url": "https://github.com/aoaostar/legado",
       "enabled": true,
       "watch": false
+    },
+    {
+      "url": "https://github.com/swjybky/deepwrite",
+      "enabled": true,
+      "watch": false
     }
   ]
 }
