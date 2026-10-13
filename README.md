@@ -55,7 +55,7 @@ scripts/
   yuque_rst_convert.py      Sphinx/reST 工程 → Markdown（docutils 中间层, 2026-10-13）
   yuque_import_all.py       批量编排器（清单/账本/四查/钉钉, GitHub Actions 用）
 repos.json                  开源项目导入清单（url/enabled/watch）
-last-imported.json          导入账本（commit/book_id/book_url, 成功才更新）
+last-imported.json          导入账本（commit/book_id/book_url[slug 形式, 2026-10-13 起不含 username], 成功才更新）
 .github/workflows/
   import-repos.yml          开源项目批量导入（workflow_dispatch, 账本去重+镜像缓存）
   notify.yml                钉钉事件通知（仓库标配）
