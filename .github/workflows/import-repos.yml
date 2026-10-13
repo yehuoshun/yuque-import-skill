@@ -61,4 +61,6 @@ jobs:
           git add last-imported.json repos.json
           git diff --cached --quiet || git commit -m "chore: 更新开源项目导入账本"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/yehuoshun/yuque-import-skill.git"
+          # 2026-10-14: 导入期间 main 可能已被推进(本次 run 内就推了 v1.2.7~12), 先 rebase 再 push 防 non-fast-forward
+          git pull --rebase origin main
           git push origin main

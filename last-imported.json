@@ -4,5 +4,11 @@
     "book_id": 84515424,
     "book_url": "free-programming-books-2574d859",
     "imported_at": "2026-10-13T07:53:02+0800"
+  },
+  "https://github.com/aoaostar/legado": {
+    "commit": "0f7dc17",
+    "book_id": 84524942,
+    "book_url": "legado-0f7dc17",
+    "imported_at": "2026-10-13T13:33:25+0800"
   }
 }
