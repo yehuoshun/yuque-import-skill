@@ -4,6 +4,11 @@
       "url": "https://github.com/EbookFoundation/free-programming-books",
       "enabled": true,
       "watch": false
+    },
+    {
+      "url": "https://github.com/aoaostar/legado",
+      "enabled": true,
+      "watch": false
     }
   ]
 }
