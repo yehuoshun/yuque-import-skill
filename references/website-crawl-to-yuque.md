@@ -20,6 +20,8 @@
    grep -o "index.html" site/*.md | wc -l             # 站内链接残留 = 0
    tail -3 site/*.md                                  # 尾部抽查(模板尾巴/导航链接)
    grep -c '${' site/*.md                              # JS 模板尾巴 = 0
+   for f in site/*.md; do tail -2 "$f"; done          # 尾部全量扫(2026-10-13 老板抓包: 底部面包屑导航只在尾部, 前四项抓不到)
+   grep -lE '上一页|下一页|»|目录|导航' site/*.md        # 导航特征词(含尾部) = 0
    ```
 5. **建库 + 移分组 + 导入**（走 `github-repo-to-yuque.md` 的 create-book/move-stack + `yuque_tree_import.py`）
 6. **验收四查**：TOC 数==本地 / 错位 0 / 幽灵文档 0 / 深层抽查；含中文必查 word_count==0（v1.1.5 已单篇内置）
@@ -57,3 +59,5 @@
 | nulab.com（Gatsby） | page-data.json 正文 | 评论区 | 图片抠图按 slug 分目录 |
 | blynn gitmagic（DocBook） | `<div class="content">` | navfooter | 全站无表格 |
 | liaoxuefeng.com（Tailwind） | 侧边栏后 `<h1` | `<div class="comment-form"` | 必须先剥 script；作者卡片在正文前 |
+| snowdream86.gitbooks.io（GitBook 单页） | `<section class="normal" id="section-..."` | `</section>` | 单页书按 h3 切分（2026-10-13） |
+| worldhello.net/gotgithub（老版 Sphinx） | `<div class="body"` 后 `<div class="section"` | **`<div class="related"`（底部导航, 不是 footer!）** | 布局=正文→底部导航→footer, 终点选 footer 会混入面包屑（2026-10-13 老板抓包）；图片包在 `<a class="reference internal image-reference">` 里要先剥壳；Sphinx 无 alt 时 alt=src 路径要清洗 |

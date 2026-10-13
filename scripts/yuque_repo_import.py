@@ -100,7 +100,17 @@ def cmd_create_book(args):
     payload = {"name": args.name, "slug": args.slug or None, "description": args.desc or "",
                "public": int(args.public)}
     payload = {k: v for k, v in payload.items() if v is not None}
-    d = api(token, BASE, "POST", f"/users/{args.login}/repos", payload)
+    # slug 撞名兜底(2026-10-13 老板定策略): 冲突时自动追加 -2/-3 序号重试
+    #   策略: 开源项目 = 项目名-commit(天然防撞); 网站/自定义 = 网站名-YYYYMMDD, 同日同站会撞 → 序号兜底
+    for attempt in range(1, 6):
+        try:
+            d = api(token, BASE, "POST", f"/users/{args.login}/repos", payload)
+            break
+        except RuntimeError as e:
+            if "422" not in str(e) or "slug" not in str(e) or attempt == 5 or not args.slug:
+                raise
+            print(f"[create-book] slug {payload.get('slug')} 冲突, 追加 -{attempt + 1} 重试", flush=True)
+            payload["slug"] = f"{args.slug}-{attempt + 1}"
     data = d.get("data", d)
     print(f"[create-book] id={data.get('id')} name={data.get('name')} slug={data.get('slug')}")
     print(f"[create-book] 下一步: move-stack --book-id {data.get('id')} --stack-id {args.stack_id}")

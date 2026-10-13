@@ -90,15 +90,22 @@ def img_md(m, page_dir, up):
     tag = m.group(0)
     src_m = re.search(r'src="([^"]*)"', tag)
     alt_m = re.search(r'alt="([^"]*)"', tag)
+    import urllib.parse as _up, re as _re
     src = src_m.group(1) if src_m else ""
     alt = (alt_m.group(1) if alt_m else "").strip()
-    if src.startswith(("data:", "http://", "https://", "/static", "$")):
+    # Sphinx 没写 alt 时会把 src 路径塞进 alt → 按路径特征清掉(2026-10-13 实捶)
+    if alt and ("/" in alt or _re.search(r"\.(png|jpe?g|gif|webp|svg)$", alt, _re.I)):
+        alt = ""
+    if src.startswith(("data:", "$")):
         return tag
+    # 相对路径 → 绝对 URL(必须先于"跳过外链"判断, 否则归一化后全被跳过, 图全丢)
+    if not src.startswith(("http://", "https://")):
+        src = _up.urljoin(page_dir.rstrip("/") + "/", src)
     mp = _load_img_map()
     if src in mp:
         return f"![{alt}]({mp[src]})"
     try:
-        raw = fetch(page_dir + "/" + src)
+        raw = fetch(src)
         tmp = os.path.join("/tmp", "crawl-img-" + os.path.basename(src))
         with open(tmp, "wb") as f:
             f.write(raw)
@@ -112,7 +119,21 @@ def img_md(m, page_dir, up):
             return f"![{alt}]({url})"
     except Exception as e:
         print(f"    img FAIL {src}: {e}", flush=True)
-    return f"![{alt}]({page_dir}/{src})"
+    return f"![{alt}]({src})"
+
+
+def table_md(inner):
+    """<table> → markdown 管道表(2026-10-13 加: GitBook/Sphinx 老站都有表格, 原模板会拍平成一段)"""
+    rows = re.findall(r"<tr[^>]*>(.*?)</tr>", inner, re.S)
+    out = []
+    for r in rows:
+        cells = re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", r, re.S)
+        out.append("| " + " | ".join(inline(c) for c in cells) + " |")
+    if len(out) >= 2:
+        n = out[0].count("|") - 1
+        sep = "|" + "|".join("---" for _ in range(n)) + "|"
+        return "\n".join([out[0], sep] + out[1:])
+    return "\n".join(out)
 
 def html_to_md(html, page_dir, up):
     """正文窗口: 先剥 script/style/link/注释 → nav_end 之后第一个 content_start → content_end_re"""
@@ -127,10 +148,12 @@ def html_to_md(html, page_dir, up):
     end = start + cm.start() if cm else html.rfind("</body>")
     body = html[start:end]
     body = re.sub(r'<a name="[^"]*"></a>', "", body)
+    # Sphinx 图片常包在 <a class="reference internal image-reference"> 里 → 先剥外壳只留 <img>(2026-10-13)
+    body = re.sub(r'<a class="reference internal image-reference"[^>]*>(<img[^>]*>)</a>', r"\1", body)
     body = re.sub(r"<img\b[^>]*>", lambda m: img_md(m, page_dir, up), body)
     out = []
     pos = 0
-    block_re = re.compile(r"<(h[1-4]|pre|p|li|dt|dd)([^>]*)>(.*?)</\1>", re.S)
+    block_re = re.compile(r"<(h[1-4]|pre|p|li|dt|dd|table)([^>]*)>(.*?)</\1>", re.S)
     def emit_gap(gap):
         t = inline(gap)
         if t:
@@ -148,6 +171,10 @@ def html_to_md(html, page_dir, up):
             code = h.unescape(re.sub(r"<[^>]+>", "", inner)).strip("\n")
             if code:
                 out.append("\n```\n" + code + "\n```")
+        elif tag == "table":
+            t = table_md(inner)
+            if t:
+                out.append("\n" + t)
         elif tag == "p":
             t = inline(inner)
             if t:
@@ -187,10 +214,10 @@ def postprocess(text, url2md):
         lines.append(ln)
     def rewrite(m):
         text2, href = m.group(1), m.group(2)   # ①文字 ②URL!
-        clean = href.lstrip("./")
+        clean = href.lstrip("./").split("#")[0]  # 去锚点 fragment(否则目录链接匹配不上, 2026-10-13)
         for u, fname in url2md.items():
             if clean == u.strip("/") or clean.endswith(u.strip("/")) or u.strip("/").endswith(clean):
-                return "[%s](%s)" % (text2, fname)
+                return text2.strip()  # 站内链接 → 纯文字: 语雀平铺文档模型不支持相对路径互链, md 文件引用是死链
         return m.group(0)
     if SITE.get("link_rewrite"):
         pat = re.compile(r"\[([^\]]*)\]\(([^)]*)\)")
@@ -221,6 +248,9 @@ def main():
         url2md[s["base"] + "/" + rel] = fname
     for fname, path in s["pages"]:
         page_dir = s["base"] + "/" + path.rsplit("/", 1)[0]
+        d = os.path.dirname(os.path.join(s["out"], fname))
+        if d:
+            os.makedirs(d, exist_ok=True)  # 嵌套子目录预建(2026-10-13: 缺了子页全写失败)
         try:
             html = fetch(s["base"] + "/" + path).decode("utf-8", "ignore")
             md = html_to_md(html, page_dir, up)
