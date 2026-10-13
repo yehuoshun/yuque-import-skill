@@ -73,5 +73,5 @@ def build_path_map(toc):
 
 - 断点文件建议放工作目录外（如 tmp/），每节点一次 `os.replace` 原子落盘
 - 语雀无严格 QPS 限制，但 429 偶发，指数退避 2^n×1.5s + 1s，4 次重试足够
-- 单文档 body 上限 4MB（2026-10-06 Shadowbus 实战确认）：>4MB 报 HTTP 400 `body is too large`。文本超 200KB 即自动多段拆分（标题 `xxx (1/N)`/`(2/N)`，每段 ≤200KB 留 JSON 转义余量，内容零丢失；阈值 `--max-body` 可调，默认 200KB=语雀端渲染卡顿阈值，2026-10-13 老板定）；二进制文件（如 PNG）会被 `errors=replace` 文本化膨胀放大（3.4MB PNG → 6MB body），**图片类已改走 Web API 上传 CDN**（`POST /api/upload/attach?type=image`，需 Cookie + ctoken + Referer/Origin 头，图片上限 20MB），非图片二进制自动占位说明
+- 单文档 body 上限 4MB（2026-10-06 Shadowbus 实战确认）：>4MB 报 HTTP 400 `body is too large`。文本超 1MB 即自动多段拆分（标题 `xxx (1/N)`/`(2/N)`，每段 ≤1MB 留 JSON 转义余量，内容零丢失；阈值 `--max-body` 可调，默认 1MB=代码文件硬拆太伤，2026-10-13 老板定，后期渲染仍卡再调小）；二进制文件（如 PNG）会被 `errors=replace` 文本化膨胀放大（3.4MB PNG → 6MB body），**图片类已改走 Web API 上传 CDN**（`POST /api/upload/attach?type=image`，需 Cookie + ctoken + Referer/Origin 头，图片上限 20MB），非图片二进制自动占位说明
 - walk 不排除 .git：clone 的仓库直接导入会把 .git 也导进去，先 rsync/cp 排除 .git 或用干净副本
