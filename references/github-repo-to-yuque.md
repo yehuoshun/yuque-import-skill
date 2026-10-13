@@ -11,7 +11,7 @@
 | slug | **老板 2026-10-13 定策略**：开源项目 = `项目名-commit`（天然防撞，同 repo 不同 commit 不同 slug）；网站/自定义 = `网站名-YYYYMMDD`（同日同站会撞 → create-book 已内置撞名兜底：422 时自动追加 `-2/-3` 序号重试）；slug 为 v2 API 必填字段（不传 422 missing_field，官方不会自动生成） |
 | 描述 | `<repo url> @ <commit>`（如 `https://github.com/swjybky/deepwrite @ 85577e7`） |
 | 知识库分组 | **开源项目**（stack id `57018723`） |
-| 归属 | 私人空间 yehuoshun 下（`/users/yehuoshun/repos`） |
+| 归属 | 私人空间下（`/users/<用户名>/repos`） |
 | 可见性 | private（public=0） |
 | 中间产物 | 镜像 / 干净副本 / 账本 / 日志一律放 `workspace/tmp/`（沙箱重启会清 `/tmp`） |
 
@@ -87,7 +87,7 @@
 
 ```
 yuque_repo_import.py prep         --url <git-url> --dir <工作目录>
-yuque_repo_import.py create-book  --name <项目名（commit）> --slug <项目名-commit> --desc <url @ commit> [--login yehuoshun] [--stack-id 57018723]
+yuque_repo_import.py create-book  --name <项目名（commit）> --slug <项目名-commit> --desc <url @ commit> [--login <用户名>] [--stack-id 57018723]
 yuque_repo_import.py move-stack   --book-id <id> --stack-id 57018723 [--wait 30] [--no-wait]  # v1.2.2: 重发+验证循环
 ```
 

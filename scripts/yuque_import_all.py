@@ -8,7 +8,7 @@ prep(克隆/增量) → commit 账本去重 → create-book → move-stack → �
 
 用法:
   python3 yuque_import_all.py --repos repos.json --ledger last-imported.json \
-      [--stack-id 57018723] [--workdir <dir>] [--login yehuoshun] \
+      [--stack-id 57018723] [--workdir <dir>] [--login <用户名>] \
       [--pend-sleep 60] [--pend-retries 3] [--only <过滤词>] [--dry] [--no-notify]
 
 约定（2026-10-12 老板固化）:
@@ -30,6 +30,14 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 BASE = "https://www.yuque.com/api/v2"
 DEFAULT_STACK = 57018723       # 开源项目
 DEFAULT_LOGIN = "yehuoshun"
+
+
+def book_slug(v):
+    """book_url 归一为 slug: 兼容旧账本完整 URL(含 username), 新账本只存 slug
+    (2026-10-13 老板隐私要求: username 不落盘, 展示/账本一律隐藏 yuque.com/<username>/ 前缀)."""
+    if not v:
+        return v
+    return v.rstrip("/").rsplit("/", 1)[-1]
 
 
 def run_script(name, args, env=None):
@@ -164,7 +172,7 @@ def dingtalk(text):
 
 # ---------- 主流程 ----------
 def import_one(url, workdir, ledger, args):
-    """返回 (status, repo, commit, book_id, book_url, errors); status: ok/skip/fail"""
+    """返回 (status, repo, commit, book_id, book_url, errors); status: ok/skip/fail; book_url 为 slug(不含 username)"""
     errors = []
     r = run_script("yuque_repo_import.py", ["prep", "--url", url, "--dir", workdir])
     info = prep_parse(r.stdout)
@@ -175,7 +183,7 @@ def import_one(url, workdir, ledger, args):
     prev = ledger.get(url, {})
     if prev.get("commit") == commit:
         # commit 未变 → 跳过（dry 模式同样只走到这里, 不算新导入）
-        return "skip", repo, commit, prev.get("book_id"), prev.get("book_url"), None
+        return "skip", repo, commit, prev.get("book_id"), book_slug(prev.get("book_url")), None
 
     if args.dry:
         return "skip", repo, commit, None, None, None
@@ -212,7 +220,7 @@ def import_one(url, workdir, ledger, args):
 
     errors += verify(book_id, progress)
 
-    book_url = f"https://www.yuque.com/{args.login}/{slug}"
+    book_url = slug  # 2026-10-13 老板隐私要求: 只存 slug, username 不落盘不展示
     return "ok", repo, commit, book_id, book_url, errors
 
 
