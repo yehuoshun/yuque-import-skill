@@ -1,4 +1,4 @@
-# yuque-import-skill 🦞
+# yuque-import-skill
 
 语雀知识库**全量目录导入** skill：把本地目录树整棵搬进语雀，文件夹=目录节点、文件=文档，层级与磁盘一致。
 
