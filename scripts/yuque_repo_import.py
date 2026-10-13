@@ -147,16 +147,19 @@ def cmd_move_stack(args):
         time.sleep(args.wait)
     # ⚠️ 正确端点是 PUT /api/mine/book_stack/move（2026-08-31 MCP 源码修复实捶）：
     # 旧实现 PUT /api/books/{id} + {"stack_id": N} 返回成功但实际不生效（本 wrapper 初版实踩：库落进「其他」分组）
-    d = web_api(cfg, "PUT", "https://www.yuque.com/api/mine/book_stack/move",
-                {"targetStackId": int(args.stack_id), "targetBookIds": [int(args.book_id)]})
-    print(f"[move-stack] 移动响应: {json.dumps(d, ensure_ascii=False)[:200]}")
-    # 验证：move 接口成功/失败都返回 200+{}，必须回查 book_stacks 确认落在目标分组（带重试）
-    # 2026-10-12 gitmagic 实测: PUT 生效但需 ~3s 才在 book_stacks 可见, 3x1.5s 不够 → 6x3s
-    # 2026-10-13 两次实踩（free-programming-books/github-help）: 新建库 10s+6x3s 仍不够,
-    #   库落「其他」; 等 ~45s 后重跑才归位 → 验证轮次 6→10 (总窗口 ≈ 30s+30s=60s)
+    # 2026-10-13 三次实踩规律：首次 PUT 常静默无效(返回 {}), 传播需 30s~4min+;
+    #   仅重试验证(10x3s)在第三例仍失败 → v1.2.2 改为【每轮重发 PUT(幂等) + 验证】, 轮间 20s
+    #   总窗口 ≈ 等待 + 10×(20s+3s) ≈ 30s+230s ≈ 4.3min
     for attempt in range(10):
+        if attempt > 0:
+            time.sleep(20)
+        d = web_api(cfg, "PUT", "https://www.yuque.com/api/mine/book_stack/move",
+                    {"targetStackId": int(args.stack_id), "targetBookIds": [int(args.book_id)]})
+        print(f"[move-stack] 第 {attempt + 1} 次移动响应: {json.dumps(d, ensure_ascii=False)[:120]}", flush=True)
+        # 验证：move 接口成功/失败都返回 200+{}，必须回查 book_stacks 确认落在目标分组
         time.sleep(3)
         stacks = web_api(cfg, "GET", "https://www.yuque.com/api/mine/book_stacks")
+
         def find_stack(o):
             if isinstance(o, dict):
                 if o.get("id") == int(args.stack_id):
@@ -171,13 +174,15 @@ def cmd_move_stack(args):
                     if r:
                         return r
             return None
+
         s = find_stack(stacks)
         books = s.get("books", []) if isinstance(s, dict) else []
         if any(str(b.get("id")) == str(args.book_id) for b in books):
             print(f"[move-stack] 验证通过: {args.book_id} ∈ {s.get('name')} (stack {args.stack_id}) ✅")
             return 0
-        print(f"[move-stack] 验证第 {attempt + 1} 次未通过，重试...")
-    raise RuntimeError(f"验证失败: 库 {args.book_id} 不在分组 {args.stack_id}({s and s.get('name')})")
+        print(f"[move-stack] 验证第 {attempt + 1} 次未通过，重试...", flush=True)
+    raise RuntimeError(f"验证失败: 库 {args.book_id} 不在分组 {args.stack_id}({s and s.get('name')}); "
+                       f"稍等几分钟重跑 move-stack --no-wait 通常可归位")
 
 
 def main():
