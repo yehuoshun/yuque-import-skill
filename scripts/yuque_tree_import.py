@@ -160,7 +160,7 @@ def fmt_content(path, up=None, max_body=1_000_000):
         segs.append("".join(cur))
     out = []
     for i, s in enumerate(segs):
-        unit, val = ("MB", round(MAX_BODY / 1048576)) if MAX_BODY >= 1048576 else ("KB", round(MAX_BODY / 1024))
+        unit, val = ("MB", round(MAX_BODY / 1048576)) if MAX_BODY >= 1_000_000 else ("KB", round(MAX_BODY / 1024))
         note = "\n\n<!-- 分段 %d/%d: 原文件 %d MB 超 %d%s 阈值, 已拆分为多文档 -->\n" % (i + 1, len(segs), size // 1048576, val, unit)
         suffix = " (%d/%d)" % (i + 1, len(segs)) if len(segs) > 1 else ""
         out.append((suffix, wrap(s) + note))
