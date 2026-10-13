@@ -186,7 +186,7 @@ def import_one(url, workdir, ledger, args):
 
     r = run_script("yuque_repo_import.py",
                    ["create-book", "--name", name, "--slug", slug, "--desc", desc,
-                    "--login", args.login, "--stack-id", args.stack_id])
+                    "--login", args.login, "--stack-id", str(args.stack_id)])
     if r.returncode != 0:
         return "fail", repo, commit, None, None, [f"create-book 失败: {r.stderr[-300:] or r.stdout[-300:]}"]
     book_id = create_book_parse(r.stdout)
