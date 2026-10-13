@@ -67,3 +67,7 @@ references/
 ## 验证记录
 
 - 2026-10-05：sts2-res（sts2.dll 反编译源码）3921 节点 → 语雀「sts2-0.107.1（杀戮尖塔2）」知识库，零重复零缺失零错位
+
+## 相关项目
+
+- [cnblogs-to-yuque](https://github.com/yehuoshun/cnblogs-to-yuque)：博客园文章 → 语雀自动采集（GitHub Actions 定时，RSS → 全文 → Markdown → 传图 CDN → 建文档 → state.json 去重）。同属「内容 → 语雀」工具族：它管单站定时采集，本 skill 管批量/手动导入（目录树、GitHub 开源项目、网站抓取），共享语雀 v2 API 链路（建文档、attach 传图、去重账本）。
