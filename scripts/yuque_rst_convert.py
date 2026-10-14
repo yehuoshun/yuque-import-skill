@@ -29,6 +29,11 @@ BLOCK_RE = re.compile(r"<(h[1-6]|pre|p|li|dt|dd|table|blockquote)([^>]*)>(.*?)</
 
 def inline(t):
     """行内元素 → markdown。链接: 外链保留, 内部锚点/脚注降级为纯文字"""
+    # <img> → markdown 图片（2026-10-15 补: 此前 .. image:: 整张丢失）
+    def _img(m):
+        attrs = dict(re.findall(r'([\w-]+)="([^"]*)"', m.group(0)))
+        return "![%s](%s)" % (attrs.get("alt", ""), attrs.get("src", ""))
+    t = re.sub(r"<img[^>]*/?>", _img, t, flags=re.S)
     # 脚注/引文引用标记（docutils html5: role=doc-noteref/doc-backlink）→ 必须先于链接正则整体去掉
     t = re.sub(r'<a[^>]*role="doc-(?:noteref|backlink)"[^>]*>.*?</a>', "", t, flags=re.S)
     t = re.sub(r"<br\s*/?>", "\n", t)
@@ -64,7 +69,7 @@ def html_to_md(body):
     body = re.sub(r'<(aside|dl)[^>]*class="(?:footnote|citation)[^"]*"[^>]*>.*?</\1>', "", body, flags=re.S)
     # note/tip 提示框 → blockquote
     def admon(m):
-        inner = m.group(1)
+        inner = m.group(2)  # 2026-10-15: 正则加 (div|aside) 捕获组后组号移位, group(2) 才是内容
         title = ""
         tm = re.search(r'<p[^>]*class="[^"]*admonition-title[^"]*"[^>]*>(.*?)</p>', inner, re.S)
         if tm:
@@ -77,7 +82,7 @@ def html_to_md(body):
             if t:
                 lines.append("> " + t)
         return "\n".join(lines)
-    body = re.sub(r'<div class="admonition[^"]*">(.*?)</div>', admon, body, flags=re.S)
+    body = re.sub(r'<(div|aside) class="admonition[^"]*">(.*?)</\1>', admon, body, flags=re.S)
 
     out = []
     pos = 0
@@ -103,7 +108,7 @@ def html_to_md(body):
         elif tag == "blockquote":
             t = inline(inner)
             if t:
-                out.append("\n" + t)
+                out.append("\n> " + t.replace("\n", "\n> "))
         elif tag == "p":
             t = inline(inner)
             if t:
@@ -130,6 +135,9 @@ def html_to_md(body):
 
 def rst_to_md(path):
     src = open(path, encoding="utf-8", errors="replace").read()
+    src = src.replace("\ufeff", "")  # 去 BOM（2026-10-15: 否则首行指令/正则被 \ufeff 卡住, epigraph 原文泄漏）
+    # 段落尾 `::` + 空行 + 列0指令（无缩进 literal 内容）→ docutils 会把指令吞进 literal 块, 收成单冒号（2026-10-15 补）
+    src = re.sub(r"::\s*\n\s*\n(?=\.\. )", ":\n\n", src)
     parts = publish_parts(source=src, writer_name="html5",
                           settings_overrides={"initial_header_level": 1,
                                               "report_level": 5, "halt_level": 5,

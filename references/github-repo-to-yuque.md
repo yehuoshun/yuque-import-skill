@@ -95,3 +95,11 @@ yuque_repo_import.py move-stack   --book-id <id> --stack-id 57018723 [--wait 30]
 
 token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/credentials.env`；cookie 默认读
 `skills/yuque-ai-mcp/config/config.json`（可用 `--cookie-config` 覆盖）。
+
+**rst 转换器已踩坑补充（2026-10-15 HgInit 实战，v1.3.12）**：
+- BOM（`\ufeff`）卡首行指令/正则 → 转换前整体剥离（epigraph 原文泄漏真因）
+- `.. image::` 全丢 → inline() 补 `<img>`→`![alt](src)`；图片文件夹（如 `_images/`）别进导入根目录，先 `upload_image` 传 CDN + 重写 md 引用，再只导 md（否则每张图变成独立占位文档）
+- docutils html5 提示框是 `<aside class="admonition">` 不是 div；正则加捕获组后 `admon()` 的 group 号会移位
+- blockquote 分支补 `> ` 前缀（epigraph 引语）
+- 段落尾 `::` + 空行 + 列 0 指令 → 指令被吞进 literal 块，`::` 收成单冒号
+- Sphinx `:doc:` 跨文档角色在语雀是死链 → 剥成纯文本
