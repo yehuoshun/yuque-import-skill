@@ -89,6 +89,9 @@ def cmd_prep(args):
     dirs = sum(1 for _, is_dir in nodes if is_dir)
     print(f"[prep] repo={name} branch={branch} commit={commit}")
     print(f"[prep] nodes={len(nodes)} (dir {dirs} / file {files})")
+    if len(nodes) > 5000:
+        print(f"[prep] ⚠️ 节点数 {len(nodes)} 超语雀知识库上限 5000，必须分库"
+              f"（按顶层目录拆多个库，命名 项目名-<顶层目录>（commit）；2026-10-14 老板拍板）", flush=True)
     print(f"[prep] clean_dir={clean}")
     print(f"[prep] 下一步: create-book + move-stack + yuque_tree_import.py --root {clean} --book <book_id>")
     return 0
