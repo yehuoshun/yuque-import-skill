@@ -10,5 +10,11 @@
     "book_id": 84564704,
     "book_url": "legado-6231e69",
     "imported_at": "2026-10-14T21:20:00+0800"
+  },
+  "https://github.com/swjybky/deepwrite": {
+    "commit": "2fd91bc",
+    "book_id": 84564873,
+    "book_url": "deepwrite-2fd91bc",
+    "imported_at": "2026-10-14T22:45:00+0800"
   }
 }
