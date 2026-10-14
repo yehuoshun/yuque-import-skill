@@ -107,9 +107,14 @@ python3 scripts/yuque_tree_import.py --root <clean_dir> --book <book_id> --progr
 
 完整 SOP + 坑清单：`references/github-repo-to-yuque.md`（必读，含 7 条踩过的坑）。
 
-## 网站抓取导入（网页 → 语雀，2026-10-13 固化）
+## 网站抓取导入（网页 → 语雀，2026-10-13 固化，2026-10-14 补命名规范）
 
-触发模板：「把 `<网址>` 抓取到语雀」。通用爬虫模板 `scripts/yuque_website_crawl.py`（复制后改 SITE 配置区）+ 完整 SOP `references/website-crawl-to-yuque.md`（正文窗口定位方法论 + 图片 CDN 方案 + 产物级验证清单 + 4 站实战案例）。
+触发模板：「把 `<网址>` 抓取到语雀」。规范：库名 `网站名（日期）`（日期=导入日，如 2026-10-14）、分组「文章收集」（stack 36149506）、描述带源站 URL。通用爬虫模板 `scripts/yuque_website_crawl.py`（复制后改 SITE 配置区）+ 完整 SOP `references/website-crawl-to-yuque.md`（正文窗口定位方法论 + 图片 CDN 方案 + 产物级验证清单 + 4 站实战案例）。
+
+```bash
+python3 scripts/yuque_repo_import.py create-book --name "<网站名>（<日期>）" --slug <语义化英文slug> --desc "<源站 URL> | 导入 <日期>"
+python3 scripts/yuque_repo_import.py move-stack --book-id <book_id> --stack-id 36149506
+```
 
 核心铁律：**先剥 script/style 再切窗；窗口终点用标签形式标记（禁裸字符串 find）；链接重写正则 group(1)=文字 group(2)=URL；验证只看产物不看日志**。
 
