@@ -16,6 +16,7 @@
   - 限流重试: 429/5xx 指数退避
   - 内容格式: .md 原样 / .cs → ```csharp / 其余 → ``` 纯文本
   - 超限自动处理: 二进制文件→占位说明; 文本超 512KB(可调 --max-body)→自动切块+注记(默认 512KB, 2026-10-14 老板定: 1MB 语雀端加载慢)
+  - 切分策略(2026-10-14 老板定): 按语义边界切, 禁硬拆——JSON 顶层数组按条目边界(每段可解析), 其余按行边界(不切破行); 每段带头部范围注记
 """
 import argparse, json, os, sys, time, urllib.request, urllib.error, uuid
 
@@ -113,6 +114,110 @@ def walk(root, excludes=None):
         nodes.append((p, False))
     return nodes
 
+FENCE_LANG = {
+    ".json": "json", ".ts": "ts", ".tsx": "tsx", ".js": "js", ".mjs": "js", ".cjs": "js",
+    ".vue": "vue", ".py": "python", ".sh": "bash", ".bash": "bash", ".yml": "yaml",
+    ".yaml": "yaml", ".css": "css", ".scss": "scss", ".less": "less", ".html": "html",
+    ".xml": "xml", ".sql": "sql", ".java": "java", ".go": "go", ".rs": "rust",
+    ".c": "c", ".h": "c", ".cpp": "cpp", ".hpp": "cpp", ".cs": "csharp", ".rb": "ruby",
+    ".php": "php", ".kt": "kotlin", ".swift": "swift", ".toml": "toml", ".ini": "ini",
+    ".conf": "conf", ".lock": "", ".txt": "", ".log": "",
+}
+
+
+def _human(n):
+    return ("%.1f MB" % (n / 1048576)) if n >= 1048576 else ("%d KB" % max(1, round(n / 1024)))
+
+
+def _first_name(obj):
+    """从 JSON 元素里挑一个像名字的字段, 给分段注记用。"""
+    if isinstance(obj, dict):
+        for k in ("bookSourceName", "name", "title", "id", "key", "url"):
+            v = obj.get(k)
+            if isinstance(v, str) and v.strip():
+                return v.strip().replace("\n", " ")[:40]
+    return ""
+
+
+def _json_text(parts, a, b):
+    return "[\n" + ",\n".join(parts[a:b]) + "\n]"
+
+
+def _json_desc(items, a, b, total):
+    nm = _first_name(items[a])
+    return "第 %d-%d 个条目（共 %d 个）" % (a + 1, b, total) + (" · 首条「%s」" % nm if nm else "")
+
+
+def _split_json_list(items, limit):
+    """JSON 顶层数组 → 按元素边界切: 每段都是完整条目, 绝不切破记录。"""
+    total = len(items)
+    parts = [json.dumps(it, ensure_ascii=False, indent=2) for it in items]
+    out, cur, n, start = [], [], 0, 0
+    for idx, s in enumerate(parts):
+        sb = len(s.encode("utf-8")) + 2
+        if sb > limit:                                  # 单条自身超限: 不切, 单独成段
+            if cur:
+                out.append((_json_text(cur, start, idx), _json_desc(items, start, idx, total)))
+                cur, n, start = [], 0, idx
+            out.append((s, "第 %d 个条目（单条超限）" % (idx + 1)))
+            start = idx + 1
+            continue
+        if cur and n + sb > limit:
+            out.append((_json_text(cur, start, idx), _json_desc(items, start, idx, total)))
+            cur, n, start = [], 0, idx
+        cur.append(s)
+        n += sb
+    if cur:
+        out.append((_json_text(cur, start, total), _json_desc(items, start, total, total)))
+    return out
+
+
+def _split_lines(text, limit):
+    """按行边界切分: 绝不切破行（单行自身超限时才硬切该行）。"""
+    lines = text.splitlines(keepends=True)
+    total = len(lines)
+    out, cur, n, start = [], [], 0, 0
+
+    def flush(end):
+        out.append(("".join(cur), "第 %d-%d 行（共 %d 行）" % (start + 1, end, total)))
+
+    for idx, ln in enumerate(lines):
+        lb = len(ln.encode("utf-8"))
+        if lb > limit:                                  # 超长单行: 只能硬切, 罕见
+            if cur:
+                flush(idx)
+                cur, n = [], 0
+            p = 0
+            while p < len(ln):
+                q = p
+                while q < len(ln) and len(ln[p:q + 1].encode("utf-8")) <= limit:
+                    q += 1
+                out.append((ln[p:q], "第 %d 行（超长行切片）" % (idx + 1)))
+                p = q
+            start = idx + 1
+            continue
+        if cur and n + lb > limit:
+            flush(idx)
+            cur, n, start = [], 0, idx
+        cur.append(ln)
+        n += lb
+    if cur:
+        flush(total)
+    return out
+
+
+def split_semantic(text, limit, ext):
+    """按语义边界切分（2026-10-14 老板：硬拆影响观感）。返回 ([(段文本, 范围描述)], 切分方式)。"""
+    if ext == ".json":
+        try:
+            d = json.loads(text)
+        except Exception:
+            d = None
+        if isinstance(d, list) and d:
+            return _split_json_list(d, limit), "JSON 条目边界"
+    return _split_lines(text, limit), "行边界"
+
+
 def fmt_content(path, up=None, max_body=524_288):
     """返回 [(标题后缀, body), ...]: 超限文本自动多段拆分, 二进制→占位说明."""
     ext = os.path.splitext(path)[1].lower()
@@ -137,31 +242,22 @@ def fmt_content(path, up=None, max_body=524_288):
                 name = os.path.basename(path)
                 return [("", "![%s](%s)\n\n<!-- 图片 %d MB 已上传语雀 CDN, 展示见上 -->\n" % (name, url, size // 1048576))]
         return [("", "<!-- 二进制文件 %d MB, 跳过内容导入(语雀 body 上限 4MB), 原文件见 GitHub -->\n" % (size // 1048576))]
+    lang = FENCE_LANG.get(ext, "")
     if ext == ".md":
         wrap = lambda s: s
-    elif ext == ".cs":
-        wrap = lambda s: "```csharp\n" + s + "\n```"
     else:
-        wrap = lambda s: "```\n" + s + "\n```"
+        wrap = lambda s: "```%s\n%s\n```" % (lang, s)
     body = wrap(text)
     # 超限自动分段(留余量给 JSON 转义膨胀): 默认 512KB(老板 2026-10-14 定: 1MB 语雀端加载慢), 可 --max-body 调
     MAX_BODY = max_body
     if len(body.encode("utf-8")) <= MAX_BODY:
         return [("", body)]
-    # 按字符边界切段, 每段(含包装+注记)不超 MAX_BODY
-    limit = MAX_BODY - 512
-    segs, cur, cur_bytes = [], [], 0
-    for ch in text:
-        b = len(ch.encode("utf-8"))
-        if cur_bytes + b > limit and cur:
-            segs.append("".join(cur)); cur, cur_bytes = [], 0
-        cur.append(ch); cur_bytes += b
-    if cur:
-        segs.append("".join(cur))
+    # 语义/行边界切分(2026-10-14 老板: 硬拆影响观感): 不切破行、不切破 JSON 记录
+    segs, mode = split_semantic(text, MAX_BODY - 1024, ext)
     out = []
-    for i, s in enumerate(segs):
-        unit, val = ("MB", round(MAX_BODY / 1048576)) if MAX_BODY >= 1_000_000 else ("KB", round(MAX_BODY / 1024))
-        note = "\n\n<!-- 分段 %d/%d: 原文件 %d MB 超 %d%s 阈值, 已拆分为多文档 -->\n" % (i + 1, len(segs), size // 1048576, val, unit)
+    for i, (s, desc) in enumerate(segs):
+        note = "\n\n<!-- 分段 %d/%d · %s · 源文件 %s 超限，按 %s 切分，内容零丢失 -->\n" % (
+            i + 1, len(segs), desc, _human(size), mode)
         suffix = " (%d/%d)" % (i + 1, len(segs)) if len(segs) > 1 else ""
         out.append((suffix, wrap(s) + note))
     return out

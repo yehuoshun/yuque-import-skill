@@ -73,5 +73,5 @@ def build_path_map(toc):
 
 - 断点文件建议放工作目录外（如 tmp/），每节点一次 `os.replace` 原子落盘
 - 语雀无严格 QPS 限制，但 429 偶发，指数退避 2^n×1.5s + 1s，4 次重试足够
-- 单文档 body 上限 4MB（2026-10-06 Shadowbus 实战确认）：>4MB 报 HTTP 400 `body is too large`。文本超 512KB 即自动多段拆分（标题 `xxx (1/N)`/`(2/N)`，每段 ≤512KB 留 JSON 转义余量，内容零丢失；阈值 `--max-body` 可调，**默认 512KB，2026-10-14 老板拍板：1MB 语雀端加载也要等很久**；上限别碰 4MB——语雀端直接打不开。后期渲染仍卡再调小）；二进制文件（如 PNG）会被 `errors=replace` 文本化膨胀放大（3.4MB PNG → 6MB body），**图片类已改走 Web API 上传 CDN**（`POST /api/upload/attach?type=image`，需 Cookie + ctoken + Referer/Origin 头，图片上限 20MB），非图片二进制自动占位说明
+- 单文档 body 上限 4MB（2026-10-06 Shadowbus 实战确认）：>4MB 报 HTTP 400 `body is too large`。文本超 512KB 即自动多段拆分（标题 `xxx (1/N)`/`(2/N)`，**按语义边界切分，禁硬拆**（2026-10-14 老板：硬拆影响观感）：JSON 顶层数组→按条目边界（每段是完整记录组成的可解析 JSON）；其余→按行边界（绝不切破行，单行自身超限才硬切）；每段头带范围注记（条目区间+首条名 / 行区间）。内容零丢失；阈值 `--max-body` 可调，**默认 512KB，2026-10-14 老板拍板：1MB 语雀端加载也要等很久**；上限别碰 4MB——语雀端直接打不开。后期渲染仍卡再调小）；二进制文件（如 PNG）会被 `errors=replace` 文本化膨胀放大（3.4MB PNG → 6MB body），**图片类已改走 Web API 上传 CDN**（`POST /api/upload/attach?type=image`，需 Cookie + ctoken + Referer/Origin 头，图片上限 20MB），非图片二进制自动占位说明
 - walk 不排除 .git：clone 的仓库直接导入会把 .git 也导进去，先 rsync/cp 排除 .git 或用干净副本
