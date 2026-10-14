@@ -233,7 +233,7 @@ def main():
     ap.add_argument("--login", default=DEFAULT_LOGIN)
     ap.add_argument("--pend-sleep", type=float, default=60, help="失败静置秒数(CI 里比默认 600 小)")
     ap.add_argument("--pend-retries", type=int, default=3)
-    ap.add_argument("--max-body", type=int, default=1_000_000, help="单文档 body 上限(字节), 透传给 tree_import; 默认 1MB(代码硬拆太伤, 2026-10-13 老板定)")
+    ap.add_argument("--max-body", type=int, default=524_288, help="单文档 body 上限(字节), 透传给 tree_import; 默认 512KB(2026-10-14 老板定: 1MB 语雀端加载慢)")
     ap.add_argument("--only", default="", help="只导匹配该子串的 repo")
     ap.add_argument("--dry", action="store_true", help="只跑 prep+账本去重, 不写语雀")
     ap.add_argument("--no-notify", action="store_true", help="不发钉钉")
