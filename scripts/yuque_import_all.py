@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-开源项目批量导入编排器（GitHub Actions / 手动通用）
+开源项目批量导入编排器（本地手动运行；GitHub Actions 版导入已于 2026-10-14 砍掉）
 
 把 repos.json 清单里的 GitHub 仓库按「开源项目流程」导入语雀：
 prep(克隆/增量) → commit 账本去重 → create-book → move-stack → 全量导入 → 对账 → 验收四查 → 记账 → 钉钉汇报
@@ -281,7 +281,7 @@ def main():
             lines += [f"⏭ 跳过 {len(skipped)} 个（commit 未变）: " + ", ".join(s["repo"] for s in skipped)]
         if failed:
             lines += [f"❌ 失败 {len(failed)} 个: " + ", ".join(f["repo"] for f in failed)]
-            lines += ["详情见 GitHub Actions 日志, 需人工介入"]
+            lines += ["详情见本地导入日志（CI 版 2026-10-14 已砍掉）, 需人工介入"]
         dingtalk("\n".join(lines))
 
     sys.exit(1 if failed else 0)
