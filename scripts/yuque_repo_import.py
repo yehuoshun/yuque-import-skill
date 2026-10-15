@@ -75,6 +75,19 @@ def cmd_prep(args):
         git(["clone", args.url, mirror])
     branch = default_branch(mirror)
     commit = short_commit(mirror, branch)
+    # 硬同步工作树到 origin/<branch>：只 fetch 不 reset 会拿到脏/旧工作树
+    # （2026-10-15 owllook cd207f9 事故：报新 commit、tar 出旧内容）
+    head = git(["rev-parse", "HEAD"], cwd=mirror).stdout.strip()
+    want = git(["rev-parse", f"origin/{branch}"], cwd=mirror).stdout.strip()
+    dirty = git(["status", "--porcelain"], cwd=mirror).stdout.strip()
+    if head != want or dirty:
+        try:
+            git(["checkout", "-f", branch], cwd=mirror)
+        except subprocess.CalledProcessError:
+            pass
+        git(["reset", "--hard", f"origin/{branch}"], cwd=mirror)
+        git(["clean", "-fdx"], cwd=mirror)
+        print(f"[prep] 工作树已硬同步 → {commit}")
     clean = os.path.join(work, f"{name}-{commit}-clean")
     if not os.path.isdir(clean):
         os.makedirs(clean, exist_ok=True)

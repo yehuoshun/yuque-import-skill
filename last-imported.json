@@ -22,5 +22,11 @@
     "book_id": 84565779,
     "book_url": "rea-ca1b2f860",
     "imported_at": "2026-10-15T01:15:00+0800"
+  },
+  "https://github.com/howie6879/owllook": {
+    "commit": "cd207f9",
+    "book_id": 84598454,
+    "book_url": "owllook-cd207f9",
+    "imported_at": "2026-10-15T12:45:35+0800"
   }
 }
