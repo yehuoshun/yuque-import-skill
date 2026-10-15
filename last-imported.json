@@ -34,5 +34,11 @@
     "book_id": 84605440,
     "book_url": "the-art-of-programming-by-july-7fafa61c",
     "imported_at": "2026-10-15T23:00:00+0800"
+  },
+  "https://github.com/DeathKing/Learning-SICP": {
+    "commit": "b60b706",
+    "book_id": 84605595,
+    "book_url": "learning-sicp-b60b706",
+    "imported_at": "2026-10-15T23:10:00+0800"
   }
 }
