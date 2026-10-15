@@ -66,12 +66,16 @@ bad = []
 for f, segs in multi:
     idx = []
     tot = set()
+    mixed = False
     for s in segs:
         m = SPLIT.match(s)
+        if not m:          # 同名纯文档 + 分片共存（重复节点残留）也算异常
+            mixed = True
+            continue
         idx.append(int(m.group('i')))
         tot.add(int(m.group('n')))
-    if sorted(idx) != list(range(1, len(segs) + 1)) or len(tot) != 1 or tot.pop() != len(segs):
-        bad.append((f, sorted(idx)))
+    if mixed or sorted(idx) != list(range(1, len(segs) + 1)) or len(tot) != 1 or tot.pop() != len(segs):
+        bad.append((f, sorted(idx), mixed))
 
 titles_all = [tuple(a + [b]) for a, b, _ in docs]
 print('本地文件           :', len(files))
