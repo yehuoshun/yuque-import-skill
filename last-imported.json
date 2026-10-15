@@ -40,5 +40,11 @@
     "book_id": 84605595,
     "book_url": "learning-sicp-b60b706",
     "imported_at": "2026-10-15T23:10:00+0800"
+  },
+  "http://i.linuxtoy.org/docs/guide/index.html": {
+    "commit": "website-20261015",
+    "book_id": 84605883,
+    "book_url": "kaiyuan-shijie-lvxing-shouce-20261015",
+    "imported_at": "2026-10-15T23:59:00+0800"
   }
 }
