@@ -111,7 +111,7 @@ python3 scripts/yuque_tree_import.py --root <clean_dir> --book <book_id> --progr
 
 ## 网站抓取导入（网页 → 语雀，2026-10-13 固化，2026-10-14 补命名规范）
 
-触发模板：「把 `<网址>` 抓取到语雀」。规范：库名 `网站名（日期）`（日期=导入日，如 2026-10-14）、**slug 同样带日期** `网站名-YYYYMMDD`（如 atguigu-python-20261014，2026-10-14 老板定；已建库不追改）、分组「文章收集」（stack 36149506）、描述带源站 URL。通用爬虫模板 `scripts/yuque_website_crawl.py`（复制后改 SITE 配置区）+ 完整 SOP `references/website-crawl-to-yuque.md`（正文窗口定位方法论 + 图片 CDN 方案 + 产物级验证清单 + 4 站实战案例）。
+触发模板：「把 `<网址>` 抓取到语雀」。规范：库名 `网站名（日期）`（日期=导入日，如 2026-10-14）、**slug 同样带日期** `网站名-YYYYMMDD`（如 atguigu-python-20261014，2026-10-14 老板定；已建库不追改）、分组「文章收集」（stack 36149506）、描述带源站 URL。通用爬虫模板 `scripts/yuque_website_crawl.py`（复制后改 SITE 配置区）+ 完整 SOP `references/website-crawl-to-yuque.md`（正文窗口定位方法论 + 图片 CDN 方案 + 产物级验证清单 + 12 站实战案例）。
 
 ```bash
 python3 scripts/yuque_repo_import.py create-book --name "<网站名>（<日期>）" --slug <网站名>-<YYYYMMDD> --desc "<源站 URL> | 导入 <日期>"

@@ -2,7 +2,9 @@
 
 > 触发模板：「把 <网址> 抓取到语雀」「这个网站教程导到语雀」。
 > 实战源（按时间）：gitref（content_box 容器）、Nulab（Gatsby page-data + 图片抠图）、
-> Git Magic（DocBook content div）、廖雪峰（Tailwind 站，评论区 JS 带偏窗口事故）。
+> Git Magic（DocBook content div）、廖雪峰（Tailwind 站，评论区 JS 带偏窗口事故）、
+> 看云 kancloud（SEO 副本直出 md 源码）、Pro Git gitbooks.io（GitBook3 + asciidoc 实体转义）、
+> SVN Book（DocBook XSL 多页站，bs4 渲染器）。
 > 通用爬虫模板：`scripts/yuque_website_crawl.py`（复制到 tmp/<站点>/crawl.py，改 SITE 配置区）。
 
 ## 一、流程（六步）
@@ -65,6 +67,29 @@
     别用 `url.replace(BASE, "")`（replace 不生效就 404）
 12. **章标题链接 = 该章第一节 URL**（Pro Git 实踩）：书目录里章名链接 href 与第一节相同 → 按 URL 去重，
     文件名用**页标题**（非章名）；章标题带 `A1.`/`附录` 前缀时去编号正则要连字母前缀一起处理
+13. **全文 HTML 实体转义**（bingohuang.gitbooks.io Pro Git / 看云 双踩）：静态站把非 ASCII 全转成
+    `&#x4E2D;` 形式（中文变实体码），正文正则全匹配不上 → 提取后统一 `html.unescape()` 还原
+14. **站点间歇性 401**（gitbooks.io 实踩，页面和图片都中招）：fetch 必须**指数退避重试**（~6 次），
+    单次失败不能放弃，否则抓取结果随机缺页/缺图
+15. **asciidoc 死链 xref `[_git_branching]`**（Pro Git 实踩 73 处）：Asciidoctor 交叉引用锚
+    留在正文成死链 → 抓全站 `<hN id="_xxx">标题` 建映射表替换成中文标题；站点自身坏 id
+    （`_email_notification`/`_git_on_the_server`）手工补映射。顺带清 asciidoc 引用对 ``x'' → “x”
+16. **SEO 副本站：正文 = 原始 markdown 源码**（看云实踩）：React 站直出 `<div class="seo">`，
+    内层 `<div class="content">` 放的是 **md 源码**（实体转义）→ 直接 unescape 落盘，
+    不用 HTML→md 转换器；`<div class="catalog"><ul>` 直接给全站目录（每页都有，顺序即目录序）
+17. **图片防盗链**（看云实踩）：box.kancloud.cn 直连 403，必须带 `Referer: <页面URL>` 才 200；
+    爬虫 fetch 统一带 Referer，图片下载同款
+18. **DocBook XSL 多页站别用正则**（svnbook 实踩）：嵌套 div 太深 → 直接上 **bs4 递归渲染器**
+    （h1-6/p/pre/ul.ol/dl/table/figure/blockquote/admonition/sidebar/footnotes/indexdiv 各一支）
+19. **DocBook 的 blockquote/admonition 是 `<table>` 渲染**（svnbook 实踩）：
+    `div.warning>table>tr>[td.icon+th][td 内容]` → 当普通表格转会塞进空单元格+图标、quote 里再套表。
+    要从 td 抽文本、丢图标格、th 当标签
+20. **页内目录 div.toc 的取舍**（svnbook 实踩）：节/章页的内目录是同页锚点 → 丢；
+    但分部页/参考手册页正文只有这个目录 → 不处理会得 **1 字节空文档** → 补「**目录**」+ 子文档相对链接回灌
+21. **`<a class="indexterm">` 双面性**（svnbook 实踩）：普通页里是空锚点标记（剥），
+    索引页里是带文本的真链接（剥了整页索引变「，」）→ 只剥「无 href 且无文本」的
+22. **语雀 TOC 根级顺序坑**（svnbook 实踩）：tree_import 先建 TITLE 后建 DOC → 根级 DOC 排到目录之后
+    → `PUT /toc {action:prependNode, action_mode:sibling, node_uuid, target_uuid}` 一次归位
 
 
 ## 五、站点案例速查
@@ -80,3 +105,6 @@
 | zh-hginit.readthedocs.io（新版 ReadTheDocs） | **不爬 HTML**：RTD 项目页（readthedocs.org/projects/<slug>/）有源仓库链接，直接 clone 拿 rst 源 → `yuque_rst_convert.py` 转 md | — | 嵌套多→章=文档平铺（7 篇），小节保留为文档内标题；`:doc:` 跨文档角色剥纯文本；`_images/` 预传 CDN 后从导入根目录删掉（2026-10-15 HgInit 实战） |
 | wiki.mercurial-scm.org（MoinMoin 归档, 2026-10-15） | `<div dir="ltr" id="content">` 后第一个 `<h1` | `<hr><p class="line874">`（分类尾巴前, 全站统一） | **p 标签不闭合**(HTML4 省略 </p>, 23开11闭)→p 用块级标签 lookahead 截断；行号锚点 `<span class="anchor" id="line-N">` 剥标签即净；页面自带目录块 `<div class="table-of-contents">` 整块删；附件 URL 带 `&amp;` 要先 decode 再下载 |
 | git-scm.com/book/zh（Asciidoctor, 2026-10-15） | `<div id="main"` 剥开标签后 | `<div id="nav">`（prev|next 翻页导航） | 块语义 div：paragraph/sect1-4/listingblock/imageblock/admonitionblock/tableblock；**嵌套 div 必须深度计数找闭合**(非贪婪 </div> 截断内层→admonition 内容丢)；**章级标题 h2 是裸标签**混在无 class 引言 div 里(re.search 找)；admonition class 是双类 `admonitionblock note` 要包含匹配；递归切分嵌套块时标题会二次输出(提取后从 inner 删)；章标题链接 href=该章第一节 URL 要按 URL 去重；**中文 URL 请求前先 quote** |
+| bingohuang.gitbooks.io/progit2（GitBook 3 + Asciidoctor, 2026-10-15） | `<section class="normal markdown-section">` | `</section>`（每页唯一） | 正文容器 markdown-section；**全文非 ASCII 实体转义**(&#x4E2D;)→h.unescape 还原；侧边栏 `ul.summary` 的 li.chapter[data-level/data-path] 直接给全树；图片相对路径 `../images/` 按页面 URL 解析；**gitbooks.io 间歇 401**→fetch 指数退避 6 次；正文块仍是 Asciidoctor div(sect2-4/listingblock/imageblock)；xref 死链 `[_xxx]` 按全站 `<hN id>` 映射换中文标题 |
+| svnbook.red-bean.com/nightly/zh（DocBook XSL 多页站, 2026-10-15） | `div.navheader` 之后 | `div.navfooter`（前一页/下一页/上一级） | 每章/节/命令手册各自成页；分部页正文只有小节目录(补「**目录**」+相对链接防空文档)；blockquote/admonition 是 `<table>` 渲染(抽 td 文本、丢图标、th 当标签)；`<a class="indexterm">` 只剥无 href 无文本的(索引页里是真链接)；正文首标题去掉但 titlepage 作者/日期要留；bs4 递归渲染器替代正则；**抓取 ~12min/导入 ~10min 长任务先报 ETA** |
+| kancloud.cn/kancloud/<book>（看云 SEO 副本, 2026-10-15） | `<div class="seo">` 内 `<div class="content">`（=原始 md 源码, 实体转义） | `</div><div class="catalog">`（全站目录, 每页都有） | 不用 HTML→md：unescape 即落盘；`catalog` 顺序=目录序、页面 URL=`/kancloud/<book>/<数字id>`；**box.kancloud.cn 防盗链**→带 Referer 才 200；书站类库名用书名(slug 仍带日期, 如 intro-to-prog-20261015) |
