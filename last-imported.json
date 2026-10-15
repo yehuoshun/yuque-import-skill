@@ -28,5 +28,11 @@
     "book_id": 84598454,
     "book_url": "owllook-cd207f9",
     "imported_at": "2026-10-15T12:45:35+0800"
+  },
+  "https://github.com/julycoding/The-Art-Of-Programming-by-July": {
+    "commit": "7fafa61c",
+    "book_id": 84605440,
+    "book_url": "the-art-of-programming-by-july-7fafa61c",
+    "imported_at": "2026-10-15T23:00:00+0800"
   }
 }
