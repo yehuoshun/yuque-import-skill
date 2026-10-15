@@ -1,50 +1,56 @@
 {
-  "https://github.com/EbookFoundation/free-programming-books": {
-    "commit": "4c301cce",
-    "book_id": 84595406,
-    "book_url": "free-programming-books-4c301cce",
-    "imported_at": "2026-10-15T07:35:00+0800"
-  },
-  "https://github.com/aoaostar/legado": {
-    "commit": "1f10d49",
-    "book_id": 84598527,
-    "book_url": "legado-1f10d49",
-    "imported_at": "2026-10-15T13:10:00+0800"
-  },
-  "https://github.com/swjybky/deepwrite": {
-    "commit": "2fd91bc",
-    "book_id": 84564873,
-    "book_url": "deepwrite-2fd91bc",
-    "imported_at": "2026-10-14T22:45:00+0800"
-  },
-  "https://github.com/morluto/rea": {
-    "commit": "a1ca8c76a",
-    "book_id": 84598779,
-    "book_url": "rea-a1ca8c76a",
-    "imported_at": "2026-10-15T17:00:00+0800"
-  },
-  "https://github.com/howie6879/owllook": {
-    "commit": "cd207f9",
-    "book_id": 84598454,
-    "book_url": "owllook-cd207f9",
-    "imported_at": "2026-10-15T12:45:35+0800"
-  },
-  "https://github.com/julycoding/The-Art-Of-Programming-by-July": {
-    "commit": "7fafa61c",
-    "book_id": 84605440,
-    "book_url": "the-art-of-programming-by-july-7fafa61c",
-    "imported_at": "2026-10-15T23:00:00+0800"
-  },
-  "https://github.com/DeathKing/Learning-SICP": {
-    "commit": "b60b706",
-    "book_id": 84605595,
-    "book_url": "learning-sicp-b60b706",
-    "imported_at": "2026-10-15T23:10:00+0800"
-  },
-  "http://i.linuxtoy.org/docs/guide/index.html": {
-    "commit": "website-20261015",
-    "book_id": 84605883,
-    "book_url": "kaiyuan-shijie-lvxing-shouce-20261015",
-    "imported_at": "2026-10-15T23:59:00+0800"
-  }
+ "https://github.com/EbookFoundation/free-programming-books": {
+  "commit": "4c301cce",
+  "book_id": 84595406,
+  "book_url": "free-programming-books-4c301cce",
+  "imported_at": "2026-10-15T07:35:00+0800"
+ },
+ "https://github.com/aoaostar/legado": {
+  "commit": "1f10d49",
+  "book_id": 84598527,
+  "book_url": "legado-1f10d49",
+  "imported_at": "2026-10-15T13:10:00+0800"
+ },
+ "https://github.com/swjybky/deepwrite": {
+  "commit": "2fd91bc",
+  "book_id": 84564873,
+  "book_url": "deepwrite-2fd91bc",
+  "imported_at": "2026-10-14T22:45:00+0800"
+ },
+ "https://github.com/morluto/rea": {
+  "commit": "a1ca8c76a",
+  "book_id": 84598779,
+  "book_url": "rea-a1ca8c76a",
+  "imported_at": "2026-10-15T17:00:00+0800"
+ },
+ "https://github.com/howie6879/owllook": {
+  "commit": "cd207f9",
+  "book_id": 84598454,
+  "book_url": "owllook-cd207f9",
+  "imported_at": "2026-10-15T12:45:35+0800"
+ },
+ "https://github.com/julycoding/The-Art-Of-Programming-by-July": {
+  "commit": "7fafa61c",
+  "book_id": 84605440,
+  "book_url": "the-art-of-programming-by-july-7fafa61c",
+  "imported_at": "2026-10-15T23:00:00+0800"
+ },
+ "https://github.com/DeathKing/Learning-SICP": {
+  "commit": "b60b706",
+  "book_id": 84605595,
+  "book_url": "learning-sicp-b60b706",
+  "imported_at": "2026-10-15T23:10:00+0800"
+ },
+ "http://i.linuxtoy.org/docs/guide/index.html": {
+  "commit": "website-20261015",
+  "book_id": 84605883,
+  "book_url": "kaiyuan-shijie-lvxing-shouce-20261015",
+  "imported_at": "2026-10-15T23:59:00+0800"
+ },
+ "https://github.com/kuuhaku1314/kairisei-ma-ch": {
+  "commit": "1b2aa00",
+  "book_id": 84635422,
+  "book_url": "kairisei-ma-ch-1b2aa00",
+  "imported_at": "2026-10-16T07:35:00+0800"
+ }
 }
