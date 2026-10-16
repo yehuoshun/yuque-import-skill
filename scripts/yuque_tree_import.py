@@ -520,9 +520,24 @@ def md_esc(t):
     return t
 
 
-def build_toc_md(root, prog, excludes):
-    """按本地树 DFS 序(目录在前/各自按名排序)生成 Markdown 目录树。"""
+def build_toc_md(root, prog, excludes, token=None, base=None, book=None):
+    """按本地树 DFS 序(目录在前/各自按名排序)生成 Markdown 目录树。
+
+    slug 兜底（2026-10-16 elinux 实战坑）：混合流程下（先跑 `--test N`（非 toc-md）建几个文献，
+    再全量 --toc-md）测试阶段落的账目只有 uuid/doc_id 没有 slug → 直拼目录树 KeyError: 'slug'。
+    这里缺 slug 时按 doc_id 回查 API 补上。
+    """
     out = []
+    _slug_cache = {}
+
+    def _slug_of(doc_id, title):
+        if doc_id in _slug_cache:
+            return _slug_cache[doc_id]
+        if not (token and book):
+            raise RuntimeError(f"账目缺 slug 且无 token 回查: {title}")
+        d = api(token, base, "GET", f"/repos/{book}/docs/{doc_id}")["data"]
+        _slug_cache[doc_id] = d["slug"]
+        return d["slug"]
 
     def rec_dir(absdir, depth, relprefix):
         names = sorted(os.listdir(absdir))
@@ -543,9 +558,11 @@ def build_toc_md(root, prog, excludes):
             node = prog["nodes"].get(rel)
             if not node:
                 raise RuntimeError(f"缺少文档记录, 无法生成目录: {rel}")
-            segs = node.get("segments") or [{"title": name, "slug": node.get("slug")}]
+            segs = node.get("segments") or [{"title": name, "slug": node.get("slug"),
+                                              "doc_id": node.get("doc_id")}]
             for s in segs:
-                out.append((depth, f"- [{md_esc(s['title'])}]({s['slug']})"))
+                slug = s.get("slug") or _slug_of(s.get("doc_id"), s.get("title") or name)
+                out.append((depth, f"- [{md_esc(s['title'])}]({slug})"))
 
     rec_dir(root, 0, "")
     return "\n".join("  " * d + line for d, line in out) + "\n"
@@ -750,7 +767,7 @@ def main():
     # 官方一次性目录模式收尾: 拼 markdown 目录树 → 一次 PUT 设目录 → 回读核对
     if args.toc_md:
         try:
-            md = build_toc_md(args.root, prog, excludes)
+            md = build_toc_md(args.root, prog, excludes, token, args.base, args.book)
         except Exception as e:
             stats["fail"].append(("(toc-md)", f"生成目录树失败: {str(e)[:200]}"))
             md = None

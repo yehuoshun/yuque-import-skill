@@ -97,6 +97,9 @@
 18. **batch 模式遇「同名目录」会串 uuid → 整树错位（2026-10-16 rea 重导版实战）**：仓库里有多处同名目录（如 `bridge/cutter` 与 `src/cutter`；`scripts/fixtures/firmware`、`scripts/verify/firmware`、`tests/fixtures/firmware`）时，batch 模式（节点统一挂根 + batchMove 归位）记录目录 uuid 会按标题匹配到「另一个同名的根级节点」，导致 progress 里**两条 rel 指向同一个 uuid**；随后 batchMove 按这些 uuid 归位 → 大批节点父链错乱（本次实测 2938 条错位、2179 文件路径对不上、TOC 全路径唯一 = False；用 verify 脚本一跑即现）。**对策：含同名目录/文件的仓库不要用 batch 模式，直接上 `--toc-md`（按本地树 DFS 拼 markdown 一次 PUT 设整棵目录，天然按层级区分同名，无 uuid 归属歧义）**
 19. **救援：batch 留下的错位树，用 toc-md 原地重建（免重导正文，2026-10-16 rea 实战）**：文档本体（doc_id/正文）是好的，只是父链乱。做法：① 拉全量 docs（`GET /repos/{id}/docs` 分页）建 `doc_id → slug` 映射；② 回填进 progress 各 segment 的 `slug`（batch 模式的 progress 不存 slug，否则 `build_toc_md` 直接 KeyError 'slug'）；③ 原样跑 `yuque_tree_import.py --toc-md`（全 skip → 只拼树 + 一次 PUT + 回读回填 uuid + 结构核对）。本次 4425 节点 PUT 22s，结构核对 PASS、对账 0 错位、verify PASS、幽灵 0，TOC 4446 节点（DOC 4080 + TITLE 366）全路径唯一 True。**toc-md 的 PUT 以本地树为准重排整棵目录，同名 TITLE/旧节点被复用重挂，无需手工清理**
 20. **batch 归位失败不会真正降级（2026-10-16 核实）**：`flush_group` 在 batchMove 异常分支只记 fail 并打「→ 降级单节点」，**实际并未逐节点降级**；失败节点不会自动兜底，重跑也不自愈。所以 batch 模式一旦批量失败就是硬伤 → 改用 toc-md 或手搓重建
+21. **`--test N` + `--toc-md` 混合流程的 slug 坑（2026-10-16 elinux 实战，脚本已修）**：先用 `--test N`（非 toc-md，appendNode 路径记账只有 uuid/doc_id、**无 slug**）探路，再全量 `--toc-md`，收尾 `build_toc_md` 会 `KeyError: 'slug'`（挂在测试阶段那几篇上）。修法：`build_toc_md` 缺 slug 时按 `doc_id` 回查 `GET /repos/{book}/docs/{doc_id}` 补上（已内置自动生效）。
+    **顺带纠一个认知**：脚本 docstring 写「POST /docs 后自动挂 TOC 根」，但 **1949 次连续建文档后 TOC 里只有最初 6 个节点**（自动挂根在高频下没生效/积压）——**不影响结果**：toc-md 的整树 PUT 以本地树为准重排，最终 TOC 2936 节点全对（DOC 1950 + TITLE 986）。所以 toc-md 模式下不必纠结「文档是否已进 TOC」。
+22. **老 gitbooks.io 链接已死（2026-10-16 elinux 实战）**：`<name>.gitbooks.io/<book>/content/<lang>/` 这类旧版 URL 集体 404（旧版托管下线）；现站（`<name>-1.gitbook.io/<book>/`）可能只剩 1 页（`curl /~gitbook/site-index` 一看便知：`pages` 就 1 条）。→ **别硬爬，改从源仓库导**（GitHub 搜书名/站名找 repo）。另：`git clone` HTTPS 走代理也 502 → 用 SSH（`git@github.com:...`）秒下。
 
 ## 七、官方 v2 一次性目录（toc-md，2026-10-16 老板拍板设为默认）
 
@@ -112,7 +115,7 @@
 
 **两个关键事实（实测）**：
 1. `POST /repos/{book}/docs` 建好文档后**会自动挂到 TOC 根** → 不用再逐篇 `appendNode`
-2. 收尾**一次 PUT** 就把整棵树摆好（134 节点实测 **1.1s**）
+2. 收尾**一次 PUT** 就把整棵树摆好（134 节点实测 **1.1s**；**2936 节点 / 139KB 目录树实测 15.1s**，一次成功，2026-10-16 elinux）
 
 **验证结论（一次性库对照，同源同树）**：toc-md 与 batch 模式导入的 TOC **集合完全一致 + 顺序完全一致**；分片（`big.json (1/2)`）、特殊字符/中文标题、根级文件与嵌套目录均正确；`yuque_import_verify.py` PASS；幽灵 0；对账错位 0。
 
