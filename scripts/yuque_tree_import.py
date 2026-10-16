@@ -109,7 +109,7 @@ def batch_move(cfg, login, book, node_uuids, target_uuid):
     })
 
 
-def verify_positions(token, base, book, wants, retries=2):
+def verify_positions(token, base, book, wants, retries=2, label=""):
     """校验节点实际位置: wants = {node_uuid: 期望parent_uuid(None=根)}.
     写路径有副本延迟(坑67), 首次不满足等 10s 重查一次.
     返回未满足的 node_uuid 列表."""
@@ -120,6 +120,7 @@ def verify_positions(token, base, book, wants, retries=2):
                if actual.get(u) != want or u not in actual]
         if not bad or i == retries - 1:
             return bad
+        print(f"    ⏳ {label}: {len(bad)} 节点位置未刷新(副本延迟), 10s 后重查", flush=True)
         time.sleep(10)
     return bad
 
@@ -409,7 +410,7 @@ def save_prog(prog, path):
     json.dump(prog, open(tmp, "w"), ensure_ascii=False)
     os.replace(tmp, path)
 
-def flush_group(cfg, login, token, base, book, items, parent_uuid, batch_size):
+def flush_group(cfg, login, token, base, book, items, parent_uuid, batch_size, parent_label=""):
     """items: [(rel, [uuids...])]; 把全部 uuid 移动到 parent_uuid 下, 保持 DFS 正序.
     batchMove 的 prependChild = 整体插到目标最前且保持数组内顺序(2026-10-16 实测);
     同父多批时若按序逐批 flush, 后批会插到前批前面 → 顺序反转.
@@ -418,18 +419,23 @@ def flush_group(cfg, login, token, base, book, items, parent_uuid, batch_size):
     all_items = [(rel, u) for rel, uuids in items for u in uuids]
     chunks = [all_items[i:i + batch_size] for i in range(0, len(all_items), batch_size)]
     ok, bad = [], []
-    for chunk in reversed(chunks):  # 逆序: 最后一片先挂
+    nchunks = len(chunks)
+    for ci, chunk in enumerate(reversed(chunks), 1):  # 逆序: 最后一片先挂
+        seq = nchunks - ci + 1  # 正序片号(便于人读: 实际挂载顺序是倒序)
         uuids = [u for _, u in chunk]
+        tag = f"归位片 {seq}/{nchunks} → {parent_label or parent_uuid[:8]} ({len(chunk)} 节点)"
+        t0 = time.time()
         try:
             batch_move(cfg, login, book, uuids, parent_uuid)
         except Exception as e:
-            print(f"  ⚠ batchMove 失败({len(chunk)} 节点): {str(e)[:120]} → 降级单节点", flush=True)
+            print(f"  ⚠ [batch] {tag}: batchMove 失败({str(e)[:100]}) → 降级单节点", flush=True)
             for rel, u in chunk:
                 bad.append((rel, f"batchMove 失败: {str(e)[:100]}"))
             continue
-        miss = verify_positions(token, base, book, {u: parent_uuid for _, u in chunk})
+        miss = verify_positions(token, base, book, {u: parent_uuid for _, u in chunk}, label=tag)
         if miss:
             missu = set(miss)
+            print(f"  ⚠ [batch] {tag}: {len(miss)} 节点位置校验未过 → 降级单节点移动", flush=True)
             for rel, u in chunk:
                 if u not in missu:
                     ok.append(rel)
@@ -443,6 +449,7 @@ def flush_group(cfg, login, token, base, book, items, parent_uuid, batch_size):
                     bad.append((rel, str(e)[:100]))
         else:
             ok.extend(rel for rel, _ in chunk)
+        print(f"  ✓ [batch] {tag} ({time.time() - t0:.1f}s)", flush=True)
     return ok, bad
 
 def node_uuids_of(record):
@@ -522,11 +529,17 @@ def main():
     stats = {"dir": 0, "doc": 0, "skip": 0, "fail": []}
     batch_q = rebuild_pending_batches(prog, token, args.base, args.book) if args.batch_mode else None
     if batch_q:
-        print(f"[batch] 中断恢复: {sum(len(v) for v in batch_q.values())} 个已记节点位置待归位", flush=True)
+        tot = sum(len(u) for v in batch_q.values() for _, u in v)
+        print(f"[batch] 中断恢复: {tot} 个已记节点待重新归位 (涉及 {len(batch_q)} 个父目录)", flush=True)
+        for pu, items in list(batch_q.items())[:10]:
+            lbl = os.path.dirname(items[0][0]) or "(根)"
+            cnt = sum(len(u) for _, u in items)
+            print(f"    - {lbl}: {cnt} 节点", flush=True)
 
     def do_flush(parent_uuid, items):
+        p_label = os.path.dirname(items[0][0]) or "(根)"
         ok_rel, bad = flush_group(cfg, args.x_login, token, args.base, args.book,
-                                  items, parent_uuid, args.batch_size)
+                                  items, parent_uuid, args.batch_size, parent_label=p_label)
         if bad:
             stats["fail"].extend(bad)
         return ok_rel
@@ -573,7 +586,11 @@ def main():
             if parent_uuid:
                 batch_q.setdefault(parent_uuid, []).append((rel, node_uuids_of(record)))
         if (stats["dir"] + stats["doc"]) % 25 == 0:
-            print(f"  进度: 目录{stats['dir']} 文档{stats['doc']} 跳过{stats['skip']} 失败{len(stats['fail'])}", flush=True)
+            pend = ""
+            if args.batch_mode:
+                pend_nodes = sum(len(u) for v in batch_q.values() for _, u in v)
+                pend = f" 待归位{pend_nodes}"
+            print(f"  进度: 目录{stats['dir']} 文档{stats['doc']} 跳过{stats['skip']}{pend} 失败{len(stats['fail'])}", flush=True)
 
     # batch 模式收尾: flush 全部剩余批次
     if args.batch_mode:
@@ -581,7 +598,9 @@ def main():
             ok_rel = do_flush(parent_uuid, items)
             if ok_rel:
                 stats["ok_flush"] = stats.get("ok_flush", 0) + len(ok_rel)
-        print(f"[batch] 归位完成: {stats.get('ok_flush', 0)} 节点确认到位", flush=True)
+        pend_n = sum(len(u) for v in batch_q.values() for _, u in v)
+        print(f"[batch] 归位完成: {stats.get('ok_flush', 0)} 节点确认到位; 失败 {len(stats['fail'])} 项"
+              + (f"; 剩余未处理 {pend_n}" if pend_n else ""), flush=True)
 
     print("=== 完成 ===", json.dumps(stats, ensure_ascii=False), flush=True)
     for rel, err in stats["fail"][:10]:
