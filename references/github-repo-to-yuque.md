@@ -101,6 +101,7 @@
     **顺带纠一个认知**：脚本 docstring 写「POST /docs 后自动挂 TOC 根」，但 **1949 次连续建文档后 TOC 里只有最初 6 个节点**（自动挂根在高频下没生效/积压）——**不影响结果**：toc-md 的整树 PUT 以本地树为准重排，最终 TOC 2936 节点全对（DOC 1950 + TITLE 986）。所以 toc-md 模式下不必纠结「文档是否已进 TOC」。
 22. **老 gitbooks.io 链接已死（2026-10-16 elinux 实战）**：`<name>.gitbooks.io/<book>/content/<lang>/` 这类旧版 URL 集体 404（旧版托管下线）；现站（`<name>-1.gitbook.io/<book>/`）可能只剩 1 页（`curl /~gitbook/site-index` 一看便知：`pages` 就 1 条）。→ **别硬爬，改从源仓库导**（GitHub 搜书名/站名找 repo）。另：`git clone` HTTPS 走代理也 502 → 用 SSH（`git@github.com:...`）秒下。
 23. **书型仓库：只导内容树，工程脚手架不进库（2026-10-17 yeasy/docker_practice 实战）**：书仓库常在根目录混着 `scripts/ tools/ tests/ .github/ .docker/ .devcontainer/ examples/ package(-lock).json check_*.py docker-compose.yml _config.yml Makefile` 等脚手架 —— 全导会把 `package-lock.json`（94KB）、CI 工作流、单元测试全塞进知识库。口径：**导入根 = 章节目录（如 `01_..21_`、`appendix`）+ `README.md`/`SUMMARY.md`/`CHANGELOG.md`/`CONTRIBUTING.md`**，脚手架全剔（在报告里列清楚，老板要再补）。图片：先 `tmp/rewrite_md_images.py`（扫 md 相对引用→传 CDN→重写；**未被引用的图不传**），随后把 `_images/` 目录 + `.graffle` 源块 + 所有图片文件从导入根**删干净**（否则每张图变成占位文档）。本次 279 节点（42 目录 / 237 文件）→ toc-md 目录树 279 行 / 10KB、PUT **1.6s**、四查全绿。
+    **反向情形**：若仓库就是**纯 GitBook 源**（只有章节目录 + `README/SUMMARY/book.json` + `images/`，无脚手架，如 `widuu/chinese_docker`）→ **直接全导**（除 `.git/.gitignore`），`book.json` 保留（书元数据）；图片仍走 rewrite_md_images + 删 `images/` 目录（2026-10-17，66 节点，PUT 0.8s）。
 
 ## 七、官方 v2 一次性目录（toc-md，2026-10-16 老板拍板设为默认）
 

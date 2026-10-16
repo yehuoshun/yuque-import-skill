@@ -96,5 +96,12 @@
   "book_url": "docker-practice-27a97ae",
   "imported_at": "2026-10-17T00:08:00+0800",
   "note": "只导书籍内容树（21 章 + appendix + README/SUMMARY/CHANGELOG/CONTRIBUTING）；脚手架/CI/tests/tools/scripts/examples 未导；33 图传 CDN"
+ },
+ "https://github.com/widuu/chinese_docker": {
+  "commit": "b26bc04",
+  "book_id": 84665434,
+  "book_url": "chinese-docker-b26bc04",
+  "imported_at": "2026-10-17T07:00:00+0800",
+  "note": "纯 GitBook 源仓库全导（10 目录 / 56 文件）；28 图传 CDN，images/ 已剔"
  }
 }
