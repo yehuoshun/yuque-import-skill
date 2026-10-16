@@ -42,10 +42,13 @@
    - move-stack 内置 30s 等待 + 每轮重发移动(幂等) + 验证, 总窗口 ~4.3min（新建库立刻移动会失败，2026-10-12 实踩；10-13 三例复现：传播 30s~4min 不定，仅重试验证不够 → v1.2.2 改为重发+验证循环）+ 移动后自动验证分组
 4. **test 6 试水** → 全量导入（**后台跑**，禁 nohup——exec-guard 会拦；用 exec `background=true`）
    ```bash
+   # ✅ 推荐：toc-md 模式（官方 v2 一次性目录，2026-10-16 起默认）
    python3 scripts/yuque_tree_import.py --root <clean_dir> --book <book_id> \
-     --progress /home/admin/.openclaw/workspace/tmp/<repo>-<commit>-progress.json --test 6
-   # 全量: 同命令去掉 --test，输出重定向到 workspace/tmp/<repo>-<commit>-import.log
+     --progress /home/admin/.openclaw/workspace/tmp/<repo>-<commit>-progress.json --toc-md
+   # 回退（旧流程，逐节点挂载 / batchMove）：去掉 --toc-md；batch 模式加 --batch-mode
    ```
+   - toc-md 原理：`POST /repos/{book}/docs` 建文档后**自动挂 TOC 根**，收尾拼一棵 Markdown 目录树 → 一次 `PUT /api/v2/repos/{book_id} {toc: "..."}`（官方 OAS 20260722）。同树实测：与 batch 模式 TOC **集合+顺序完全一致**，134 节点 PUT 仅 1.1s，收尾从 ~80 分钟降到秒级，且**不需要 cookie**
+   - 旧全量命令（无 `--toc-md`，逐节点挂真实父）：测试时高频创建会触发 TOC 写路径积压（坑 67），现已不推荐
 5. **心跳汇报**：25% / 50% / 75% / 完成，各报一次（读 progress 账本算百分比）
 6. **对账**：`python3 scripts/yuque_toc_reconcile.py --root <clean_dir> --book <book_id> --progress <账本> [--fix]`
 7. **验收四查**（缺一不可）：
@@ -88,8 +91,33 @@
 13. **分片标题含 `/`，验收别拼字符串（2026-10-15 legado 实战）**：超 512KB 分片后标题是 `2a1f129b.json (1/14)`——**这个 `/` 是真雷**：`os.path.dirname("sources/2a1f129b.json (1/14)")` 得到 `sources/2a1f129b.json (1`，一键把 6 个分片文件全判成「缺失」（实际 95 个分片节点都在）。验收一律按 TITLE 列表（uuid 父链）比，别拼字符串；节点数口径换成分片感知版 → `scripts/yuque_import_verify.py`。
 14. **杀掉/重启导入后必跑 reconcile --fix（2026-10-15 rea 实战）**：TOC 写路径积压期，节点会「HTTP 200 但落在根级」（本次 9 个：`licenses/Apache-2.0.txt`、`third_party/binwalk`、`src/ida/IdaWorkspace.ts` 等）。① 高频失败时先静置 ~10 分钟排空语雀写队列，再用 `--pend-sleep 300 --pend-retries 5` 重启（断点续传不丢已导节点）；② **重启后无条件跑一次 `yuque_toc_reconcile.py --fix`**——脚本自己不会发现「已记账但挂错层级」；③ 个别 TITLE 修不动时手搓 `PUT /toc {action:appendNode, action_mode:child, target_uuid=<父>, node_uuid=<它>}` 再复查；④ 误删了节点不要慌：备份账本 → 删掉该路径的 key → 重跑同一条导入命令，按原路径重建（本次根级 package.json 就是这么补回来的）。
 
-## 六、wrapper 子命令速查
+15. **目录标题一律原样写，禁转义（2026-10-16 实测）**：`PUT /repos/{id}` 的 markdown `toc` 里，`[weird[1] (x).md](slug)` 原样写是对的；加反斜杠 `\[` 或 HTML 实体 `&#91;` 会被**当字面量写进标题**（标题变脏）。语雀按**最后一个 `](slug)`** 切分——实测 7/7 恶心标题全对：`x]` / `a]b` / `a](b` / `p[q](r` / `尾]` / `(paren]` / `】中文】` / `a\b`
+16. **官方 v2 的 removeNode 语义（2026-10-16 核 OAS 20260722）**：`action_mode=sibling` 删当前节点，`action_mode=child` **删当前节点及子节点**；官方明写「删除节点不会删除关联文档」（→ 幽灵 doc 必须另走 `DELETE /repos/{id}/docs/{id}`）。旧「removeNode 乐观回显清库」事故更像 **action_mode 用错/缺省**（挂在根上就得清库），不再是单纯的响应假成功问题
+17. **限流（官方文档）**：每小时最多 5000 次、每秒最多 100 次，**同账号所有 Token 共享**；响应头带 `X-RateLimit-Limit/Remaining`。单次 batchMove 传 200 节点实测无问题（无 100 上限）；但逐节点干活很吃配额——toc-md 模式每文件只需 1 次请求，天然省配额
 
+## 七、官方 v2 一次性目录（toc-md，2026-10-16 老板拍板设为默认）
+
+**来源**：官方 OAS `yuque_openapi_20260722.yaml`（v2.0.1，入口页 `yuque.com/yuque/developer/openapi`；页面 JS 渲染，需带 cookie 走 `GET /api/docs/openapi?book_id=75338` 挖正文 → 再拿附件）
+
+**能力**：`PUT /api/v2/repos/{book_id}`（或 `/repos/{group_login}/{book_slug}`）body 的 **`toc` 字段 = Markdown 目录树**：
+```markdown
+- [目录名]()
+  - [文档名](doc_slug)
+- [根级文档](doc_slug)
+```
+`[名称]()` 空链接 = 分组（TITLE），`[名称](slug)` = 文档节点；顺序即目录顺序。
+
+**两个关键事实（实测）**：
+1. `POST /repos/{book}/docs` 建好文档后**会自动挂到 TOC 根** → 不用再逐篇 `appendNode`
+2. 收尾**一次 PUT** 就把整棵树摆好（134 节点实测 **1.1s**）
+
+**验证结论（一次性库对照，同源同树）**：toc-md 与 batch 模式导入的 TOC **集合完全一致 + 顺序完全一致**；分片（`big.json (1/2)`）、特殊字符/中文标题、根级文件与嵌套目录均正确；`yuque_import_verify.py` PASS；幽灵 0；对账错位 0。
+
+**中断续传**：文档层可断点续传（progress 记 slug/doc_id）；收尾 PUT 幂等，重跑同一命令安全。
+
+**回退**：`--no-toc-md`（编排器）/ 不加 `--toc-md`/`--batch-mode`（直接用 tree_import）→ 旧流程。
+
+## 六、wrapper 子命令速查
 ```
 yuque_repo_import.py prep         --url <git-url> --dir <工作目录>
 yuque_repo_import.py create-book  --name <项目名（commit）> --slug <项目名-commit> --desc <url @ commit> [--login <用户名>] [--stack-id 57018723]

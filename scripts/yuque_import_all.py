@@ -141,13 +141,21 @@ def verify(book, progress_path):
     if total != len(doc_ids):
         errors.append(f"幽灵文档: 库内 {total} != 账本 {len(doc_ids)}")
 
-    # 4. 全路径唯一 + 抽查首尾深层路径
+    # 4. 全路径唯一 + 抽查首尾路径（分片文件的实际路径是 "rel (i/N)", 要兼容）
     doc_paths = [p for n in toc for p in [actual_paths[n["uuid"]]] if n.get("type") == "DOC"]
     if len(doc_paths) != len(set(doc_paths)):
         errors.append("存在重复文档路径")
+    actual_set = set(actual_paths.values())
+
+    def _reachable(rel):
+        if rel in actual_set:
+            return True
+        pat = re.compile(re.escape(rel) + r" \(\d+/\d+\)$")
+        return any(pat.match(p) for p in actual_set)
+
     samples = [rel for rel in list(prog["nodes"].keys())[:1] + list(prog["nodes"].keys())[-1:]]
     for s in samples:
-        if s not in actual_paths.values():
+        if not _reachable(s):
             errors.append(f"抽查路径不可达: {s}")
 
     return errors
@@ -206,11 +214,12 @@ def import_one(url, workdir, ledger, args):
         return "fail", repo, commit, book_id, None, [f"move-stack 失败: {r.stderr[-300:] or r.stdout[-300:]}"]
 
     progress = os.path.join(workdir, f"{repo}-{commit}-progress.json")
+    flow_args = ["--toc-md"] if not args.no_toc_md else []
     r = run_script("yuque_tree_import.py",
                    ["--root", info["clean_dir"], "--book", str(book_id), "--progress", progress,
                     "--pend-sleep", str(args.pend_sleep), "--pend-retries", str(args.pend_retries),
                     "--max-body", str(args.max_body)]
-                   + cc_args)
+                   + flow_args + cc_args)
     m = re.search(r'=== 完成 === (\{.*\})', r.stdout)
     stats = json.loads(m.group(1)) if m else {}
     if stats.get("fail"):
@@ -235,6 +244,7 @@ def main():
     ap.add_argument("--pend-retries", type=int, default=3)
     ap.add_argument("--max-body", type=int, default=524_288, help="单文档 body 上限(字节), 透传给 tree_import; 默认 512KB(2026-10-14 老板定: 1MB 语雀端加载慢)")
     ap.add_argument("--only", default="", help="只导匹配该子串的 repo")
+    ap.add_argument("--no-toc-md", action="store_true", help="关闭官方一次性目录模式(默认开启), 回退旧的逐节点挂载流程")
     ap.add_argument("--dry", action="store_true", help="只跑 prep+账本去重, 不写语雀")
     ap.add_argument("--no-notify", action="store_true", help="不发钉钉")
     args = ap.parse_args()

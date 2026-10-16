@@ -48,6 +48,14 @@ python3 scripts/yuque_tree_import.py --root /path/to/dir --book <book_id> --prog
   - 实测（2026-10-16 测试库，11 节点 5 目录 6 文件含 512KB 分片）：0 失败、无残留、DFS 序正确（目录前文件后、分片 1→2→3）
   - **顺序语义（实测）**：batchMove 的 prependChild = 「整体插到目标最前、保持数组内顺序」；同父多批若按序 flush 后批会插到前批前 → 脚本已实现「逆序逐片 flush」（最后一片先挂）保证正序
   - 依赖：`--cookie-config` 需有效 cookie/ctoken（Web API 认证，会过期）；中断后重跑自动扫描 progress 里位置未归位的节点重新入队
+- **⭐ toc-md 模式（2026-10-16 新增，官方 v2 能力，推荐默认）**：`--toc-md`
+  - 原理：官方 OAS（`yuque_openapi_20260722.yaml`）中 `PUT /api/v2/repos/{book_id}` 的 **`toc` 字段 = Markdown 目录树**（原文「可利用此字段批量更新知识库的目录」）。文档经 `POST /repos/{book}/docs` 建好后**自动挂到 TOC 根**，目录分组由目录树本身生成 → **逐文件建文档 + 一次 PUT 设整棵目录**即完成，无需逐节点 `appendNode`，也无需 batchMove
+  - 用法：`python3 scripts/yuque_tree_import.py --root <dir> --book <id> --progress <p> --toc-md`
+  - 实测（一次性库，同树对照）：134 节点库 **PUT 仅 1.1s**；与 batch 模式同树导入的 TOC **集合与顺序逐项完全一致**；分片/特殊字符标题（`weird[1] (x).md`/`a](b`/`p[q](r`/中文）7/7 原样正确；幽灵 0；对账 0 错位
+  - **标题原样写，禁转义**（实测：`\[`/`\]` 与 `&#91;` 会被当字面量写进标题 → 变脏）；语雀按最后一个 `](slug)` 切分，嵌套/不平衡括号都能扛
+  - 对比 batch 模式：请求数 ~减半（不再对每篇文档发 `appendNode`），收尾 ~80 分钟 → **秒级**；无需 cookie
+  - 收尾自动：拼目录树 → PUT → 回读回填 uuid（含分片段）到账本 → 结构核对，输出 `[toc-md] 结构核对 PASS ✅`；核对失败会把缺失路径记入 fail
+  - 编排器 `yuque_import_all.py` 已默认启用（`--no-toc-md` 可回退旧流程）
 
 - 内容格式：`.md` 原样 / `.cs` → ` ```csharp ` 代码块 / 其余 → 纯文本代码块
 - 超限自动处理：二进制（NUL/无效 UTF-8 占比高）→ 图片类（png/jpg/gif/webp/svg…）自动上传语雀 CDN 并 `![文件名](cdn_url)` 嵌入（需 cookie/ctoken，见 `--cookie-config`）；非图片 → 占位说明；文本超 512KB（`--max-body` 可调，**默认 512KB**，2026-10-14 老板拍板：1MB 语雀端加载也要等很久；上限别碰 4MB——语雀端直接打不开）→ 自动拆成多文档 `xxx (1/N)` `(2/N)` …，内容零丢失。**切分必须按语义边界，禁硬拆**（2026-10-14 老板：硬拆影响观感）：JSON 顶层数组→按条目边界（每段是完整记录组成的可解析 JSON），其余→按行边界（绝不切破行；单行自身超限才硬切）；每段正文头带范围注记 `分段 i/N · 第 a-b 个条目（共 M 个）· 首条「xx」· 源文件 X MB 超限，按 JSON 条目边界切分`；代码块按扩展名标注语言（json/ts/vue/py…）

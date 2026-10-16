@@ -485,6 +485,136 @@ def rebuild_pending_batches(prog, token, base, book):
     return q
 
 
+def create_doc_only(token, base, book, root, rel, up, max_body=524_288):
+    """官方一次性目录模式(2026-10-16): 只建文档(POST /docs, 语雀自动挂到 TOC 根), 不挂 TOC。
+    返回 {type:doc, segments:[{title,slug,doc_id}], doc_id, slug, uuid:''}"""
+    segs = fmt_content(os.path.join(root, rel), up, max_body)
+    records = []
+    for suffix, body in segs:
+        title = os.path.basename(rel) + suffix
+        created = api(token, base, "POST", f"/repos/{book}/docs",
+                      {"title": title, "format": "markdown", "body": body})["data"]
+        slug = created.get("slug")
+        if not slug:
+            raise RuntimeError(f"POST /docs 未返回 slug: {title}")
+        sb = body.strip()
+        if sb and not sb.startswith(("<!--", "![")):
+            wc = created.get("word_count") or 0
+            if wc <= 0:
+                raise RuntimeError(f"内容校验失败: {title} 发送 {len(body)} 字符但 word_count={wc}")
+        records.append({"title": title, "slug": slug, "doc_id": created["id"]})
+    return {"type": "doc", "uuid": "", "doc_id": records[0]["doc_id"],
+            "slug": records[0]["slug"], "segments": records}
+
+
+# ---------- 官方 v2 一次性目录模式(2026-10-16) ----------
+# 依据官方 OAS(20260722): PUT /api/v2/repos/{book_id} 的 toc 字段 = Markdown 目录树,
+# 原文"可利用此字段批量更新知识库的目录"。文档经 POST /repos/{book}/docs 建好后自动挂到 TOC 根,
+# 因此"逐文件建文档 + 一次 PUT toc"即可完成整棵树, 无需逐节点 appendNode 或 batchMove。
+def md_esc(t):
+    """标题原样输出——**不要转义**。
+    2026-10-16 实测(一次性库): 语雀目录解析器按最后一个 `](slug)` 切分, 下列恶心标题全部原样正确:
+    `x]` / `a]b` / `a](b` / `p[q](r` / `尾]` / `(paren]` / `】中文】` / `a\\b`(7/7 ✅)。
+    反而 `\\[`/`\\]`(反斜杠转义) 与 `&#91;`(HTML 实体) 会被当字面量写进标题 → 标题变脏。
+    """
+    return t
+
+
+def build_toc_md(root, prog, excludes):
+    """按本地树 DFS 序(目录在前/各自按名排序)生成 Markdown 目录树。"""
+    out = []
+
+    def rec_dir(absdir, depth, relprefix):
+        names = sorted(os.listdir(absdir))
+        dirs = [n for n in names if os.path.isdir(os.path.join(absdir, n))]
+        files = [n for n in names if not os.path.isdir(os.path.join(absdir, n))]
+        for name in dirs:
+            p = os.path.join(absdir, name)
+            if p in excludes:
+                continue
+            rel = f"{relprefix}/{name}" if relprefix else name
+            out.append((depth, f"- [{md_esc(name)}]()"))
+            rec_dir(p, depth + 1, rel)
+        for name in files:
+            p = os.path.join(absdir, name)
+            if p in excludes:
+                continue
+            rel = f"{relprefix}/{name}" if relprefix else name
+            node = prog["nodes"].get(rel)
+            if not node:
+                raise RuntimeError(f"缺少文档记录, 无法生成目录: {rel}")
+            segs = node.get("segments") or [{"title": name, "slug": node.get("slug")}]
+            for s in segs:
+                out.append((depth, f"- [{md_esc(s['title'])}]({s['slug']})"))
+
+    rec_dir(root, 0, "")
+    return "\n".join("  " * d + line for d, line in out) + "\n"
+
+
+def toc_path_map(toc):
+    by = {n["uuid"]: n for n in toc}
+    paths = {}
+    for n in toc:
+        parts, cur = [], n
+        while cur:
+            parts.append(cur["title"])
+            cur = by.get(cur.get("parent_uuid") or "")
+        paths[n["uuid"]] = "/".join(reversed(parts))
+    return paths
+
+
+def expected_paths(root, prog, excludes):
+    """本地树 → 期望的 TOC 路径集合(分片文件按 seg 标题展开)。"""
+    want = {}
+
+    def rec_dir(absdir, relprefix):
+        for name in sorted(os.listdir(absdir)):
+            p = os.path.join(absdir, name)
+            if p in excludes:
+                continue
+            rel = f"{relprefix}/{name}" if relprefix else name
+            if os.path.isdir(p):
+                want[rel] = "TITLE"
+                rec_dir(p, rel)
+            else:
+                node = prog["nodes"].get(rel)
+                if not node:
+                    continue
+                segs = node.get("segments") or [{"title": name}]
+                for s in segs:
+                    want[f"{relprefix}/{s['title']}" if relprefix else s["title"]] = "DOC"
+
+    rec_dir(root, "")
+    return want
+
+
+def backfill_and_verify(token, base, book, prog, root, excludes):
+    """PUT toc 后回读一次: 回填 uuid 到账本 + 结构核对。返回 (缺失路径列表, TOC 节点数)。"""
+    toc = api(token, base, "GET", f"/repos/{book}/toc")["data"]
+    paths = toc_path_map(toc)
+    got = {}
+    for n in toc:
+        got.setdefault(paths[n["uuid"]], []).append(n)
+    want = expected_paths(root, prog, excludes)
+    missing = [p for p in want if p not in got]
+    for rel, node in prog["nodes"].items():
+        if node.get("type") == "dir":
+            ns = got.get(rel) or []
+        else:
+            segs = node.get("segments") or []
+            parent = os.path.dirname(rel)
+            for s in segs:
+                wp = f"{parent}/{s['title']}" if parent else s["title"]
+                ns2 = got.get(wp) or []
+                if ns2:
+                    s["uuid"] = ns2[0]["uuid"]
+            first = segs[0]["title"] if segs else os.path.basename(rel)
+            ns = got.get(f"{parent}/{first}" if parent else first) or []
+        if ns:
+            node["uuid"] = ns[0]["uuid"]
+    return missing, len(toc)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", required=True)
@@ -500,10 +630,13 @@ def main():
     ap.add_argument("--max-body", type=int, default=524_288, help="单文档 body 上限(字节), 超限自动切块; 默认 512KB(2026-10-14 老板定: 1MB 语雀端加载慢)")
     ap.add_argument("--pend-retries", type=int, default=3, help="失败静置重试最大轮数(超出则记 fail 跳过)")
     ap.add_argument("--batch-mode", action="store_true", help="批处理模式(2026-10-16): 节点统一挂根+攒批 batchMove 到目标目录, 规避高频子树挂载积压(坑67); 需 cookie 有效")
+    ap.add_argument("--toc-md", action="store_true", help="官方一次性目录模式(2026-10-16): 逐文件 POST /docs + 一次 PUT /repos/{id} 设 markdown 目录树(官方 OAS 20260722 能力), 请求数与收尾耗时比 batch 模式低一个数量级")
     ap.add_argument("--batch-size", type=int, default=50, help="batch 模式每批节点数(默认 50)")
     ap.add_argument("--x-login", default="yehuoshun", help="Web API x-login 用户名(batch 模式用)")
     args = ap.parse_args()
 
+    if args.batch_mode and args.toc_md:
+        raise SystemExit("--batch-mode 与 --toc-md 互斥, 二选一")
     token = load_token(args.token_env)
     cfg = load_upload_cfg(args.cookie_config)
     if args.batch_mode and not cfg:
@@ -555,25 +688,41 @@ def main():
             stats["skip"] += 1
             continue
         parent_rel = os.path.dirname(rel)
-        parent = prog["nodes"].get(parent_rel) if parent_rel else None
-        parent_uuid = parent.get("uuid") if parent else None
-        if parent_rel and parent is None:
-            stats["fail"].append((rel, "缺父节点映射"))
-            continue
         record = None
         last_err = None
-        for attempt in range(1, args.pend_retries + 1):
-            try:
-                record = create_node(token, args.base, args.book, args.root, rel, is_dir, up, parent_uuid, args.max_body, root_only=args.batch_mode)
-                break
-            except Exception as e:
-                last_err = f"{type(e).__name__}: {str(e)[:300]} (parent={parent_rel or 'ROOT'})"
-                if attempt < args.pend_retries:
-                    wait = args.pend_sleep * attempt  # 递增: 600/1200/1800 (10/20/30 分钟)
-                    log(f"  ⚠ 失败 [{rel}] → {last_err}; 静置 {wait}s 后重试 ({attempt}/{args.pend_retries})", flush=True)
-                    time.sleep(wait)
-                    # 静置后清理可能残留的同名节点(避免重复创建), 断点续传账本不动
-                    cleanup_leftover(token, args.base, args.book, rel, is_dir, parent_uuid)
+        if args.toc_md:
+            # 官方一次性目录模式: 目录无需建节点(由 markdown 目录树生成), 文件只建文档
+            if is_dir:
+                record = {"type": "dir", "uuid": "", "title": os.path.basename(rel)}
+            else:
+                for attempt in range(1, args.pend_retries + 1):
+                    try:
+                        record = create_doc_only(token, args.base, args.book, args.root, rel, up, args.max_body)
+                        break
+                    except Exception as e:
+                        last_err = f"{type(e).__name__}: {str(e)[:300]} (parent={parent_rel or 'ROOT'})"
+                        if attempt < args.pend_retries:
+                            wait = args.pend_sleep * attempt
+                            log(f"  ⚠ 失败 [{rel}] → {last_err}; 静置 {wait}s 后重试 ({attempt}/{args.pend_retries})", flush=True)
+                            time.sleep(wait)
+        else:
+            parent = prog["nodes"].get(parent_rel) if parent_rel else None
+            parent_uuid = parent.get("uuid") if parent else None
+            if parent_rel and parent is None:
+                stats["fail"].append((rel, "缺父节点映射"))
+                continue
+            for attempt in range(1, args.pend_retries + 1):
+                try:
+                    record = create_node(token, args.base, args.book, args.root, rel, is_dir, up, parent_uuid, args.max_body, root_only=args.batch_mode)
+                    break
+                except Exception as e:
+                    last_err = f"{type(e).__name__}: {str(e)[:300]} (parent={parent_rel or 'ROOT'})"
+                    if attempt < args.pend_retries:
+                        wait = args.pend_sleep * attempt  # 递增: 600/1200/1800 (10/20/30 分钟)
+                        log(f"  ⚠ 失败 [{rel}] → {last_err}; 静置 {wait}s 后重试 ({attempt}/{args.pend_retries})", flush=True)
+                        time.sleep(wait)
+                        # 静置后清理可能残留的同名节点(避免重复创建), 断点续传账本不动
+                        cleanup_leftover(token, args.base, args.book, rel, is_dir, parent_uuid)
         if record is None:
             stats["fail"].append((rel, last_err))
             continue
@@ -597,6 +746,32 @@ def main():
                 pend_nodes = sum(len(u) for v in batch_q.values() for _, u in v)
                 pend = f" 待归位{pend_nodes}"
             log(f"  进度: 目录{stats['dir']} 文档{stats['doc']} 跳过{stats['skip']}{pend} 失败{len(stats['fail'])}", flush=True)
+
+    # 官方一次性目录模式收尾: 拼 markdown 目录树 → 一次 PUT 设目录 → 回读核对
+    if args.toc_md:
+        try:
+            md = build_toc_md(args.root, prog, excludes)
+        except Exception as e:
+            stats["fail"].append(("(toc-md)", f"生成目录树失败: {str(e)[:200]}"))
+            md = None
+        if md:
+            lines = md.splitlines()
+            log(f"[toc-md] 目录树: {len(lines)} 行 / {len(md.encode('utf-8'))} 字节 → 一次 PUT /repos/{args.book}", flush=True)
+            t0 = time.time()
+            try:
+                api(token, args.base, "PUT", f"/repos/{args.book}", {"toc": md})
+                log(f"[toc-md] PUT 完成 ({time.time() - t0:.1f}s), 回读核对…", flush=True)
+                missing, n = backfill_and_verify(token, args.base, args.book, prog, args.root, excludes)
+                save_prog(prog, args.progress)
+                log(f"[toc-md] TOC {n} 节点; 结构缺失 {len(missing)} 项", flush=True)
+                if missing:
+                    for p in missing[:20]:
+                        log("  缺失:", p)
+                    stats["fail"].extend((p, "TOC 结构缺失") for p in missing)
+                else:
+                    log("[toc-md] 结构核对 PASS ✅", flush=True)
+            except Exception as e:
+                stats["fail"].append(("(toc-md)", f"PUT toc 失败: {type(e).__name__}: {str(e)[:200]}"))
 
     # batch 模式收尾: flush 全部剩余批次
     if args.batch_mode:

@@ -71,6 +71,17 @@ def build_path_map(toc):
 - **真批量端点（2026-10-16 老板抓包 + 实测确认）**：Web 内部 API `PUT /api/catalog_nodes/batch`（Cookie 认证：cookie + x-csrf-token(=yuque_ctoken) + x-login，body `{"batch_action":"batchMove","node_uuids":[...],"target_uuid":...,"book_id":N,"target_book_id":N,"transfer_action":"prependChild","insert_to_catalog":true}`）一次移动 N 个节点。v2 `PUT /toc` 无批量（数组 body 422）；MCP `yuque_batch_update_toc` 是 for 循环假 batch；无 batchCreate（只有 batchMove）。**实测语义**：① 服务端「整体插到目标最前、保持数组内顺序」——传正序得正序（分片 1→2→3）；② 同父分批 flush 后批会插到前批前（乱序）→ 必须「逆序逐片 flush」；③ 批内节点顺序保持 = 目录/文件 DFS 序无需反转。已落地 `yuque_tree_import.py --batch-mode`（挂根攒批 + batchMove 归位 + 校验降级 + 中断恢复）。
 - **处置**：脚本已内置 `--pend-sleep` 失败静置重试（默认 600s 递增退避(10/20/30 分钟)×3 轮）；残留同名节点由 cleanup_leftover 自动清理；极端情况（父子嵌死锁）用 Web 前端拖拽或重建子树。
 
+## 官方 v2 能力核实（2026-10-16，来源 OAS `yuque_openapi_20260722.yaml` v2.0.1）
+
+- **一次性设目录**：`PUT /api/v2/repos/{book_id}` body **`toc` 字段 = Markdown 目录树**（原文「可利用此字段批量更新知识库的目录」）。已落地为 `yuque_tree_import.py --toc-md`（推荐默认）
+- `POST /repos/{book}/docs` 建文档后**自动挂到 TOC 根**（不再需要逐个 appendNode）
+- **TOC 事务**：`PUT /api/v2/repos/{book_id}/toc` 单节点，`action` = `appendNode`(尾插)/`prependNode`(头插)/`editNode`/`removeNode`，`action_mode` **必填** = `sibling`/`child`；**removeNode + child = 连子节点一起删**（sibling = 只删当前）；**「删除节点不会删除关联文档」**（幽灵 doc 得另走 `DELETE /docs/{id}`）
+- `target_uuid` 不填**默认根节点**；`node_uuid` 移动/更新/删除必填；`doc_id` 已 deprecated → 用 `doc_ids`
+- **限流（官方 Overview 文档）**：每小时 5000 次、每秒 100 次，**同账号所有 Token 共享**，响应头 `X-RateLimit-Limit/Remaining`
+- 官方 v2 无 batch 路径；`/api/catalog_nodes/batch`（batchMove）是 Web 内部 API，不在 OAS 里
+- **batchMove 响应体 = 完整 TOC 快照**（`{"meta":{...},"data":[全 TOC 节点, 带 parent_uuid/prev_uuid/sibling_uuid/level]}`）——可直接拿来核位，无需再 GET /toc；单次 200 节点实测正常（无 100 上限）
+- **删库**：`DELETE /api/v2/repos/{id}` 有效（Web `DELETE /api/books/{id}` 不存在）
+
 ## 批量导入注意
 
 - 断点文件建议放工作目录外（如 tmp/），每节点一次 `os.replace` 原子落盘
