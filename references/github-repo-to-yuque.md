@@ -116,6 +116,8 @@
 **中断续传**：文档层可断点续传（progress 记 slug/doc_id）；收尾 PUT 幂等，重跑同一命令安全。
 
 **回退**：`--no-toc-md`（编排器）/ 不加 `--toc-md`/`--batch-mode`（直接用 tree_import）→ 旧流程。
+15. **batch 模式遇「同名目录」会串 uuid → 整树错位（2026-10-16 rea 重导版实战）**：仓库里有多处同名目录（如 `bridge/cutter` 与 `src/cutter`；`scripts/fixtures/firmware`、`scripts/verify/firmware`、`tests/fixtures/firmware`）时，batch 模式（节点统一挂根 + batchMove 归位）记录目录 uuid 会按标题匹配到「另一个同名的根级节点」，导致 progress 里**两条 rel 指向同一个 uuid**；随后 batchMove 按这些 uuid 归位 → 大批节点父链错乱（本次实测 2938 条错位、2179 文件路径对不上、TOC 全路径唯一 = False；用 verify 脚本一跑即现）。**对策：含同名目录/文件的仓库不要用 batch 模式，直接上 `--toc-md`（官方一次性目录，按本地树 DFS 拼 markdown 一次 PUT 设整棵目录，天然按层级区分同名，无 uuid 归属歧义）**。SKILL.md 已把 toc-md 列为推荐默认。
+16. **救援：batch 留下的错位树，用 toc-md 原地重建（免重导正文，2026-10-16 rea 实战）**：文档本体（doc_id/正文）是好的，只是父链乱。做法：① 拉全量 docs（`GET /repos/{id}/docs` 分页）建 `doc_id → slug` 映射；② 回填进 progress 各 segment 的 `slug`（batch 模式的 progress 不存 slug，否则 `build_toc_md` 直接 KeyError 'slug'）；③ 原样跑 `yuque_tree_import.py --toc-md`（所有 rel 已在账本 → 全 skip → 只拼树 + 一次 PUT + 回读回填 uuid + 结构核对）。本次 4425 节点 PUT 22s，结构核对 PASS、对账 0 错位、verify PASS、幽灵 0，TOC 4446 节点（DOC 4080 + TITLE 366）全路径唯一 True。**toc-md 的 PUT 以本地树为准重排整棵目录，同名 TITLE/旧节点被复用重挂，无需手工清理**。
 
 ## 六、wrapper 子命令速查
 ```
