@@ -61,6 +61,68 @@ def load_upload_cfg(cookie_config):
         pass
     return None
 
+
+def web_api(cfg, login, method, url, body=None, retries=4):
+    """Web 内部 API 请求(cookie 认证): 图片上传/batchMove 等不在 v2 的能力.
+    返回解析后的 JSON; HTTP 429/5xx 指数退避重试."""
+    import ssl
+    data = json.dumps(body).encode() if body is not None else None
+    for i in range(retries):
+        req = urllib.request.Request(url, data=data, method=method)
+        req.add_header("Cookie", cfg["cookie"])
+        req.add_header("x-csrf-token", cfg["ctoken"])
+        req.add_header("x-login", login)
+        req.add_header("Content-Type", "application/json")
+        req.add_header("X-Requested-With", "XMLHttpRequest")
+        req.add_header("Origin", "https://www.yuque.com")
+        req.add_header("Referer", "https://www.yuque.com/")
+        req.add_header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36")
+        try:
+            with urllib.request.urlopen(req, timeout=30) as r:
+                return json.loads(r.read().decode())
+        except urllib.error.HTTPError as e:
+            if e.code in (401, 403):
+                raise RuntimeError(f"Web API 认证失败 HTTP {e.code}(cookie/ctoken 过期?): {e.read().decode()[:200]}")
+            if e.code in (429, 500, 502, 503, 504):
+                time.sleep(2 ** i * 1.5 + 1)
+                continue
+            raise RuntimeError(f"Web API HTTP {e.code}: {e.read().decode()[:200]}")
+        except Exception:
+            if i == retries - 1:
+                raise
+            time.sleep(2 ** i * 1.5 + 1)
+    raise RuntimeError("web_api retries exhausted")
+
+
+def batch_move(cfg, login, book, node_uuids, target_uuid):
+    """批量移动节点到目标目录下(Web API /api/catalog_nodes/batch, 2026-10-16 老板抓包确认).
+    transfer_action 固定 prependChild; 实测(2026-10-16 测试库)服务端是「整体插到目标最前、
+    保持传入数组顺序」——直接传 DFS 正序即可, 千万别逆序(逆序会让兄弟/分片顺序反转)."""
+    return web_api(cfg, login, "PUT", "https://www.yuque.com/api/catalog_nodes/batch", {
+        "batch_action": "batchMove",
+        "node_uuids": list(node_uuids),
+        "target_uuid": target_uuid,
+        "book_id": book,
+        "target_book_id": book,
+        "transfer_action": "prependChild",
+        "insert_to_catalog": True,
+    })
+
+
+def verify_positions(token, base, book, wants, retries=2):
+    """校验节点实际位置: wants = {node_uuid: 期望parent_uuid(None=根)}.
+    写路径有副本延迟(坑67), 首次不满足等 10s 重查一次.
+    返回未满足的 node_uuid 列表."""
+    for i in range(retries):
+        toc = api(token, base, "GET", f"/repos/{book}/toc").get("data", [])
+        actual = {n["uuid"]: (n.get("parent_uuid") or None) for n in toc}
+        bad = [u for u, want in wants.items()
+               if actual.get(u) != want or u not in actual]
+        if not bad or i == retries - 1:
+            return bad
+        time.sleep(10)
+    return bad
+
 def load_token(env):
     t = os.environ.get(env)
     if t:
@@ -263,8 +325,9 @@ def fmt_content(path, up=None, max_body=524_288):
     return out
 
 def find_node(toc, parent_uuid, title=None, doc_id=None):
+    want = parent_uuid or ""
     for n in toc:
-        if n.get("parent_uuid") != parent_uuid:
+        if (n.get("parent_uuid") or "") != want:
             continue
         if title is not None and n.get("title") == title:
             return n
@@ -299,15 +362,16 @@ def cleanup_leftover(token, base, book, rel, is_dir, parent_uuid):
             except Exception:
                 pass
 
-def create_node(token, base, book, root, rel, is_dir, up, parent_uuid, max_body=524_288):
-    """创建并挂载单个节点, 返回 progress 记录块; 失败抛异常。"""
+def create_node(token, base, book, root, rel, is_dir, up, parent_uuid, max_body=524_288, root_only=False):
+    """创建并挂载单个节点, 返回 progress 记录块; 失败抛异常。
+    root_only=True(batch 模式): 挂载一律挂根(不带 target_uuid), 后续由 batch_move 批量归位。"""
     if is_dir:
         toc = api(token, base, "PUT", f"/repos/{book}/toc", {
             "action": "appendNode", "action_mode": "child",
             "type": "TITLE", "title": os.path.basename(rel),
-            **({"target_uuid": parent_uuid} if parent_uuid else {}),
+            **({} if root_only else ({"target_uuid": parent_uuid} if parent_uuid else {})),
         })["data"]
-        n = find_node(toc, parent_uuid, title=os.path.basename(rel))
+        n = find_node(toc, (None if root_only else parent_uuid), title=os.path.basename(rel))
         if not n:
             raise RuntimeError("TITLE 节点未在返回目录中找到")
         return {"type": "dir", "uuid": n["uuid"]}
@@ -330,9 +394,9 @@ def create_node(token, base, book, root, rel, is_dir, up, parent_uuid, max_body=
         toc = api(token, base, "PUT", f"/repos/{book}/toc", {
             "action": "appendNode", "action_mode": "child",
             "type": "DOC", "doc_ids": [doc_id],
-            **({"target_uuid": parent_uuid} if parent_uuid else {}),
+            **({} if root_only else ({"target_uuid": parent_uuid} if parent_uuid else {})),
         })["data"]
-        n = find_node(toc, parent_uuid, doc_id=doc_id)
+        n = find_node(toc, (None if root_only else parent_uuid), doc_id=doc_id)
         if not n:
             raise RuntimeError("DOC 节点未挂载成功")
         records.append({"uuid": n["uuid"], "doc_id": doc_id, "title": title})
@@ -344,6 +408,69 @@ def save_prog(prog, path):
     tmp = path + ".tmp"
     json.dump(prog, open(tmp, "w"), ensure_ascii=False)
     os.replace(tmp, path)
+
+def flush_group(cfg, login, token, base, book, items, parent_uuid, batch_size):
+    """items: [(rel, [uuids...])]; 把全部 uuid 移动到 parent_uuid 下, 保持 DFS 正序.
+    batchMove 的 prependChild = 整体插到目标最前且保持数组内顺序(2026-10-16 实测);
+    同父多批时若按序逐批 flush, 后批会插到前批前面 → 顺序反转.
+    解法: 按 DFS 序切片后「逆序逐片 flush」(最后一片先挂), prepend 叠加后整体正序.
+    batchMove 失败/校验未过 → 降级逐节点 v2 移动."""
+    all_items = [(rel, u) for rel, uuids in items for u in uuids]
+    chunks = [all_items[i:i + batch_size] for i in range(0, len(all_items), batch_size)]
+    ok, bad = [], []
+    for chunk in reversed(chunks):  # 逆序: 最后一片先挂
+        uuids = [u for _, u in chunk]
+        try:
+            batch_move(cfg, login, book, uuids, parent_uuid)
+        except Exception as e:
+            print(f"  ⚠ batchMove 失败({len(chunk)} 节点): {str(e)[:120]} → 降级单节点", flush=True)
+            for rel, u in chunk:
+                bad.append((rel, f"batchMove 失败: {str(e)[:100]}"))
+            continue
+        miss = verify_positions(token, base, book, {u: parent_uuid for _, u in chunk})
+        if miss:
+            missu = set(miss)
+            for rel, u in chunk:
+                if u not in missu:
+                    ok.append(rel)
+                    continue
+                try:
+                    api(token, base, "PUT", f"/repos/{book}/toc", {
+                        "action": "appendNode", "action_mode": "child",
+                        "target_uuid": parent_uuid, "node_uuid": u})
+                    ok.append(rel)
+                except Exception as e:
+                    bad.append((rel, str(e)[:100]))
+        else:
+            ok.extend(rel for rel, _ in chunk)
+    return ok, bad
+
+def node_uuids_of(record):
+    """progress 记录的全部 TOC 节点 uuid(含分片)。"""
+    uuids = [record["uuid"]]
+    for s in record.get("segments", [])[1:]:
+        uuids.append(s["uuid"])
+    return uuids
+
+
+def rebuild_pending_batches(prog, token, base, book):
+    """batch 模式中断恢复: 扫描 progress 已有节点, 实际位置 != 期望父的重新入队.
+    返回 {parent_uuid: [(rel, [uuid])]} (只含非根目标)."""
+    if not prog["nodes"]:
+        return {}
+    toc = api(token, base, "GET", f"/repos/{book}/toc").get("data", [])
+    actual = {n["uuid"]: (n.get("parent_uuid") or "") for n in toc}
+    q = {}
+    for rel, rec in prog["nodes"].items():
+        parent_rel = os.path.dirname(rel)
+        want = (prog["nodes"].get(parent_rel, {}).get("uuid") if parent_rel else None) or ""
+        if not want:
+            continue  # 根级节点挂根即最终位置
+        misplaced = [u for u in node_uuids_of(rec) if actual.get(u, "MISSING") != want]
+        if misplaced:
+            q.setdefault(want, []).append((rel, misplaced))
+    return q
+
 
 def main():
     ap = argparse.ArgumentParser()
@@ -359,15 +486,20 @@ def main():
     ap.add_argument("--pend-sleep", type=float, default=600, help="失败静置基础秒数, 按轮次递增(第n次等待 = pend_sleep×n, 默认 600 → 10/20/30 分钟)")
     ap.add_argument("--max-body", type=int, default=524_288, help="单文档 body 上限(字节), 超限自动切块; 默认 512KB(2026-10-14 老板定: 1MB 语雀端加载慢)")
     ap.add_argument("--pend-retries", type=int, default=3, help="失败静置重试最大轮数(超出则记 fail 跳过)")
+    ap.add_argument("--batch-mode", action="store_true", help="批处理模式(2026-10-16): 节点统一挂根+攒批 batchMove 到目标目录, 规避高频子树挂载积压(坑67); 需 cookie 有效")
+    ap.add_argument("--batch-size", type=int, default=50, help="batch 模式每批节点数(默认 50)")
+    ap.add_argument("--x-login", default="yehuoshun", help="Web API x-login 用户名(batch 模式用)")
     args = ap.parse_args()
 
     token = load_token(args.token_env)
     cfg = load_upload_cfg(args.cookie_config)
-    up = {"cfg": cfg, "user_id": args.user_id} if cfg else None
-    if up:
+    if args.batch_mode and not cfg:
+        raise SystemExit("--batch-mode 需要 --cookie-config 提供有效 cookie/ctoken(Web API 认证)")
+    if cfg:
         print("图片自动上传: 已启用(cookie 就绪)", flush=True)
     else:
         print("图片自动上传: 未启用(无 cookie/ctoken, 图片回退占位说明)", flush=True)
+    up = {"cfg": cfg, "user_id": args.user_id} if cfg else None
     # 自身产物防自污染: 账本(及其 .tmp)落在导入树内时排除, 不再被当文档导入
     excludes = set()
     root_abs, prog_abs = os.path.abspath(args.root), os.path.abspath(args.progress)
@@ -388,6 +520,17 @@ def main():
 
     prog = load_prog(args.progress)
     stats = {"dir": 0, "doc": 0, "skip": 0, "fail": []}
+    batch_q = rebuild_pending_batches(prog, token, args.base, args.book) if args.batch_mode else None
+    if batch_q:
+        print(f"[batch] 中断恢复: {sum(len(v) for v in batch_q.values())} 个已记节点位置待归位", flush=True)
+
+    def do_flush(parent_uuid, items):
+        ok_rel, bad = flush_group(cfg, args.x_login, token, args.base, args.book,
+                                  items, parent_uuid, args.batch_size)
+        if bad:
+            stats["fail"].extend(bad)
+        return ok_rel
+
     for rel, is_dir in rels:
         if rel in prog["nodes"]:
             stats["skip"] += 1
@@ -402,7 +545,7 @@ def main():
         last_err = None
         for attempt in range(1, args.pend_retries + 1):
             try:
-                record = create_node(token, args.base, args.book, args.root, rel, is_dir, up, parent_uuid, args.max_body)
+                record = create_node(token, args.base, args.book, args.root, rel, is_dir, up, parent_uuid, args.max_body, root_only=args.batch_mode)
                 break
             except Exception as e:
                 last_err = str(e)[:150]
@@ -415,15 +558,30 @@ def main():
         if record is None:
             stats["fail"].append((rel, last_err))
             continue
+        prog["nodes"][rel] = record
         if record["type"] == "dir":
-            prog["nodes"][rel] = record
             stats["dir"] += 1
         else:
-            prog["nodes"][rel] = record
             stats["doc"] += 1
         save_prog(prog, args.progress)  # 每节点落盘一次(防中断丢批)
+        if not args.batch_mode:
+            # 非 batch 模式: 节点在 create_node 内已挂到真实父, 直接计数完成
+            pass
+        else:
+            # batch 模式: 已挂根; 非根节点攒批等待收尾统一归位
+            # (同父分批 flush 会因 prependChild 语义乱序, 2026-10-16 实测 → 只攒不中途 flush)
+            if parent_uuid:
+                batch_q.setdefault(parent_uuid, []).append((rel, node_uuids_of(record)))
         if (stats["dir"] + stats["doc"]) % 25 == 0:
             print(f"  进度: 目录{stats['dir']} 文档{stats['doc']} 跳过{stats['skip']} 失败{len(stats['fail'])}", flush=True)
+
+    # batch 模式收尾: flush 全部剩余批次
+    if args.batch_mode:
+        for parent_uuid, items in list(batch_q.items()):
+            ok_rel = do_flush(parent_uuid, items)
+            if ok_rel:
+                stats["ok_flush"] = stats.get("ok_flush", 0) + len(ok_rel)
+        print(f"[batch] 归位完成: {stats.get('ok_flush', 0)} 节点确认到位", flush=True)
 
     print("=== 完成 ===", json.dumps(stats, ensure_ascii=False), flush=True)
     for rel, err in stats["fail"][:10]:

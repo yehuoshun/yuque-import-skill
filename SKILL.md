@@ -43,6 +43,12 @@ python3 scripts/yuque_tree_import.py --root /path/to/dir --book <book_id> --prog
 
 - token 来源：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/credentials.env` 的 `export TOKEN_L91="..."`，**脚本不硬编码 token**
 - 失败静置重试：单个节点挂载失败（如 `TITLE 节点未在返回目录中找到`）→ 静置 `--pend-sleep` 秒（默认 600）→ 清理残留同名节点 → 重试，最多 `--pend-retries` 轮（默认 3）；仍失败才记 fail。**背景（2026-10-07 实验证实）**：高频连续创建（几百节点不间断）会让语雀 TOC 写路径积压，新建空目录挂子静默失败（响应乐观回显但实际挂根）；静置 ~10 分钟自愈，节流（每请求间隔 1.5s + 每百节点休息）可完全规避。故默认保持高频 + 失败静置重试，不主动降速，除非想稳到底（用 `--pend-sleep` 调小）+ 外部节流。
+- **batch 模式（2026-10-16 新增，防积压终极方案）**：`--batch-mode [--batch-size N] [--x-login 用户名]`
+  - 原理：doc 层（create_doc）不受 TOC 队列限制可连续造；**TOC 挂载改两段式**——节点统一 appendNode 挂根（根层追加实测稳定）→ 攒批 → Web API `PUT /api/catalog_nodes/batch`（batchMove，一次请求 N 个节点）批量归位。把「N 次高风险子树插入」变成「N 次低风险挂根 + N/B 次服务端批量移动」
+  - 实测（2026-10-16 测试库，11 节点 5 目录 6 文件含 512KB 分片）：0 失败、无残留、DFS 序正确（目录前文件后、分片 1→2→3）
+  - **顺序语义（实测）**：batchMove 的 prependChild = 「整体插到目标最前、保持数组内顺序」；同父多批若按序 flush 后批会插到前批前 → 脚本已实现「逆序逐片 flush」（最后一片先挂）保证正序
+  - 依赖：`--cookie-config` 需有效 cookie/ctoken（Web API 认证，会过期）；中断后重跑自动扫描 progress 里位置未归位的节点重新入队
+
 - 内容格式：`.md` 原样 / `.cs` → ` ```csharp ` 代码块 / 其余 → 纯文本代码块
 - 超限自动处理：二进制（NUL/无效 UTF-8 占比高）→ 图片类（png/jpg/gif/webp/svg…）自动上传语雀 CDN 并 `![文件名](cdn_url)` 嵌入（需 cookie/ctoken，见 `--cookie-config`）；非图片 → 占位说明；文本超 512KB（`--max-body` 可调，**默认 512KB**，2026-10-14 老板拍板：1MB 语雀端加载也要等很久；上限别碰 4MB——语雀端直接打不开）→ 自动拆成多文档 `xxx (1/N)` `(2/N)` …，内容零丢失。**切分必须按语义边界，禁硬拆**（2026-10-14 老板：硬拆影响观感）：JSON 顶层数组→按条目边界（每段是完整记录组成的可解析 JSON），其余→按行边界（绝不切破行；单行自身超限才硬切）；每段正文头带范围注记 `分段 i/N · 第 a-b 个条目（共 M 个）· 首条「xx」· 源文件 X MB 超限，按 JSON 条目边界切分`；代码块按扩展名标注语言（json/ts/vue/py…）
 - 中断后重跑同一命令即续传，跳过已完成节点

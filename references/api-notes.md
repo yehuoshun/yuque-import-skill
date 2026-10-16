@@ -68,6 +68,7 @@ def build_path_map(toc):
 - **复现**：高频创建 50 节点后探针即失败；`GET /toc` 与 `GET /api/catalog_nodes`（Web 目录）两套 API 读出一致的“挂根/不存在”，Web 单节点/批量 move 也假成功（返回 success 实际不动）。
 - **自愈/规避**：停止写入静置 ~10 分钟恢复（5/5 探针通过）；降速（每请求间隔 1.5s + 每 100 节点休息 45s）1000 节点 0 失败。与 TOC 总量上限（5000）无关，与库无关（两个全新库同样复现）。
 - **限速对象（2026-10-16 rea 全库实测确认）**：只有 TOC 写动作（appendNode / removeNode / moveNode / prependNode 等 `PUT /toc` 系列）需要降速——它们走串行队列，灌快了假成功挂根；**doc 层（create_doc / PUT /docs 正文回灌）走独立存储服务，不受 TOC 队列影响，可以连续/并行造**（rea 单 4048 doc 全建成、仅 TOC 挂载失败，5 个幽灵全是 create 成功+挂载失败的孤儿）。推论：理论上可生产-消费并行——create_doc 多 worker 连续跑 → doc_id 入队 → 单线程慢速 appendNode（挂载端绝不并行，并行=排队=更快挤爆）。
+- **真批量端点（2026-10-16 老板抓包 + 实测确认）**：Web 内部 API `PUT /api/catalog_nodes/batch`（Cookie 认证：cookie + x-csrf-token(=yuque_ctoken) + x-login，body `{"batch_action":"batchMove","node_uuids":[...],"target_uuid":...,"book_id":N,"target_book_id":N,"transfer_action":"prependChild","insert_to_catalog":true}`）一次移动 N 个节点。v2 `PUT /toc` 无批量（数组 body 422）；MCP `yuque_batch_update_toc` 是 for 循环假 batch；无 batchCreate（只有 batchMove）。**实测语义**：① 服务端「整体插到目标最前、保持数组内顺序」——传正序得正序（分片 1→2→3）；② 同父分批 flush 后批会插到前批前（乱序）→ 必须「逆序逐片 flush」；③ 批内节点顺序保持 = 目录/文件 DFS 序无需反转。已落地 `yuque_tree_import.py --batch-mode`（挂根攒批 + batchMove 归位 + 校验降级 + 中断恢复）。
 - **处置**：脚本已内置 `--pend-sleep` 失败静置重试（默认 600s 递增退避(10/20/30 分钟)×3 轮）；残留同名节点由 cleanup_leftover 自动清理；极端情况（父子嵌死锁）用 Web 前端拖拽或重建子树。
 
 ## 批量导入注意
