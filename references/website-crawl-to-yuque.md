@@ -4,7 +4,7 @@
 > 实战源（按时间）：gitref（content_box 容器）、Nulab（Gatsby page-data + 图片抠图）、
 > Git Magic（DocBook content div）、廖雪峰（Tailwind 站，评论区 JS 带偏窗口事故）、
 > 看云 kancloud（SEO 副本直出 md 源码）、Pro Git gitbooks.io（GitBook3 + asciidoc 实体转义）、
-> SVN Book（DocBook XSL 多页站，bs4 渲染器）。
+> SVN Book（DocBook XSL 多页站，bs4 渲染器）、cn.linux.vbird.org（老式 PHP 表格站，2026-10-16）。
 > 通用爬虫模板：`scripts/yuque_website_crawl.py`（复制到 tmp/<站点>/crawl.py，改 SITE 配置区）。
 
 ## 一、流程（六步）
@@ -90,6 +90,23 @@
     索引页里是带文本的真链接（剥了整页索引变「，」）→ 只剥「无 href 且无文本」的
 22. **语雀 TOC 根级顺序坑**（svnbook 实踩）：tree_import 先建 TITLE 后建 DOC → 根级 DOC 排到目录之后
     → `PUT /toc {action:prependNode, action_mode:sibling, node_uuid, target_uuid}` 一次归位
+23. **老站「整章全文页」与「分页」并存 → 只导一种**（vbird 服务器架设篇实踩 2026-10-16）：
+    每章有 `NNNNname.php`（整章）与 `NNNNname_1.._N.php`（分页）两套，标题/章名完全相同。
+    实测全文页文本长度 ≈ 分页拼接之和（本站 21/22 章比值 1.01~1.06）→ **连分页一起导会让整库内容翻倍重复**。
+    动手前先抽 1~2 章做「全文页 vs Σ分页」长度比对，比值≈1 就只导全文页；分页文件用 `_\d+\.php$` 排除。
+24. **装饰性图标必须按 alt 剔除**（vbird 实踩）：每级标题前都挂 `<img src="../../image/logo.png" alt="大标题的图示|小标题的图示">`（本站 596 张），
+    另有人物头像 `鸟哥的图示`。不剔则每篇多几百个占位/噪声图（且全部白传 CDN）。
+    剔除后只传正文截图（本站 218 张，逐章图片数可核对：`src 非装饰 img 数 == md 里 ![...] 数`）。
+    顺带：顶部 ImageReady 切片导航图墙、页脚版权区靠「正文标记 → 页脚标记」窗口直接跳过，不用逐块识别。
+25. **标题不是 h 标签的站，先归一化成 heading 再走块渲染**（vbird 实踩）：正文用 `<span class="text_h1|text_h2">`
+    表达 ## / ###（另有 `text_head0` = 章名、`text_history` = 更新日期）；终端输出是 `<table class="term"><td class="term"><pre>`；
+    Tips/例题是单格 `<table width="90%">`（单格→递归成块，单段长文本→引用块）。
+    直接正则拆 `<p>` 会把「无 `<p>` 的 div（文字 + 表格混排）」整块压成一行 → 用 html.parser 建迷你 DOM 再块渲染更稳。
+26. **同站简繁混排 → 简体版另出一篇，不改原篇**（vbird 实踩，老板 2026-10-16 拍板）：
+    繁体章的正文标记也是繁体（`本文的檔頭部分`/`連結區`）→ 窗口正则要同时吃「档/檔 头/頭」（`本文的正式部分` 简繁同形）。
+    口径：**保留繁体原文 + 额外产出「（简体版）」**。转换器选 **opencc `tw2sp`**（词级正确：設定→设置、透过→通过、资讯→信息、执行绪→线程）；
+    `zhconv` 的 `zh-cn` 只做部分词转换（設定→设定、透過→透过），质量不够。
+    命名兼容排序：`20-X.md` < `20-X（简体版）.md`（短串在前）→ 顺序自然落在原篇后面。
 
 
 ## 五、站点案例速查
@@ -108,3 +125,4 @@
 | bingohuang.gitbooks.io/progit2（GitBook 3 + Asciidoctor, 2026-10-15） | `<section class="normal markdown-section">` | `</section>`（每页唯一） | 正文容器 markdown-section；**全文非 ASCII 实体转义**(&#x4E2D;)→h.unescape 还原；侧边栏 `ul.summary` 的 li.chapter[data-level/data-path] 直接给全树；图片相对路径 `../images/` 按页面 URL 解析；**gitbooks.io 间歇 401**→fetch 指数退避 6 次；正文块仍是 Asciidoctor div(sect2-4/listingblock/imageblock)；xref 死链 `[_xxx]` 按全站 `<hN id>` 映射换中文标题 |
 | svnbook.red-bean.com/nightly/zh（DocBook XSL 多页站, 2026-10-15） | `div.navheader` 之后 | `div.navfooter`（前一页/下一页/上一级） | 每章/节/命令手册各自成页；分部页正文只有小节目录(补「**目录**」+相对链接防空文档)；blockquote/admonition 是 `<table>` 渲染(抽 td 文本、丢图标、th 当标签)；`<a class="indexterm">` 只剥无 href 无文本的(索引页里是真链接)；正文首标题去掉但 titlepage 作者/日期要留；bs4 递归渲染器替代正则；**抓取 ~12min/导入 ~10min 长任务先报 ETA** |
 | kancloud.cn/kancloud/<book>（看云 SEO 副本, 2026-10-15） | `<div class="seo">` 内 `<div class="content">`（=原始 md 源码, 实体转义） | `</div><div class="catalog">`（全站目录, 每页都有） | 不用 HTML→md：unescape 即落盘；`catalog` 顺序=目录序、页面 URL=`/kancloud/<book>/<数字id>`；**box.kancloud.cn 防盗链**→带 Referer 才 200；书站类库名用书名(slug 仍带日期, 如 intro-to-prog-20261015) |
+| cn.linux.vbird.org/linux_server（老式 PHP 表格站, 2026-10-16） | `<!-- 本文的正式部分 -->`（繁体同形）之后 | 页脚 `<div style="padding-top: 0px; text-align: center;">` | 22 章；**标题是 `<span class="text_h1">` / `<span class="text_h2">` 不是 h 标签**，章名取 `text_head0`（内有嵌套 `text_head_en`，正则用 `</span>\s*(?:</a>|<br)` 收尾）；终端块 `<table class="term"><pre>`；Tips/例题=单格 `<table width="90%">`；**整章全文页与分页并存 → 只导全文页**（比值≈1）；装饰图（大标题/小标题/鸟哥图示 596 张）按 alt 剔除、正文截图 218 张传 CDN；繁体章额外出「（简体版）」（opencc tw2sp）；按「第N章」中文数字转阿拉伯排序（非文件名前缀序）；站点专用转换器 `tmp/vbird-server/crawl_vbird.py` |
