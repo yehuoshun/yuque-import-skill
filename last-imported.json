@@ -89,5 +89,12 @@
   "book_url": "elinux-c37502e",
   "imported_at": "2026-10-16T23:40:00+0800",
   "note": "zh/ 中文版子树（GitBook 源）；全树 1949 文件 / 986 目录（含 960 个 subpage 子页）；toc-md"
+ },
+ "https://github.com/yeasy/docker_practice": {
+  "commit": "27a97ae",
+  "book_id": 84645345,
+  "book_url": "docker-practice-27a97ae",
+  "imported_at": "2026-10-17T00:08:00+0800",
+  "note": "只导书籍内容树（21 章 + appendix + README/SUMMARY/CHANGELOG/CONTRIBUTING）；脚手架/CI/tests/tools/scripts/examples 未导；33 图传 CDN"
  }
 }
