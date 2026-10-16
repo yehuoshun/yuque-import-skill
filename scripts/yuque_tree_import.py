@@ -120,9 +120,15 @@ def verify_positions(token, base, book, wants, retries=2, label=""):
                if actual.get(u) != want or u not in actual]
         if not bad or i == retries - 1:
             return bad
-        print(f"    ⏳ {label}: {len(bad)} 节点位置未刷新(副本延迟), 10s 后重查", flush=True)
+        log(f"    ⏳ {label}: {len(bad)} 节点位置未刷新(副本延迟), 10s 后重查", flush=True)
         time.sleep(10)
     return bad
+
+def log(*args, **kw):
+    """带秒级时间戳的输出(2026-10-16): 长任务事后靠日志分析必须能建时间线."""
+    kw.setdefault("flush", True)
+    print(f"[{time.strftime('%H:%M:%S')}]", *args, **kw)
+
 
 def load_token(env):
     t = os.environ.get(env)
@@ -359,7 +365,7 @@ def cleanup_leftover(token, base, book, rel, is_dir, parent_uuid):
             try:
                 api(token, base, "PUT", f"/repos/{book}/toc", {
                     "action": "removeNode", "action_mode": "child", "node_uuid": n["uuid"]})
-                print(f"    清理残留节点: {title} (parent={pu!r})", flush=True)
+                log(f"    清理残留节点: {title} (parent={pu!r})", flush=True)
             except Exception:
                 pass
 
@@ -428,14 +434,14 @@ def flush_group(cfg, login, token, base, book, items, parent_uuid, batch_size, p
         try:
             batch_move(cfg, login, book, uuids, parent_uuid)
         except Exception as e:
-            print(f"  ⚠ [batch] {tag}: batchMove 失败({str(e)[:100]}) → 降级单节点", flush=True)
+            log(f"  ⚠ [batch] {tag}: batchMove 失败({str(e)[:200]}) → 降级单节点; 节点样本: {uuids[:3]}", )
             for rel, u in chunk:
-                bad.append((rel, f"batchMove 失败: {str(e)[:100]}"))
+                bad.append((rel, f"batchMove 失败: {str(e)[:200]} (uuid={u}, parent={parent_label or parent_uuid})"))
             continue
         miss = verify_positions(token, base, book, {u: parent_uuid for _, u in chunk}, label=tag)
         if miss:
             missu = set(miss)
-            print(f"  ⚠ [batch] {tag}: {len(miss)} 节点位置校验未过 → 降级单节点移动", flush=True)
+            log(f"  ⚠ [batch] {tag}: {len(miss)} 节点位置校验未过 → 降级单节点移动", flush=True)
             for rel, u in chunk:
                 if u not in missu:
                     ok.append(rel)
@@ -446,10 +452,10 @@ def flush_group(cfg, login, token, base, book, items, parent_uuid, batch_size, p
                         "target_uuid": parent_uuid, "node_uuid": u})
                     ok.append(rel)
                 except Exception as e:
-                    bad.append((rel, str(e)[:100]))
+                    bad.append((rel, f"{type(e).__name__}: {str(e)[:200]} (移动 uuid={u} → {parent_label or parent_uuid})"))
         else:
             ok.extend(rel for rel, _ in chunk)
-        print(f"  ✓ [batch] {tag} ({time.time() - t0:.1f}s)", flush=True)
+        log(f"  ✓ [batch] {tag} ({time.time() - t0:.1f}s)", flush=True)
     return ok, bad
 
 def node_uuids_of(record):
@@ -503,9 +509,9 @@ def main():
     if args.batch_mode and not cfg:
         raise SystemExit("--batch-mode 需要 --cookie-config 提供有效 cookie/ctoken(Web API 认证)")
     if cfg:
-        print("图片自动上传: 已启用(cookie 就绪)", flush=True)
+        log("图片自动上传: 已启用(cookie 就绪)", flush=True)
     else:
-        print("图片自动上传: 未启用(无 cookie/ctoken, 图片回退占位说明)", flush=True)
+        log("图片自动上传: 未启用(无 cookie/ctoken, 图片回退占位说明)", flush=True)
     up = {"cfg": cfg, "user_id": args.user_id} if cfg else None
     # 自身产物防自污染: 账本(及其 .tmp)落在导入树内时排除, 不再被当文档导入
     excludes = set()
@@ -513,28 +519,28 @@ def main():
     if prog_abs.startswith(root_abs + os.sep):
         excludes.add(prog_abs)
         excludes.add(prog_abs + ".tmp")
-        print(f"已排除自身账本: {args.progress} (位于导入树内, 防止被当文档导入)", flush=True)
+        log(f"已排除自身账本: {args.progress} (位于导入树内, 防止被当文档导入)", flush=True)
     rels = [(os.path.relpath(p, args.root), d) for p, d in walk(args.root, excludes)]
-    print(f"节点总数: {len(rels)} (目录 {sum(1 for _, d in rels if d)} / 文件 {sum(1 for _, d in rels if not d)})", flush=True)
+    log(f"节点总数: {len(rels)} (目录 {sum(1 for _, d in rels if d)} / 文件 {sum(1 for _, d in rels if not d)})", flush=True)
 
     if args.dry:
         for rel, is_dir in rels[:50]:
-            print(("DIR " if is_dir else "FILE"), rel)
+            log(("DIR " if is_dir else "FILE"), rel)
         sys.exit(0)
     if args.test:
         rels = rels[: args.test]
-        print(f"[TEST] 只导前 {args.test} 个节点", flush=True)
+        log(f"[TEST] 只导前 {args.test} 个节点", flush=True)
 
     prog = load_prog(args.progress)
     stats = {"dir": 0, "doc": 0, "skip": 0, "fail": []}
     batch_q = rebuild_pending_batches(prog, token, args.base, args.book) if args.batch_mode else None
     if batch_q:
         tot = sum(len(u) for v in batch_q.values() for _, u in v)
-        print(f"[batch] 中断恢复: {tot} 个已记节点待重新归位 (涉及 {len(batch_q)} 个父目录)", flush=True)
+        log(f"[batch] 中断恢复: {tot} 个已记节点待重新归位 (涉及 {len(batch_q)} 个父目录)", flush=True)
         for pu, items in list(batch_q.items())[:10]:
             lbl = os.path.dirname(items[0][0]) or "(根)"
             cnt = sum(len(u) for _, u in items)
-            print(f"    - {lbl}: {cnt} 节点", flush=True)
+            log(f"    - {lbl}: {cnt} 节点", flush=True)
 
     def do_flush(parent_uuid, items):
         p_label = os.path.dirname(items[0][0]) or "(根)"
@@ -561,10 +567,10 @@ def main():
                 record = create_node(token, args.base, args.book, args.root, rel, is_dir, up, parent_uuid, args.max_body, root_only=args.batch_mode)
                 break
             except Exception as e:
-                last_err = str(e)[:150]
+                last_err = f"{type(e).__name__}: {str(e)[:300]} (parent={parent_rel or 'ROOT'})"
                 if attempt < args.pend_retries:
                     wait = args.pend_sleep * attempt  # 递增: 600/1200/1800 (10/20/30 分钟)
-                    print(f"  ⚠ 失败 [{rel}] → {last_err}; 静置 {wait}s 后重试 ({attempt}/{args.pend_retries})", flush=True)
+                    log(f"  ⚠ 失败 [{rel}] → {last_err}; 静置 {wait}s 后重试 ({attempt}/{args.pend_retries})", flush=True)
                     time.sleep(wait)
                     # 静置后清理可能残留的同名节点(避免重复创建), 断点续传账本不动
                     cleanup_leftover(token, args.base, args.book, rel, is_dir, parent_uuid)
@@ -590,7 +596,7 @@ def main():
             if args.batch_mode:
                 pend_nodes = sum(len(u) for v in batch_q.values() for _, u in v)
                 pend = f" 待归位{pend_nodes}"
-            print(f"  进度: 目录{stats['dir']} 文档{stats['doc']} 跳过{stats['skip']}{pend} 失败{len(stats['fail'])}", flush=True)
+            log(f"  进度: 目录{stats['dir']} 文档{stats['doc']} 跳过{stats['skip']}{pend} 失败{len(stats['fail'])}", flush=True)
 
     # batch 模式收尾: flush 全部剩余批次
     if args.batch_mode:
@@ -598,13 +604,14 @@ def main():
             ok_rel = do_flush(parent_uuid, items)
             if ok_rel:
                 stats["ok_flush"] = stats.get("ok_flush", 0) + len(ok_rel)
-        pend_n = sum(len(u) for v in batch_q.values() for _, u in v)
-        print(f"[batch] 归位完成: {stats.get('ok_flush', 0)} 节点确认到位; 失败 {len(stats['fail'])} 项"
-              + (f"; 剩余未处理 {pend_n}" if pend_n else ""), flush=True)
+            batch_q.pop(parent_uuid, None)
+        log(f"[batch] 归位完成: {stats.get('ok_flush', 0)} 节点确认到位; 失败 {len(stats['fail'])} 项")
 
-    print("=== 完成 ===", json.dumps(stats, ensure_ascii=False), flush=True)
+    log("=== 完成 ===", json.dumps(stats, ensure_ascii=False), flush=True)
     for rel, err in stats["fail"][:10]:
-        print("FAIL:", rel, "→", err, flush=True)
+        log("FAIL:", rel, "→", err)
+    if len(stats["fail"]) > 10:
+        log(f"  ... 另有 {len(stats['fail']) - 10} 项失败(完整列表见 === 完成 === 的 stats)")
 
 if __name__ == "__main__":
     main()
