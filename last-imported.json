@@ -76,5 +76,11 @@
   "book_id": 84644468,
   "book_url": "niaoge-linux-server-20261016",
   "imported_at": "2026-10-16T22:20:00+0800"
+ },
+ "http://cn.linux.vbird.org/linux_basic/": {
+  "commit": "website-20261016",
+  "book_id": 84644854,
+  "book_url": "niaoge-linux-basic-20261016",
+  "imported_at": "2026-10-16T22:54:00+0800"
  }
 }
