@@ -64,5 +64,11 @@
   "book_id": 84644268,
   "book_url": "understand-linux-process-5791bcd",
   "imported_at": "2026-10-16T21:54:00+0800"
+ },
+ "https://github.com/jlevy/the-art-of-command-line": {
+  "commit": "6b50745",
+  "book_id": 84644338,
+  "book_url": "the-art-of-command-line-zh-6b50745",
+  "imported_at": "2026-10-16T22:01:00+0800"
  }
 }
