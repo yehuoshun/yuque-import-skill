@@ -67,6 +67,7 @@ def build_path_map(toc):
 - **现象**：几百个节点不间断高频创建后，新建空 TITLE 目录 appendNode 子节点静默失败——响应里 parent_uuid 正确（乐观回显），实际 GET 节点在根；或响应里根本找不到节点。老目录（已有子）挂载始终正常。
 - **复现**：高频创建 50 节点后探针即失败；`GET /toc` 与 `GET /api/catalog_nodes`（Web 目录）两套 API 读出一致的“挂根/不存在”，Web 单节点/批量 move 也假成功（返回 success 实际不动）。
 - **自愈/规避**：停止写入静置 ~10 分钟恢复（5/5 探针通过）；降速（每请求间隔 1.5s + 每 100 节点休息 45s）1000 节点 0 失败。与 TOC 总量上限（5000）无关，与库无关（两个全新库同样复现）。
+- **限速对象（2026-10-16 rea 全库实测确认）**：只有 TOC 写动作（appendNode / removeNode / moveNode / prependNode 等 `PUT /toc` 系列）需要降速——它们走串行队列，灌快了假成功挂根；**doc 层（create_doc / PUT /docs 正文回灌）走独立存储服务，不受 TOC 队列影响，可以连续/并行造**（rea 单 4048 doc 全建成、仅 TOC 挂载失败，5 个幽灵全是 create 成功+挂载失败的孤儿）。推论：理论上可生产-消费并行——create_doc 多 worker 连续跑 → doc_id 入队 → 单线程慢速 appendNode（挂载端绝不并行，并行=排队=更快挤爆）。
 - **处置**：脚本已内置 `--pend-sleep` 失败静置重试（默认 600s 递增退避(10/20/30 分钟)×3 轮）；残留同名节点由 cleanup_leftover 自动清理；极端情况（父子嵌死锁）用 Web 前端拖拽或重建子树。
 
 ## 批量导入注意
