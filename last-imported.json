@@ -117,5 +117,12 @@
 "book_url": "freebsd-handbook-20261017",
 "imported_at": "2026-10-17T09:05:00+0800",
 "note": "FreeBSD 官方文档站（zh-cn 旧版翻译，docs.freebsd.org，入口 freebsd.org/doc/zh_CN.UTF-8/books/handbook/ 301 过来）；5 部分目录 + 32 章 + 4 附录 + 前言 = 46 节点；Asciidoctor/Hugo DOM 走 bs4 递归渲染器；167 图传 CDN；toc-md 后 prependNode 修根级顺序"
+},
+"http://works.jinbuguo.com/lfs/lfs62/index.html": {
+"commit": "lfs-6.2-zh-20080301",
+"book_id": 84676049,
+"book_url": "lfs-6.2-zh-20261017",
+"imported_at": "2026-10-17T09:45:00+0800",
+"note": "LFS 6.2 中文版（金步国/ipconfigme/bobkey 合译 2008-03-01）；源站 works.jinbuguo.com NXDOMAIN、www.jinbuguo.com 502 → 取自 GitHub p-moon/develop-reference-data 镜像（155 文件/1.8MB）；DocBook XSL 老多页站 bs4 渲染；1 + 11 目录 + 142 文档；图=装饰 icon 全跳过；toc-md + prependNode 前言归位 + editNode 目录名清理"
 }
 }
