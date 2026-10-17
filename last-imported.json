@@ -186,5 +186,13 @@
 "book_url": "ubuntu-manual-20261018",
 "imported_at": "2026-10-18T00:56:00+0800",
 "note": "《Ubuntu 参考手册》（Ubuntu 中文 wiki / MediaWiki 1.42，改自 Debian 中文参考手册）；api.php 被 Cloudflare 拦 → 抓页面 HTML（正文 div.mw-parser-output，丢导航 ul/table + div.toc，尾部 NewPP 调试块截断）；分类成员 17 页平铺；无图；toc-md PUT 0.4s；四查 + 17 篇逐字符比对全绿；转换器 examples/ubuntu-manual/"
+},
+"https://www.gitbook.com/book/objectkuan/ucore-docs/details": {
+"commit": "2181bd4",
+"repo": "https://github.com/chyyuu/ucore_os_docs",
+"book_id": 84683544,
+"book_url": "ucore-os-docs-2181bd4",
+"imported_at": "2026-10-18T01:05:00+0800",
+"note": "《uCore Lab: Operating System Course in Tsinghua University》（清华 uCore OS 实验指导书）；老板给的 gitbook.com 旧链已失效（302 legacy → gitbook 首页），objectkuan/ucore-docs 404 / objectkuan/ucore_docs 已重定向 → 用官方源 chyyuu/ucore_os_docs（741★，陈渝）；纯 GitBook 源仓库按 SUMMARY.md 树导（labN.md 移进 labN/）；9 lab 目录 + README/SUMMARY/book.json = 202 节点（193 文件）；35 张图传 CDN；toc-md PUT 1.3s；四查全绿（仅 book.json +12 围栏、lab0.md 行尾 \\r 差异）"
 }
 }

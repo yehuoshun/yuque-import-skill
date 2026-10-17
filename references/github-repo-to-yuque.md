@@ -122,6 +122,11 @@
    ① **文件名要洗 `/`**（“流程控制：while/until 循环”直接当文件名会 ENOENT）
    ② **图片引用按 md 所在目录解析**——章节进了子目录后，原 `images/x.png` 要改成 `../images/x.png` 才能被 rewrite 脚本找到
    ③ **中英对照书保留原文**（TLCL 每段英文 + 中文），不删英文；站点首页（`index.html`，比 md 源里的 HTML 混排规范）用 bs4 转 md 当根级「目录.md」（含分部目录表）
+34. **GitBook 源仓库的「章节首页 + 章节目录」双结构 + md 图片 title 语法**（2026-10-18 chyyuu/ucore_os_docs 实踩）：
+    - 这类仓库常是 `labN.md`（章节首页，位于**根**）+ `labN/`（该章各节）/ `labN_figs/`（图）三件套。直接全导的话，语雀 TOC 会把 `labN/` 目录排在前、`labN.md` 落到根级文件区（全部排到 9 个目录**之后**），与书的内容顺序相反。做法：**把 `labN.md` 拷进 `labN/` 同名保留**（`lab0/lab0.md`）—— `.` 的字符序小于 `_`，目录内自然排第一 ✅（本次 9 个 lab、202 节点）
+    - **md 图片可带 title**：`![alt](../lab0_figs/image001.png "ucore系统结构图")` —— 旧版 `yuque_rewrite_images.py` 会把 `path "title"` 整体当 src → 报本地缺失、图全不传。已修：`sub_md` 先 `split(None, 1)` 拆 path/title，只重写 path（v1.3.62）
+    - 老板给的 gitbook.com 旧链可能已死（302 → legacy → gitbook 首页）→ 去 GitHub 搜书名/仓库名找官方源（本次 `objectkuan/ucore-docs` 404 / `objectkuan/ucore_docs` 已重定向 → 官方是 `chyyuu/ucore_os_docs`）
+    - 单行 md（如只一行标题的 `lab0.md`）入语雀后行尾 `\n` 会变 `\r`，逐字符比对会报差异（实际无影响，别当事故）
 
 ## 七、官方 v2 一次性目录（toc-md，2026-10-16 老板拍板设为默认）
 

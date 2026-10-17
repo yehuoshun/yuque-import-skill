@@ -20,6 +20,7 @@
     失败自动等 120s 重试（最多 60 轮）
   - 脚本跑完请把图片目录从导入根**删干净**，否则每张图会变成独立占位文档（SKILL 硬规则 10）
   - img_map.json 本身也不能留在导入根目录里
+  - markdown 图片带 title 的写法 `![alt](path "title")` 也吃（2026-10-18 ucore 实踩：旧版把 path+title 整体当 src → 报本地缺失）
 """
 import argparse
 import json
@@ -99,12 +100,16 @@ def main():
 
         def sub_md(m):
             nonlocal dirty, rewritten
-            url = resolve(m.group(2))
+            # markdown 图片可带 title：![alt](path "title") → 只重写 path，title 原样保留
+            raw = m.group(2)
+            bits = raw.split(None, 1)
+            url = resolve(bits[0])
             if url is None:
                 return m.group(0)
+            tail = (" " + bits[1]) if len(bits) > 1 else ""
             dirty = True
             rewritten += 1
-            return "%s%s%s" % (m.group(1), url, m.group(3))
+            return "%s%s%s%s" % (m.group(1), url, tail, m.group(3))
 
         def sub_html(m):
             nonlocal dirty, rewritten
