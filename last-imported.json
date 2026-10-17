@@ -19,10 +19,11 @@
 "note": "默认分支 release；28 节点（3 目录 / 25 文件）→ TOC 117（TITLE 3 / DOC 114，6 个 JSON 分片 95 片）。⚠️ 首次导入(bid 84678542)命中 JSON 分片丢内容 bug（_split_json_list 绝对下标切段内列表）已删库重建；v1.3.50 修复 + 新增 scripts/yuque_verify_shards.py 验收，6 个分片文件拼回与本地逐条相等"
 },
 "https://github.com/swjybky/deepwrite": {
-"commit": "7c028da",
-"book_id": 84635468,
-"book_url": "deepwrite-7c028da",
-"imported_at": "2026-10-16T09:33:00+0800"
+"commit": "26c5bc7",
+"book_id": 84681889,
+"book_url": "deepwrite-26c5bc7",
+"imported_at": "2026-10-17T21:38:37+0800",
+"note": "3425 文档 + 338 目录，0 失败；本次起 md 本地图先传 CDN 再重写引用，docs/images 从导入根删除（前两次未做）"
 },
 "https://github.com/morluto/rea": {
 "commit": "5b2439938",
