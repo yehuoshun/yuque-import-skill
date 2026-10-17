@@ -26,11 +26,11 @@
 "note": "3425 文档 + 338 目录，0 失败；本次起 md 本地图先传 CDN 再重写引用，docs/images 从导入根删除（前两次未做）"
 },
 "https://github.com/morluto/rea": {
-"commit": "5b2439938",
-"book_id": 84678877,
-"book_url": "rea-5b2439938",
-"imported_at": "2026-10-17T16:00:00+0800",
-"note": "默认分支 main；toc-md 模式，4520 节点（364 目录 / 4156 文件）→ TOC 4541（364 TITLE + 4177 DOC，20 个 >512KB 文件切 41 片）；61 分钟、fail 0；图片 4 张传 CDN + 81 处引用重写后删 docs/assets + website/public/assets（按 SKILL 硬规则 10）；根级顺序=本地 DFS 序无需归位；四查全绿 + 分片内容 20/20 逐字符相等。⚠️ 首次跑发现 yuque_verify_shards.py 自身两个 bug（假失败），同日修"
+"commit": "e7df00e80",
+"book_id": 84682363,
+"book_url": "rea-e7df00e80",
+"imported_at": "2026-10-17T22:47:41+0800",
+"note": "默认分支 main；toc-md，4604 节点（369 目录 / 4235 文件）→ TOC 4625（369 TITLE + 4256 DOC，20 个 >512KB 文件切 41 片）；57 分钟、fail 0；图片 4 张复用上版 CDN（img_map 缓存，零上传）+ 81 处图引用 + 20 处「查看大图」普通链接一并改 CDN；删 docs/assets + website/public/assets 图片但保留被 3 篇 md 引用的 licenses/dinosaur.txt（上版误删）；根级顺序 46 项 == 本地 DFS 序无需归位；四查 + 分片内容 20/20 全绿"
 },
 "https://github.com/howie6879/owllook": {
 "commit": "8ded1ea",
