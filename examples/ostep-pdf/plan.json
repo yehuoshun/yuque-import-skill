@@ -1,0 +1,478 @@
+[
+ {
+  "part": "00-前言",
+  "num": null,
+  "title": "Dedication",
+  "pdf": "dedication.pdf",
+  "out": "Dedication.md"
+ },
+ {
+  "part": "00-前言",
+  "num": null,
+  "title": "Preface",
+  "pdf": "preface.pdf",
+  "out": "Preface.md"
+ },
+ {
+  "part": "00-前言",
+  "num": null,
+  "title": "TOC",
+  "pdf": "toc.pdf",
+  "out": "TOC.md"
+ },
+ {
+  "part": "01-Introduction",
+  "num": 1,
+  "title": "Dialogue",
+  "pdf": "dialogue-threeeasy.pdf",
+  "out": "01-Dialogue.md"
+ },
+ {
+  "part": "01-Introduction",
+  "num": 2,
+  "title": "Introduction",
+  "pdf": "intro.pdf",
+  "out": "02-Introduction.md"
+ },
+ {
+  "part": "02-Virtualization",
+  "num": 3,
+  "title": "Dialogue",
+  "pdf": "dialogue-virtualization.pdf",
+  "out": "03-Dialogue.md"
+ },
+ {
+  "part": "02-Virtualization",
+  "num": 4,
+  "title": "Processes",
+  "pdf": "cpu-intro.pdf",
+  "out": "04-Processes.md"
+ },
+ {
+  "part": "02-Virtualization",
+  "num": 5,
+  "title": "Process API",
+  "pdf": "cpu-api.pdf",
+  "out": "05-Process API.md"
+ },
+ {
+  "part": "02-Virtualization",
+  "num": 6,
+  "title": "Direct Execution",
+  "pdf": "cpu-mechanisms.pdf",
+  "out": "06-Direct Execution.md"
+ },
+ {
+  "part": "02-Virtualization",
+  "num": 7,
+  "title": "CPU Scheduling",
+  "pdf": "cpu-sched.pdf",
+  "out": "07-CPU Scheduling.md"
+ },
+ {
+  "part": "02-Virtualization",
+  "num": 8,
+  "title": "Multi-level Feedback",
+  "pdf": "cpu-sched-mlfq.pdf",
+  "out": "08-Multi-level Feedback.md"
+ },
+ {
+  "part": "02-Virtualization",
+  "num": 9,
+  "title": "Lottery Scheduling",
+  "pdf": "cpu-sched-lottery.pdf",
+  "out": "09-Lottery Scheduling.md"
+ },
+ {
+  "part": "02-Virtualization",
+  "num": 10,
+  "title": "Multi-CPU Scheduling",
+  "pdf": "cpu-sched-multi.pdf",
+  "out": "10-Multi-CPU Scheduling.md"
+ },
+ {
+  "part": "02-Virtualization",
+  "num": 11,
+  "title": "Summary",
+  "pdf": "cpu-dialogue.pdf",
+  "out": "11-Summary.md"
+ },
+ {
+  "part": "02-Virtualization",
+  "num": 12,
+  "title": "Dialogue",
+  "pdf": "dialogue-vm.pdf",
+  "out": "12-Dialogue.md"
+ },
+ {
+  "part": "02-Virtualization",
+  "num": 13,
+  "title": "Address Spaces",
+  "pdf": "vm-intro.pdf",
+  "out": "13-Address Spaces.md"
+ },
+ {
+  "part": "02-Virtualization",
+  "num": 14,
+  "title": "Memory API",
+  "pdf": "vm-api.pdf",
+  "out": "14-Memory API.md"
+ },
+ {
+  "part": "02-Virtualization",
+  "num": 15,
+  "title": "Address Translation",
+  "pdf": "vm-mechanism.pdf",
+  "out": "15-Address Translation.md"
+ },
+ {
+  "part": "02-Virtualization",
+  "num": 16,
+  "title": "Segmentation",
+  "pdf": "vm-segmentation.pdf",
+  "out": "16-Segmentation.md"
+ },
+ {
+  "part": "02-Virtualization",
+  "num": 17,
+  "title": "Free Space Management",
+  "pdf": "vm-freespace.pdf",
+  "out": "17-Free Space Management.md"
+ },
+ {
+  "part": "02-Virtualization",
+  "num": 18,
+  "title": "Introduction to Paging",
+  "pdf": "vm-paging.pdf",
+  "out": "18-Introduction to Paging.md"
+ },
+ {
+  "part": "02-Virtualization",
+  "num": 19,
+  "title": "Translation Lookaside Buffers",
+  "pdf": "vm-tlbs.pdf",
+  "out": "19-Translation Lookaside Buffers.md"
+ },
+ {
+  "part": "02-Virtualization",
+  "num": 20,
+  "title": "Advanced Page Tables",
+  "pdf": "vm-smalltables.pdf",
+  "out": "20-Advanced Page Tables.md"
+ },
+ {
+  "part": "02-Virtualization",
+  "num": 21,
+  "title": "Swapping - Mechanisms",
+  "pdf": "vm-beyondphys.pdf",
+  "out": "21-Swapping - Mechanisms.md"
+ },
+ {
+  "part": "02-Virtualization",
+  "num": 22,
+  "title": "Swapping - Policies",
+  "pdf": "vm-beyondphys-policy.pdf",
+  "out": "22-Swapping - Policies.md"
+ },
+ {
+  "part": "02-Virtualization",
+  "num": 23,
+  "title": "Complete VM Systems",
+  "pdf": "vm-complete.pdf",
+  "out": "23-Complete VM Systems.md"
+ },
+ {
+  "part": "02-Virtualization",
+  "num": 24,
+  "title": "Summary",
+  "pdf": "vm-dialogue.pdf",
+  "out": "24-Summary.md"
+ },
+ {
+  "part": "03-Concurrency",
+  "num": 25,
+  "title": "Dialogue",
+  "pdf": "dialogue-concurrency.pdf",
+  "out": "25-Dialogue.md"
+ },
+ {
+  "part": "03-Concurrency",
+  "num": 26,
+  "title": "Concurrency and Threads",
+  "pdf": "threads-intro.pdf",
+  "out": "26-Concurrency and Threads.md"
+ },
+ {
+  "part": "03-Concurrency",
+  "num": 27,
+  "title": "Thread API",
+  "pdf": "threads-api.pdf",
+  "out": "27-Thread API.md"
+ },
+ {
+  "part": "03-Concurrency",
+  "num": 28,
+  "title": "Locks",
+  "pdf": "threads-locks.pdf",
+  "out": "28-Locks.md"
+ },
+ {
+  "part": "03-Concurrency",
+  "num": 29,
+  "title": "Locked Data Structures",
+  "pdf": "threads-locks-usage.pdf",
+  "out": "29-Locked Data Structures.md"
+ },
+ {
+  "part": "03-Concurrency",
+  "num": 30,
+  "title": "Condition Variables",
+  "pdf": "threads-cv.pdf",
+  "out": "30-Condition Variables.md"
+ },
+ {
+  "part": "03-Concurrency",
+  "num": 31,
+  "title": "Semaphores",
+  "pdf": "threads-sema.pdf",
+  "out": "31-Semaphores.md"
+ },
+ {
+  "part": "03-Concurrency",
+  "num": 32,
+  "title": "Concurrency Bugs",
+  "pdf": "threads-bugs.pdf",
+  "out": "32-Concurrency Bugs.md"
+ },
+ {
+  "part": "03-Concurrency",
+  "num": 33,
+  "title": "Event-based Concurrency",
+  "pdf": "threads-events.pdf",
+  "out": "33-Event-based Concurrency.md"
+ },
+ {
+  "part": "03-Concurrency",
+  "num": 34,
+  "title": "Summary",
+  "pdf": "threads-dialogue.pdf",
+  "out": "34-Summary.md"
+ },
+ {
+  "part": "04-Persistence",
+  "num": 35,
+  "title": "Dialogue",
+  "pdf": "dialogue-persistence.pdf",
+  "out": "35-Dialogue.md"
+ },
+ {
+  "part": "04-Persistence",
+  "num": 36,
+  "title": "I-O Devices",
+  "pdf": "file-devices.pdf",
+  "out": "36-I-O Devices.md"
+ },
+ {
+  "part": "04-Persistence",
+  "num": 37,
+  "title": "Hard Disk Drives",
+  "pdf": "file-disks.pdf",
+  "out": "37-Hard Disk Drives.md"
+ },
+ {
+  "part": "04-Persistence",
+  "num": 38,
+  "title": "Redundant Disk Arrays (RAID)",
+  "pdf": "file-raid.pdf",
+  "out": "38-Redundant Disk Arrays (RAID).md"
+ },
+ {
+  "part": "04-Persistence",
+  "num": 39,
+  "title": "Files and Directories",
+  "pdf": "file-intro.pdf",
+  "out": "39-Files and Directories.md"
+ },
+ {
+  "part": "04-Persistence",
+  "num": 40,
+  "title": "File System Implementation",
+  "pdf": "file-implementation.pdf",
+  "out": "40-File System Implementation.md"
+ },
+ {
+  "part": "04-Persistence",
+  "num": 41,
+  "title": "Fast File System (FFS)",
+  "pdf": "file-ffs.pdf",
+  "out": "41-Fast File System (FFS).md"
+ },
+ {
+  "part": "04-Persistence",
+  "num": 42,
+  "title": "FSCK and Journaling",
+  "pdf": "file-journaling.pdf",
+  "out": "42-FSCK and Journaling.md"
+ },
+ {
+  "part": "04-Persistence",
+  "num": 43,
+  "title": "Log-structured File System (LFS)",
+  "pdf": "file-lfs.pdf",
+  "out": "43-Log-structured File System (LFS).md"
+ },
+ {
+  "part": "04-Persistence",
+  "num": 44,
+  "title": "Flash-based SSDs",
+  "pdf": "file-ssd.pdf",
+  "out": "44-Flash-based SSDs.md"
+ },
+ {
+  "part": "04-Persistence",
+  "num": 45,
+  "title": "Data Integrity and Protection",
+  "pdf": "file-integrity.pdf",
+  "out": "45-Data Integrity and Protection.md"
+ },
+ {
+  "part": "04-Persistence",
+  "num": 46,
+  "title": "Summary",
+  "pdf": "file-dialogue.pdf",
+  "out": "46-Summary.md"
+ },
+ {
+  "part": "04-Persistence",
+  "num": 47,
+  "title": "Dialogue",
+  "pdf": "dialogue-distribution.pdf",
+  "out": "47-Dialogue.md"
+ },
+ {
+  "part": "04-Persistence",
+  "num": 48,
+  "title": "Distributed Systems",
+  "pdf": "dist-intro.pdf",
+  "out": "48-Distributed Systems.md"
+ },
+ {
+  "part": "04-Persistence",
+  "num": 49,
+  "title": "Network File System (NFS)",
+  "pdf": "dist-nfs.pdf",
+  "out": "49-Network File System (NFS).md"
+ },
+ {
+  "part": "04-Persistence",
+  "num": 50,
+  "title": "Andrew File System (AFS)",
+  "pdf": "dist-afs.pdf",
+  "out": "50-Andrew File System (AFS).md"
+ },
+ {
+  "part": "04-Persistence",
+  "num": 51,
+  "title": "Summary",
+  "pdf": "dist-dialogue.pdf",
+  "out": "51-Summary.md"
+ },
+ {
+  "part": "05-Security",
+  "num": 52,
+  "title": "Dialogue",
+  "pdf": "dialogue-security.pdf",
+  "out": "52-Dialogue.md"
+ },
+ {
+  "part": "05-Security",
+  "num": 53,
+  "title": "Intro Security",
+  "pdf": "security-intro.pdf",
+  "out": "53-Intro Security.md"
+ },
+ {
+  "part": "05-Security",
+  "num": 54,
+  "title": "Authentication",
+  "pdf": "security-authentication.pdf",
+  "out": "54-Authentication.md"
+ },
+ {
+  "part": "05-Security",
+  "num": 55,
+  "title": "Access Control",
+  "pdf": "security-access.pdf",
+  "out": "55-Access Control.md"
+ },
+ {
+  "part": "05-Security",
+  "num": 56,
+  "title": "Cryptography",
+  "pdf": "security-crypto.pdf",
+  "out": "56-Cryptography.md"
+ },
+ {
+  "part": "05-Security",
+  "num": 57,
+  "title": "Distributed",
+  "pdf": "security-distributed.pdf",
+  "out": "57-Distributed.md"
+ },
+ {
+  "part": "06-Appendices",
+  "num": null,
+  "title": "Dialogue - VMM",
+  "pdf": "dialogue-vmm.pdf",
+  "out": "Dialogue - VMM.md"
+ },
+ {
+  "part": "06-Appendices",
+  "num": null,
+  "title": "Virtual Machines",
+  "pdf": "vmm-intro.pdf",
+  "out": "Virtual Machines.md"
+ },
+ {
+  "part": "06-Appendices",
+  "num": null,
+  "title": "Dialogue - Monitors",
+  "pdf": "dialogue-monitors.pdf",
+  "out": "Dialogue - Monitors.md"
+ },
+ {
+  "part": "06-Appendices",
+  "num": null,
+  "title": "Monitors",
+  "pdf": "threads-monitors.pdf",
+  "out": "Monitors.md"
+ },
+ {
+  "part": "06-Appendices",
+  "num": null,
+  "title": "Dialogue - Labs",
+  "pdf": "dialogue-labs.pdf",
+  "out": "Dialogue - Labs.md"
+ },
+ {
+  "part": "06-Appendices",
+  "num": null,
+  "title": "Lab Tutorial",
+  "pdf": "lab-tutorial.pdf",
+  "out": "Lab Tutorial.md"
+ },
+ {
+  "part": "06-Appendices",
+  "num": null,
+  "title": "Systems Labs",
+  "pdf": "lab-projects-systems.pdf",
+  "out": "Systems Labs.md"
+ },
+ {
+  "part": "06-Appendices",
+  "num": null,
+  "title": "xv6 Labs",
+  "pdf": "lab-projects-xv6.pdf",
+  "out": "xv6 Labs.md"
+ }
+]

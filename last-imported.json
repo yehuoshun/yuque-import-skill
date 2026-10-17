@@ -164,5 +164,12 @@
 "book_url": "mac-dev-setup-20261017",
 "imported_at": "2026-10-17T00:05:00+0800",
 "note": "《Mac 开发配置手册》（阿树，意译自 Sourabh Bajaj 的 Mac OS X Setup Guide）；老 gitbooks.io 静态站仍在线、GitHub 无同名源仓库 → 抓 HTML（正文 section.normal）；13 页平铺（侧栏 ul.summary 定序）；bs4 递归渲染（新增 render_list 修嵌套列表丢前缀坑 + inline 跳块级子节点）；无站内图，2 张外链图（七牛测试域名）已 404 保留；toc-md PUT 0.4s；四查 + 13 篇逐字符比对全绿；转换器 examples/mac-dev-setup/"
+},
+"https://pages.cs.wisc.edu/~remzi/OSTEP/": {
+"commit": "v1.10",
+"book_id": 84683427,
+"book_url": "ostep-20261018",
+"imported_at": "2026-10-18T00:31:00+0800",
+"note": "《Operating Systems: Three Easy Pieces》（Remzi & Andrea Arpaci-Dusseau，Version 1.10 / 2023-11）；官网只有 68 个章节 PDF（无 HTML、书稿源不公开）→ PyMuPDF 提取转 md；7 分部目录（00-前言/01-Introduction/02-Virtualization/03-Concurrency/04-Persistence/05-Security/06-Appendices）+ 68 篇 = 75 节点；矢量图未导（老板拍板 A），图注文字保留；断词用 words_alpha 词表判复合词；toc-md PUT 0.7s；四查 + 68 篇逐字符比对全绿"
 }
 }

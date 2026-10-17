@@ -127,6 +127,12 @@ python3 scripts/yuque_tree_import.py --root <clean_dir> --book <book_id> --progr
 
 完整 SOP + 坑清单：`references/github-repo-to-yuque.md`（必读，含 7 条踩过的坑）。
 
+## PDF 书导入（只有 PDF 的官方站，2026-10-18 固化）
+
+触发模板：「把这本 PDF 书/这个站（只有 PDF）导入语雀」。SOP：`references/pdf-book-to-yuque.md`；实战首例 + 脚本：`examples/ostep-pdf/`（fetch_ostep.py + extract_ostep.py + README 含排版识别表与 8 条坑）。
+
+要点：PyMuPDF `get_text("dict")` 按字号/字体/缩进重建结构；断词用 `words_alpha.txt` 词表判断「删连字符拼接 vs 保留复合词」；矢量图文字会混入正文，图本身按老板口径可跳过；只有 PDF 的官方站走网站口径（库名带日期、分组「文章收集」）。
+
 ## 网站抓取导入（网页 → 语雀，2026-10-13 固化，2026-10-14 补命名规范）
 
 触发模板：「把 `<网址>` 抓取到语雀」。规范：库名 `网站名（日期）`（日期=导入日，如 2026-10-14）、**slug 同样带日期** `网站名-YYYYMMDD`（如 atguigu-python-20261014，2026-10-14 老板定；已建库不追改）、分组「文章收集」（stack 36149506）、描述带源站 URL。通用爬虫模板 `scripts/yuque_website_crawl.py`（复制后改 SITE 配置区）+ 完整 SOP `references/website-crawl-to-yuque.md`（正文窗口定位方法论 + 图片 CDN 方案 + 产物级验证清单 + 实战案例表）。**老式 PHP 表格站（标题用 span、正文 div+table 混排）完整可复用示例：`examples/vbird-server/`**（fetch_all.py 抓页 + crawl_vbird.py 迷你 DOM 转换 + README 复用流程）。
