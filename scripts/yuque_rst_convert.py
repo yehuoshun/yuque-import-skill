@@ -20,11 +20,25 @@ Sphinx/reST 工程 → Markdown 转换（2026-10-13 固化，Got GitHub 实战�
   3. docutils html5 脚注引用是 role="doc-noteref"/"doc-backlink"（新版, 不是 class=footnote-reference），
      且必须【先于链接正则】剥离，否则被 <a href=#...> 降级逻辑吃掉, [1][2] 残留正文
   4. 脚注定义块（aside/dl.footnote、dl.citation）整体丢弃, 避免文档尾挂脚注清单
+  5. Sphinx 交叉引用角色（`:ref:`x`` / `:doc:`x`` / `:term:`x`` …）docutils 不认，会**原样留在正文**
+     （2026-10-17 linuxtools_rst 实踩）→ 转换前剥成纯文本（`:ref:`ldd <ldd>`` → `ldd`）
 """
 import re, os, sys, html as h, shutil, argparse
 from docutils.core import publish_parts
 
 BLOCK_RE = re.compile(r"<(h[1-6]|pre|p|li|dt|dd|table|blockquote)([^>]*)>(.*?)</\1>", re.S)
+
+# Sphinx 交叉引用角色 → 纯文本（坑 5）
+ROLE_RE = re.compile(
+    r':(ref|doc|term|numref|meth|func|class|attr|mod|exc|data|const|obj|file|command|option|'
+    r'envvar|kbd|guilabel|menuselection|abbr|download|pep|rfc|sup|sub|literal|math):`([^`]*)`')
+
+
+def _strip_role(m):
+    """`:ref:`显示文本 <目标>`` → '显示文本'；`:ref:`目标`` → '目标'"""
+    body = m.group(2)
+    mm = re.match(r'^(.*?)\s*<[^>]*>$', body)
+    return mm.group(1).strip() if mm else body
 
 
 def inline(t):
@@ -138,6 +152,8 @@ def rst_to_md(path):
     src = src.replace("\ufeff", "")  # 去 BOM（2026-10-15: 否则首行指令/正则被 \ufeff 卡住, epigraph 原文泄漏）
     # 段落尾 `::` + 空行 + 列0指令（无缩进 literal 内容）→ docutils 会把指令吞进 literal 块, 收成单冒号（2026-10-15 补）
     src = re.sub(r"::\s*\n\s*\n(?=\.\. )", ":\n\n", src)
+    # Sphinx 交叉引用角色 → 纯文本（沟 5，2026-10-17 linuxtools_rst 实踩）
+    src = ROLE_RE.sub(_strip_role, src)
     parts = publish_parts(source=src, writer_name="html5",
                           settings_overrides={"initial_header_level": 1,
                                               "report_level": 5, "halt_level": 5,

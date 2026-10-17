@@ -151,10 +151,13 @@ yuque_repo_import.py move-stack   --book-id <id> --stack-id 57018723 [--wait 30]
 token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/credentials.env`；cookie 默认读
 `skills/yuque-ai-mcp/config/config.json`（可用 `--cookie-config` 覆盖）。
 
-**rst 转换器已踩坑补充（2026-10-15 HgInit 实战，v1.3.12）**：
+**rst 转换器已踩坑补充（2026-10-15 HgInit 实战，v1.3.12；2026-10-17 linuxtools_rst 补）**：
 - BOM（`\ufeff`）卡首行指令/正则 → 转换前整体剥离（epigraph 原文泄漏真因）
 - `.. image::` 全丢 → inline() 补 `<img>`→`![alt](src)`；图片文件夹（如 `_images/`）别进导入根目录，先 `upload_image` 传 CDN + 重写 md 引用，再只导 md（否则每张图变成独立占位文档）
 - docutils html5 提示框是 `<aside class="admonition">` 不是 div；正则加捕获组后 `admon()` 的 group 号会移位
 - blockquote 分支补 `> ` 前缀（epigraph 引语）
 - 段落尾 `::` + 空行 + 列 0 指令 → 指令被吞进 literal 块，`::` 收成单冒号
-- Sphinx `:doc:` 跨文档角色在语雀是死链 → 剥成纯文本
+- **Sphinx 交叉引用角色 → 剥成纯文本**（不只是 `:doc:`，`:ref:`/`:term:`/`:func:` 等同族）。2026-10-17 linuxtools_rst 实测：docutils 不认这些角色 → `参见 :ref:`ldd`` **原样留在正文**（12 处垃圾）。修法：转换前 `ROLE_RE.sub(_strip_role, src)`，`:ref:`显示文本 <目标>`` → `显示文本`、`:ref:`目标`` → `目标`
+- **`.. image:: /_static/x.png` 是站点绝对路径**：转出来就是 `![]](/_static/x.png)`，`os.path.join` 遇绝对路径会**直接跳出导入根** → rewrite 报 missing。先在 md 里把 `(/` 前缀改成按层级算的相对路径（根下 `_static/`、子目录 `../_static/`），再跑 `yuque_rewrite_images.py`
+
+**案例（Sphinx/readthedocs 书仓，2026-10-17 me115/linuxtools_rst 实战）**：需 Sphinx 源仓库（`conf.py`/`index.rst`/`Makefile`）导站时，**只导 toctree 覆盖的页面 + 图片**；仓库根常同时躺着脚手架（`_build/`、`der/`、`sphinx_rtd_theme/`、`*.zip`、`*.epub`）和**早期版本的重复单文件**（本次 `top.rst`/`020-file-manage.rst`/`crontab.rst` 与 `tool/top.rst`/`base/02_file_manage.rst`/`tool/crontab.rst` 撞车，`base/ref.rst`/`base/README.rst`/`base/crond introduce.rst` 不在任何 toctree）——按 toctree 展开收集，别整树导。本次：`index.rst` + `base/`(index+9) + `advance/`(index+3) + `tool/`(index+19) = **35 篇 → 38 节点**（3 目录）；6 张图传 CDN（`_static/` 里其余 4 张封面/psd 未被引用不传）；无需爬 HTML（站点就是这些 rst 渲染的）。

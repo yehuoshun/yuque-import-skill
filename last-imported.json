@@ -150,5 +150,12 @@
 "book_url": "lgcb-22efba9",
 "imported_at": "2026-10-17T23:40:00+0800",
 "note": "《Linux Guide for Complete Beginners》（happypeter，摘 TLCL 常用部分）；站点是 GitHub Pages（gh-pages 分支 Jekyll）→ 直接导 book/ 下 md 源；13 章 + 目录.md（从站内 index.html 目录表重生成）= 14 节点平铺；剥 Jekyll front matter；33 张被引用图传 CDN；toc-md PUT 0.4s；四查 + 14 篇逐字符比对全绿"
+},
+"https://github.com/me115/linuxtools_rst": {
+"commit": "7e40155",
+"book_id": 84683240,
+"book_url": "linuxtools-7e40155",
+"imported_at": "2026-10-17T23:47:00+0800",
+"note": "《Linux工具快速教程》（me115，6001★，Sphinx/reST 源，站点 readthedocs）；按 index.rst 的 toctree 只导站点页面：index + base/(index+9) + advance/(index+3) + tool/(index+19) = 35 篇 → 38 节点（3 目录）；rst→md 转换（新增 :ref: 等 Sphinx 角色剥离，本次修 12 处残留）；/_static/ 绝对路径改相对后传 CDN 6 张；罐头/旧版重复文件（top.rst/020-file-manage.rst/crontab.rst）与脚手架（_build/der/sphinx_rtd_theme/*.zip/*.epub）未导；toc-md PUT 0.5s；四查 + 35 篇逐字符比对全绿"
 }
 }
