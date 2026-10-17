@@ -4,9 +4,11 @@
 
 支持两种写法（2026-10-17 bilibili-API-collect 实战补）：
   1. markdown：`![alt](相对路径)`
-  2. HTML：  `<img src="相对路径" ...>`
+  2. HTML：  `<img src="相对路径" ...>`（**单/双引号都吃**）
      —— VuePress/Docusaurus 类文档站的图几乎都写成 HTML img，
         只认 markdown 的旧脚本会整站漏图（漏了就是一堆裂图）
+     —— 单引号形式 `<img src='..'>` 也要吃：2026-10-17 linux-doc 实踩，
+        旧正则写死 `src="` → 单引号那条整条漏传（引用留在正文里成裂图）
 
 用法:
   python3 scripts/yuque_rewrite_images.py <clean_dir> <img_map.json> [--throttle 3] [--dry]
@@ -30,7 +32,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from yuque_tree_import import load_upload_cfg, upload_image  # noqa: E402
 
 MD_RE = re.compile(r'(!\[[^\]]*\]\()([^)]+)(\))')
-HTML_RE = re.compile(r'(<img\b[^>]*?\bsrc=")([^"]+)(")')
+# 4 组：前缀(含引号) / 引号 / src / 闭合引号——单双引号都能匹配
+HTML_RE = re.compile(r'(<img\b[^>]*?\bsrc=)(["\'])([^"\']+)(["\'])')
 
 
 def main():
@@ -68,16 +71,16 @@ def main():
         base = os.path.dirname(fp)
         dirty = False
 
-        def sub(m):
-            nonlocal dirty, rewritten, skipped
-            pre, src, post = m.group(1), m.group(2), m.group(3)
+        def resolve(src):
+            """本地图 → CDN URL；外链/缺失返回 None（原样保留）"""
+            nonlocal skipped
             if src.startswith(("http://", "https://", "data:")):
                 skipped += 1
-                return m.group(0)
+                return None
             p = os.path.normpath(os.path.join(base, src))
             if not os.path.exists(p):
                 missing.append((fp, src))
-                return m.group(0)
+                return None
             key = os.path.relpath(p, args.root)
             if key not in mp and not args.dry:
                 for attempt in range(60):
@@ -92,14 +95,28 @@ def main():
                     print("上传失败(重试%d): %s — 等 120s（疑似限流）" % (attempt + 1, key),
                           flush=True)
                     time.sleep(120)
-            if key in mp:
-                dirty = True
-                rewritten += 1
-                return "%s%s%s" % (pre, mp[key], post)
-            return m.group(0)
+            return mp.get(key)
 
-        new = HTML_RE.sub(sub, text)     # 先 HTML：<img src> 里不会包含 markdown 语法
-        new = MD_RE.sub(sub, new)
+        def sub_md(m):
+            nonlocal dirty, rewritten
+            url = resolve(m.group(2))
+            if url is None:
+                return m.group(0)
+            dirty = True
+            rewritten += 1
+            return "%s%s%s" % (m.group(1), url, m.group(3))
+
+        def sub_html(m):
+            nonlocal dirty, rewritten
+            url = resolve(m.group(3))
+            if url is None:
+                return m.group(0)
+            dirty = True
+            rewritten += 1
+            return "%s%s%s%s" % (m.group(1), m.group(2), url, m.group(4))
+
+        new = HTML_RE.sub(sub_html, text)   # 先 HTML：<img src> 里不会包含 markdown 语法
+        new = MD_RE.sub(sub_md, new)
         if dirty and not args.dry:
             with open(fp, "w", encoding="utf-8") as f:
                 f.write(new)

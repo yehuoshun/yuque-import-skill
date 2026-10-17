@@ -134,5 +134,13 @@
 "book_url": "bilibili-api-collect-d45e712",
 "imported_at": "2026-10-17T14:12:00+0800",
 "note": "！原仓库 SocialSisterYi/bilibili-API-collect 因收到 B 站律师函已 archived（默认分支 deprecated、历史被抹，只剩 README+reason.jpg；2026-01-28）→ 老板 2026-10-17 拍板从 Goooler fork（trunk @ d45e712）导。820 节点（355 目录/465 文件：docs 196 md + grpc_api 128 proto + proto 137 proto + README/CONTRIBUTING/version.json）；77 张本地图（HTML <img src> 写法）传 CDN；剔 .vuepress/.github/assets/AGENTS.md/bun.lock/package.json/.gitignore/LICENSE"
+},
+"https://tinylab.gitbooks.io/linux-doc/content/zh-cn/": {
+"commit": "f5a6344",
+"repo": "https://github.com/tinyclub/linux-doc",
+"book_id": 84683048,
+"book_url": "linux-doc-f5a6344",
+"imported_at": "2026-10-17T23:15:00+0800",
+"note": "《Linux Documentation 中文版》（GPL v2 翻译计划，末次 push 2021-01）；旧 gitbooks 站 301 到 tinylab-1.gitbook.io；站点内容 = 仓库 zh-cn/ 子树 → 纯 GitBook 源全导口径（保留 book.json/SUMMARY.md）；5 目录 / 17 文件 = 22 节点；3 张图（zh-cn/pic ×2 + 根 pic ×1，后者引用是单引号 HTML img）全传 CDN；toc-md PUT 0.4s；四查 + 17 篇逐字符比对全绿"
 }
 }
