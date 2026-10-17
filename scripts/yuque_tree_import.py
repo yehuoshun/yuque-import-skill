@@ -43,12 +43,23 @@ def upload_image(cookie, ctoken, user_id, path):
     req.add_header("Cookie", cookie)
     req.add_header("Referer", "https://www.yuque.com/")
     req.add_header("Origin", "https://www.yuque.com")
-    try:
-        with urllib.request.urlopen(req, timeout=60) as r:
-            d = json.loads(r.read().decode())
-        return d.get("data", {}).get("url") or None
-    except Exception:
-        return None
+    # 429/5xx 退避重试（2026-10-17 freebsd-ask 实战：连传 ~500 张后 CDN 附件接口开始 429「操作过于频繁」）
+    for i in range(6):
+        try:
+            with urllib.request.urlopen(req, timeout=60) as r:
+                d = json.loads(r.read().decode())
+            return d.get("data", {}).get("url") or None
+        except urllib.error.HTTPError as e:
+            if e.code in (429, 500, 502, 503, 504) and i < 5:
+                time.sleep(min(5 * (2 ** i), 60))
+                continue
+            return None
+        except Exception:
+            if i < 2:
+                time.sleep(2)
+                continue
+            return None
+    return None
 
 
 def load_upload_cfg(cookie_config):
@@ -350,7 +361,7 @@ def load_prog(path):
 def cleanup_leftover(token, base, book, rel, is_dir, parent_uuid):
     """静置重试前清理可能残留的同名节点(避免重复创建)。
     只清「目标父下」和「根」的同名节点; 父链其他地方的同名(理论上不可能)不动。"""
-    import urllib.request as _u
+    import urllib.request
     title = os.path.basename(rel)
     try:
         d = api(token, base, "GET", f"/repos/{book}/toc")

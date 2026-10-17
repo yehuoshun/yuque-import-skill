@@ -103,5 +103,12 @@
   "book_url": "chinese-docker-b26bc04",
   "imported_at": "2026-10-17T07:00:00+0800",
   "note": "纯 GitBook 源仓库全导（10 目录 / 56 文件）；28 图传 CDN，images/ 已剔"
+ },
+ "https://github.com/FreeBSD-Ask/FreeBSD-Ask": {
+  "commit": "2335823",
+  "book_id": 84675397,
+  "book_url": "freebsd-ask-2335823",
+  "imported_at": "2026-10-17T08:37:00+0800",
+  "note": "源站 book.bsdcn.org 是多书站，只取根书；47 目录 / 256 文件；845 图传 CDN（中途 429 限流）；剔 .github/.vitepress/.gitbook/public/CLAUDE.md/LICENSE 等"
  }
 }
