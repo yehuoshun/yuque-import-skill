@@ -12,10 +12,11 @@
 "imported_at": "2026-10-16T14:20:00+0800"
 },
 "https://github.com/aoaostar/legado": {
-"commit": "620be6c",
-"book_id": 84639340,
-"book_url": "legado-620be6c",
-"imported_at": "2026-10-16T14:25:00+0800"
+"commit": "06b8162",
+"book_id": 84678623,
+"book_url": "legado-06b8162",
+"imported_at": "2026-10-17T14:43:00+0800",
+"note": "默认分支 release；28 节点（3 目录 / 25 文件）→ TOC 117（TITLE 3 / DOC 114，6 个 JSON 分片 95 片）。⚠️ 首次导入(bid 84678542)命中 JSON 分片丢内容 bug（_split_json_list 绝对下标切段内列表）已删库重建；v1.3.50 修复 + 新增 scripts/yuque_verify_shards.py 验收，6 个分片文件拼回与本地逐条相等"
 },
 "https://github.com/swjybky/deepwrite": {
 "commit": "7c028da",

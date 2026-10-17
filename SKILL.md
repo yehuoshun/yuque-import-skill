@@ -80,6 +80,9 @@ python3 scripts/yuque_toc_reconcile.py --root /path/to/dir --book <book_id> --pr
 1. 语雀端 TOC 节点数 == 本地节点数
 2. 全路径唯一性：`len(paths) == len(set(paths))`（无重复无缺失）
 3. 抽查深层路径（如 `src/Core/Models/AbstractModel.cs`）实际可达
+4. **有超限分片的库必须跑分片内容验收**（2026-10-17 加，见 `references` 坑 28）：
+   `python3 scripts/yuque_verify_shards.py --root <clean_dir> --book <id> --progress <账本>`
+   —— 路径映射对不对 **不代表正文没丢**；JSON 顶层数组切分的 bug 就是路径验收全 PASS 但第 2 片起正文全空。
 
 ---
 

@@ -229,7 +229,12 @@ def _json_desc(items, a, b, total):
 
 
 def _split_json_list(items, limit):
-    """JSON 顶层数组 → 按元素边界切: 每段都是完整条目, 绝不切破记录。"""
+    """JSON 顶层数组 → 按元素边界切: 每段都是完整条目, 绝不切破记录。
+
+    ⚠ 2026-10-17 修 bug：原来写 `_json_text(cur, start, idx)` —— `start/idx` 是**文件级绝对下标**，
+    而 `cur` 是**每次 flush 后重置的段内列表**，按绝对下标切片恒为空 → 第 2 片起正文丢失
+    （legado sources/*.json 实测：20.9MB 只进去 0.79MB，3~40 片全是空壳）。正确写法是取整段 `cur[0:len(cur)]`。
+    """
     total = len(items)
     parts = [json.dumps(it, ensure_ascii=False, indent=2) for it in items]
     out, cur, n, start = [], [], 0, 0
@@ -237,18 +242,18 @@ def _split_json_list(items, limit):
         sb = len(s.encode("utf-8")) + 2
         if sb > limit:                                  # 单条自身超限: 不切, 单独成段
             if cur:
-                out.append((_json_text(cur, start, idx), _json_desc(items, start, idx, total)))
+                out.append((_json_text(cur, 0, len(cur)), _json_desc(items, start, idx, total)))
                 cur, n, start = [], 0, idx
             out.append((s, "第 %d 个条目（单条超限）" % (idx + 1)))
             start = idx + 1
             continue
         if cur and n + sb > limit:
-            out.append((_json_text(cur, start, idx), _json_desc(items, start, idx, total)))
+            out.append((_json_text(cur, 0, len(cur)), _json_desc(items, start, idx, total)))
             cur, n, start = [], 0, idx
         cur.append(s)
         n += sb
     if cur:
-        out.append((_json_text(cur, start, total), _json_desc(items, start, total, total)))
+        out.append((_json_text(cur, 0, len(cur)), _json_desc(items, start, total, total)))
     return out
 
 
