@@ -142,5 +142,13 @@
 "book_url": "linux-doc-f5a6344",
 "imported_at": "2026-10-17T23:15:00+0800",
 "note": "《Linux Documentation 中文版》（GPL v2 翻译计划，末次 push 2021-01）；旧 gitbooks 站 301 到 tinylab-1.gitbook.io；站点内容 = 仓库 zh-cn/ 子树 → 纯 GitBook 源全导口径（保留 book.json/SUMMARY.md）；5 目录 / 17 文件 = 22 节点；3 张图（zh-cn/pic ×2 + 根 pic ×1，后者引用是单引号 HTML img）全传 CDN；toc-md PUT 0.4s；四查 + 17 篇逐字符比对全绿"
+},
+"http://happypeter.github.io/LGCB/book/": {
+"commit": "22efba9",
+"repo": "https://github.com/happypeter/LGCB",
+"book_id": 84683210,
+"book_url": "lgcb-22efba9",
+"imported_at": "2026-10-17T23:40:00+0800",
+"note": "《Linux Guide for Complete Beginners》（happypeter，摘 TLCL 常用部分）；站点是 GitHub Pages（gh-pages 分支 Jekyll）→ 直接导 book/ 下 md 源；13 章 + 目录.md（从站内 index.html 目录表重生成）= 14 节点平铺；剥 Jekyll front matter；33 张被引用图传 CDN；toc-md PUT 0.4s；四查 + 14 篇逐字符比对全绿"
 }
 }
