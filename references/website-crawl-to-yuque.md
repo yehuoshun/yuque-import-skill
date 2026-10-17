@@ -146,6 +146,13 @@
     - **嵌套列表必须脱离 render 主循环**（本次血泪）：bs4 渲染器的 `render()` 主循环里**没有 `li` 分支**，只要在 `ul` 分支里用 `render(child_ul)` 递归，下一次 `render(ul)` 就会去遍历 `ul.children`（全是 `li`）→ 每个 `li` 掉进 `else` → 症状是「同一列表内容出现两遍 / 子项没缩进 / 缩进层级跳级」。正确做法：写独立的 `render_list()` 递归，`render()` 的 `ul/ol` 分支只调它
     - `inline()` 必须**先跳过块级子节点**（`ul/ol/table/pre/blockquote`），否则 `inline(li)` 会把子列表文本拼进父项 → 重复
     - 收尾清 GitBook 插件产物：读者数徽章（`bitdeli` 行）、`cover.jpg` 发布图等；**外链图源站可能早就 404**（本文两张七牛测试域名图）——修不了就保留原链并在报告里说明
+33. **MediaWiki 站（wiki.ubuntu.org.cn）**（2026-10-18《Ubuntu 参考手册》实战）：
+    - **`api.php` 被 Cloudflare 拦**（https 直接 403 “Just a moment…”，http 301→https）；但**普通页面路径放行** → 仍可抓 HTML（带浏览器 UA）。先试 API，不行就切页面抓取
+    - 页面清单（分类成员）取 `/分类:<分类名>` 页面而不是 API（`list=categorymembers`）；命名空间页面 URL 形如 `/UbuntuManual:Ubuntu_基础`（空格→`_`，整体 quote）
+    - 正文容器 = `div.mw-parser-output`；**要丢掉的东西**：顶部导航 `ul`（含“…导航”）+ 导航 `table` + **自动目录 `div.toc`**（含 `h2#mw-toc-heading`）→ 定位『第一个带 `span.mw-headline` 的 h2』之后才算正文；无标题页（封面/首页）从第一个 `<p>` 起到第一个 `hr/ul/table` 前
+    - **每页尾部有 MediaWiki 调试块**（`NewPP limit report` / `Transclusion expansion time report` / `parser cache`）→ 从 `NewPP limit report` 处截断
+    - 站内链接（`/UbuntuManual:xxx#anchor`）剥成纯文本；`sup.reference`（脚注引用）丢；`span.mw-editsection` 丢；`<nowiki>` 清洗
+    - 实测：17 页（分类 17 个成员）/ 405KB → 库 84683525，四种查全绿
 
 
 ## 五、站点案例速查

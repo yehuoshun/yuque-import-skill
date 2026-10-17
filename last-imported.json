@@ -179,5 +179,12 @@
 "book_url": "tlcl-f4d81b3",
 "imported_at": "2026-10-18T00:42:00+0800",
 "note": "《快乐的 Linux 命令行》（The Linux Command Line 中文版，happypeter/billie66 及社区译）；gh-pages 分支即书稿源（Jekyll，book/chap01-37.md 中英对照）；按 book/index.html 的 5 分部建目录（引言/学习 shell/配置文件和 shell 环境/常见任务和基本工具/编写 Shell 脚本）+ 根级 目录.md = 43 节点；5 张图传 CDN；文件名洗 /；子目录图引用改 ../images/；toc-md PUT 0.5s；四查 + 38 篇逐字符比对全绿"
+},
+"http://wiki.ubuntu.org.cn/UbuntuManual": {
+"commit": "rev149963",
+"book_id": 84683525,
+"book_url": "ubuntu-manual-20261018",
+"imported_at": "2026-10-18T00:56:00+0800",
+"note": "《Ubuntu 参考手册》（Ubuntu 中文 wiki / MediaWiki 1.42，改自 Debian 中文参考手册）；api.php 被 Cloudflare 拦 → 抓页面 HTML（正文 div.mw-parser-output，丢导航 ul/table + div.toc，尾部 NewPP 调试块截断）；分类成员 17 页平铺；无图；toc-md PUT 0.4s；四查 + 17 篇逐字符比对全绿；转换器 examples/ubuntu-manual/"
 }
 }
