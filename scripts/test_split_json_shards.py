@@ -86,4 +86,30 @@ with tempfile.TemporaryDirectory() as td:
     assert len(Y.fmt_content(fp, None, LIMIT)) == 1
 print("✅ 测试 4：未超限不分片")
 
-print("\n🎉 全部 4 项测试通过")
+# ---------- 测试 5：strip_shard 剥壳是可逆的（防「剥壳差几个字符 → 假失败」） ----------
+import yuque_verify_shards as V  # noqa: E402
+
+# 行边界切分的文件（.po / .md）→ 剥壳后拼回必须逐字符等于原文
+for fname, text in [("big.po", "".join("line %d \u4e2d\u6587\n" % i for i in range(4000))),
+                    ("big.md", "".join("\u6bb5 %d\n" % i for i in range(5000)))]:
+    with tempfile.TemporaryDirectory() as td:
+        fp = os.path.join(td, fname)
+        open(fp, "w", encoding="utf-8").write(text)
+        segs = Y.fmt_content(fp, None, LIMIT)
+    assert len(segs) > 1, "%s 应被分片（%d 片）" % (fname, len(segs))
+    joined = "".join(V.strip_shard(b) for _s, b in segs)
+    assert joined == text, "%s 剥壳后拼回不等（%d vs %d）" % (fname, len(joined), len(text))
+print("✅ 测试 5：行边界分片剥壳可逆（.po/.md 拼回逐字符相等）")
+
+# JSON 条目边界切分 → 段内是重排版过的 JSON，只能按「逐条回拼」比（走验收脚本的 B 路）
+with tempfile.TemporaryDirectory() as td:
+    fp = os.path.join(td, "big.json")
+    open(fp, "w", encoding="utf-8").write(raw)
+    segs = Y.fmt_content(fp, None, LIMIT)
+got = []
+for _s, b in segs:
+    got.extend(json.loads(V.strip_shard(b)))
+assert got == items, "JSON 分片剥壳后逐条回拼不等"
+print("✅ 测试 6：JSON 条目分片剥壳后逐条回拼相等（%d 条 / %d 片）" % (len(got), len(segs)))
+
+print("\n🎉 全部 6 项测试通过")

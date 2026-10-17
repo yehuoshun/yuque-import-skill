@@ -5,16 +5,17 @@ yuque_verify_shards.py — 分片文档「内容零丢失」验收（2026-10-17 
 ====================================================================
 为什么需要它：`yuque_import_verify.py` 只验『路径映射』（节点在不在、分片号连不连续），
 **不看分片正文**。2026-10-17 发现 `_split_json_list` 有 bug（绝对下标切段内列表 → 第 2 片起正文全丢），
-legado 4 个库、rea 4 个库、kairisei-ma-ch 1 个库全部中招，而路径验收全 PASS 没拦住。
-本脚本补上这一层：**把语雀上的分片正文拉回来拼好，跟本地文件逐条/逐字符比对**。
+legado 多个库中招，而路径验收全 PASS 没拦住。本脚本补上这一层。
+
+判定（两种方法，命中任一即 PASS，方法写进输出）：
+  A. 拼回文本：逐片剥围栏与尾注后直接拼接，与本地文件**逐字符相等**（覆盖行边界切分）
+  B. 数组回拼：各片都能 `json.loads` → 拼回列表与本地 `json.loads` 结果**逐条相等**
+     （覆盖 JSON 条目边界切分；「单条超限」片是裸对象，会自动包成单元素列表）
 
 用法:
     python3 scripts/yuque_verify_shards.py --root <clean_dir> --book <book_id> --progress <progress.json>
 
-判定:
-  - .json 且按「JSON 条目边界」切 → 逐片 json.loads、拼回、与本地数组 `==`
-  - 其余（行边界/单条超限裸对象）→ 逐片剥围栏与尾注后拼回，与本地文本逐字符 `==`
-退出码: 0 = 全 PASS；1 = 有文件不一致（会列出）
+退出码: 0 = 全 PASS；1 = 有不一致（会列出）
 """
 import argparse
 import json
@@ -28,12 +29,27 @@ BASE = "https://www.yuque.com/api/v2"
 
 
 def strip_shard(body):
-    """去掉 ```lang 围栏 + 尾部 `<!-- 分段 -->` 注记，还原该片正文。"""
+    """去掉 ```lang 围栏 + 尾部 `<!-- 分段 -->` 注记，还原该片正文（精确逆运算）。
+
+    正文构造固定为：`wrap(s) + "\n\n<!-- 分段 ... -->\n"`，其中
+      wrap(s) = s          （.md）
+      wrap(s) = "```lang\n" + s + "\n```"（其他）
+    所以倒着剥：先切尾注并吃掉它的前导两个换行，再去围栏首行与行首的 "\n```" 尾巴。
+    （2026-10-17 踩：先剥围栏再剥尾注 → 每片多 6 字符（"\n```\n\n" 残留）→ 全库假失败）
+    """
     t = body.strip()
+    i = t.rfind("<!-- 分段")
+    if i != -1:
+        t = t[:i]
+        if t.endswith("\n\n"):
+            t = t[:-2]
     if t.startswith("```"):
         t = t.split("\n", 1)[1] if "\n" in t else ""
-        t = t.rsplit("```", 1)[0]
-    return t.split("<!-- 分段", 1)[0]
+        if t.endswith("\n```"):
+            t = t[:-4]
+        elif t.endswith("```"):
+            t = t[:-3]
+    return t
 
 
 def main():
@@ -55,37 +71,56 @@ def main():
     bad = []
     for p, segs in sorted(seg_files.items()):
         fp = os.path.join(args.root, p)
-        raw_local = open(fp, "rb").read()
-        chunks = []
+        local = open(fp, "rb").read().decode("utf-8", errors="replace")
+        chunks, fetch_err = [], None
         for s in segs:
-            d = api(token, BASE, "GET", "/repos/%s/docs/%s" % (args.book, s["doc_id"]))
+            try:
+                d = api(token, BASE, "GET", "/repos/%s/docs/%s" % (args.book, s["doc_id"]))
+            except Exception as ex:          # noqa: BLE001
+                fetch_err = "拉取 %s 失败: %s" % (s["title"], ex)
+                break
             chunks.append(strip_shard((d.get("data") or {}).get("body") or ""))
 
+        if fetch_err:
+            print("  ❌ %s: %s" % (p, fetch_err), flush=True)
+            bad.append(p)
+            continue
+
+        # A. 拼回文本逐字符比
+        joined = "".join(chunks)
+        if joined == local:
+            print("  ✅ %s: %d 片 · 拼回文本与本地逐字符相等（%d 字符）"
+                  % (p, len(segs), len(local)), flush=True)
+            continue
+
+        # B. JSON 数组回拼逐条比
         if p.lower().endswith(".json"):
-            got = []
-            broken = False
-            for c in chunks:
+            got, err = [], None
+            for i, c in enumerate(chunks):
                 try:
                     v = json.loads(c)
-                except Exception as e:
-                    broken = True
+                except Exception as ex:      # noqa: BLE001
+                    err = "第 %d 片不是合法 JSON（%s）" % (i + 1, ex)
                     break
-                got.extend(v if isinstance(v, list) else [v])   # 「单条超限」片是裸对象
-            if not broken:
-                want = json.loads(raw_local.decode("utf-8"))
-                ok = got == want
-                detail = "拼回 %d 条 / 本地 %d 条" % (len(got), len(want))
-            else:
-                ok, detail = False, "有分片不是合法 JSON（%s）" % e
+                got.extend(v if isinstance(v, list) else [v])
+            if err is None:
+                try:
+                    want = json.loads(local)
+                except Exception as ex:      # noqa: BLE001
+                    want, err = None, "本地文件不是合法 JSON（%s）" % ex
+                if err is None and got == want:
+                    print("  ✅ %s: %d 片 · 数组回拼 %d 条与本地逐条相等"
+                          % (p, len(segs), len(got)), flush=True)
+                    continue
+                if err is None:
+                    err = "数组回拼 %d 条 ≠ 本地 %d 条" % (
+                        len(got), len(want) if want is not None else -1)
+            print("  ❌ %s: %d 片 · %s（拼回文本 %d 字符 vs 本地 %d 字符）"
+                  % (p, len(segs), err, len(joined), len(local)), flush=True)
         else:
-            text = "".join(chunks)
-            want = raw_local.decode("utf-8", errors="replace")
-            ok = text == want
-            detail = "拼回 %d 字符 / 本地 %d 字符（逐字符 %s）" % (
-                len(text), len(want), "相等" if ok else "不等")
-        print("  %s %s: %d 片 · %s" % ("✅" if ok else "❌", p, len(segs), detail), flush=True)
-        if not ok:
-            bad.append(p)
+            print("  ❌ %s: %d 片 · 拼回文本 %d 字符 ≠ 本地 %d 字符"
+                  % (p, len(segs), len(joined), len(local)), flush=True)
+        bad.append(p)
 
     if bad:
         print("\n❌ 分片内容校验失败 %d 个: %s" % (len(bad), bad))

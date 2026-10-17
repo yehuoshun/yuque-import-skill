@@ -25,10 +25,11 @@
 "imported_at": "2026-10-16T09:33:00+0800"
 },
 "https://github.com/morluto/rea": {
-"commit": "2c7583599",
-"book_id": 84639746,
-"book_url": "rea-2c758359",
-"imported_at": "2026-10-16T18:16:00+0800"
+"commit": "5b2439938",
+"book_id": 84678877,
+"book_url": "rea-5b2439938",
+"imported_at": "2026-10-17T16:00:00+0800",
+"note": "默认分支 main；toc-md 模式，4520 节点（364 目录 / 4156 文件）→ TOC 4541（364 TITLE + 4177 DOC，20 个 >512KB 文件切 41 片）；61 分钟、fail 0；图片 4 张传 CDN + 81 处引用重写后删 docs/assets + website/public/assets（按 SKILL 硬规则 10）；根级顺序=本地 DFS 序无需归位；四查全绿 + 分片内容 20/20 逐字符相等。⚠️ 首次跑发现 yuque_verify_shards.py 自身两个 bug（假失败），同日修"
 },
 "https://github.com/howie6879/owllook": {
 "commit": "8ded1ea",
