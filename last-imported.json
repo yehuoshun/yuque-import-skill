@@ -171,5 +171,13 @@
 "book_url": "ostep-20261018",
 "imported_at": "2026-10-18T00:31:00+0800",
 "note": "《Operating Systems: Three Easy Pieces》（Remzi & Andrea Arpaci-Dusseau，Version 1.10 / 2023-11）；官网只有 68 个章节 PDF（无 HTML、书稿源不公开）→ PyMuPDF 提取转 md；7 分部目录（00-前言/01-Introduction/02-Virtualization/03-Concurrency/04-Persistence/05-Security/06-Appendices）+ 68 篇 = 75 节点；矢量图未导（老板拍板 A），图注文字保留；断词用 words_alpha 词表判复合词；toc-md PUT 0.7s；四查 + 68 篇逐字符比对全绿"
+},
+"http://billie66.github.io/TLCL/index.html": {
+"commit": "f4d81b3",
+"repo": "https://github.com/billie66/TLCL",
+"book_id": 84683475,
+"book_url": "tlcl-f4d81b3",
+"imported_at": "2026-10-18T00:42:00+0800",
+"note": "《快乐的 Linux 命令行》（The Linux Command Line 中文版，happypeter/billie66 及社区译）；gh-pages 分支即书稿源（Jekyll，book/chap01-37.md 中英对照）；按 book/index.html 的 5 分部建目录（引言/学习 shell/配置文件和 shell 环境/常见任务和基本工具/编写 Shell 脚本）+ 根级 目录.md = 43 节点；5 张图传 CDN；文件名洗 /；子目录图引用改 ../images/；toc-md PUT 0.5s；四查 + 38 篇逐字符比对全绿"
 }
 }

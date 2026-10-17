@@ -118,6 +118,10 @@
    ① **Jekyll front matter 必须剥**：每篇 md 开头是 `---\nlayout: book\ntitle: 你好，命令行\n---`——不剥就变成正文头部的 YAML 垃圾。剥法：`re.match(r'^---\s*\n(.*?)\n---\s*\n', t, re.S)`；**剥出来的 `title` 别丢**（中文标题！文件名是 `02_hello_cli.md` 这种英文 slug）——用来生成「目录」文档。
    ② **`book/index.html` 是站点的目录页**（同样是 Jekyll 页）——不要原样当 HTML 文档导（站内 `.html` 链接到语雀会成死链），而是解析它的 `<tr class="episode-wrap">` 表（序号/标题/时长）**重新生成一篇 `目录.md`**（markdown 表格：序号 | 章节 | 时长 | 文件名），顺带写上站点与源仓库地址。
    ③ 文档标题仍按硬规则 7 用**文件名**（`02_hello_cli.md`），中文标题靠目录页对照。本次：13 章 + 目录.md = **14 节点**（0 目录，平铺）；33 张被引用的图全传 CDN（未引用的 5 张不传）、删 `book/images/`；`--toc-md` PUT 0.4s；四查 + 14 篇逐字符比对全绿；库 id 84683210。
+    **续例（2026-10-18 billie66/TLCL《快乐的 Linux 命令行》）**：同构站（gh-pages + Jekyll + `book/chapNN.md` 37 章），但**章多时按站点目录页的分部建目录**（`book/index.html` 的 `<h2>` 分组 = 5 部：引言/学习 shell/配置文件和 shell 环境/常见任务和基本工具/编写 Shell 脚本）→ `00-引言/01-引言.md` … 5 目录 + 37 章 + 根级 `目录.md` = 43 节点。三个补充：
+   ① **文件名要洗 `/`**（“流程控制：while/until 循环”直接当文件名会 ENOENT）
+   ② **图片引用按 md 所在目录解析**——章节进了子目录后，原 `images/x.png` 要改成 `../images/x.png` 才能被 rewrite 脚本找到
+   ③ **中英对照书保留原文**（TLCL 每段英文 + 中文），不删英文；站点首页（`index.html`，比 md 源里的 HTML 混排规范）用 bs4 转 md 当根级「目录.md」（含分部目录表）
 
 ## 七、官方 v2 一次性目录（toc-md，2026-10-16 老板拍板设为默认）
 
