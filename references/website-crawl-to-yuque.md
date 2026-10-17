@@ -8,7 +8,7 @@
 > cn.linux.vbird.org/linux_basic（同站基础学习篇，复用同一转换器，2026-10-16）、
 > docs.freebsd.org/zh-cn/books/handbook（FreeBSD 官方文档站，Asciidoctor/Hugo，2026-10-17）、
 > jinbuguo.com/lfs/lfs62（LFS 6.2 中文版，DocBook XSL 老多页站 + GitHub 镜像，2026-10-17）。
-> 通用爬虫模板：`scripts/yuque_website_crawl.py`（复制到 tmp/<站点>/crawl.py，改 SITE 配置区）。
+> 通用爬虫模板：`scripts/yuque_website_crawl.py`（正则/窗口式，复制到 tmp/<站点>/crawl.py 改 SITE 配置区）；DOM 规整的站（GitBook/Asciidoctor/Hugo）用 bs4 递归渲染更稳，可抄 `examples/freebsd-handbook/`、`examples/mac-dev-setup/`。
 
 ## 一、流程（六步）
 
@@ -141,6 +141,11 @@
 31. **无章号页（附录/索引）要单独定顺序与命名**（vbird 基础学习篇实踩 2026-10-16）：基础学习篇 27 章从**第零章**起（中文数字含「零」）+
     `附录 A`/`附录 B`/`快速索引` 三页无「第N章」→ 解析不出章号会全落兜底值、排序错乱。做法：章号正则加「零」；附录/索引给 `27/28/29`
     伪章号接在章节后（三位数前缀与两位章号字典序一致，DFS 导入序不错位）；标题带上「附录 A：…」，索引页 `text_head0` 是站点名要改名成「…快速索引」。
+32. **GitBook 2.x 静态站（老 gitbooks.io）+ 嵌套列表渲染坑**（2026-10-17 mac-dev-setup 实战，`examples/mac-dev-setup/`）：
+    - 老站**还在线时优先直接抓 HTML**：正文容器 = `section.normal`（上一/下一页导航是 `div.book-body > div.navigation*`，在容器外，天然不污染）；每页一个 `index.html`，站点目录顺序看侧栏 `ul.summary` 的 `<a>`；**`.md`/`SUMMARY.md`/`book.json` 一律 401**（别指望 Shell 版面旧 gitbook 站有 md 源）
+    - **嵌套列表必须脱离 render 主循环**（本次血泪）：bs4 渲染器的 `render()` 主循环里**没有 `li` 分支**，只要在 `ul` 分支里用 `render(child_ul)` 递归，下一次 `render(ul)` 就会去遍历 `ul.children`（全是 `li`）→ 每个 `li` 掉进 `else` → 症状是「同一列表内容出现两遍 / 子项没缩进 / 缩进层级跳级」。正确做法：写独立的 `render_list()` 递归，`render()` 的 `ul/ol` 分支只调它
+    - `inline()` 必须**先跳过块级子节点**（`ul/ol/table/pre/blockquote`），否则 `inline(li)` 会把子列表文本拼进父项 → 重复
+    - 收尾清 GitBook 插件产物：读者数徽章（`bitdeli` 行）、`cover.jpg` 发布图等；**外链图源站可能早就 404**（本文两张七牛测试域名图）——修不了就保留原链并在报告里说明
 
 
 ## 五、站点案例速查
@@ -163,3 +168,4 @@
 | docs.freebsd.org/zh-cn/books/handbook（FreeBSD 官方手册，Asciidoctor/Hugo，2026-10-17） | 正文 = `main>div.book-content` | 容器自带边界（页脚 last-modified/buttons 在外） | 42 节点（5 部分目录 + 37 章/附录）；bs4 递归渲染器（见坑 28）；5 类 admonition → 引用块；表格 caption + 无 thead 首行当表头；167 图传 CDN；`--toc-md` + prependNode 修根级顺序（坑 29）；转换器 `examples/freebsd-handbook/` |
 | cn.linux.vbird.org/linux_basic（同站基础学习篇, 2026-10-16） | `<!-- 本文的正式部分 -->`（附录 A 无此标记→fallback `<!-- 本文的档头部分 -->`） | 页脚 `<div style="padding-top: 0px; text-align: center;">` | 27 章（**第零章**起）+ 附录 A/B + 快速索引 = 30 篇；**全简体**（无繁体章，不触发简繁双版）；转换器抄 `examples/vbird-server/`，改 4 处：BASE→linux_basic、章号正则加「零」、窗口加「档头部分」fallback、附录/索引伪章号 27/28/29；269 张正文图全传 CDN（0 失败） |
 | cn.linux.vbird.org/linux_server（老式 PHP 表格站, 2026-10-16） | `<!-- 本文的正式部分 -->`（繁体同形）之后 | 页脚 `<div style="padding-top: 0px; text-align: center;">` | 22 章；**标题是 `<span class="text_h1">` / `<span class="text_h2">` 不是 h 标签**，章名取 `text_head0`（内有嵌套 `text_head_en`，正则用 `</span>\s*(?:</a>|<br)` 收尾）；终端块 `<table class="term"><pre>`；Tips/例题=单格 `<table width="90%">`；**整章全文页与分页并存 → 只导全文页**（比值≈1）；装饰图（大标题/小标题/鸟哥图示 596 张）按 alt 剔除、正文截图 218 张传 CDN；繁体章额外出「（简体版）」（opencc tw2sp）；按「第N章」中文数字转阿拉伯排序（非文件名前缀序）；站点专用转换器与复用流程见 `examples/vbird-server/`（fetch_all.py + crawl_vbird.py + README） |
+| aaaaaashu.gitbooks.io/mac-dev-setup（《Mac 开发配置手册》，GitBook 2.6.7 静态站，2026-10-17） | 正文 = `section.normal` | 容器自带边界（`div.book-body > div.navigation*` 在外） | 无源仓库（GitHub 同名 repo 不存在）→ 抓 HTML；13 页（侧栏 `ul.summary` 定序，平铺）；bs4 递归渲染（**嵌套列表丢前缀坑见坑 32**）；无站内图，2 张外链图源站已 404 保留；转换器 `examples/mac-dev-setup/` |
