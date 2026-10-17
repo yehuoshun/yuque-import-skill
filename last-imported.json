@@ -124,5 +124,12 @@
 "book_url": "lfs-6.2-zh-20261017",
 "imported_at": "2026-10-17T09:45:00+0800",
 "note": "LFS 6.2 中文版（金步国/ipconfigme/bobkey 合译 2008-03-01）；源站 works.jinbuguo.com NXDOMAIN、www.jinbuguo.com 502 → 取自 GitHub p-moon/develop-reference-data 镜像（155 文件/1.8MB）；DocBook XSL 老多页站 bs4 渲染；1 + 11 目录 + 142 文档；图=装饰 icon 全跳过；toc-md + prependNode 前言归位 + editNode 目录名清理"
+},
+"https://github.com/Goooler/bilibili-API-collect": {
+"commit": "d45e712",
+"book_id": 84678268,
+"book_url": "bilibili-api-collect-d45e712",
+"imported_at": "2026-10-17T14:12:00+0800",
+"note": "！原仓库 SocialSisterYi/bilibili-API-collect 因收到 B 站律师函已 archived（默认分支 deprecated、历史被抹，只剩 README+reason.jpg；2026-01-28）→ 老板 2026-10-17 拍板从 Goooler fork（trunk @ d45e712）导。820 节点（355 目录/465 文件：docs 196 md + grpc_api 128 proto + proto 137 proto + README/CONTRIBUTING/version.json）；77 张本地图（HTML <img src> 写法）传 CDN；剔 .vuepress/.github/assets/AGENTS.md/bun.lock/package.json/.gitignore/LICENSE"
 }
 }
