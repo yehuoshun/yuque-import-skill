@@ -1,114 +1,121 @@
 {
- "https://github.com/Alchyr/ModTemplate-StS2": {
-  "commit": "2c900a0",
-  "book_id": 84639583,
-  "book_url": "modtemplate-sts2-2c900a0",
-  "imported_at": "2026-10-16T14:44:00+0800"
- },
- "https://github.com/EbookFoundation/free-programming-books": {
-  "commit": "f42a51cd",
-  "book_id": 84639221,
-  "book_url": "free-programming-books-f42a51cd",
-  "imported_at": "2026-10-16T14:20:00+0800"
- },
- "https://github.com/aoaostar/legado": {
-  "commit": "620be6c",
-  "book_id": 84639340,
-  "book_url": "legado-620be6c",
-  "imported_at": "2026-10-16T14:25:00+0800"
- },
- "https://github.com/swjybky/deepwrite": {
-  "commit": "7c028da",
-  "book_id": 84635468,
-  "book_url": "deepwrite-7c028da",
-  "imported_at": "2026-10-16T09:33:00+0800"
- },
- "https://github.com/morluto/rea": {
-  "commit": "2c7583599",
-  "book_id": 84639746,
-  "book_url": "rea-2c758359",
-  "imported_at": "2026-10-16T18:16:00+0800"
- },
- "https://github.com/howie6879/owllook": {
-  "commit": "8ded1ea",
-  "book_id": 84639466,
-  "book_url": "owllook-8ded1ea",
-  "imported_at": "2026-10-16T14:32:00+0800"
- },
- "https://github.com/julycoding/The-Art-Of-Programming-by-July": {
-  "commit": "7fafa61c",
-  "book_id": 84605440,
-  "book_url": "the-art-of-programming-by-july-7fafa61c",
-  "imported_at": "2026-10-15T23:00:00+0800"
- },
- "https://github.com/DeathKing/Learning-SICP": {
-  "commit": "b60b706",
-  "book_id": 84605595,
-  "book_url": "learning-sicp-b60b706",
-  "imported_at": "2026-10-15T23:10:00+0800"
- },
- "http://i.linuxtoy.org/docs/guide/index.html": {
-  "commit": "website-20261015",
-  "book_id": 84605883,
-  "book_url": "kaiyuan-shijie-lvxing-shouce-20261015",
-  "imported_at": "2026-10-15T23:59:00+0800"
- },
- "https://github.com/kuuhaku1314/kairisei-ma-ch": {
-  "commit": "1b2aa00",
-  "book_id": 84635422,
-  "book_url": "kairisei-ma-ch-1b2aa00",
-  "imported_at": "2026-10-16T07:35:00+0800"
- },
- "https://github.com/tobegit3hub/understand_linux_process": {
-  "commit": "5791bcd",
-  "book_id": 84644268,
-  "book_url": "understand-linux-process-5791bcd",
-  "imported_at": "2026-10-16T21:54:00+0800"
- },
- "https://github.com/jlevy/the-art-of-command-line": {
-  "commit": "6b50745",
-  "book_id": 84644338,
-  "book_url": "the-art-of-command-line-zh-6b50745",
-  "imported_at": "2026-10-16T22:01:00+0800"
- },
- "http://cn.linux.vbird.org/linux_server/": {
-  "commit": "website-20261016",
-  "book_id": 84644468,
-  "book_url": "niaoge-linux-server-20261016",
-  "imported_at": "2026-10-16T22:20:00+0800"
- },
- "http://cn.linux.vbird.org/linux_basic/": {
-  "commit": "website-20261016",
-  "book_id": 84644854,
-  "book_url": "niaoge-linux-basic-20261016",
-  "imported_at": "2026-10-16T22:54:00+0800"
- },
- "https://github.com/tinyclub/elinux": {
-  "commit": "c37502e",
-  "book_id": 84645028,
-  "book_url": "elinux-c37502e",
-  "imported_at": "2026-10-16T23:40:00+0800",
-  "note": "zh/ 中文版子树（GitBook 源）；全树 1949 文件 / 986 目录（含 960 个 subpage 子页）；toc-md"
- },
- "https://github.com/yeasy/docker_practice": {
-  "commit": "27a97ae",
-  "book_id": 84645345,
-  "book_url": "docker-practice-27a97ae",
-  "imported_at": "2026-10-17T00:08:00+0800",
-  "note": "只导书籍内容树（21 章 + appendix + README/SUMMARY/CHANGELOG/CONTRIBUTING）；脚手架/CI/tests/tools/scripts/examples 未导；33 图传 CDN"
- },
- "https://github.com/widuu/chinese_docker": {
-  "commit": "b26bc04",
-  "book_id": 84665434,
-  "book_url": "chinese-docker-b26bc04",
-  "imported_at": "2026-10-17T07:00:00+0800",
-  "note": "纯 GitBook 源仓库全导（10 目录 / 56 文件）；28 图传 CDN，images/ 已剔"
- },
- "https://github.com/FreeBSD-Ask/FreeBSD-Ask": {
-  "commit": "2335823",
-  "book_id": 84675397,
-  "book_url": "freebsd-ask-2335823",
-  "imported_at": "2026-10-17T08:37:00+0800",
-  "note": "源站 book.bsdcn.org 是多书站，只取根书；47 目录 / 256 文件；845 图传 CDN（中途 429 限流）；剔 .github/.vitepress/.gitbook/public/CLAUDE.md/LICENSE 等"
- }
+"https://github.com/Alchyr/ModTemplate-StS2": {
+"commit": "2c900a0",
+"book_id": 84639583,
+"book_url": "modtemplate-sts2-2c900a0",
+"imported_at": "2026-10-16T14:44:00+0800"
+},
+"https://github.com/EbookFoundation/free-programming-books": {
+"commit": "f42a51cd",
+"book_id": 84639221,
+"book_url": "free-programming-books-f42a51cd",
+"imported_at": "2026-10-16T14:20:00+0800"
+},
+"https://github.com/aoaostar/legado": {
+"commit": "620be6c",
+"book_id": 84639340,
+"book_url": "legado-620be6c",
+"imported_at": "2026-10-16T14:25:00+0800"
+},
+"https://github.com/swjybky/deepwrite": {
+"commit": "7c028da",
+"book_id": 84635468,
+"book_url": "deepwrite-7c028da",
+"imported_at": "2026-10-16T09:33:00+0800"
+},
+"https://github.com/morluto/rea": {
+"commit": "2c7583599",
+"book_id": 84639746,
+"book_url": "rea-2c758359",
+"imported_at": "2026-10-16T18:16:00+0800"
+},
+"https://github.com/howie6879/owllook": {
+"commit": "8ded1ea",
+"book_id": 84639466,
+"book_url": "owllook-8ded1ea",
+"imported_at": "2026-10-16T14:32:00+0800"
+},
+"https://github.com/julycoding/The-Art-Of-Programming-by-July": {
+"commit": "7fafa61c",
+"book_id": 84605440,
+"book_url": "the-art-of-programming-by-july-7fafa61c",
+"imported_at": "2026-10-15T23:00:00+0800"
+},
+"https://github.com/DeathKing/Learning-SICP": {
+"commit": "b60b706",
+"book_id": 84605595,
+"book_url": "learning-sicp-b60b706",
+"imported_at": "2026-10-15T23:10:00+0800"
+},
+"http://i.linuxtoy.org/docs/guide/index.html": {
+"commit": "website-20261015",
+"book_id": 84605883,
+"book_url": "kaiyuan-shijie-lvxing-shouce-20261015",
+"imported_at": "2026-10-15T23:59:00+0800"
+},
+"https://github.com/kuuhaku1314/kairisei-ma-ch": {
+"commit": "1b2aa00",
+"book_id": 84635422,
+"book_url": "kairisei-ma-ch-1b2aa00",
+"imported_at": "2026-10-16T07:35:00+0800"
+},
+"https://github.com/tobegit3hub/understand_linux_process": {
+"commit": "5791bcd",
+"book_id": 84644268,
+"book_url": "understand-linux-process-5791bcd",
+"imported_at": "2026-10-16T21:54:00+0800"
+},
+"https://github.com/jlevy/the-art-of-command-line": {
+"commit": "6b50745",
+"book_id": 84644338,
+"book_url": "the-art-of-command-line-zh-6b50745",
+"imported_at": "2026-10-16T22:01:00+0800"
+},
+"http://cn.linux.vbird.org/linux_server/": {
+"commit": "website-20261016",
+"book_id": 84644468,
+"book_url": "niaoge-linux-server-20261016",
+"imported_at": "2026-10-16T22:20:00+0800"
+},
+"http://cn.linux.vbird.org/linux_basic/": {
+"commit": "website-20261016",
+"book_id": 84644854,
+"book_url": "niaoge-linux-basic-20261016",
+"imported_at": "2026-10-16T22:54:00+0800"
+},
+"https://github.com/tinyclub/elinux": {
+"commit": "c37502e",
+"book_id": 84645028,
+"book_url": "elinux-c37502e",
+"imported_at": "2026-10-16T23:40:00+0800",
+"note": "zh/ 中文版子树（GitBook 源）；全树 1949 文件 / 986 目录（含 960 个 subpage 子页）；toc-md"
+},
+"https://github.com/yeasy/docker_practice": {
+"commit": "27a97ae",
+"book_id": 84645345,
+"book_url": "docker-practice-27a97ae",
+"imported_at": "2026-10-17T00:08:00+0800",
+"note": "只导书籍内容树（21 章 + appendix + README/SUMMARY/CHANGELOG/CONTRIBUTING）；脚手架/CI/tests/tools/scripts/examples 未导；33 图传 CDN"
+},
+"https://github.com/widuu/chinese_docker": {
+"commit": "b26bc04",
+"book_id": 84665434,
+"book_url": "chinese-docker-b26bc04",
+"imported_at": "2026-10-17T07:00:00+0800",
+"note": "纯 GitBook 源仓库全导（10 目录 / 56 文件）；28 图传 CDN，images/ 已剔"
+},
+"https://github.com/FreeBSD-Ask/FreeBSD-Ask": {
+"commit": "2335823",
+"book_id": 84675397,
+"book_url": "freebsd-ask-2335823",
+"imported_at": "2026-10-17T08:37:00+0800",
+"note": "源站 book.bsdcn.org 是多书站，只取根书；47 目录 / 256 文件；845 图传 CDN（中途 429 限流）；剔 .github/.vitepress/.gitbook/public/CLAUDE.md/LICENSE 等"
+},
+"https://docs.freebsd.org/zh-cn/books/handbook/": {
+"commit": "0b2d55b173",
+"book_id": 84675796,
+"book_url": "freebsd-handbook-20261017",
+"imported_at": "2026-10-17T09:05:00+0800",
+"note": "FreeBSD 官方文档站（zh-cn 旧版翻译，docs.freebsd.org，入口 freebsd.org/doc/zh_CN.UTF-8/books/handbook/ 301 过来）；5 部分目录 + 32 章 + 4 附录 + 前言 = 46 节点；Asciidoctor/Hugo DOM 走 bs4 递归渲染器；167 图传 CDN；toc-md 后 prependNode 修根级顺序"
+}
 }

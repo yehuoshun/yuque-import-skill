@@ -55,6 +55,7 @@ python3 scripts/yuque_tree_import.py --root /path/to/dir --book <book_id> --prog
   - **标题原样写，禁转义**（实测：`\[`/`\]` 与 `&#91;` 会被当字面量写进标题 → 变脏）；语雀按最后一个 `](slug)` 切分，嵌套/不平衡括号都能扛
   - 对比 batch 模式：请求数 ~减半（不再对每篇文档发 `appendNode`），收尾 ~80 分钟 → **秒级**；无需 cookie
   - 收尾自动：拼目录树 → PUT → 回读回填 uuid（含分片段）到账本 → 结构核对，输出 `[toc-md] 结构核对 PASS ✅`；核对失败会把缺失路径记入 fail
+  - ⚠️ **收尾后根级 DOC 会排到 TITLE 目录之后**（doc 先建挂根、TITLE 后由目录树生成）→ 按需补一发 `PUT /toc {action:prependNode, action_mode:sibling, node_uuid:<根级DOC>, target_uuid:<第一个TITLE>}` 归位（2026-10-17 FreeBSD 手册实踩，refs 坑 29）
   - 编排器 `yuque_import_all.py` 已默认启用（`--no-toc-md` 可回退旧流程）
 
 - 内容格式：`.md` 原样 / `.cs` → ` ```csharp ` 代码块 / 其余 → 纯文本代码块

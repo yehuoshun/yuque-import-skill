@@ -5,7 +5,8 @@
 > Git Magic（DocBook content div）、廖雪峰（Tailwind 站，评论区 JS 带偏窗口事故）、
 > 看云 kancloud（SEO 副本直出 md 源码）、Pro Git gitbooks.io（GitBook3 + asciidoc 实体转义）、
 > SVN Book（DocBook XSL 多页站，bs4 渲染器）、cn.linux.vbird.org/linux_server（老式 PHP 表格站，2026-10-16）、
-> cn.linux.vbird.org/linux_basic（同站基础学习篇，复用同一转换器，2026-10-16）。
+> cn.linux.vbird.org/linux_basic（同站基础学习篇，复用同一转换器，2026-10-16）、
+> docs.freebsd.org/zh-cn/books/handbook（FreeBSD 官方文档站，Asciidoctor/Hugo，2026-10-17）。
 > 通用爬虫模板：`scripts/yuque_website_crawl.py`（复制到 tmp/<站点>/crawl.py，改 SITE 配置区）。
 
 ## 一、流程（六步）
@@ -111,7 +112,23 @@
 27. **同站换篇：正文窗口标记不保证一致，要有 fallback**（vbird 基础学习篇实踩 2026-10-16）：
     服务器架设篇每页都有 `<!-- 本文的正式部分 -->`；基础学习篇**附录 A 页只有 `<!-- 本文的档头部分 -->`**（无「正式部分」）→ 窗口起点要
     `find("本文的正式部分")` 失败后 fallback 到 `find("本文的档头部分")`。同站不同篇先全站 grep 一遍标记再动手。
-28. **无章号页（附录/索引）要单独定顺序与命名**（vbird 基础学习篇实踩 2026-10-16）：基础学习篇 27 章从**第零章**起（中文数字含「零」）+
+28. **Asciidoctor/Hugo 文档站（DocBook 之后的同门）**（docs.freebsd.org 官方手册实踩 2026-10-17）：
+    DOM 与 git-scm.com/book 同族（`div.sect1-4`/`paragraph`/`listingblock`/`literalblock`/`admonitionblock`/
+    `imageblock`/`ulist`/`olist`/`dlist`/`exampleblock`/`tableblock`），但**别上正则，直接 bs4 递归渲染器**（同坑 18）。要点：
+    - 正文容器 = `main.main-wrapper-book > div.book-content`（页脚 `div.last-modified`/`div.buttons` 在容器外，天然不沾）
+    - 页内目录是 `div.toc-mobile`（删）；每页顶部还有一条**站点级公告 admonitionblock**（「This translation may be out of date」）→ 按文字匹配剔
+    - admonitionblock 是 `<table><td class=icon><i title=Note></i><td class=content>…</td>` → 取 `td.content` 递归，渲染成 `> **注意**` 引用块（label 按 note/tip/important/warning/caution 映射）
+    - 表格标题在 `<caption class=title>`（**在表格元素内**！只收 td/th 会把标题整条丢掉）→ 提到表前一行 `**表 1. …**`
+    - **无 `<thead>` 的表**：不处理会渲出空表头行 → 拿**首行数据当表头**
+    - `span.filename|guimenuitem|keyseq|parameter` → 行内 code，**取 get_text() 再包**（内层本身是 `<kbd>` → 不然出 `` ``Alt`+`F1`` `` 双层反引号）
+    - 站点图片相对路径 `../../../../images/...` 用 `urljoin` 归一到 docs.freebsd.org，直连可下（167 张，无 429 压力）
+    - 站内交叉链接（`../disks/#xxx`）→ 纯文字（语雀无相对链接）；`man.freebsd.org` 等外链保留
+    - 站点是**多书站**时先从侧边栏 `nav#MenuContents` 取**顶层 ul 的直接 li** = 本书节点全集；**裸正则扫全部 `<li>` 会把各节锚点也当节点**（42 → 342 条误判，实踩）
+29. **`--toc-md` 收尾后根级 DOC 仍会排到 TITLE 之后**（FreeBSD 手册实踩 2026-10-17，坑 22 的 toc-md 版）：
+    doc 先建（挂根）、TITLE 目录由 toc-md 生成 → 根级 DOC（如「00-前言.md」）落到 5 个目录**之后**。
+    收尾补一发 `PUT /toc {action:prependNode, action_mode:sibling, node_uuid:前言, target_uuid:第一部分}` 归位，回读确认。
+    排序前缀照旧：根级文档用 `00-`（`0` < 汉字，字典序天然在前），章节 `01-`…；附录用 `A-`/`B-`/`C-`/`D-`。
+30. **无章号页（附录/索引）要单独定顺序与命名**（vbird 基础学习篇实踩 2026-10-16）：基础学习篇 27 章从**第零章**起（中文数字含「零」）+
     `附录 A`/`附录 B`/`快速索引` 三页无「第N章」→ 解析不出章号会全落兜底值、排序错乱。做法：章号正则加「零」；附录/索引给 `27/28/29`
     伪章号接在章节后（三位数前缀与两位章号字典序一致，DFS 导入序不错位）；标题带上「附录 A：…」，索引页 `text_head0` 是站点名要改名成「…快速索引」。
 
@@ -132,5 +149,6 @@
 | bingohuang.gitbooks.io/progit2（GitBook 3 + Asciidoctor, 2026-10-15） | `<section class="normal markdown-section">` | `</section>`（每页唯一） | 正文容器 markdown-section；**全文非 ASCII 实体转义**(&#x4E2D;)→h.unescape 还原；侧边栏 `ul.summary` 的 li.chapter[data-level/data-path] 直接给全树；图片相对路径 `../images/` 按页面 URL 解析；**gitbooks.io 间歇 401**→fetch 指数退避 6 次；正文块仍是 Asciidoctor div(sect2-4/listingblock/imageblock)；xref 死链 `[_xxx]` 按全站 `<hN id>` 映射换中文标题 |
 | svnbook.red-bean.com/nightly/zh（DocBook XSL 多页站, 2026-10-15） | `div.navheader` 之后 | `div.navfooter`（前一页/下一页/上一级） | 每章/节/命令手册各自成页；分部页正文只有小节目录(补「**目录**」+相对链接防空文档)；blockquote/admonition 是 `<table>` 渲染(抽 td 文本、丢图标、th 当标签)；`<a class="indexterm">` 只剥无 href 无文本的(索引页里是真链接)；正文首标题去掉但 titlepage 作者/日期要留；bs4 递归渲染器替代正则；**抓取 ~12min/导入 ~10min 长任务先报 ETA** |
 | kancloud.cn/kancloud/<book>（看云 SEO 副本, 2026-10-15） | `<div class="seo">` 内 `<div class="content">`（=原始 md 源码, 实体转义） | `</div><div class="catalog">`（全站目录, 每页都有） | 不用 HTML→md：unescape 即落盘；`catalog` 顺序=目录序、页面 URL=`/kancloud/<book>/<数字id>`；**box.kancloud.cn 防盗链**→带 Referer 才 200；书站类库名用书名(slug 仍带日期, 如 intro-to-prog-20261015) |
+| docs.freebsd.org/zh-cn/books/handbook（FreeBSD 官方手册，Asciidoctor/Hugo，2026-10-17） | 正文 = `main>div.book-content` | 容器自带边界（页脚 last-modified/buttons 在外） | 42 节点（5 部分目录 + 37 章/附录）；bs4 递归渲染器（见坑 28）；5 类 admonition → 引用块；表格 caption + 无 thead 首行当表头；167 图传 CDN；`--toc-md` + prependNode 修根级顺序（坑 29）；转换器 `examples/freebsd-handbook/` |
 | cn.linux.vbird.org/linux_basic（同站基础学习篇, 2026-10-16） | `<!-- 本文的正式部分 -->`（附录 A 无此标记→fallback `<!-- 本文的档头部分 -->`） | 页脚 `<div style="padding-top: 0px; text-align: center;">` | 27 章（**第零章**起）+ 附录 A/B + 快速索引 = 30 篇；**全简体**（无繁体章，不触发简繁双版）；转换器抄 `examples/vbird-server/`，改 4 处：BASE→linux_basic、章号正则加「零」、窗口加「档头部分」fallback、附录/索引伪章号 27/28/29；269 张正文图全传 CDN（0 失败） |
 | cn.linux.vbird.org/linux_server（老式 PHP 表格站, 2026-10-16） | `<!-- 本文的正式部分 -->`（繁体同形）之后 | 页脚 `<div style="padding-top: 0px; text-align: center;">` | 22 章；**标题是 `<span class="text_h1">` / `<span class="text_h2">` 不是 h 标签**，章名取 `text_head0`（内有嵌套 `text_head_en`，正则用 `</span>\s*(?:</a>|<br)` 收尾）；终端块 `<table class="term"><pre>`；Tips/例题=单格 `<table width="90%">`；**整章全文页与分页并存 → 只导全文页**（比值≈1）；装饰图（大标题/小标题/鸟哥图示 596 张）按 alt 剔除、正文截图 218 张传 CDN；繁体章额外出「（简体版）」（opencc tw2sp）；按「第N章」中文数字转阿拉伯排序（非文件名前缀序）；站点专用转换器与复用流程见 `examples/vbird-server/`（fetch_all.py + crawl_vbird.py + README） |
