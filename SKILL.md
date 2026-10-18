@@ -128,6 +128,7 @@ python3 scripts/yuque_tree_import.py --root <clean_dir> --book <book_id> --progr
 完整 SOP + 坑清单：`references/github-repo-to-yuque.md`（必读，含 7 条踩过的坑）。
 GitBook 3.x 源仓库的书（站点给链接但同名 source repo 在 GitHub，正文是 `chapter-N/chapter-N-M.md` 扁平编号、层级只在 SUMMARY.md 里）：可复用脚本 + README 见 `examples/datamining-guide/`（2026-10-18《面向程序员的数据挖掘指南》实战，含重建规则与 2 个新坑）。
 **老 GitBook「独立域名」型书仓**（`legacy.gitbook.com/...` 死链 / `*.gitbooks.io` 302 到已被抢注的空壳域名，如 learnes.net）：同样改吃源仓库 md；SUMMARY 常与磁盘**大小写不符 + 断链**，且**图可能是绝对外链**（raw.githubusercontent）需按 basename 反查本地文件重写成 CDN —— 复用脚本 + README 见 `examples/elasticsearch-guide/`（2026-10-18《Elasticsearch 权威指南（中文版）》实战，坑 36/37）。
+**站点域名直接死掉 + SUMMARY 多层嵌套 + 旧版整编孤儿**（如 `kibana.logstash.es` DNS 不解析，仓库 `homepage` 指认源仓库）：复用脚本 + README 见 `examples/elkstack-guide/`（2026-10-18《ELKstack 中文指南》实战，坑 38；含空链接/断链节点落 TITLE、点分编号多层命名、v3 旧版孤儿归档、外链图「能救的救」口径）。
 
 ## PDF 书导入（只有 PDF 的官方站，2026-10-18 固化）
 

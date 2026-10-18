@@ -247,5 +247,13 @@
     "book_url": "elasticsearch-definitive-guide-cn-ef70bab",
     "imported_at": "2026-10-18T11:35:00+0800",
     "note": "《Elasticsearch 权威指南（中文版）》（looly 译，GitBook 源）；老板给的 legacy.gitbook.com 死链（301→gitbook 首页）+ gitbooks.io 302 到已被抢注的空壳 learnes.net → 改从同名源仓库吃 md 源不抓 HTML。SUMMARY 重建 36 章目录 + 00-前言/00-版本变动，315 篇正文；16 张绝对外链图（raw.githubusercontent）×16 处引用重写为 CDN，elastic.co 11 张外链保留；toc-md 目录树 351 行 PUT 2.1s，结构四查全绿（351 节点 / 全路径唯一 / TOC==本地 / 幽灵 0 / CDN 5-5 200）"
+  },
+  "http://kibana.logstash.es": {
+    "commit": "a30092e",
+    "repo": "https://github.com/chenryn/ELKstack-guide-cn",
+    "book_id": 84707435,
+    "book_url": "elkstack-guide-cn-a30092e",
+    "imported_at": "2026-10-18T13:15:00+0800",
+    "note": "《ELKstack 中文指南》（饶琛琳，GitBook 源）；老板给的站点链接域名已死（DNS 不解析）→ 仓库 homepage 指认源仓库 chenryn/ELKstack-guide-cn（764★）；SUMMARY 4~5 层嵌套 + 4 个空链接纯分组节点 + 4 个目录首页断链（全部落 TITLE 目录）+ 35 篇孤儿（kibana/v3 旧版整编→顶级组「Kibana 3（旧版）」、v5/README、difference、searchguard、marvel）→ 230 节点（34 目录 / 196 文档）；92 张本地图传 CDN（93 处引用，GitHub raw 外链 5 处预下载兜住）；外链图约 45 处已死（elasticsearch.org/kibana current）原样保留；toc-md PUT 1.6s；四查全绿（196 篇逐字符回读不等 0 空 0 / reconcile 0 / 幽灵 0）+ 前言 prependNode 归位"
   }
 }

@@ -190,4 +190,18 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
 - **TOC 节点里 `id` 和 `doc_id` 都是空串**（DOC/TITLE 都一样）→ 想按 TOC 回读正文拿不到 doc_id。正文回读一律**取导入账本 `progress.json` 的 `doc_id`**（账本才是权威）
 - 教训：验收器上线前先拿 2 篇小样本跑一遍（能变红也能变绿）再全量跑；无限循环 + 无口径校验会同时烧掉时间和配额（本次 315 篇正文回读作废重跑）
 
+**坑 38（站点域名直接死掉 + SUMMARY 四~五层嵌套 + 旧版整编孤儿，2026-10-18 chenryn/ELKstack-guide-cn 实战）**：老板给的列表链接 `http://kibana.logstash.es`（书《ELKstack 中文指南》）**域名已废，DNS 都不解析**；`archive.org` 快照沙箱超时（老毛病）→ 只能找源仓库。判据很干脆：**GitHub 仓库的 `homepage` 字段就写着这个死域名**（`chenryn/ELKstack-guide-cn` @ a30092e，764★）→ 确证「站点 = 本仓库」，吃 md 源、库名带 commit、分组「开源项目」。
+
+这个仓库的形状比普通 GitBook 源复杂，四个特征都要认：
+- **SUMMARY.md 四~五层嵌套**，中文标题 + 英文扁平磁盘路径（`logstash/plugins/filter/grok.md`）→ 通用递归建树，不要写死两层
+- **空链接纯分组节点**：`* [插件配置]()` / `[接口使用示例]()` / `[性能优化]()` / `[output配置]()`（4 个）→ **落成 TITLE 目录、无文档**（别当断链丢掉）
+- **目录首页断链**：SUMMARY 引用了 `elasticsearch/auth/README.md`、`elasticsearch/hadoop/README.md`、`elasticsearch/monitor/api/README.md`、`logstash/performance/monitor/README.md`，**文件根本不存在**（4 个）→ 同样落 TITLE 目录、无落地页
+- **孤儿 35 篇**（未被 SUMMARY 引用）：`kibana/v3/**` 旧版 Kibana 3 整编 + `kibana/v5/README.md` + `kibana/difference.md` + `elasticsearch/auth/searchguard.md` + `elasticsearch/monitor/marvel.md`。本书前言明说「K3/K4 并存，本书分别讲解」，而 master 的 SUMMARY 已把 v3 摘掉（仓库自述「master 统一调整为 5.0 状态，老版本在 ELK release tag」）→ **按「内容不丢」口径全纳入**：v3 建顶级组「Kibana 3（旧版）」（镜像源目录、子目录名中文化、文档标题取首个 `# ` H1、无 H1 回退文件名），`kibana/v5/README.md` 塞进 Kibana 5 组内 `04.00-…`，`difference.md` 落根级，searchguard/marvel 追加进对应分组（编号 = 组内已有最大号 +1，**别用 `len(os.listdir)` 计数——落地页会把编号顶掉一位**）
+
+**命名方案（多层通用，排序靠分隔符）**：节点号 = 点分路径 `01` / `01.01` / `01.01.01`；有子节点 → 目录 `NN-标题/` + 目录内落地页 `NN-标题.md`；叶子 → `NN-标题.md`。`'-'(0x2D) < '.'(0x2E) < '0'(0x30) < 字母 < CJK` → 落地页 `04-Kibana 5.md` 天然排在 `04.00-…`/`04.01-…` 前。**别用 `_`(0x5F) 或空格当分隔符**（会把落地页顶到字母标题之后）。
+
+**外链图：能救的救，救不了的别耗**——105 处外链里约 45 处已死：`www.elasticsearch.org/*`（302 → elastic.co 首页，返回 HTML 不是图）、`www.elastic.co/guide/en/kibana/current/images/*`（Kibana 文档改版后 404）、`logstash.es`、`timroes.de`、`marvel` 等。口径：① **必救 = GitHub raw 族**（`raw.githubusercontent.com` / `github.com/*/raw/*`，CN 不可达必裂图）→ 在 build 脚本里**预下载**（走 `gh-proxy.com`）落进 `_imgs/`，交标准 rewrite 脚本一起传 CDN；② 死域名/改版 404 的**原样保留**（源仓库自己就烂，逐个查 Wayback 性价比极低）。本地图统一收进 `_imgs/<源相对路径洗 __>` 并把 md 引用改成到该处的相对路径 → 标准 `yuque_rewrite_images.py` 一把过（93 处重写 / 92 张图 / 0 缺失），传完删 `_imgs`。
+
+实测：196 篇建文档 ~2.5 分钟 0 失败；toc-md 230 行目录树 **PUT 1.6s**、结构核对 PASS；四查全绿（全路径唯一、TOC==本地、幽灵 0、196 篇逐字符回读不等 0 空 0、reconcile 0）；根级 `00-前言.md` 被 toc-md 排到 5 个 TITLE 之后 → `prependNode + sibling` 一发归位。可复用脚本 + README：`examples/elkstack-guide/`。
+
 **案例（Sphinx/readthedocs 书仓，2026-10-17 me115/linuxtools_rst 实战）**：需 Sphinx 源仓库（`conf.py`/`index.rst`/`Makefile`）导站时，**只导 toctree 覆盖的页面 + 图片**；仓库根常同时躺着脚手架（`_build/`、`der/`、`sphinx_rtd_theme/`、`*.zip`、`*.epub`）和**早期版本的重复单文件**（本次 `top.rst`/`020-file-manage.rst`/`crontab.rst` 与 `tool/top.rst`/`base/02_file_manage.rst`/`tool/crontab.rst` 撞车，`base/ref.rst`/`base/README.rst`/`base/crond introduce.rst` 不在任何 toctree）——按 toctree 展开收集，别整树导。本次：`index.rst` + `base/`(index+9) + `advance/`(index+3) + `tool/`(index+19) = **35 篇 → 38 节点**（3 目录）；6 张图传 CDN（`_static/` 里其余 4 张封面/psd 未被引用不传）；无需爬 HTML（站点就是这些 rst 渲染的）。
