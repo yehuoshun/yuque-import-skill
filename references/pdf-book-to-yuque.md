@@ -3,18 +3,22 @@
 > 触发模板：「把这本 PDF 书/这个官方文档站（只有 PDF）导入语雀」。
 > 首例：OSTEP《Operating Systems: Three Easy Pieces》68 章 → 库 `84683427`。
 > 完整实战记录 + 排版识别表 + 8 条坑：**`examples/ostep-pdf/README.md`**（必读），脚本 `examples/ostep-pdf/{fetch_ostep,extract_ostep}.py`。
+>
+> ⭐ **默认口径（2026-10-18 老板拍板）：PDF 导入 =「原版 + 解析」双轨** —— 解析正文照旧导库，**同时把 PDF 原件上传语雀附件**，以根级 `00-PDF 原件.md` 挂同一库（正文可读 + 原件可下）。做法见 §五，默认执行、不必再问。
+> 二次导入可参考完整双轨样例 `examples/scalability-pdf/`（《走向分布式》，含提取脚本 + README）。
 
 ## 一、先确认是不是真没别的源（顺序不能反）
 
 1. 站点有没有 HTML 版？`curl -I <chapter>.html` → 404 就是没有（OSTEP 实测）
 2. 有没有官方/译者源仓库？GitHub `remzi-arpacidusseau/*` 只有 code/homework/projects/translations，**书稿源不公开**
-3. 都没有 → 走 PDF 提取（**先跟老板确认两件事**：图要不要抠 / 要不要交子 agent）
+3. 都没有 → 走 PDF 提取（**先跟老板确认两件事**：图要不要抠 / 要不要交子 agent）；**PDF 原件附件按默认口径必传**（§五），不用问
 
 ## 二、流程
 
 1. **清单**：站点目录表 → 手工整理 `plan.json`（`part` 分部 / `num` 章号 / `title` / `pdf` / `out` 输出名）
 2. **下载**：并发 6 线程、幂等跳过（`fetch.py`，68 个 PDF ≈ 2 分钟）
 3. **提取**：PyMuPDF `get_text("dict")` → 按字号/字体/缩进重建 `#/##/代码块/引用块/段落`（`extract.py`）
+3.5 **PDF 原件附件（默认，§五）**：`type=attachment` 上传 → 取响应 `url` 字段 → 建根级 `00-PDF 原件.md` 挂进导入树，与解析正文同库同行
 4. **建库**：只有 PDF 的官方站 → **网站口径**（库名+slug 带日期，分组「文章收集」36149506）；有 repo 的走开源项目口径
 5. **导入**：`yuque_tree_import.py --toc-md`（分部目录 = 7 个 TITLE）
 6. **四查**：TOC == 本地 == docs、全路径唯一、**每篇逐字符回读比对**、reconcile 0 错位
