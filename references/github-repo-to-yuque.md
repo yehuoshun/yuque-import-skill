@@ -10,7 +10,7 @@
 |---|---|
 | 知识库名 | `项目名（commit id）`，commit 取 8 位短哈希，如 `deepwrite（85577e7）` |
 | slug | **老板 2026-10-13 定策略**：开源项目 = `项目名-commit`（天然防撞，同 repo 不同 commit 不同 slug）；网站/自定义 = `网站名-YYYYMMDD`（同日同站会撞 → create-book 已内置撞名兜底：422 时自动追加 `-2/-3` 序号重试）；slug 为 v2 API 必填字段（不传 422 missing_field，官方不会自动生成） |
-| 描述 | `<repo url> @ <commit>`（如 `https://github.com/swjybky/deepwrite @ 85577e7`） |
+| 描述 | **必须标注来源（2026-10-18 老板拍板，硬规则 11）**：`来源：<repo url> @ <commit> ｜ <口径说明> ｜ 导入 <日期>`。单源也要带「来源：」前缀；站点+仓库双源（如资源索引站）两个都写；双轨库注明。禁止空描述/只有库名 |
 | 知识库分组 | **开源项目**（stack id `57018723`） |
 | 归属 | 私人空间下（`/users/<用户名>/repos`） |
 | 可见性 | private（public=0） |
@@ -256,3 +256,12 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
     - 全角「：」留在标题里不用洗；本章标题无 `/`；md 全 UTF-8、无分片。
     - **toc-md 后根级 DOC `00-前言.md` 又被排到 TITLE 之后**（老坑 29）→ 一发 `prependNode/action_mode=sibling`（node_uuid=前言, target_uuid=首个 TITLE）归位。
     - 实测：114 张图 1.5s 节流全传 CDN（~3 分钟、0 失败、114 引用 ↔ 114 图 1:1）；toc-md **PUT 0.5s**；四查全绿 + 19 篇逐篇回读 0 差 0 空。可复用脚本 + README：`examples/opengl-tutorials/`。
+
+**坑 44（资源索引型仓库：仓库不装正文而装清单 →「原版 + 解析」双轨 + 分类索引，2026-10-18 aoaostar/legado @ fd0ec7f9 实战）**：`aoaostar/legado` 是「阅读」APP 的资源索引站（默认分支 **`release`** 不是 main；CI 每天重写 `README.md`/`index.html`），仓库里只有 README（分类目录）+ index.html + `sources/*.json`（21 条引用 / 20 个文件 / 48.8MB，最大 `b778fe6b.json` 20MB / 3907 条书源）。老板口径：B = 索引 + 附件**双轨**。
+    - **别把 20MB JSON 原样当文档导**（会走 512KB 切分 → 几十个分片，既丑又把「原件」当正文）。
+    - **解析轨**：每个 JSON 逐条转表 → `08-解析/sources/<名>.json.md`（书源/TTS 列 名称+网址+分组+启用；净化规则列正则；主题单对象列字段值；zip 解包内 `readConfig.json` 列字段）→ **体积暴降**（20MB 原件 → 303KB 文档），全部 <512KB **零分片**。
+    - **原版轨**：`type=attachment` 上传全部原件（`upload_attach`，MIME 按扩展名，大文件 timeout 拉到 300s + 5s 节流）→ 根级 `01-原版附件.md` 表格列 分类/名称/条数/📎原件/直链/`legado://` 一键导入。实测 20 文件（含 10.8MB / 6.9MB×2 / 20MB）全传成功，带 cookie `curl -L` 复拉 **md5 全对**。
+    - **分类索引**：README 的 `<h2 id="id_N">` → `02-书源.md` … `07-在线朗读引擎.md`（名称/条数/来源网站/上游更新时间/直链/一键导入/原件）；`00-前言.md` 写来源（站点+仓库+commit+上游同步时间）、库结构、怎么用。
+    - **不入库**：`CNAME` / `sources/cache.lock` / `.github/workflows/`（站点与 CI 产物）。
+    - **三个坑**：① 同一文件被两条引用（「月下自酌」「纵横不败」都指 `856adf0e.json`）→ 附件按文件名去重、索引按条目各列一行；② **根级 TITLE 会排到根级 DOC 之前**（与老坑 29 相反）→ 一发 `appendNode action_mode=sibling, node_uuid=<TITLE>, target_uuid=<最后一个根级DOC>` 归位；③ 非 md（index.html）入库会包 ` ```html ` 包围且**吃掉首部换行** → 回读比对按 `"```html\n\n" + src.lstrip("\n") + "\n```"` 算（差 1 字符不是丢内容）。
+    - 实测：32 节点（2 目录 / 30 文档）、toc-md **PUT 0.5s**、四查全绿（全路径唯一 / 幽灵 0 / 根级序一致 / 30 篇逐篇回读 0 差 0 空、含 20 个附件 md5 抽验）；库 id 84711589。可复用脚本：`examples/legado-sources/`（build.py 四模式：prep/upload/all）。

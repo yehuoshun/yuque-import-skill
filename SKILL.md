@@ -22,6 +22,8 @@ description: 语雀知识库全量目录导入与对账修复技能。把本地�
 9. **知识库节点上限 5000（2026-10-14 老板拍板）**：语雀单库节点硬上限 5000。`prep` 节点数（含超限文件 512KB 切分的预估分片）> 5000 时必须分库：按顶层目录拆多个库（命名 `项目名-<顶层目录>（commit）`），不硬塞单库；`yuque_repo_import.py prep` 已内置 >5000 警告
 10. **图片目录别进导入根目录（2026-10-15 HgInit 实战）**：tree_import 会把图片/二进制文件建成**独立占位文档**（每张图一个节点，垃圾）。图片必须：先 `upload_image` 预传语雀 CDN（cookie 见 `--cookie-config`）+ 重写 md 引用为 CDN URL（`img_map.json` 缓存防重传）——**现成脚本 `scripts/yuque_rewrite_images.py`**（同时吃 markdown `![]()` 与 HTML `<img src>` 两种写法，**单/双引号都吃**；`--throttle` 控速、`--dry` 只统计），再从导入根目录**删掉图片文件夹**，只导 .md。Sphinx/仓库类 rst→md 转换后尤其注意（`_images/` 等目录）；缓存文件（`img_map.json` 等）同样不能留在导入根目录
 
+11. **知识库描述必须标注来源（2026-10-18 老板拍板）**：`create-book --desc` 一律写清来源，格式 `来源：<URL>[@ <commit>] ｜ <口径/作者说明> ｜ 导入 <日期>`（有多源就都写上，如「站点 + 源仓库」）。开源项目口径至少 `来源：<repo url> @ <commit>`；网站口径写 `来源：<源站 URL>`；双轨库（原版 + 解析）要注明「原版原件附件 + 解析」。**禁止空描述、禁止只有库名**——描述就是下次能凭它找回来源的那一行。
+
 ---
 
 ## 流程
@@ -113,7 +115,7 @@ python3 scripts/yuque_toc_reconcile.py --root /path/to/dir --book <book_id> --pr
 
 ## 开源项目导入（GitHub repo → 语雀，2026-10-12 老板固化）
 
-触发模板：「把 `<repo>` 按开源项目流程到语雀」。规范：库名 `项目名（commit id）`、分组「开源项目」（stack 57018723）、描述 `<url> @ <commit>`。
+触发模板：「把 `<repo>` 按开源项目流程到语雀」。规范：库名 `项目名（commit id）`、分组「开源项目」（stack 57018723）、描述 `来源：<url> @ <commit> ｜ <口径说明> ｜ 导入 <日期>`（硬规则 11，2026-10-18 老板拍板：描述必须标注来源）。
 
 ```bash
 # 1. 克隆/更新 + 干净副本 + 节点数
@@ -135,6 +137,7 @@ GitBook 3.x 源仓库的书（站点给链接但同名 source repo 在 GitHub，
 **站点域名死掉且仓库不自证（`homepage` 不写域名）+ 残缺译本**（如 `udn.yyuap.com` DNS 不解析，靠 `gh search repos "<书名> 翻译"` 反查）：复用脚本 + README 见 `examples/mastering-es-guide/`（2026-10-18《Mastering Elasticsearch 中文版》实战，坑 39）。⚠️ **老译本仓库常烂尾**——动手前先扫空壳（`wc -c` 各章）：SUMMARY 收录的空壳章照建节点，未收录且 0 字节的孤儿**跳过**，并**主动向老板报残缺度**。
 **MkDocs/VuePress 教程站的源仓库（站点是渲染产物，仓库里躺着 md 源）**：只吃 `docs/`（剔 `css/` `mathjax/` `yeti/` 主题脚手架）；⚠️ **相对路径按渲染后站点 URL 的深度写**（`../img/…` 会多一层、嵌套目录甚至 `../../../img/…`）→ 用带路径归一化的重写脚本；**mp4/zip/rar 走 `type=attachment`**（会话门控，同 PDF 附件）；默认分支可能不是 main（如 `new-theme`）—— 复用脚本 + README 见 `examples/learnopengl-mkdocs/`（2026-10-18《LearnOpenGL CN》实战，82 节点 / 369 个资源，坑 42）。
 **章节目录名无语义（`tutNN/`）+ 逐章自带 `tutNN/res/` 同名图**：可读标题只在 `SUMMARY.md` 里 → 按 SUMMARY 重建树（`NN-标题` 剥「第N课：」）；⚠️ **先在原布局跑 CDN 重写、再重建树**（同名图跨章串台）；标题只信 SUMMARY（磁盘 heading 有笔误）—— 复用脚本 + README 见 `examples/opengl-tutorials/`（2026-10-18《OpenGL 教程》实战，21 节点，坑 43）。
+**资源索引型仓库（仓库不装正文，装的是「别的 App 的资源清单」，如 `aoaostar/legado` 的「阅读」APP 书源站）**：走**「原版 + 解析」双轨**（同 PDF 口径）——**解析轨**=把每个 `sources/*.json` 逐条转表（书源/TTS 列名称+网址、净化规则列正则）挂 `08-解析/sources/`，另建 `01-原版附件.md` 放全部 **原件附件**（`type=attachment` 上传，48MB / 20 文件实测 md5 全对）；顶上加 6 篇分类索引（名称/条数/来源网站/上游更新时间/直链/一键导入/原件）；站点/CI 产物（`CNAME`/`cache.lock`/`.github/`）不入库 —— 复用脚本 `examples/legado-sources/`（2026-10-18 legado fd0ec7f9 实战，32 节点，坑 44）。
 **单篇长文型仓库（仓库里只有一篇文章，不是多章书）**：按 `## N.` 拆篇 + README 做 `00-译者说明.md`，英文原文不收，文件名剥「N.」与标题内链接/sup；拆篇会让原文内部锚点（脚注 `#f1`）跨文档失效，原样保留 —— 口径见 references 坑 41（2026-10-18《傻瓜函数编程》实战，15 节点）。
 
 ## PDF 书导入（只有 PDF 的官方站，2026-10-18 固化）
