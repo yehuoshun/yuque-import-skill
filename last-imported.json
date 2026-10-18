@@ -194,5 +194,12 @@
 "book_url": "ucore-os-docs-2181bd4",
 "imported_at": "2026-10-18T01:05:00+0800",
 "note": "《uCore Lab: Operating System Course in Tsinghua University》（清华 uCore OS 实验指导书）；老板给的 gitbook.com 旧链已失效（302 legacy → gitbook 首页），objectkuan/ucore-docs 404 / objectkuan/ucore_docs 已重定向 → 用官方源 chyyuu/ucore_os_docs（741★，陈渝）；纯 GitBook 源仓库按 SUMMARY.md 树导（labN.md 移进 labN/）；9 lab 目录 + README/SUMMARY/book.json = 202 节点（193 文件）；35 张图传 CDN；toc-md PUT 1.3s；四查全绿（仅 book.json +12 围栏、lab0.md 行尾 \\r 差异）"
+},
+"https://web.archive.org/web/20210812021003/cb.vu/unixtoolbox_zh_CN.xhtml": {
+"commit": "n/a",
+"book_id": 84705524,
+"book_url": "unix-toolbox-zh-20261018",
+"imported_at": "2026-10-18T08:14:00+0800",
+"note": "《UNIX TOOLBOX》中文版（Colin Barschel & Greco Shi，CC BY-SA）；老板给的 archive.org 链接超时 → 原站 cb.vu 仍在（已归档标注）直接抓；单页 XHTML 拆成 23 章 + 前言 = 24 节点；内嵌 XHTML 导致 bs4 二次解析失效 → 改正则块扫描；无图；toc-md PUT 0.6s；四查 + 24 篇逐字符比对全绿"
 }
 }

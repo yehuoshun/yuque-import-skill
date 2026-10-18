@@ -153,6 +153,12 @@
     - **每页尾部有 MediaWiki 调试块**（`NewPP limit report` / `Transclusion expansion time report` / `parser cache`）→ 从 `NewPP limit report` 处截断
     - 站内链接（`/UbuntuManual:xxx#anchor`）剥成纯文本；`sup.reference`（脚注引用）丢；`span.mw-editsection` 丢；`<nowiki>` 清洗
     - 实测：17 页（分类 17 个成员）/ 405KB → 库 84683525，四种查全绿
+34. **单页长文档（xhtml）→ 按 h1 拆章**（2026-10-18 cb.vu/unixtoolbox_zh_CN 实战）：
+    - archive.org 链接可能超时（沙箱屏蔽）→ **先试原站**（cb.vu 还活着，直接抓原页更全）
+    - 站把完整 XHTML **内嵌**在 `<div id="toolboxContent">` 里 → **bs4 二次解析不出来**（h1/pre 全为 0，但 `decode_contents()` 里明明是标签；疑与嵌套 `<html>`/`<?xml?>`/DOCTYPE 有关）→ **改纯正则扫描块**（`<(h1|h2|h3|h4|pre|p|ul|table)…>(.*?)</\1>` 顺序扫），稳定且够用
+    - 正文容器 `div.main`（`title/abstract` 单独取，`menu/changestyle/footerfirst/footerlast/pb` 全丢）；行内：`span.cmt`→保留、`span.fn/pp/keyword`→反引号、`a.xrefp`→纯文本；`<pre>` 内容原样进 bash 代码块
+    - **拆分粒度**：单页长文档按 `h1` 切（本次 23 章 + 前言 = 24 篇）；文件名 `NN-<h1文本>.md`（洗 `/\\:*?"<>|`）；首页 `00-前言.md` = 书名 + 摘要 + 章节目录表
+    - 尾巴常有 XHTML 注释/未闭合碎片（`end main -->`、孤立 `-->`、`<div`）→ 截断 + 逐行清
 
 
 ## 五、站点案例速查
