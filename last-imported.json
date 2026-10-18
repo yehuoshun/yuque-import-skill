@@ -255,5 +255,13 @@
     "book_url": "elkstack-guide-cn-a30092e",
     "imported_at": "2026-10-18T13:15:00+0800",
     "note": "《ELKstack 中文指南》（饶琛琳，GitBook 源）；老板给的站点链接域名已死（DNS 不解析）→ 仓库 homepage 指认源仓库 chenryn/ELKstack-guide-cn（764★）；SUMMARY 4~5 层嵌套 + 4 个空链接纯分组节点 + 4 个目录首页断链（全部落 TITLE 目录）+ 35 篇孤儿（kibana/v3 旧版整编→顶级组「Kibana 3（旧版）」、v5/README、difference、searchguard、marvel）→ 230 节点（34 目录 / 196 文档）；92 张本地图传 CDN（93 处引用，GitHub raw 外链 5 处预下载兜住）；外链图约 45 处已死（elasticsearch.org/kibana current）原样保留；toc-md PUT 1.6s；四查全绿（196 篇逐字符回读不等 0 空 0 / reconcile 0 / 幽灵 0）+ 前言 prependNode 归位"
+  },
+  "https://github.com/chenryn/logstash-best-practice-cn": {
+    "commit": "1ecbd5e",
+    "repo": "https://github.com/chenryn/logstash-best-practice-cn",
+    "book_id": 84707547,
+    "book_url": "logstash-best-practice-cn-1ecbd5e",
+    "imported_at": "2026-10-18T13:18:00+0800",
+    "note": "《Logstash 最佳实践》（饶琛琳，GitBook 源；仓库已在 README 声明废弃，作者并入《ELKstack 中文指南》）；SUMMARY 两层 8 章（每章 README 首页 + 子节），无空链接/断链/孤儿 → 61 节点（8 目录 / 53 文档）；2 张本地图传 CDN；toc-md PUT 0.7s；四查全绿（53 篇逐字符回读不等 0 空 0 / reconcile 0 / 幽灵 0）；根级 00-简介.md prependNode 归位第一次未生效、重试成功（api-notes 已记）"
   }
 }
