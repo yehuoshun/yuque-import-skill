@@ -265,3 +265,5 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
     - **不入库**：`CNAME` / `sources/cache.lock` / `.github/workflows/`（站点与 CI 产物）。
     - **三个坑**：① 同一文件被两条引用（「月下自酌」「纵横不败」都指 `856adf0e.json`）→ 附件按文件名去重、索引按条目各列一行；② **根级 TITLE 会排到根级 DOC 之前**（与老坑 29 相反）→ 一发 `appendNode action_mode=sibling, node_uuid=<TITLE>, target_uuid=<最后一个根级DOC>` 归位；③ 非 md（index.html）入库会包 ` ```html ` 包围且**吃掉首部换行** → 回读比对按 `"```html\n\n" + src.lstrip("\n") + "\n```"` 算（差 1 字符不是丢内容）。
     - 实测：32 节点（2 目录 / 30 文档）、toc-md **PUT 0.5s**、四查全绿（全路径唯一 / 幽灵 0 / 根级序一致 / 30 篇逐篇回读 0 差 0 空、含 20 个附件 md5 抽验）；库 id 84711589。可复用脚本：`examples/legado-sources/`（build.py 四模式：prep/upload/all）。
+    - **根级 TITLE / DOC 顺序（toc-md 常态）**：`PUT /repos/{id} {toc}` 把根级 **TITLE（目录）排在根级 DOC（松散文件）之前**。仓库根同时有目录与文件且**语义无要求**时（如 deepwrite：`.agents`/`apps`/`docs`/`packages`/`tools` + `package.json`/`LICENSE`…）这是**正常态、不必强行归位**（deepwrite 历史 ×4 库都是这个态）；只有「`00-前言.md` 必须排最前」这类**语义要求**才发 `prependNode/action_mode=sibling` 归位（且一次只能挪一个，多个要写循环）。
+    - **桌面/打包类图标走占位，别指望 CDN**：`*.ico` 不在 `IMAGE_EXTS` → 落到二进制占位（`<!-- 二进制文件 … -->`）；`png/jpg` 类未引用资源会被 `upload_image` 传成 **CDN 占位文档**（`![名](cdn.nlark.com/…)`）。验收时这两者都不该算「异常」，按对应期望值比。

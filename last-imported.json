@@ -19,11 +19,11 @@
   "note": "默认分支 release；老板拍『B』=索引+附件（原版+解析双轨）。32 节点（2 目录/30 文档）：00-前言 + 01-原版附件（20 个原件 type=attachment，48.8MB 含 20MB，md5 全对）+ 02..07 六分类索引 + 08-解析（README/index.html/20 篇 JSON 逐条转表，零分片）。toc-md PUT 0.5s、根级 TITLE 归位（与坑29相反）、四查全绿+30 篇回读 0 差；examples/legado-sources；新增硬规则 11「库描述必须标注来源」。旧库 84678623（06b8162）待删"
  },
  "https://github.com/swjybky/deepwrite": {
-  "commit": "26c5bc7",
-  "book_id": 84681889,
-  "book_url": "deepwrite-26c5bc7",
-  "imported_at": "2026-10-17T21:38:37+0800",
-  "note": "3425 文档 + 338 目录，0 失败；本次起 md 本地图先传 CDN 再重写引用，docs/images 从导入根删除（前两次未做）"
+  "commit": "7d1ec85",
+  "book_id": 84711790,
+  "book_url": "deepwrite-7d1ec85",
+  "imported_at": "2026-10-18T22:15:00+0800",
+  "note": "prep 3881（351 目录/3530 文件）→ 删 docs/images（22 图先传 CDN、25 处引用重写）后 3855 节点（347/3508）<5000 不分库；toc-md PUT 19.2s、结构核对 PASS、0 失败；对账 0 错位、幽灵 0、全路径唯一、3508 篇逐篇回读全对（4 张 app 图确认为 CDN 占位、icon.ico 为二进制占位，均与上版一致）；根级 TITLE 在前、DOC 在后（历史 deepwrite 库同此，属 toc-md 常态非缺陷）"
  },
  "https://github.com/morluto/rea": {
   "commit": "e7df00e80",
