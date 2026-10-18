@@ -144,6 +144,8 @@
 1. `POST /repos/{book}/docs` 建好文档后**会自动挂到 TOC 根** → 不用再逐篇 `appendNode`
 2. 收尾**一次 PUT** 就把整棵树摆好（134 节点实测 **1.1s**；**2936 节点 / 139KB 目录树实测 15.1s**，一次成功，2026-10-16 elinux）
 
+**toc-md 的两个反复踩点（2026-10-18 datamining-guide 复现）**：① 根级 DOC（如 `00-前言.md`）收尾后**排在所有 TITLE 目录之后** → 补一发 `prependNode/action_mode=sibling, node_uuid=<根级DOC>, target_uuid=<第一个TITLE>` 归位；② `yuque_rewrite_images.py --dry` 曾恒报 `重写 0 处 / 缺失 0`（dry 短路了 mp 填值）→ v1.3.65 已修，现在 dry 会如实报处数，**跑 433 张图前先用 dry 核数**。
+
 **验证结论（一次性库对照，同源同树）**：toc-md 与 batch 模式导入的 TOC **集合完全一致 + 顺序完全一致**；分片（`big.json (1/2)`）、特殊字符/中文标题、根级文件与嵌套目录均正确；`yuque_import_verify.py` PASS；幽灵 0；对账错位 0。
 
 **中断续传**：文档层可断点续传（progress 记 slug/doc_id）；收尾 PUT 幂等，重跑同一命令安全。
@@ -168,5 +170,12 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
 - 段落尾 `::` + 空行 + 列 0 指令 → 指令被吞进 literal 块，`::` 收成单冒号
 - **Sphinx 交叉引用角色 → 剥成纯文本**（不只是 `:doc:`，`:ref:`/`:term:`/`:func:` 等同族）。2026-10-17 linuxtools_rst 实测：docutils 不认这些角色 → `参见 :ref:`ldd`` **原样留在正文**（12 处垃圾）。修法：转换前 `ROLE_RE.sub(_strip_role, src)`，`:ref:`显示文本 <目标>`` → `显示文本`、`:ref:`目标`` → `目标`
 - **`.. image:: /_static/x.png` 是站点绝对路径**：转出来就是 `![]](/_static/x.png)`，`os.path.join` 遇绝对路径会**直接跳出导入根** → rewrite 报 missing。先在 md 里把 `(/` 前缀改成按层级算的相对路径（根下 `_static/`、子目录 `../_static/`），再跑 `yuque_rewrite_images.py`
+
+**坑 35（GitBook 3.x 源仓库的书，2026-10-18 yourtion/DataminingGuideBook 实战）**：老板给的是**站点**链接（`dataminingguide.books.yourtion.com`，页面 meta `generator=GitBook 3.2.2` + `author=Yourtion`），但**同名源仓库就是书稿源** → 先 `api.github.com/search/repositories?q=<书名>` 找到 `yourtion/DataminingGuideBook`，**吃 md 不抓 HTML**（口径随源走：库名带 commit、分组「开源项目」，同 TLCL/uCore）。两个特征要认清：
+- 这类 GitBook 3.x 源**没有目录层级**——正文是 `chapter-N/chapter-N-M.md` 扁平编号，层级与标题**只存在 SUMMARY.md 的缩进里** → 必须解析 SUMMARY.md 重建树，靠文件名推不出来
+- 重建时的排序技巧：章首页 `NN-章名.md` + 子节 `NN.M-标题.md`，**`-`(0x2D) < `.`(0x2E) 让章首页天然排第一**（toc-md 模式下顺序其实来自目录树，命名只为磁盘/人眼一致）
+- 把章首页也塞进 `NN-章名/` 而不是平铺到根：**原仓库 depth=1、新树也 depth=1 → `../img/...` 引用天然仍有效，零路径改写**
+- 图：441 处引用 / 433 张图（8 处重复引用同一张），`img_map.json` 以相对路径为 key → 同图只传一次
+- 完整可复用脚本 + README：`examples/datamining-guide/`
 
 **案例（Sphinx/readthedocs 书仓，2026-10-17 me115/linuxtools_rst 实战）**：需 Sphinx 源仓库（`conf.py`/`index.rst`/`Makefile`）导站时，**只导 toctree 覆盖的页面 + 图片**；仓库根常同时躺着脚手架（`_build/`、`der/`、`sphinx_rtd_theme/`、`*.zip`、`*.epub`）和**早期版本的重复单文件**（本次 `top.rst`/`020-file-manage.rst`/`crontab.rst` 与 `tool/top.rst`/`base/02_file_manage.rst`/`tool/crontab.rst` 撞车，`base/ref.rst`/`base/README.rst`/`base/crond introduce.rst` 不在任何 toctree）——按 toctree 展开收集，别整树导。本次：`index.rst` + `base/`(index+9) + `advance/`(index+3) + `tool/`(index+19) = **35 篇 → 38 节点**（3 目录）；6 张图传 CDN（`_static/` 里其余 4 张封面/psd 未被引用不传）；无需爬 HTML（站点就是这些 rst 渲染的）。

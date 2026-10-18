@@ -126,6 +126,7 @@ python3 scripts/yuque_tree_import.py --root <clean_dir> --book <book_id> --progr
 ```
 
 完整 SOP + 坑清单：`references/github-repo-to-yuque.md`（必读，含 7 条踩过的坑）。
+GitBook 3.x 源仓库的书（站点给链接但同名 source repo 在 GitHub，正文是 `chapter-N/chapter-N-M.md` 扁平编号、层级只在 SUMMARY.md 里）：可复用脚本 + README 见 `examples/datamining-guide/`（2026-10-18《面向程序员的数据挖掘指南》实战，含重建规则与 2 个新坑）。
 
 ## PDF 书导入（只有 PDF 的官方站，2026-10-18 固化）
 

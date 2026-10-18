@@ -21,6 +21,8 @@
   - 脚本跑完请把图片目录从导入根**删干净**，否则每张图会变成独立占位文档（SKILL 硬规则 10）
   - img_map.json 本身也不能留在导入根目录里
   - markdown 图片带 title 的写法 `![alt](path "title")` 也吃（2026-10-18 ucore 实踩：旧版把 path+title 整体当 src → 报本地缺失）
+  - `--dry` 如实报「重写 N 处 / 本地缺失 M」不写盘（2026-10-18 修：旧版 dry 短路了缓存填值，统计恒为 0/0/0，
+    会让人误判「一张图都没扫到」；datamining-guide 实踩）
 """
 import argparse
 import json
@@ -83,7 +85,11 @@ def main():
                 missing.append((fp, src))
                 return None
             key = os.path.relpath(p, args.root)
-            if key not in mp and not args.dry:
+            if args.dry:
+                # 2026-10-18 修：旧版 dry 会把 mp 永远当空 → resolve 恒返回 None →
+                # 统计恒为 0/0/0（datamining-guide 实踩，差点误判「一张图都没找到」）
+                return "DRY:" + src
+            if key not in mp:
                 for attempt in range(60):
                     url = upload_image(cfg["cookie"], cfg["ctoken"], args.user_id, p)
                     if url:
