@@ -239,5 +239,13 @@
     "imported_at": "2026-10-18T10:58:00+0800",
     "mode": "双轨：正文+图提取导入（30 章拆篇）+ PDF 原件附件（type=attachment 上传，URL 取返回 url 字段 yuque.com/attachments/...；filekey 拼 cdn.nlark.com 403 死路）",
     "notes": "图：位图 3 张 CDN 引用（CAP/Kafka 架构/partition 示意），矢量 0（仅页眉页脚横线）；对账 0 错位、幽灵 0、四查全绿"
+  },
+  "https://legacy.gitbook.com/book/fuxiaopang/learnelasticsearch/details": {
+    "commit": "ef70bab",
+    "repo": "https://github.com/looly/elasticsearch-definitive-guide-cn",
+    "book_id": 84706781,
+    "book_url": "elasticsearch-definitive-guide-cn-ef70bab",
+    "imported_at": "2026-10-18T11:35:00+0800",
+    "note": "《Elasticsearch 权威指南（中文版）》（looly 译，GitBook 源）；老板给的 legacy.gitbook.com 死链（301→gitbook 首页）+ gitbooks.io 302 到已被抢注的空壳 learnes.net → 改从同名源仓库吃 md 源不抓 HTML。SUMMARY 重建 36 章目录 + 00-前言/00-版本变动，315 篇正文；16 张绝对外链图（raw.githubusercontent）×16 处引用重写为 CDN，elastic.co 11 张外链保留；toc-md 目录树 351 行 PUT 2.1s，结构四查全绿（351 节点 / 全路径唯一 / TOC==本地 / 幽灵 0 / CDN 5-5 200）"
   }
 }

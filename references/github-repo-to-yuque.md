@@ -180,4 +180,14 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
 - 图：441 处引用 / 433 张图（8 处重复引用同一张），`img_map.json` 以相对路径为 key → 同图只传一次
 - 完整可复用脚本 + README：`examples/datamining-guide/`
 
+**坑 36（老 GitBook「独立域名」型书仓，2026-10-18 looly/elasticsearch-definitive-guide-cn 实战）**：老板给的 `https://legacy.gitbook.com/book/fuxiaopang/learnelasticsearch/details` 已死——`legacy.gitbook.com` **301 → `www.gitbook.com/?utm_source=legacy`（首页）**，而老式 `fuxiaopang.gitbooks.io/learnelasticsearch` **302 → `https://www.learnes.net/`**（该域名已被某公司抢注成空壳页，gb2312 + 无正文）→ 站点内容不可恢复，只能找源仓库（本次 `looly/elasticsearch-definitive-guide-cn`，2045★，同书名）。**三条可复用手法**：
+- **图是绝对外链时的 CDN 化**：本仓库图有两套写法——`https://raw.githubusercontent.com/<org>/<repo>/master/images/x.png`（沙箱/部分网络拉不动，**默认 rewrite 脚本只认相对路径，一条都不匹配**）+ `https://www.elastic.co/.../images/x.png`（实测 200 外链，保留）。做法：写个 20 行的旁路脚本，**按 URL basename 反查 `images/` 里的本地文件** → `upload_image` 传 CDN → 正则替换回 md；`img_map.json` 照旧做断点续传。16 张图（raw 13 + 相对 2 + 封面 1）→ 16 处引用全重写，CDN 抽 5/5 实拉 200；elastic.co 的 11 张外链零改动
+- **SUMMARY 大小写与磁盘不符 + 断链**：`500_Cluster_Admin` 目录里全是小写（`10_intro.md`/`15_marvel.md`），SUMMARY 却写 `00_Intro.md`/`15_Marvel.md` → 直接按路径查全 404。**路径解析必须大小写不敏感**（先建「小写相对路径 → 真实路径」索引）。另有 10 处真断链（5 章首页 `00_Intro.md` 不存在 + 4 个文件不存在）→ 章首页缺失时按序兜底：① 该章 SUMMARY 子节里第一个 intro 类（intro/overview/readme）文件**提升为章首页**；② 章节目录里未被引用的 intro 类文件提升；③ 都没有就当纯 TITLE（本次 5 例全部兜底成功）
+- **SUMMARY 顺序 ≠ 文件名编号顺序**：源文件编号非单调（`300_Aggregations` 是 05,100,105,10,110,… 乱序），SUMMARY 才是阅读序 → **编号一律按 SUMMARY 顺序重排**（章 `NN-`、子节 `NN.MM-`），别信文件名
+
+**坑 37（验收脚本自己打爆 API 限额，2026-10-18 ESDG 实战）**：写验收脚本要把两个「看着对、其实错」的坑先钉死：
+- `GET /repos/{book}/docs` 的 **`page` 参数无效**（恒返首页 100 条）→ 拿 page 循环「直到 len<100」**永远不退出**，900 秒把语雀**账号级 5000 次/小时**限额打爆（后续全是 `429 Too Many Requests`）。分页必须用 **`offset`**
+- **TOC 节点里 `id` 和 `doc_id` 都是空串**（DOC/TITLE 都一样）→ 想按 TOC 回读正文拿不到 doc_id。正文回读一律**取导入账本 `progress.json` 的 `doc_id`**（账本才是权威）
+- 教训：验收器上线前先拿 2 篇小样本跑一遍（能变红也能变绿）再全量跑；无限循环 + 无口径校验会同时烧掉时间和配额（本次 315 篇正文回读作废重跑）
+
 **案例（Sphinx/readthedocs 书仓，2026-10-17 me115/linuxtools_rst 实战）**：需 Sphinx 源仓库（`conf.py`/`index.rst`/`Makefile`）导站时，**只导 toctree 覆盖的页面 + 图片**；仓库根常同时躺着脚手架（`_build/`、`der/`、`sphinx_rtd_theme/`、`*.zip`、`*.epub`）和**早期版本的重复单文件**（本次 `top.rst`/`020-file-manage.rst`/`crontab.rst` 与 `tool/top.rst`/`base/02_file_manage.rst`/`tool/crontab.rst` 撞车，`base/ref.rst`/`base/README.rst`/`base/crond introduce.rst` 不在任何 toctree）——按 toctree 展开收集，别整树导。本次：`index.rst` + `base/`(index+9) + `advance/`(index+3) + `tool/`(index+19) = **35 篇 → 38 节点**（3 目录）；6 张图传 CDN（`_static/` 里其余 4 张封面/psd 未被引用不传）；无需爬 HTML（站点就是这些 rst 渲染的）。
