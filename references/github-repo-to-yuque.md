@@ -240,3 +240,11 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
 4. **拆篇的固有代价：原文跨文档的内部锚点必失效**——本例 `[1](#f1)` … `[8](#f8)` 的脚注定义全在第 13 章，拆开后点不动（语雀不跨文档同步锚点）。口径：**原样保留、不做手术**（拆篇换来的是可读性）
 
 本例实测：15 节点（1 目录 / 14 文档），toc-md **PUT 0.6s**、四查全绿 + 14 篇逐篇回读 0 差；字节差 101B = 丢掉的 H1 行 + README 标题行（拆篇零丢失的快速判据）。⚠️ 提示：`--toc-md` **不要配 `--test N` 试水**（坑 26），直接全量跑。
+
+**坑 42（MkDocs 教程站：相对路径按「站点 URL 深度」写 + 视频/数据包走附件，2026-10-18 LearnOpenGL CN 实战）**：站点 `learnopengl-cn.github.io` 是 MkDocs 渲染产物，源仓库 `LearnOpenGL-CN/LearnOpenGL-CN`（默认分支是 **`new-theme`** 不是 main！）`homepage` 自证 → 走源仓库口径。
+    - **导入根 = `docs/`**，且要剔主题脚手架 `css/` `mathjax/`（只在 mkdocs.yml 里被引用，正文不引用）；`docs/img/README.md`（图片目录版权说明）随 img 目录一起剔。
+    - **⭐ 相对路径不是按文件位置写的，是按渲染后站点 URL 深度写的**：`docs/01 Getting started/05 Shaders.md` 里写 `../img/01/05/x.png`（站点 URL `/01 Getting started/05 Shaders/` → 上一级才对），嵌套目录里更夸张写成 `../../../img/08/01/x.jpg` → **通用 `yuque_rewrite_images.py` 直接报 26 处「本地缺失」**（会把图全留成相对路径 = 裂图）。对策：自写带**路径归一化**的重写脚本——① 先按 md 所在目录解析；② 失败则**逐级剥 `../`** 再按导入根解析；③ 仍失败则**按后缀唯一匹配**（`img/08/01/x.jpg`）。实战脚本：`tmp/lo-rewrite.py`（本次实现，可复用）。
+    - **非图片资源（mp4 / zip / rar）**：`<video src="...mp4" controls>` 这种 HTML 视频标签要单独一条正则（`(<video\b[^>]*?\bsrc=)(["'])([^"']+)(["'])`）；上传用 **`type=attachment`**（`upload_attach()`，MIME 按扩展名）→ 返回 `https://www.yuque.com/attachments/...`（**会话门控**，同 PDF 附件性质，老板口径接受）。zip/rar 这类正文里 `[这里](../data/x.zip)` 的下载链接同样走附件 + 重写。
+    - **量级与限流**：本次 358 处图引用 + 20 处文件引用 = 369 个资源，`--throttle 5`（~12-15 个/分）全程 **0 失败**、约 27 分钟（贴着 ~500 张/窗口的 429 红线，别把 throttle 调更小）。
+    - 收尾：82 节点（15 目录 / 67 文档）toc-md **PUT 1.1s**；**4 个根级 DOC（index/intro/legacy/code_repo）被排到 8 个 TITLE 目录之后** → 复用 `examples/puppet-cookbook/fix_root_order.py`（改写 EXPECT 为期望根级序）**4 轮收敛**；四查全绿 + 67 篇逐篇回读 0 差、word_count 无 0。
+    - 版权：正文本站译文 CC BY-NC 4.0，**图片/素材 © Joey de Vries 保留所有权利** → 只进私有库、不同步公开渠道。

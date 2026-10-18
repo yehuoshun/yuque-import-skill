@@ -286,5 +286,12 @@
     "book_url": "functional-programming-for-the-rest-of-us-cn-7a5d66c",
     "imported_at": "2026-10-18T14:55:00+0800",
     "note": "《傻瓜函数编程》（Slava Akhmechet《Functional Programming For The Rest of Us》中译，译者 justinyhuang）7a5d66c；单篇长文型仓库：59.9KB 正文按 `## N.` 拆 13 章 + README(00-译者说明)=14 篇，目录「傻瓜函数编程」；英文原文 .en.md 不收（老板拍板）；H1 丢弃、日期行留 01 首行；脚注锚点 #f1..#f8 因拆篇跨文档失效（原样保留）；无图；toc-md PUT 0.6s；四查全绿 + 14 篇逐篇回读 0 差。列表 L176 函数式概念 / L208 软件开发方法 同 URL 重复，只导一次"
+  },
+  "https://learnopengl-cn.github.io": {
+    "commit": "3315608",
+    "book_id": 84708519,
+    "book_url": "learnopengl-cn-3315608",
+    "imported_at": "2026-10-18T15:45:00+0800",
+    "note": "《LearnOpenGL CN》（learnopengl.com 系列教程简体中文翻译）站点→源仓库 LearnOpenGL-CN/LearnOpenGL-CN（默认分支 new-theme，homepage 指认）3315608；只吃 docs/ md 源（68 篇→67 篇，剔 img/README.md 图片目录说明），另剔 css/ mathjax/ 主题脚手架；82 节点（15 目录 / 67 文档）；358 处图 → cdn.nlark.com + 15 个 mp4 / 6 个 data 包（zip,rar）→ type=attachment（会话门控）；源相对路径按站点 URL 深度写（../ 多一层）→ 自写路径归一化重写脚本；上传 369 个资源 5s 节流 0 失败；toc-md PUT 1.1s；根级 4 DOC 用 fix_root_order 4 轮归位；四查全绿 + 67 篇逐篇回读 0 差 0 空；版权：正文 CC BY-NC 4.0 译文，图片 © Joey de Vries 保留所有权利 → 只进私有库"
   }
 }
