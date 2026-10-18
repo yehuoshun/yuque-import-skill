@@ -159,6 +159,11 @@
     - 正文容器 `div.main`（`title/abstract` 单独取，`menu/changestyle/footerfirst/footerlast/pb` 全丢）；行内：`span.cmt`→保留、`span.fn/pp/keyword`→反引号、`a.xrefp`→纯文本；`<pre>` 内容原样进 bash 代码块
     - **拆分粒度**：单页长文档按 `h1` 切（本次 23 章 + 前言 = 24 篇）；文件名 `NN-<h1文本>.md`（洗 `/\\:*?"<>|`）；首页 `00-前言.md` = 书名 + 摘要 + 章节目录表
     - 尾巴常有 XHTML 注释/未闭合碎片（`end main -->`、孤立 `-->`、`<div`）→ 截断 + 逐行清
+35. **看云（kancloud）书：主章/子节分组 + 图床防盗链**（2026-10-18《程序员的自我修养》实战）：
+    - **SEO 副本仍是 md 源码**：`div.seo > div.content` 是**未渲染的 markdown**（HTML 转义）→ `html.unescape` 后去掉统一左缩进即落盘（比抓渲染后的正文干净得多）
+    - **目录**：页面 `div.catalog > ul > li > a` 给出**全部 124 条**（单层平铺，id 连续），**书首页**的目录链（`/kancloud/<book>/<id>`）只含 **20 个主章** → 主章 id 之间的条目就是它的子节 → 据此建「主章目录 + 主章页 + 子节」结构（`02-程序员基础知识/02-程序员基础知识.md` + `02.1-字符编码.md`…；`-`(45) < `.`(46) 主章文件自然排第一）
+    - **图床防盗链**：`box.kancloud.cn` 裸请求 **403**，带 `Referer: http://www.kancloud.cn/kancloud/<book>` 才 200 → 下载传 CDN 时必须带 Referer（本次 38 张图全转 CDN、0 失败）
+    - 个别页 `div.content` **本身为空**（看云侧真没写）→ 用 `# 标题` 占位，避开语雀空文档校验
 
 
 ## 五、站点案例速查
