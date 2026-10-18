@@ -217,3 +217,18 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
 实测：47 节点（6 目录 / 41 文档）、18 图 CDN（49 处引用、0 缺失）、toc-md **PUT 0.6s**、四查全绿（41 篇逐字符回读 0 差 / 幽灵 0 / reconcile 0）；根级 TITLE/DOC 混排顺手二次归位（见 `api-notes.md` 根级排序条）。可复用脚本 + README：`examples/mastering-es-guide/`。
 
 **案例（Sphinx/readthedocs 书仓，2026-10-17 me115/linuxtools_rst 实战）**：需 Sphinx 源仓库（`conf.py`/`index.rst`/`Makefile`）导站时，**只导 toctree 覆盖的页面 + 图片**；仓库根常同时躺着脚手架（`_build/`、`der/`、`sphinx_rtd_theme/`、`*.zip`、`*.epub`）和**早期版本的重复单文件**（本次 `top.rst`/`020-file-manage.rst`/`crontab.rst` 与 `tool/top.rst`/`base/02_file_manage.rst`/`tool/crontab.rst` 撞车，`base/ref.rst`/`base/README.rst`/`base/crond introduce.rst` 不在任何 toctree）——按 toctree 展开收集，别整树导。本次：`index.rst` + `base/`(index+9) + `advance/`(index+3) + `tool/`(index+19) = **35 篇 → 38 节点**（3 目录）；6 张图传 CDN（`_static/` 里其余 4 张封面/psd 未被引用不传）；无需爬 HTML（站点就是这些 rst 渲染的）。
+
+**坑 40（AsciiDoc 书稿源 + 老 gitbooks.io 站当逐页 oracle，2026-10-18 sinosmond/puppet-27-cookbook-CN 实战）**：老板给的还是 gitbook.com 旧链（302 → gitbook 首页，死），但**书内 Footer/正文自述「源码位于 <repo>」** → 判据升级：老 gitbooks.io 书页（`https://<user>.gitbooks.io/<slug>/content/`）**还活着**时，先看书里有没有自述源仓库；本次 `sinosmond/puppet-27-cookbook-CN`（AsciiDoc 书稿）比抓 HTML 强得多（`[source,puppet]` 语言标签 / 块标题 / 出处引用都在）。
+
+- **AsciiDoc 源识别**：全树 `.txt` 无 `.md`，且有 `book.txt`（标题下划线 + `:Author:` 属性 + `include::` 清单）+ `entries.txt`（`:Recipe101: xxx` 属性字典）+ `asciidoc.conf`；层级只在 `include::` 里
+- **必须自写转换器**（`examples/puppet-cookbook/adoc-build.py`，规则表见该目录 README）：节标题降级、`[source,x]+----`→围栏（带语言）、`....`/`..................` 字面块、`[NOTE]/[TIP]/[IMPORTANT]+====`→引用块、`[quote,说话人,出处]`→引文+出处、`****` 侧栏、`--` 开放块、`.块标题`、`[[锚点]]`/`<<锚点,文字>>`、`+x+`→行内码、列表续项 `+`
+- **⭐ 关键口径：只替换 entries.txt 里定义过的属性**。Puppet 代码里满屏 `{name}`/`{md5}`/`{hostname}`（未定义属性），asciidoc 渲染也是原样输出 → 转换器若无脑替换会毁代码块
+- **状态机必须认闭合类型**：`....` 块只能用 `^\.{4,}$` 收、`----` 块只能用 `^-{4,}$` 收（shell 输出里满是 `-----` 分隔线）；闭合行**要自己输出**围栏（漏了就整篇少一半围栏，收尾自查 `grep -c '^\s*```'` 为偶数）
+- **`[master]`/`[myapp]`/`[mysqld]` 不是块属性**：只认白名单（`[source,x]`/admonition/`[quote,`），代码块状态内一律不解析
+- **书稿 `.txt` 常带 UTF-8 BOM** → `\ufeff[[anchor]]` 破锚点正则；读源码用 `encoding="utf-8-sig"`（写 md 仍用 `utf-8`）
+- **⭐ 老 gitbooks.io 站可以当逐页正文 oracle**：站点页（`index.html` + `1..N.html`）与本地书稿 1:1，按**标题**配对、归一化后算相似度 → 首次就抓出 2 个转换器 bug（围栏/续项缩进）与「站点是旧版书稿」的事实。**判据要分三档**：≥0.99 = 通过；低于阈值但**站点文本是本地子串**（只有 insert 无 delete/replace）= **站点滞后**（源仓库 HEAD 比渲染站新，可接受，本次 3 页）；有 delete/replace = 真差异 → FAIL。抓站点**必须限速**（并发 8 会有 ~13/122 页返回 GitBook「Page Not Found」假 404，串行重抓即正常；抓完 `grep -l "Page Not Found" *.html` 自查）
+- **前置篇目的落地方式**：`book.txt` 里的封面（标题/作者/版本/`[IMPORTANT]` 版权声明）落 `00-书名页.md`；`00-translator_preamble/01-colophon/02-author/03-preface` 分别落 `02-译者序/`、`03-原书版权页.md`、`04-关于作者.md`、`05-前言/`，章首页 + 子节按 `NN` / `NN.MM` 编号 → 与站点序号天然对齐
+- **toc-md 后根级 DOC 又落到 TITLE 之后**（老坑 29）：本次 4 个根级 DOC（00/01/03/04）分散在 TITLE 之后，**一次 prependNode 只挪一个节点** → 写循环（每轮回读 TOC、按期望序找「紧随其后且存在的目标」prepend），3 轮收敛（`examples/puppet-cookbook/fix_root_order.py`，可复用）
+- 版权提醒：本书是 **Packt 封闭版权**译本（译者自述禁止公网发布 HTML/PDF）→ 只进私有库，`00-书名页.md` 保留版权声明原文，**不要**同步到任何公开渠道
+
+实测：134 节点（11 目录 / 123 文档）、12 图 CDN（0 缺失）、toc-md **PUT 1.0s**、四查全绿 + 120 页 ≥0.99（3 页站点滞后）+ 123 篇逐篇回读 0 差。可复用脚本 + README：`examples/puppet-cookbook/`。

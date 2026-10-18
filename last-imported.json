@@ -271,5 +271,13 @@
     "book_url": "mastering-elasticsearch-cn-d2b8d61",
     "imported_at": "2026-10-18T13:35:00+0800",
     "note": "《Mastering Elasticsearch 中文版》（GitBook 源，xtmhm2000 翻译 2014-12）；老板给的 udn.yyuap.com 域名已死（DNS 不解析）→ GitHub 搜「mastering elasticsearch 翻译」定位源仓库；SUMMARY 3 层 9 章，章目录名剥「第N章」前缀；16 个子节文件 0 字节空壳（翻译烂尾，SUMMARY 未收录）不建节点；notes/ 垫片图（pixel.gif/lm/rm 1px 装饰）剥掉、note.png 保留；引用 ../44_cluster.png 少写 imgs/ 层 → 回退补层；47 节点（6 目录/41 文档），18 图 CDN，toc-md PUT 0.6s；根级排 00→09 两发移动（00 前言 prepend + 03 doc prepend 到 04 前）；四查全绿（41 篇逐字符回读 0 差 / 幽灵 0 / reconcile 0）；原版英文 PDF 附件挂前言（type=attachment）"
+  },
+  "https://www.gitbook.com/book/wizardforcel/puppet-27-cookbook/details": {
+    "commit": "5415c55",
+    "repo": "https://github.com/sinosmond/puppet-27-cookbook-CN",
+    "book_id": 84708168,
+    "book_url": "puppet-27-cookbook-cn-5415c55",
+    "imported_at": "2026-10-18T14:40:00+0800",
+    "note": "《Puppet 2.7 Cookbook 中文版》（Osmond Liang 译，原书 John Arundel/Packt 2011）；老板给的 gitbook.com 旧链已 302 到 gitbook 首页，但老 gitbooks.io 渲染站仍在线 → 按书内自述取源仓库 sinosmond/puppet-27-cookbook-CN（21★，AsciiDoc 书稿；仓库自述「鉴于版权原因请勿在公网发布 HTML/PDF」→ 只进私有库）；新增 examples/puppet-cookbook（adoc-build.py AsciiDoc→md 转换器 + verify.py 站点 oracle 逐页比对 / fix_root_order.py）；134 节点（11 目录 / 123 文档，95 处方 + 9 章首页 + 前置 5 篇 + 9 子节）；12 张图全 CDN（12 处引用 1:1）；toc-md PUT 1.0s；四查全绿 + 逐页比对 120 页 ≥0.990（3 页为站点旧版少内容）+ 逐篇回读 0 差"
   }
 }
