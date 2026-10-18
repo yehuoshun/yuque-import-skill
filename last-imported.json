@@ -293,5 +293,12 @@
     "book_url": "learnopengl-cn-3315608",
     "imported_at": "2026-10-18T15:45:00+0800",
     "note": "《LearnOpenGL CN》（learnopengl.com 系列教程简体中文翻译）站点→源仓库 LearnOpenGL-CN/LearnOpenGL-CN（默认分支 new-theme，homepage 指认）3315608；只吃 docs/ md 源（68 篇→67 篇，剔 img/README.md 图片目录说明），另剔 css/ mathjax/ 主题脚手架；82 节点（15 目录 / 67 文档）；358 处图 → cdn.nlark.com + 15 个 mp4 / 6 个 data 包（zip,rar）→ type=attachment（会话门控）；源相对路径按站点 URL 深度写（../ 多一层）→ 自写路径归一化重写脚本；上传 369 个资源 5s 节流 0 失败；toc-md PUT 1.1s；根级 4 DOC 用 fix_root_order 4 轮归位；四查全绿 + 67 篇逐篇回读 0 差 0 空；版权：正文 CC BY-NC 4.0 译文，图片 © Joey de Vries 保留所有权利 → 只进私有库"
+  },
+  "https://github.com/zilongshanren/opengl-tutorials": {
+    "commit": "4500ac6",
+    "book_id": 84709042,
+    "book_url": "opengl-tutorials-4500ac6",
+    "imported_at": "2026-10-18T16:03:54+0800",
+    "note": "master @ 4500ac6（2015-01-05）；GitBook 源（SUMMARY.md + tutNN/zh.md + tutNN/res/）。方案 B 按 SUMMARY 重建树：00-前言.md + 01-OpenGL基本知识(01..08) + 02-OpenGL中级教程(09..18)，21 节点（2 目录 / 19 文档）；114 张图全传 CDN（1.5s 节流 ~3min 0 失败）→ 先重写后重建（同名图 icon_smile.gif 在 tut08/tut13 各一份，防串台）；标题以 SUMMARY 为准（磁盘 heading 有笔误）；toc-md PUT 0.5s；根级前言 prependNode 归位；四查全绿 + 19 篇逐篇回读 0 差 0 空"
   }
 }

@@ -248,3 +248,11 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
     - **量级与限流**：本次 358 处图引用 + 20 处文件引用 = 369 个资源，`--throttle 5`（~12-15 个/分）全程 **0 失败**、约 27 分钟（贴着 ~500 张/窗口的 429 红线，别把 throttle 调更小）。
     - 收尾：82 节点（15 目录 / 67 文档）toc-md **PUT 1.1s**；**4 个根级 DOC（index/intro/legacy/code_repo）被排到 8 个 TITLE 目录之后** → 复用 `examples/puppet-cookbook/fix_root_order.py`（改写 EXPECT 为期望根级序）**4 轮收敛**；四查全绿 + 67 篇逐篇回读 0 差、word_count 无 0。
     - 版权：正文本站译文 CC BY-NC 4.0，**图片/素材 © Joey de Vries 保留所有权利** → 只进私有库、不同步公开渠道。
+
+**坑 43（章节目录名无语义 + 逐章自带同名图：先 CDN 重写再重建树，标题只信 SUMMARY，2026-10-18 zilongshanren/opengl-tutorials 实战）**：源仓库是 GitBook 源（`README.md` + `SUMMARY.md` + 18 个 `tutNN/zh.md` + `tutNN/res/`）——**目录名 `tutNN` 无语义，可读标题只存在 `SUMMARY.md`**，镜像仓库树会得到 18 个叫 `tutNN` 的目录。
+    - **方案 B（2026-10-18 老板拍板）**：`README.md` → `00-前言.md`；SUMMARY 第 i 分部 → `0i-<分部名>/`；文档名 `NN-<SUMMARY 标题剥「第N课[:：]」>.md`（NN = 课号，全局连续）；`SUMMARY.md` 不入库（就是目录本身）→ 21 节点（2 目录 / 19 文档）。
+    - **⭐ 顺序铁律：先在原布局跑 `yuque_rewrite_images.py`，再重建树**（`./res/x.png` 在原始布局按 md 目录天然解析，重建后相对路径就没了锚点）。反序会踩**同名图串台**：本仓库 `icon_smile.gif` **同时存在于 `tut08/res/` 与 `tut13/res/`**（两张不同的图、同名），两章归到同一分部后共享 `res/` 会互相覆盖。`examples/opengl-tutorials/build_tree.py` 只 copy md、**不 copy 任何图片**，并内置两条断言（目标树无非 md 文件 / 无残留非 http 图片引用）。
+    - **标题以 SUMMARY 为准，别信磁盘 heading**：本例 `tut08/zh.md` heading 写「基础光照模型」（SUMMARY：「基本着色」）、`tut18/zh.md` heading 错字「Billbard」（SUMMARY：「Billboard和粒子」）→ 按 heading 命名会把笔误写进库。
+    - 全角「：」留在标题里不用洗；本章标题无 `/`；md 全 UTF-8、无分片。
+    - **toc-md 后根级 DOC `00-前言.md` 又被排到 TITLE 之后**（老坑 29）→ 一发 `prependNode/action_mode=sibling`（node_uuid=前言, target_uuid=首个 TITLE）归位。
+    - 实测：114 张图 1.5s 节流全传 CDN（~3 分钟、0 失败、114 引用 ↔ 114 图 1:1）；toc-md **PUT 0.5s**；四查全绿 + 19 篇逐篇回读 0 差 0 空。可复用脚本 + README：`examples/opengl-tutorials/`。
