@@ -224,5 +224,12 @@
     "book_url": "dataminingalgorithm-6f5caa1",
     "imported_at": "2026-10-18T09:30:00+0800",
     "note": "《数据挖掘经典算法》linyiqun 教程仓库（Java 实现：Apriori/KMeans/SVM/PageRank 等 43 目录 151 文件）；toc-md PUT 1.5s；坑 36：110 篇 GBK 源码被误判二进制→占位，回填脚本 decode('gbk') PUT 修复，回读全绿；四查 PASS（幽灵 0 / 错位 0 / verify PASS）"
+  },
+  "https://github.com/aiyanbo/spark-programming-guide-zh-cn": {
+    "commit": "487c68a",
+    "book_id": 84705967,
+    "book_url": "spark-programming-guide-zh-cn-487c68a",
+    "imported_at": "2026-10-18T10:05:00+0800",
+    "note": "《Spark 编程指南简体中文版》（aiyanbo，GitBook 3.x 源，master）；站点链接→同名源仓库吃 md 源不抓 HTML（坑 35 口径）；SUMMARY.md 3~4 层嵌套重建树：7 章 + 6 子目录 + 00-前言 = 81 节点（13 目录/68 文档）；6 个孤儿 md（streaming 集成 4 篇 + spark-sql 兼容 2 篇）按源目录补进树；部署/更多文档父子同路径去重（flatten 提升子树）；12 图全传 CDN；toc-md PUT 0.7s + prependNode 前言归位；四查全绿"
   }
 }
