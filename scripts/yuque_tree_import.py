@@ -153,6 +153,25 @@ def load_token(env):
                 return line.strip().split("=", 1)[1].strip().strip('"').strip("'")
     raise SystemExit(f"找不到 token: 设置环境变量 {env} 或写入 credentials.env")
 
+_QUOTA_WAITED = False
+
+
+def wait_quota_reset(pad=60, cap=3600):
+    """语雀账号级小时配额（5000 次/小时）是**整点刷新** → 撞 429 后等到「下一个整点 + pad 秒」再试。
+
+    pad 默认 60s（2026-10-18 老板定：给 1 分钟余量，防网络波动导致整点没刷上）。
+    同进程只等一次（否则每个请求都睡一小时）；等过之后仍 429 就按短退避走，最终 raise。
+    """
+    global _QUOTA_WAITED
+    import datetime as _dt
+    now = _dt.datetime.now()
+    nxt = (now + _dt.timedelta(hours=1)).replace(minute=0, second=0, microsecond=0)
+    wait = min((nxt - now).total_seconds() + pad, cap)
+    print("[quota] 429 配额耗尽 → 等到 %s +%ds（%.0fs）后重试" % (nxt.strftime("%H:%M"), pad, wait), flush=True)
+    time.sleep(wait)
+    _QUOTA_WAITED = True
+
+
 def api(token, base, method, path, payload=None, retries=4):
     data = json.dumps(payload).encode() if payload is not None else None
     for i in range(retries):
@@ -163,6 +182,10 @@ def api(token, base, method, path, payload=None, retries=4):
             with urllib.request.urlopen(req, timeout=30) as r:
                 return json.loads(r.read().decode())
         except urllib.error.HTTPError as e:
+            if e.code == 429 and not _QUOTA_WAITED:
+                # 小时配额整点刷新 → 等整点+60s 再试（只等一次）
+                wait_quota_reset()
+                continue
             if e.code in (429, 500, 502, 503, 504):
                 time.sleep(2 ** i * 1.5 + 1)
                 continue
