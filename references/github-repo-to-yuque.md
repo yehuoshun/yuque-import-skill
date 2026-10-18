@@ -128,6 +128,8 @@
     - 老板给的 gitbook.com 旧链可能已死（302 → legacy → gitbook 首页）→ 去 GitHub 搜书名/仓库名找官方源（本次 `objectkuan/ucore-docs` 404 / `objectkuan/ucore_docs` 已重定向 → 官方是 `chyyuu/ucore_os_docs`）
     - 单行 md（如只一行标题的 `lab0.md`）入语雀后行尾 `\n` 会变 `\r`，逐字符比对会报差异（实际无影响，别当事故）
 
+**坑 36（GBK/非 UTF-8 源码误判二进制 → 整篇正文变占位，2026-10-18 linyiqun/DataMiningAlgorithm 实战）**：老的 Java 教程仓库（201X 年）源码常是 **GBK 编码**（中文注释），脚本二进制检测「UTF-8 解码失败 → binary」会把它们全判成二进制 → 110 篇正文写成 `<!-- 二进制文件 0 MB, 跳过内容导入 -->` 占位，**结构验收四查全绿也拦不住**（路径映射只看节点在不在，不看正文）。当场表现：`AprioriTool.java` body 是占位、word_count=0、git 里文件却是正常文本；`iconv -f GBK` 在部分沙箱直接报 `conversion from GBK is not supported`（iconv 缺 GBK 表），别用 iconv 验证，用 Python `raw.decode('gbk')`。修法：① 写回填脚本，`raw.decode('gbk')` 后按 `fmt_content` 同等格式（` ```java` 围栏）`PUT /repos/{book}/docs/{doc_id}` 更新正文 + word_count>0 校验 + 回读（复用 `yuque_repair_placeholders.py` 的 update_doc 模式，但它的 `errors="replace"` 会把 GBK 变乱码，得自己 decode('gbk')）；② 回填后全量扫一遍 `二进制文件|跳过内容导入` 残留必须为 0；③ 教训：**碰到老仓库（Java/C#/中文注释）先全量测一遍编码**（`find . -type f` 逐个 try UTF-8 decode），中招的多是编码非 UTF-8 的源码文件而不是 md/txt。
+
 ## 七、官方 v2 一次性目录（toc-md，2026-10-16 老板拍板设为默认）
 
 **来源**：官方 OAS `yuque_openapi_20260722.yaml`（v2.0.1，入口页 `yuque.com/yuque/developer/openapi`；页面 JS 渲染，需带 cookie 走 `GET /api/docs/openapi?book_id=75338` 挖正文 → 再拿附件）

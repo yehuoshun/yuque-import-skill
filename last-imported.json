@@ -216,5 +216,13 @@
     "book_url": "dataminingguide-5e05231",
     "imported_at": "2026-10-18T08:50:00+0800",
     "note": "《面向程序员的数据挖掘指南》（Ron Zacharski 著，egrcc 译，yourtion 排版 GitBook）；站点链接→同名源仓库，吃 md 源不抓 HTML；SUMMARY.md 重建 8 章目录（01-简介…08-聚类）+ 00-前言，54 篇正文；433 张图全传 CDN（441 处引用重写）；toc-md PUT 秒级，四查 + 55 篇逐字符回读全绿"
+  },
+  "https://github.com/linyiqun/DataMiningAlgorithm": {
+    "commit": "6f5caa1",
+    "repo": "https://github.com/linyiqun/DataMiningAlgorithm",
+    "book_id": 84705769,
+    "book_url": "dataminingalgorithm-6f5caa1",
+    "imported_at": "2026-10-18T09:30:00+0800",
+    "note": "《数据挖掘经典算法》linyiqun 教程仓库（Java 实现：Apriori/KMeans/SVM/PageRank 等 43 目录 151 文件）；toc-md PUT 1.5s；坑 36：110 篇 GBK 源码被误判二进制→占位，回填脚本 decode('gbk') PUT 修复，回读全绿；四查 PASS（幽灵 0 / 错位 0 / verify PASS）"
   }
 }
