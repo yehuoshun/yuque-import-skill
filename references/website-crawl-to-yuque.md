@@ -165,6 +165,18 @@
     - **图床防盗链**：`box.kancloud.cn` 裸请求 **403**，带 `Referer: http://www.kancloud.cn/kancloud/<book>` 才 200 → 下载传 CDN 时必须带 Referer（本次 38 张图全转 CDN、0 失败）
     - 个别页 `div.content` **本身为空**（看云侧真没写）→ 用 `# 标题` 占位，避开语雀空文档校验
 
+36. **社区/论坛站整体下线（域名 302 到厂商新站 + 反爬 403）→ Common Crawl WARC 兜底**（2026-10-18 EMC 中文支持论坛《SAN 管理入门系列》实战，`examples/emc-community-cc/`）：
+    - **症状**：`community.emc.com/docs/DOC-16067` 302 到 `dell.com/support`；社区页对 curl/headless 一律 **Akamai 403**（TLS/JA3 层面挡，换 UA/HTTP2 无用）；archive.org 在沙箱被墙（DNS 投毒到私网 + 出口白名单）
+    - **兜底链路**：**Common Crawl**（无需 key、`index.commoncrawl.org` + `data.commoncrawl.org` 通常可达）
+      1. `https://index.commoncrawl.org/collinfo.json` 拿 collection 列表
+      2. **用 prefix 查询一次拿全**：`/{coll}-index?url=<域名>%2F<路径前缀>&matchType=prefix&output=json&limit=200` → 返回每条含 `filename/offset/length/timestamp/status`
+         （逐条精确查询又慢又容易被 504 限流；「No Captures」是确定性空，504/空响应要重试 3-4 次，加 `sleep`）
+      3. 按 `Range: bytes=<offset>-<offset+length-1>` GET `https://data.commoncrawl.org/<filename>` → gunzip → **WARC response 体**（跳过两层 `\r\n\r\n`：先 WARC 头，再 HTTP 头）即原文 HTML
+    - **2019 年的快照最有价值**：老论坛在 2016 迁移后仍留旧页，CC-MAIN-2018/2019 有全量；更老的 collection（2013-2014）反而常「No Captures」
+    - **正文定位（Jive/DECN 类社区）**：`<!-- [DocumentBodyStart:<uuid>] --><div class="jive-rendered-content">` … `<!-- [DocumentBodyEnd`。Word 粘贴带来的符号字体项目符 **`ü`/`Ø`/`•`/`–` 是字面字符**（不是标签）→ 转换器按「首字符 → 层级」映射成 `- ` / `  - `；`<h1>` = 小节标题（介绍/更多信息/参考/应用于）
+    - **图片多半救不回来**：`/servlet/JiveServlet/downloadImage/...` 这类附件 CC 基本不收录（本次 128 个 collection 前缀查询全空，4 张只救回 2 张——靠**第三方转载站**（cnblogs pipci）镜像的图）。缺图就如实记账，别去 Dell 新站硬抓（它把正文/图都放 Sprinklr JS 里，云爬虫也只拿得到评论区）
+    - **命名/口径**：站点类走网站口径（库名 `系列名（日期）`、分组「文章收集」36149506）；描述里**必须注明「站点已下线，正文经 Common Crawl <年份> 快照恢复」**（硬规则 11）
+
 
 ## 五、站点案例速查
 
@@ -187,3 +199,4 @@
 | cn.linux.vbird.org/linux_basic（同站基础学习篇, 2026-10-16） | `<!-- 本文的正式部分 -->`（附录 A 无此标记→fallback `<!-- 本文的档头部分 -->`） | 页脚 `<div style="padding-top: 0px; text-align: center;">` | 27 章（**第零章**起）+ 附录 A/B + 快速索引 = 30 篇；**全简体**（无繁体章，不触发简繁双版）；转换器抄 `examples/vbird-server/`，改 4 处：BASE→linux_basic、章号正则加「零」、窗口加「档头部分」fallback、附录/索引伪章号 27/28/29；269 张正文图全传 CDN（0 失败） |
 | cn.linux.vbird.org/linux_server（老式 PHP 表格站, 2026-10-16） | `<!-- 本文的正式部分 -->`（繁体同形）之后 | 页脚 `<div style="padding-top: 0px; text-align: center;">` | 22 章；**标题是 `<span class="text_h1">` / `<span class="text_h2">` 不是 h 标签**，章名取 `text_head0`（内有嵌套 `text_head_en`，正则用 `</span>\s*(?:</a>|<br)` 收尾）；终端块 `<table class="term"><pre>`；Tips/例题=单格 `<table width="90%">`；**整章全文页与分页并存 → 只导全文页**（比值≈1）；装饰图（大标题/小标题/鸟哥图示 596 张）按 alt 剔除、正文截图 218 张传 CDN；繁体章额外出「（简体版）」（opencc tw2sp）；按「第N章」中文数字转阿拉伯排序（非文件名前缀序）；站点专用转换器与复用流程见 `examples/vbird-server/`（fetch_all.py + crawl_vbird.py + README） |
 | aaaaaashu.gitbooks.io/mac-dev-setup（《Mac 开发配置手册》，GitBook 2.6.7 静态站，2026-10-17） | 正文 = `section.normal` | 容器自带边界（`div.book-body > div.navigation*` 在外） | 无源仓库（GitHub 同名 repo 不存在）→ 抓 HTML；13 页（侧栏 `ul.summary` 定序，平铺）；bs4 递归渲染（**嵌套列表丢前缀坑见坑 32**）；无站内图，2 张外链图源站已 404 保留；转换器 `examples/mac-dev-setup/` |
+| community.emc.com（EMC 中文支持论坛，Jive/DECN，**站已下线**，2026-10-18） | 正文 = `<!-- [DocumentBodyStart:…] -->` 后的 `div.jive-rendered-content`（**从 Common Crawl WARC 取 HTML**） | `<!-- [DocumentBodyEnd` | 8 篇系列（DOC-16067/68/69/80-84，互为链接）；项目符 `ü/Ø/•/–` 是字面字符→手写映射成嵌套列表；`/servlet/JiveServlet/downloadImage/` 图 CC 未收录（4 张只救回 2 张，靠转载站镜像）；转换器 `examples/emc-community-cc/`（见坑 36） |

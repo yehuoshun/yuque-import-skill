@@ -300,5 +300,12 @@
   "book_url": "opengl-tutorials-4500ac6",
   "imported_at": "2026-10-18T16:03:54+0800",
   "note": "master @ 4500ac6（2015-01-05）；GitBook 源（SUMMARY.md + tutNN/zh.md + tutNN/res/）。方案 B 按 SUMMARY 重建树：00-前言.md + 01-OpenGL基本知识(01..08) + 02-OpenGL中级教程(09..18)，21 节点（2 目录 / 19 文档）；114 张图全传 CDN（1.5s 节流 ~3min 0 失败）→ 先重写后重建（同名图 icon_smile.gif 在 tut08/tut13 各一份，防串台）；标题以 SUMMARY 为准（磁盘 heading 有笔误）；toc-md PUT 0.5s；根级前言 prependNode 归位；四查全绿 + 19 篇逐篇回读 0 差 0 空"
+ },
+ "https://community.emc.com/docs/DOC-16067": {
+  "commit": "emc-decn-2019 (Common Crawl)",
+  "book_id": 84712887,
+  "book_url": "san-management-primer-20261018",
+  "imported_at": "2026-10-18T23:57:00+0800",
+  "note": "EMC 中文支持论坛《SAN 管理入门系列》8 篇（DOC-16067/16068/16069/16080-16084）。源站 community.emc.com 已下线（302→dell.com 403）、archive.org 被沙箱屏蔽 → 走 Common Crawl 2019 快照（CC-MAIN-2019-47/39/26/18、2018-43/34）取 WARC 还原正文。toc-md 一次 PUT 0.4s、结构核对 PASS、8 篇 word_count 全 >0、图 2/4（第 6/8 篇图经 cnblogs pipci 镜像转 CDN；第 1/5 篇源图 CC 未收录缺失）"
  }
 }

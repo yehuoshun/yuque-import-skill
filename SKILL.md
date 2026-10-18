@@ -150,6 +150,7 @@ GitBook 3.x 源仓库的书（站点给链接但同名 source repo 在 GitHub，
 
 触发模板：「把 `<网址>` 抓取到语雀」。规范：库名 `网站名（日期）`（日期=导入日，如 2026-10-14）、**slug 同样带日期** `网站名-YYYYMMDD`（如 atguigu-python-20261014，2026-10-14 老板定；已建库不追改）、分组「文章收集」（stack 36149506）、描述带源站 URL。通用爬虫模板 `scripts/yuque_website_crawl.py`（复制后改 SITE 配置区）+ 完整 SOP `references/website-crawl-to-yuque.md`（正文窗口定位方法论 + 图片 CDN 方案 + 产物级验证清单 + 实战案例表）。**老式 PHP 表格站（标题用 span、正文 div+table 混排）完整可复用示例：`examples/vbird-server/`**（fetch_all.py 抓页 + crawl_vbird.py 迷你 DOM 转换 + README 复用流程）。
 **同站另一篇（基础学习篇）的适配版：`examples/vbird-basic/`**（crawl_basic.py；只改 4 处：BASE、章号正则加「零」、窗口加「档头部分」fallback、附录/索引伪章号 27/28/29——见坑 27/28）。
+**整站下线（域名单跳厂商新站 + 反爬 403，archive.org 又被墙）**：走 **Common Crawl 兜底**——`index.commoncrawl.org` 用 **prefix 查询**拿 WARC 坐标（filename/offset/length）→ `data.commoncrawl.org` Range 拉 `.warc.gz` → gunzip 剥两层头得原页 HTML（老论坛看 **2018-2019** 快照，2013-2014 常空）。Jive/DECN 类社区正文在 `<!-- [DocumentBodyStart:…] -->`+`div.jive-rendered-content`，项目符 `ü/Ø/•/–` 是**字面字符**；附件图多半 CC 未收录（只能靠第三方转载镜像救）。复用脚本 + README 见 `examples/emc-community-cc/`（2026-10-18《SAN 管理入门系列》实战，8 篇，坑 36）。
 
 ```bash
 python3 scripts/yuque_repo_import.py create-book --name "<网站名>（<日期>）" --slug <网站名>-<YYYYMMDD> --desc "<源站 URL> | 导入 <日期>"
