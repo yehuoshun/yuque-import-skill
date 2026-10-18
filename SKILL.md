@@ -133,6 +133,7 @@ GitBook 3.x 源仓库的书（站点给链接但同名 source repo 在 GitHub，
 **站点域名直接死掉 + SUMMARY 多层嵌套 + 旧版整编孤儿**（如 `kibana.logstash.es` DNS 不解析，仓库 `homepage` 指认源仓库）：复用脚本 + README 见 `examples/elkstack-guide/`（2026-10-18《ELKstack 中文指南》实战，坑 38；含空链接/断链节点落 TITLE、点分编号多层命名、v3 旧版孤儿归档、外链图「能救的救」口径）。
 
 **站点域名死掉且仓库不自证（`homepage` 不写域名）+ 残缺译本**（如 `udn.yyuap.com` DNS 不解析，靠 `gh search repos "<书名> 翻译"` 反查）：复用脚本 + README 见 `examples/mastering-es-guide/`（2026-10-18《Mastering Elasticsearch 中文版》实战，坑 39）。⚠️ **老译本仓库常烂尾**——动手前先扫空壳（`wc -c` 各章）：SUMMARY 收录的空壳章照建节点，未收录且 0 字节的孤儿**跳过**，并**主动向老板报残缺度**。
+**单篇长文型仓库（仓库里只有一篇文章，不是多章书）**：按 `## N.` 拆篇 + README 做 `00-译者说明.md`，英文原文不收，文件名剥「N.」与标题内链接/sup；拆篇会让原文内部锚点（脚注 `#f1`）跨文档失效，原样保留 —— 口径见 references 坑 41（2026-10-18《傻瓜函数编程》实战，15 节点）。
 
 ## PDF 书导入（只有 PDF 的官方站，2026-10-18 固化）
 

@@ -279,5 +279,12 @@
     "book_url": "puppet-27-cookbook-cn-5415c55",
     "imported_at": "2026-10-18T14:40:00+0800",
     "note": "《Puppet 2.7 Cookbook 中文版》（Osmond Liang 译，原书 John Arundel/Packt 2011）；老板给的 gitbook.com 旧链已 302 到 gitbook 首页，但老 gitbooks.io 渲染站仍在线 → 按书内自述取源仓库 sinosmond/puppet-27-cookbook-CN（21★，AsciiDoc 书稿；仓库自述「鉴于版权原因请勿在公网发布 HTML/PDF」→ 只进私有库）；新增 examples/puppet-cookbook（adoc-build.py AsciiDoc→md 转换器 + verify.py 站点 oracle 逐页比对 / fix_root_order.py）；134 节点（11 目录 / 123 文档，95 处方 + 9 章首页 + 前置 5 篇 + 9 子节）；12 张图全 CDN（12 处引用 1:1）；toc-md PUT 1.0s；四查全绿 + 逐页比对 120 页 ≥0.990（3 页为站点旧版少内容）+ 逐篇回读 0 差"
+  },
+  "https://github.com/justinyhuang/Functional-Programming-For-The-Rest-of-Us-Cn": {
+    "commit": "7a5d66c",
+    "book_id": 84708416,
+    "book_url": "functional-programming-for-the-rest-of-us-cn-7a5d66c",
+    "imported_at": "2026-10-18T14:55:00+0800",
+    "note": "《傻瓜函数编程》（Slava Akhmechet《Functional Programming For The Rest of Us》中译，译者 justinyhuang）7a5d66c；单篇长文型仓库：59.9KB 正文按 `## N.` 拆 13 章 + README(00-译者说明)=14 篇，目录「傻瓜函数编程」；英文原文 .en.md 不收（老板拍板）；H1 丢弃、日期行留 01 首行；脚注锚点 #f1..#f8 因拆篇跨文档失效（原样保留）；无图；toc-md PUT 0.6s；四查全绿 + 14 篇逐篇回读 0 差。列表 L176 函数式概念 / L208 软件开发方法 同 URL 重复，只导一次"
   }
 }
