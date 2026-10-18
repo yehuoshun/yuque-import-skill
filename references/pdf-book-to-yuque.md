@@ -28,6 +28,16 @@
 - **相邻同类强调跨行合并**（`**time** **sharing**` → `**time sharing**`）
 - **跨页续段**：上一行无句末标点即续接，别按 x 变化断
 
+## 五、PDF 原件附件直传（2026-10-18 双轨实战《走向分布式》84706243 补）
+
+老板口径：**提取照旧，PDF 本体也额外传上去**（正文可读 + 原件可下，双轨并行）。
+
+1. 上传走 `type=attachment`（样例见 `yuque_rewrite_images.py` 的 attachment 上传路径）：返回 JSON 里**取 `url` 字段**（`https://www.yuque.com/attachments/yuque/0/2026/pdf/<uid>/<ts>-<uuid>.pdf`，会话门控：带 cookie 才 200，无会话 302 到登录）
+2. **坑：用 filekey 拼 `cdn.nlark.com/yuque/0/2026/pdf/...` 是 403 死路**（PDF 类型 attachment 走代理路径，不公开直链）——一切以 `url` 字段为准
+3. 建一棵根级文档 `00-PDF 原件.md`：`# 标题（PDF 原件）` + 元信息（书名/译者/版本/页数/整理人）+ `📎 [xxx.pdf（410KB）](<url 字段>)` + 源站链接；`--toc-md` 下根级 DOC 排最前，无需归位（有 TITLE 目录时才要 prependNode，坑 35）
+4. 验收：GET 该文档 body 含 `yuque.com/attachments/` URL；带 cookie `curl -L` 实拉 200 + `application/pdf` + 与源文件 md5 一致
+5. 备注：提取与附件可并行——正文 30 篇拆篇照常导，附件只挂在 00 号文档上，互不干扰
+
 ## 四、产物验证（别只看日志）
 
 ```bash
