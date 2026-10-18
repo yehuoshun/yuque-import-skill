@@ -263,5 +263,13 @@
     "book_url": "logstash-best-practice-cn-1ecbd5e",
     "imported_at": "2026-10-18T13:18:00+0800",
     "note": "《Logstash 最佳实践》（饶琛琳，GitBook 源；仓库已在 README 声明废弃，作者并入《ELKstack 中文指南》）；SUMMARY 两层 8 章（每章 README 首页 + 子节），无空链接/断链/孤儿 → 61 节点（8 目录 / 53 文档）；2 张本地图传 CDN；toc-md PUT 0.7s；四查全绿（53 篇逐字符回读不等 0 空 0 / reconcile 0 / 幽灵 0）；根级 00-简介.md prependNode 归位第一次未生效、重试成功（api-notes 已记）"
+  },
+  "http://udn.yyuap.com/doc/mastering-elasticsearch/": {
+    "commit": "d2b8d61",
+    "repo": "https://github.com/xtmhm2000/mastering-elasticsearch",
+    "book_id": 84707668,
+    "book_url": "mastering-elasticsearch-cn-d2b8d61",
+    "imported_at": "2026-10-18T13:35:00+0800",
+    "note": "《Mastering Elasticsearch 中文版》（GitBook 源，xtmhm2000 翻译 2014-12）；老板给的 udn.yyuap.com 域名已死（DNS 不解析）→ GitHub 搜「mastering elasticsearch 翻译」定位源仓库；SUMMARY 3 层 9 章，章目录名剥「第N章」前缀；16 个子节文件 0 字节空壳（翻译烂尾，SUMMARY 未收录）不建节点；notes/ 垫片图（pixel.gif/lm/rm 1px 装饰）剥掉、note.png 保留；引用 ../44_cluster.png 少写 imgs/ 层 → 回退补层；47 节点（6 目录/41 文档），18 图 CDN，toc-md PUT 0.6s；根级排 00→09 两发移动（00 前言 prepend + 03 doc prepend 到 04 前）；四查全绿（41 篇逐字符回读 0 差 / 幽灵 0 / reconcile 0）；原版英文 PDF 附件挂前言（type=attachment）"
   }
 }
