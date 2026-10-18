@@ -130,6 +130,8 @@ GitBook 3.x 源仓库的书（站点给链接但同名 source repo 在 GitHub，
 **老 GitBook「独立域名」型书仓**（`legacy.gitbook.com/...` 死链 / `*.gitbooks.io` 302 到已被抢注的空壳域名，如 learnes.net）：同样改吃源仓库 md；SUMMARY 常与磁盘**大小写不符 + 断链**，且**图可能是绝对外链**（raw.githubusercontent）需按 basename 反查本地文件重写成 CDN —— 复用脚本 + README 见 `examples/elasticsearch-guide/`（2026-10-18《Elasticsearch 权威指南（中文版）》实战，坑 36/37）。
 **站点域名直接死掉 + SUMMARY 多层嵌套 + 旧版整编孤儿**（如 `kibana.logstash.es` DNS 不解析，仓库 `homepage` 指认源仓库）：复用脚本 + README 见 `examples/elkstack-guide/`（2026-10-18《ELKstack 中文指南》实战，坑 38；含空链接/断链节点落 TITLE、点分编号多层命名、v3 旧版孤儿归档、外链图「能救的救」口径）。
 
+**站点域名死掉且仓库不自证（`homepage` 不写域名）+ 残缺译本**（如 `udn.yyuap.com` DNS 不解析，靠 `gh search repos "<书名> 翻译"` 反查）：复用脚本 + README 见 `examples/mastering-es-guide/`（2026-10-18《Mastering Elasticsearch 中文版》实战，坑 39）。⚠️ **老译本仓库常烂尾**——动手前先扫空壳（`wc -c` 各章）：SUMMARY 收录的空壳章照建节点，未收录且 0 字节的孤儿**跳过**，并**主动向老板报残缺度**。
+
 ## PDF 书导入（只有 PDF 的官方站，2026-10-18 固化）
 
 触发模板：「把这本 PDF 书/这个站（只有 PDF）导入语雀」。SOP：`references/pdf-book-to-yuque.md`；实战首例 + 脚本：`examples/ostep-pdf/`（fetch_ostep.py + extract_ostep.py + README 含排版识别表与 8 条坑）。

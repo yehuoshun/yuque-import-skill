@@ -204,4 +204,16 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
 
 实测：196 篇建文档 ~2.5 分钟 0 失败；toc-md 230 行目录树 **PUT 1.6s**、结构核对 PASS；四查全绿（全路径唯一、TOC==本地、幽灵 0、196 篇逐字符回读不等 0 空 0、reconcile 0）；根级 `00-前言.md` 被 toc-md 排到 5 个 TITLE 之后 → `prependNode + sibling` 一发归位。可复用脚本 + README：`examples/elkstack-guide/`。
 
+**坑 39（站点域名死透但仓库不自证 + 反查源仓库 + 残缺译本甄别，2026-10-18 xtmhm2000/mastering-elasticsearch 实战）**：老板给的 `http://udn.yyuap.com/doc/mastering-elasticsearch/`（《Mastering Elasticsearch 中文版》）**DNS 不解析**（http/https 都瞬断 000），archive.org 快照沙箱超时 → 又是「找源仓库」场景。与坑 38 的差别：**仓库 `homepage` 字段没写这个死域名**（判据失效）→ 改走**关键词检索反查**：
+
+- **检索手法**：`gh search repos "mastering elasticsearch"` / `"<书名> 翻译"` / `"<书名> 中文"`，配 `--json fullName,stargazersCount,description,updatedAt --jq` 精筛；仓库 description 写着「xx翻译」+ 树里有 `SUMMARY.md`/`chapter-*`/`imgs/` → 基本就是 GitBook 源。本次一条命中 `xtmhm2000/mastering-elasticsearch`（desc "mastering elasticsearch翻译"，2014-12，★0）
+- ⚠️ **别用 `gh api search/repositories?q=<中文+空格>` 手拼 query**：中文/空格没编码时返回一堆无关仓库（本次第一次搜全是无关项目，白折腾一轮）→ 一律用 `gh search repos`（CLI 自己编码）
+- **残缺译本甄别（动手前必做，别闷头导完）**：老译本仓库常烂尾 → 先 `wc -c chapter-*/README.md`（或全树 md 扫 0 字节）量一遍，识别「只有一行标题」的空壳章。本次 **第 3/6/7/8/9 章正文全空**（31~38 字节 = 就一行 `# 第N章 xxx`），另有 **16 个子节文件 0 字节**。处置口径：**SUMMARY 收录的空壳章照建节点**（保结构完整）；**未被 SUMMARY 收录且 0 字节的孤儿文件跳过**（不造垃圾节点）；导完**主动向老板报残缺度**（本次报「正文只有 1/2/4/5 章，其余只有标题」+ 问要不要找更全译本），不能只说四查全绿
+- **章标题自带「第N章」→ 目录名剥前缀**：SUMMARY 标题常写成 `第1章 认识Elasticsearch`，而目录名已由 `NN-` 编码序号 → 不剥就落成 `01-第1章 xxx` 重复编号。做法：`re.match(r'^第(\d+)章\s*', title)` 命中就剥（本次 9 章全剥），得 `01-认识Elasticsearch`，落地页同号排子节点前
+- **排版垫片图剥离**：源里 `<img src="../notes/pixel.gif" style="height:100%; width:1px;">` / `lm.png` / `rm.png`（1px/13px 尺寸 + 包在 `position:absolute` 布局 div 里）是排版脚手架，**不是内容** → build 时正则整体剥掉（本次 96 处 / 32 篇），不传 CDN（否则每篇挂 4 张 1px 图，白烧配额）；`note.png` 这类小图标保留。正则：`<img\s+src="(?:\.\./)?notes/(?:pixel\.gif|lm\.png|rm\.png)"[^>]*/>\s*`
+- **相对图引用缺层 → 回退补层**：源仓库笔误 `../44_cluster.png`（实际在 `imgs/`）→ 收集图时**先试原路径，不存在再试「同名前插一层 `imgs/`」**（本次 1 处，不修就裂图）
+- **源仓库自带原版 PDF/电子书 → 走双轨**：本次仓库根躺着 `Mastering ElasticSearch [eBook].pdf`（英文原版 3.4MB）→ 同 `type=attachment` 上传（端点见 `pdf-book-to-yuque.md`），链接写进 `00-前言.md` 正文末尾：「**原版英文 PDF 附件**：[点击下载](url)」
+
+实测：47 节点（6 目录 / 41 文档）、18 图 CDN（49 处引用、0 缺失）、toc-md **PUT 0.6s**、四查全绿（41 篇逐字符回读 0 差 / 幽灵 0 / reconcile 0）；根级 TITLE/DOC 混排顺手二次归位（见 `api-notes.md` 根级排序条）。可复用脚本 + README：`examples/mastering-es-guide/`。
+
 **案例（Sphinx/readthedocs 书仓，2026-10-17 me115/linuxtools_rst 实战）**：需 Sphinx 源仓库（`conf.py`/`index.rst`/`Makefile`）导站时，**只导 toctree 覆盖的页面 + 图片**；仓库根常同时躺着脚手架（`_build/`、`der/`、`sphinx_rtd_theme/`、`*.zip`、`*.epub`）和**早期版本的重复单文件**（本次 `top.rst`/`020-file-manage.rst`/`crontab.rst` 与 `tool/top.rst`/`base/02_file_manage.rst`/`tool/crontab.rst` 撞车，`base/ref.rst`/`base/README.rst`/`base/crond introduce.rst` 不在任何 toctree）——按 toctree 展开收集，别整树导。本次：`index.rst` + `base/`(index+9) + `advance/`(index+3) + `tool/`(index+19) = **35 篇 → 38 节点**（3 目录）；6 张图传 CDN（`_static/` 里其余 4 张封面/psd 未被引用不传）；无需爬 HTML（站点就是这些 rst 渲染的）。
