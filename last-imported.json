@@ -26,11 +26,11 @@
   "note": "prep 3881（351 目录/3530 文件）→ 删 docs/images（22 图先传 CDN、25 处引用重写）后 3855 节点（347/3508）<5000 不分库；toc-md PUT 19.2s、结构核对 PASS、0 失败；对账 0 错位、幽灵 0、全路径唯一、3508 篇逐篇回读全对（4 张 app 图确认为 CDN 占位、icon.ico 为二进制占位，均与上版一致）；根级 TITLE 在前、DOC 在后（历史 deepwrite 库同此，属 toc-md 常态非缺陷）"
  },
  "https://github.com/morluto/rea": {
-  "commit": "e7df00e80",
-  "book_id": 84682363,
-  "book_url": "rea-e7df00e80",
-  "imported_at": "2026-10-17T22:47:41+0800",
-  "note": "默认分支 main；toc-md，4604 节点（369 目录 / 4235 文件）→ TOC 4625（369 TITLE + 4256 DOC，20 个 >512KB 文件切 41 片）；57 分钟、fail 0；图片 4 张复用上版 CDN（img_map 缓存，零上传）+ 81 处图引用 + 20 处「查看大图」普通链接一并改 CDN；删 docs/assets + website/public/assets 图片但保留被 3 篇 md 引用的 licenses/dinosaur.txt（上版误删）；根级顺序 46 项 == 本地 DFS 序无需归位；四查 + 分片内容 20/20 全绿"
+  "commit": "9e259f87c",
+  "book_id": 84713190,
+  "book_url": "rea-9e259f87c",
+  "imported_at": "2026-10-19T11:11:40+0800",
+  "note": "默认分支 main @ 9e259f87c；toc-md，4703 节点（370 目录 / 4333 文件）→ TOC 4725（370 TITLE + 4355 DOC，21 个 >512KB 文件切 43 片）；10:00→11:08 约 67 分钟、fail 0；图片 4 张复用上版 CDN（img_map 缓存，零上传）+ 85 处图引用 + 21 处「查看大图」普通链接改 CDN（md 内共 106 处 CDN 引用）；删 docs/assets + website/public/assets 图片，保留 licenses/dinosaur.txt（网站 dinosaur 许可，被 2 篇 md 引用）；根级顺序 46 项 == 本地 DFS 序无需归位；对账 0 错位；四查全绿：verify PASS（缺失 0 / 分片 21 文件 43 片连续 / 全路径唯一 True）、分片内容 21/21 逐字符相等、幽灵 0（docs total 4355 == TOC DOC 4355）、深层抽查 5/5 正文非空。旧库 84682363（e7df00e80）按老板口径保留"
  },
  "https://github.com/howie6879/owllook": {
   "commit": "8ded1ea",
