@@ -26,11 +26,11 @@
   "note": "默认分支 release @ 0dde287（Add sync changes，2026-10-19 10:32）；沿用老板 10-18 拍板口径『B』=索引+附件（原版+解析双轨）。32 节点（2 目录/30 文档）：00-前言 + 01-原版附件（20 个原件 type=attachment，48.8MB 含 20MB，抽 3 个 md5 全对）+ 02..07 六分类索引 + 08-解析（README/index.html/20 篇 JSON 逐条转表，零分片，最大 303KB）。toc-md 目录树 32 行 PUT 0.7s、结构核对 PASS、0 失败；根级 TITLE（08-解析）排到根级 DOC 之前 → 一发 appendNode sibling 归位（与上一版同坑）；四查全绿（32==32==30+2、全路径唯一、幽灵 0、根级序一致、30 篇逐篇回读 0 差）。历史：fd0ec7f9=84711589、06b8162=84678623（旧库按老板口径保留）"
  },
  "https://github.com/swjybky/deepwrite": {
-  "commit": "7d1ec85",
-  "book_id": 84711790,
-  "book_url": "deepwrite-7d1ec85",
-  "imported_at": "2026-10-18T22:15:00+0800",
-  "note": "prep 3881（351 目录/3530 文件）→ 删 docs/images（22 图先传 CDN、25 处引用重写）后 3855 节点（347/3508）<5000 不分库；toc-md PUT 19.2s、结构核对 PASS、0 失败；对账 0 错位、幽灵 0、全路径唯一、3508 篇逐篇回读全对（4 张 app 图确认为 CDN 占位、icon.ico 为二进制占位，均与上版一致）；根级 TITLE 在前、DOC 在后（历史 deepwrite 库同此，属 toc-md 常态非缺陷）"
+  "commit": "a44686d",
+  "book_id": 84777697,
+  "book_url": "deepwrite-a44686d",
+  "imported_at": "2026-10-20T12:08:00+0800",
+  "note": "默认分支 main @ a44686d（2026-10-20，上一版 7d1ec85 / 84711790，旧库保留）。prep 3943（351 目录/3592 文件）→ 删 docs/images（22 图先传 CDN、25 处引用重写）后 3917 节点（347/3570）<5000 不分库；toc-md 目录树 3917 行 / 212KB 一次 PUT 21.6s、结构核对 PASS、0 失败；对账 0 错位、全路径唯一 True、docs total 3570 == TOC DOC 3570（幽灵 0）、根级 TITLE 在前 DOC 在后（toc-md 常态非缺陷）、3570 篇逐篇回读 0 差异；4 张 app 图 CDN 占位 + icon.ico 二进制占位与上版一致"
  },
  "https://github.com/morluto/rea": {
   "commit": "9e259f87c",
