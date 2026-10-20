@@ -12,11 +12,11 @@
   "imported_at": "2026-10-16T14:20:00+0800"
  },
  "https://github.com/aoaostar/legado": {
-  "commit": "fd0ec7f9",
-  "book_id": 84711589,
-  "book_url": "legado-fd0ec7f9",
-  "imported_at": "2026-10-18T21:10:00+0800",
-  "note": "默认分支 release；老板拍『B』=索引+附件（原版+解析双轨）。32 节点（2 目录/30 文档）：00-前言 + 01-原版附件（20 个原件 type=attachment，48.8MB 含 20MB，md5 全对）+ 02..07 六分类索引 + 08-解析（README/index.html/20 篇 JSON 逐条转表，零分片）。toc-md PUT 0.5s、根级 TITLE 归位（与坑29相反）、四查全绿+30 篇回读 0 差；examples/legado-sources；新增硬规则 11「库描述必须标注来源」。旧库 84678623（06b8162）待删"
+  "commit": "0dde287",
+  "book_id": 84776109,
+  "book_url": "legado-0dde287",
+  "imported_at": "2026-10-20T09:33:00+0800",
+  "note": "默认分支 release @ 0dde287（Add sync changes，2026-10-19 10:32）；沿用老板 10-18 拍板口径『B』=索引+附件（原版+解析双轨）。32 节点（2 目录/30 文档）：00-前言 + 01-原版附件（20 个原件 type=attachment，48.8MB 含 20MB，抽 3 个 md5 全对）+ 02..07 六分类索引 + 08-解析（README/index.html/20 篇 JSON 逐条转表，零分片，最大 303KB）。toc-md 目录树 32 行 PUT 0.7s、结构核对 PASS、0 失败；根级 TITLE（08-解析）排到根级 DOC 之前 → 一发 appendNode sibling 归位（与上一版同坑）；四查全绿（32==32==30+2、全路径唯一、幽灵 0、根级序一致、30 篇逐篇回读 0 差）。历史：fd0ec7f9=84711589、06b8162=84678623（旧库按老板口径保留）"
  },
  "https://github.com/swjybky/deepwrite": {
   "commit": "7d1ec85",

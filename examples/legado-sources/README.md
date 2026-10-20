@@ -63,6 +63,10 @@ url = "https://www.yuque.com/api/upload/attach?attachable_type=User&attachable_i
    `"```html\n\n" + src.lstrip("\n") + "\n```"` 算（差 1 字符不是丢内容）。
 4. 大文件上传偶发慢：`timeout=300` + 5s 节流 + 429/5xx 退避（沿用附件接口的账号级风控口径）。
 
+## 复用记录
+
+- **2026-10-20 重导 `0dde287`**（库 **84776109**，slug `legado-0dde287`，同口径 B）：仓库形状与分类数不变（6 分类 / 21 条 / 20 文件 / 47MB）；`build.py` 只改 4 处参数（`SRC` / `OUT` / `ATTACH_MAP` / `COMMIT`）+ `sys.path`，跑 `prep → upload → prep`（20 附件 2.5 分钟）→ `create-book → move-stack → toc-md` 即可，32 节点 0 失败、四查全绿。**同坑复现**：根级 TITLE（`08-解析`）又排到根级 DOC 之前，照旧一发 `appendNode sibling` 归位。旧库 `84711589`（fd0ec7f9）、`84678623`（06b8162）按老板口径保留。
+
 ## 复用
 
 ```bash
