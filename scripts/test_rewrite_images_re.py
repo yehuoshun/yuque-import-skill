@@ -7,7 +7,8 @@
   2. HTML `<img src='...'>`（单引号）—— 2026-10-17 linux-doc 实踩漏传的那类
   3. 属性顺序/换行、alt 里带引号等其他属性
   4. markdown `![alt](path)`
-  5. 反例：纯文本里的 src= 不应误伤
+  5. markdown path 里含成对括号 `![](./石凉粉(冰粉)成品1.jpg)` —— 2026-10-20 HowToCook 实踩漏传的那类
+  6. 反例：纯文本里的 src= 不应误伤
 
 跑法：cd scripts && python3 test_rewrite_images_re.py
 """
@@ -46,11 +47,17 @@ eq("html negative (no <img>)", m, None)
 md_cases = [
     ("md basic", "![alt](images/x.png)", "images/x.png"),
     ("md nested parens-safe", "![](../img/y.jpg)", "../img/y.jpg"),
+    # 2026-10-20 HowToCook：中文文件名带括号 → 旧正则截断成「本地缺失」
+    ("md paren path", "![石凉粉(冰粉)成品1](./石凉粉(冰粉)成品1.jpg)",
+     "./石凉粉(冰粉)成品1.jpg"),
+    ("md paren path + title", '![x](./a(b).jpg "标题")', './a(b).jpg "标题"'),
+    ("md paren path, trailing note", "![x](./a.jpg) 说明(b)", "./a.jpg"),
 ]
 for name, text, want in md_cases:
     m = MD_RE.search(text)
     eq(name, m.group(2) if m else None, want)
 eq("md negative (plain link)", MD_RE.search("[text](page.md)"), None)
 
-print("\n%s" % ("ALL PASS (9)" if not fails else "FAILED %d" % len(fails)))
+n = len(html_cases) + 1 + len(md_cases) + 1
+print("\n%s" % (("ALL PASS (%d)" % n) if not fails else "FAILED %d" % len(fails)))
 sys.exit(1 if fails else 0)

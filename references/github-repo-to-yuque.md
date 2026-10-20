@@ -267,3 +267,14 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
     - 实测：32 节点（2 目录 / 30 文档）、toc-md **PUT 0.5s**、四查全绿（全路径唯一 / 幽灵 0 / 根级序一致 / 30 篇逐篇回读 0 差 0 空、含 20 个附件 md5 抽验）；库 id 84711589。可复用脚本：`examples/legado-sources/`（build.py 四模式：prep/upload/all）。
     - **根级 TITLE / DOC 顺序（toc-md 常态）**：`PUT /repos/{id} {toc}` 把根级 **TITLE（目录）排在根级 DOC（松散文件）之前**。仓库根同时有目录与文件且**语义无要求**时（如 deepwrite：`.agents`/`apps`/`docs`/`packages`/`tools` + `package.json`/`LICENSE`…）这是**正常态、不必强行归位**（deepwrite 历史 ×4 库都是这个态）；只有「`00-前言.md` 必须排最前」这类**语义要求**才发 `prependNode/action_mode=sibling` 归位（且一次只能挪一个，多个要写循环）。
     - **桌面/打包类图标走占位，别指望 CDN**：`*.ico` 不在 `IMAGE_EXTS` → 落到二进制占位（`<!-- 二进制文件 … -->`）；`png/jpg` 类未引用资源会被 `upload_image` 传成 **CDN 占位文档**（`![名](cdn.nlark.com/…)`）。验收时这两者都不该算「异常」，按对应期望值比。
+
+**坑 45（md 图片路径里的「成对括号」被截断 → 整条漏传，2026-10-20 Anduin2017/HowToCook @ f6da4528 实踩，v1.3.85 已修）**：`yuque_rewrite_images.py` 的 `MD_RE` 原写 `(!\[[^\]]*\]\()([^)]+)(\))`——**path 用 `[^)]+` 会在第一个 `)` 处停**，于是 `![石凉粉(冰粉)成品1](./石凉粉(冰粉)成品1.jpg)` 只截到 `./石凉粉(冰粉` → 判成「本地缺失」，图不传、正文留相对路径 = 裂图（本次 4 处：`石凉粉(冰粉)成品1/2.jpg`、`血浆鸭(特辣)/(微辣).jpg`；dry-run 会如实报「本地缺失 N」，别当噪音跳过）。
+    - **修法**：path 改为允许**一层成对括号** `((?:[^()]|\([^()]*\))*)`；补单测 3 项（带括号路径 / 带括号+title / 带括号后缀说明）→ `scripts/test_rewrite_images_re.py` 现 12 项全绿。
+    - **通用坑**：中文菜谱/图纸类仓库的文件名爱用括号（`石凉粉(冰粉)`、`血浆鸭(特辣)`），md 图片正则、链接提取一律要按「成对括号」写，别用 `[^)]+`。
+
+**复用记录：Anduin2017/HowToCook（2026-10-20 @ f6da4528，库 84776562，622 节点）**
+    - 默认分支 **master**（不是 main）；仓库形态：`dishes/<分类>/<菜名>/<菜名>.md` + **同目录配图**、`tips/`（技巧与 `learn/images/*.svg`）、根级 README/LICENSE/package.json/CI 配置。
+    - **这是硬规则 10（图片目录别进导入根）在「配图与文档同目录」场景的落地样板**：358 张图（212 jpg / 96 jpeg / 42 png / 3 webp / 3 svg / 2 JPG）**全传 CDN + 重写 350 处引用 + 连图带目录删干净**（`find -iname '*.jpg' … -delete` + `find -type d -empty -delete`）→ 622 节点（216 目录 / 406 文档），文档数是「md + README/LICENSE/json/CI 文件」的真实数量。
+    - **旧口径的代价（对照）**：上一版 743d7f46（库 84598602）把图片当文件导 → **760 篇里有 355 个 word_count=0 的空壳图片节点**，且正文 `![](./改刀.jpg)` 全是裂图。重导后 `word_count 0 篇 = 0`。
+    - **8 张孤儿图**（`dishes/aquatic/葱油桂鱼/*.jpg`、`土豆炖排骨/*`、`青椒土豆炒肉/*`、`炒凉粉成品.jpg` 等，无任何 md 引用）直接随删除走，不建节点（上游自己漏引）。
+    - 收尾：`--toc-md` PUT 4.5s 结构 PASS；**根级顺序天然正确**（TITLE 目录在前、DOC 文件在后，合老板 Windows 规则，无需归位——与 legado 那次「TITLE 反在 DOC 后」相反，取决于仓库根有没有目录）。

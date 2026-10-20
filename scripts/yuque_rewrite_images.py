@@ -34,7 +34,9 @@ import time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from yuque_tree_import import load_upload_cfg, upload_image  # noqa: E402
 
-MD_RE = re.compile(r'(!\[[^\]]*\]\()([^)]+)(\))')
+# path 部分允许「一层成对括号」（菜谱/图片命名常见 `石凉粉(冰粉)成品1.jpg`）：
+# 旧写法 `[^)]+` 会在第一个 `)` 处截断 → 判成「本地缺失」整条漏传（2026-10-20 HowToCook 实踩，4 处）
+MD_RE = re.compile(r'(!\[[^\]]*\]\()((?:[^()]|\([^()]*\))*)(\))')
 # 4 组：前缀(含引号) / 引号 / src / 闭合引号——单双引号都能匹配
 HTML_RE = re.compile(r'(<img\b[^>]*?\bsrc=)(["\'])([^"\']+)(["\'])')
 

@@ -1,4 +1,11 @@
 {
+ "https://github.com/Anduin2017/HowToCook": {
+  "commit": "f6da4528",
+  "book_id": 84776562,
+  "book_url": "howtocook-f6da4528",
+  "imported_at": "2026-10-20T10:50:00+0800",
+  "note": "默认分支 master @ f6da4528（学习用刀图文教程 #1889，2026-10-20）；本地 622 节点（216 目录 / 406 文件）< 5000 单库。⭐ 硬规则 10 首次在 HowToCook 落地：358 张配图不再建占位文档——350 处引用传语雀 CDN + 重写（含 4 处「文件名带括号」手工补，已修 MD_RE 正则并补单测）+ 删全部图片与图片目录；正文 0 处本地引用残留。toc-md 目录树 622 行 / 23KB 一次 PUT 4.5s、结构核对 PASS、0 失败；根级顺序天然正确（TITLE 目录在前、DOC 文件在后，符合老板 Windows 规则）；四查全绿（TOC 622 == 本地 622、全路径唯一 True、幽灵 0 docs406==TOC DOC406、406 篇 word_count 全 >0 + 抽查 4 篇正文 CDN 图可达、CDN 直链 200/562KB）。历史：743d7f46=84598602（760 篇含 355 个空图片节点，旧口径）、84295491（fkigao 976）、84453956（2026-10-12）——旧库按老板口径保留"
+ },
  "https://github.com/Alchyr/ModTemplate-StS2": {
   "commit": "2c900a0",
   "book_id": 84639583,
