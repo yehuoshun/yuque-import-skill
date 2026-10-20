@@ -172,14 +172,14 @@ def wait_quota_reset(pad=60, cap=3600):
     _QUOTA_WAITED = True
 
 
-def api(token, base, method, path, payload=None, retries=4):
+def api(token, base, method, path, payload=None, retries=4, timeout=30):
     data = json.dumps(payload).encode() if payload is not None else None
     for i in range(retries):
         req = urllib.request.Request(base + path, data=data, method=method)
         req.add_header("X-Auth-Token", token)
         req.add_header("Content-Type", "application/json")
         try:
-            with urllib.request.urlopen(req, timeout=30) as r:
+            with urllib.request.urlopen(req, timeout=timeout) as r:
                 return json.loads(r.read().decode())
         except urllib.error.HTTPError as e:
             if e.code == 429 and not _QUOTA_WAITED:
@@ -815,7 +815,9 @@ def main():
             log(f"[toc-md] 目录树: {len(lines)} 行 / {len(md.encode('utf-8'))} 字节 → 一次 PUT /repos/{args.book}", flush=True)
             t0 = time.time()
             try:
-                api(token, args.base, "PUT", f"/repos/{args.book}", {"toc": md})
+                # 整树 PUT 服务端重排耗时随节点数增长(2026-10-20 rea 4984 行/251KB 实测 >30s 超时)
+                # → 单独放宽到 300s, 其余接口维持 30s
+                api(token, args.base, "PUT", f"/repos/{args.book}", {"toc": md}, timeout=300)
                 log(f"[toc-md] PUT 完成 ({time.time() - t0:.1f}s), 回读核对…", flush=True)
                 missing, n = backfill_and_verify(token, args.base, args.book, prog, args.root, excludes)
                 save_prog(prog, args.progress)

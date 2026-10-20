@@ -278,3 +278,18 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
     - **旧口径的代价（对照）**：上一版 743d7f46（库 84598602）把图片当文件导 → **760 篇里有 355 个 word_count=0 的空壳图片节点**，且正文 `![](./改刀.jpg)` 全是裂图。重导后 `word_count 0 篇 = 0`。
     - **8 张孤儿图**（`dishes/aquatic/葱油桂鱼/*.jpg`、`土豆炖排骨/*`、`青椒土豆炒肉/*`、`炒凉粉成品.jpg` 等，无任何 md 引用）直接随删除走，不建节点（上游自己漏引）。
     - 收尾：`--toc-md` PUT 4.5s 结构 PASS；**根级顺序天然正确**（TITLE 目录在前、DOC 文件在后，合老板 Windows 规则，无需归位——与 legado 那次「TITLE 反在 DOC 后」相反，取决于仓库根有没有目录）。
+
+**坑 46（toc-md 整树 PUT 的 30s 读超时在接近 5000 节点的库上会挂，2026-10-20 morluto/rea @ 58d6043 实踩，v1.3.87 已修）**：`api()` 里所有请求写死 `timeout=30`，而 `PUT /repos/{id}` 设整树目录是**服务端重排操作**——耗时随节点数线性涨：4425 节点实测 22s、3917 行 21.6s（都卡在 30s 内，没暴露），本次 **4984 行 / 251KB 实测 35.4s** → 每次都 30s 超时，4 次重试全挂，`--toc-md` 收尾报 `fail: PUT toc 失败: TimeoutError: The read operation timed out`。
+    - **有个坑中坑**：客户端超时**不代表服务端没执行**——实测超时后 GET `/toc` 一看，**整棵树其实已经写进去了**（4984 节点全对）。所以别急着重导正文：补跑一次 `--toc-md`（全 skip → 只拼树 + 再 PUT + 回读回填 uuid + 结构核对）即可，正文零损失。
+    - **修法**：`api(...)` 加 `timeout=30` 形参（默认不变），**整树 PUT 那处单独传 `timeout=300`**；其余接口维持 30s。别全局调大——普通 CRUD 卡 5 分钟没意义。
+    - **经验值**：节点数 → 整树 PUT 时长 ≈ 节点数/140 秒（4600 节点 ≈ 33s）。超 4000 节点就该预期 >30s。
+
+**复用记录：morluto/rea（2026-10-20 @ 58d6043，库 84779255，4984 节点）**
+    - 默认分支 main；**上游就是本机 REA 逆向环境（skill v41 + MCP + Ghidra 12.1.4）的源仓库**，俗称「用 agent 逆向一切」。
+    - 距上版 9e259f87c（库 84713190）**83 commit / 300+ 文件变动**（src 168、docs 77、scripts 39）；本地节点从 4703 涨到 5026 → **首次触发「单库超 5000」**。
+    - **口径决策（老板 10-20 拍板）**：不强拆库、不剔语言目录，**剔 `.github/`**（44 文件 / 8 目录 = CI workflow ×40 + issue 模板 + PR 模板 + action 定义，纯脚手架，正合硬规则 23）→ 4962 节点（380 目录 / 4582 文件）单库落地。**排 `.github` 前后实测 5031 → 4979（+分片）**。
+    - 配图：仓库共 10 张图，**只有 4 张被 md 引用**（`docs/assets/{discord.svg,rea-hopper-analysis.png,rea-showcases.png}` + `website/public/assets/figures/rea-investigation-flow.svg`）→ 传 CDN；其余 6 张（favicon/social-card/4 张 figures svg）**无引用不传**，连图目录一起删。**两类引用都要改**：85 处 markdown 图片语法（脚本吃）+ **21 处「查看大图」普通链接**（脚本不吃，一条 `re.sub` 改到同一张图的 CDN URL，同坑 29）。
+    - **`licenses/dinosaur.txt` 必须保留**（Chromium/BSD 许可文本，被 `licenses/README.md` / `THIRD_PARTY_NOTICES.md` 引用）——它在 `website/public/assets/licenses/` 里，**`rm -rf` 整个 assets 会误伤**（同坑 29 第②条）。做法：只删图片文件 + 空目录，非图片全留。
+    - **submodule 空目录别删**：`third_party/{binwalk,jadx-headless-mcp,unblob,ghidra-nativeaot,wakaru}` 是 git submodule，fresh clone 里是空目录，`find -type d -empty -delete` 会顺手清掉 5 个节点（它们在上版库里是正常 TITLE 节点）→ 删空目录后要按 `.gitmodules` 补回来。
+    - 四查：TOC 4984 == 本地 4962 + 22 分片；对账错位 0；幽灵 0（docs total 4604 == TOC DOC 4604）；深层 3 篇 word_count>0 + 4 张 CDN 图 200 + **分片内容 21/21 逐字符相等**（含 20 个 `website/locales/*/messages.po`，行边界切分）。
+    - 计时：14:09 起建文档 → 15:14:42 建完（4582 篇 / 65 分钟，~70 篇/分）；收尾 PUT 35.4s（超时补跑）。旧库 84713190（9e259f87c）按旧库保留口径不动。
