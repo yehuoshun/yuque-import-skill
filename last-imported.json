@@ -308,6 +308,13 @@
   "imported_at": "2026-10-18T16:03:54+0800",
   "note": "master @ 4500ac6（2015-01-05）；GitBook 源（SUMMARY.md + tutNN/zh.md + tutNN/res/）。方案 B 按 SUMMARY 重建树：00-前言.md + 01-OpenGL基本知识(01..08) + 02-OpenGL中级教程(09..18)，21 节点（2 目录 / 19 文档）；114 张图全传 CDN（1.5s 节流 ~3min 0 失败）→ 先重写后重建（同名图 icon_smile.gif 在 tut08/tut13 各一份，防串台）；标题以 SUMMARY 为准（磁盘 heading 有笔误）；toc-md PUT 0.5s；根级前言 prependNode 归位；四查全绿 + 19 篇逐篇回读 0 差 0 空"
  },
+ "http://sketchcn.com/sketch-chinese-user-manual.html": {
+  "commit": "sketchcn-2019-04-25 (Common Crawl)",
+  "book_id": 84783868,
+  "book_url": "sketch-chinese-manual-20261020",
+  "imported_at": "2026-10-20T20:25:00+0800",
+  "note": "《Sketch 中文用户手册》（Sketch 3 中文版，原站 Sketch 中文网 ©2014 SketchCN / Aegean K）。源站 sketchcn.com 已下线（域名在 4.cn 在售）→ 正文走 Common Crawl CC-MAIN-2019-18 快照 20190425144522（149KB HTML，Adobe Muse 单页站）；CC 对 sketchcn.com/images/ 明确 No Captures → 44 张配图全部由 GitHub 同源镜像仓 i5ting/sketchcn（翻译工作仓，含 index.md/images/整站 HTML 快照）补回。按 h1 拆 15 章 + 00-前言 = 16 篇平铺；toc-md 目录树 16 行/569B PUT 0.4s、结构核对 PASS、0 失败；四查全绿（TOC 16 == 本地 16 / 全路径唯一 / 缺失 0 / 16 篇 word_count 全 >0 / 44 张 CDN 图逐篇对得上）"
+ },
  "https://community.emc.com/docs/DOC-16067": {
   "commit": "emc-decn-2019 (Common Crawl)",
   "book_id": 84712887,

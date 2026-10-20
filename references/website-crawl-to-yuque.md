@@ -7,7 +7,8 @@
 > SVN Book（DocBook XSL 多页站，bs4 渲染器）、cn.linux.vbird.org/linux_server（老式 PHP 表格站，2026-10-16）、
 > cn.linux.vbird.org/linux_basic（同站基础学习篇，复用同一转换器，2026-10-16）、
 > docs.freebsd.org/zh-cn/books/handbook（FreeBSD 官方文档站，Asciidoctor/Hugo，2026-10-17）、
-> jinbuguo.com/lfs/lfs62（LFS 6.2 中文版，DocBook XSL 老多页站 + GitHub 镜像，2026-10-17）。
+> jinbuguo.com/lfs/lfs62（LFS 6.2 中文版，DocBook XSL 老多页站 + GitHub 镜像，2026-10-17）、
+> sketchcn.com（《Sketch 中文用户手册》Adobe Muse 单页站，**域名已停售下线** → CC 2019-04-25 快照 + GitHub 同源镜像仓库救图，2026-10-20）。
 > 通用爬虫模板：`scripts/yuque_website_crawl.py`（正则/窗口式，复制到 tmp/<站点>/crawl.py 改 SITE 配置区）；DOM 规整的站（GitBook/Asciidoctor/Hugo）用 bs4 递归渲染更稳，可抄 `examples/freebsd-handbook/`、`examples/mac-dev-setup/`。
 
 ## 一、流程（六步）
@@ -177,6 +178,15 @@
     - **图片多半救不回来**：`/servlet/JiveServlet/downloadImage/...` 这类附件 CC 基本不收录（本次 128 个 collection 前缀查询全空，4 张只救回 2 张——靠**第三方转载站**（cnblogs pipci）镜像的图）。缺图就如实记账，别去 Dell 新站硬抓（它把正文/图都放 Sprinklr JS 里，云爬虫也只拿得到评论区）
     - **命名/口径**：站点类走网站口径（库名 `系列名（日期）`、分组「文章收集」36149506）；描述里**必须注明「站点已下线，正文经 Common Crawl <年份> 快照恢复」**（硬规则 11）
 
+37. **站点下线 + CC 无图 → 先找 GitHub 上的同源镜像仓库**（2026-10-20 sketchcn.com《Sketch 中文用户手册》实战，`examples/sketchcn/`）：
+    - **域名停放页的特征**：`curl -I` 返回 200，但 body 只有 1~2KB，正文是 `<h1>[域名] is for sale</h1>`（4.cn 之类）→ 站点已下线，别在正文抓取上耗时间
+    - **CC prefix 查询先摸清收录面**：`/{coll}-index?url=<域名>%2F&matchType=prefix` 逐个 collection 扫，挑**时间最新且含目标页**的（本次目标页只到 CC-MAIN-2019-18 / 20190425144522；2020 之后的快照只剩停放页）
+    - **图的无解要「确定性」收口**：`?url=sketchcn.com%2Fimages%2F*` 返回 **`"No Captures found for: …"`** = 确定性空（≠ 504 超时）→ 才能断定「CC 没有这张图」，不用反复重试
+    - **⭐ 反向找镜像仓库**：`api.github.com/search/repositories?q=<域名>` 或 `q=<页面 slug>`。本次命中 `i5ting/sketchcn`（**repo description 直接写了目标 URL**）——站长把翻译工作仓推上去了，里面有 **翻译源 md（可当标题 oracle）+ images/ 全量图 + 整站 HTML 快照**
+    - **两份快照取谁**：先 diff（本次只差 7 处），**正文取更新的 CC 版**（菜单项从「编辑 >」改成「图层 >」），**图片取仓库版**
+    - **Muse（Adobe Muse）站的转换要点**：h3/h4 小标题是 `<p class="nomal-text" id="u…">` → 拿翻译源 md 的标题做 oracle 还原（126/178 命中）+「本页另有同名真 h2 → 压到 h3」补丁；项目符 `・` 是字面字符（同坑 36）；`<p class="code">` → 代码块；窗口 = 手风琴导航 `<ul>` 之后 → `<div class="verticalspacer">` 之前
+    - **保真度自检（比 grep 残留标签更硬）**：源 HTML 窗口所有 `<p>` 文本逐条在产物 md 全文里做「去空白/去项目符」子串匹配，本次 510 条未命中 3（三句欢迎语，补进前言）→ 100% 覆盖
+
 
 ## 五、站点案例速查
 
@@ -200,3 +210,4 @@
 | cn.linux.vbird.org/linux_server（老式 PHP 表格站, 2026-10-16） | `<!-- 本文的正式部分 -->`（繁体同形）之后 | 页脚 `<div style="padding-top: 0px; text-align: center;">` | 22 章；**标题是 `<span class="text_h1">` / `<span class="text_h2">` 不是 h 标签**，章名取 `text_head0`（内有嵌套 `text_head_en`，正则用 `</span>\s*(?:</a>|<br)` 收尾）；终端块 `<table class="term"><pre>`；Tips/例题=单格 `<table width="90%">`；**整章全文页与分页并存 → 只导全文页**（比值≈1）；装饰图（大标题/小标题/鸟哥图示 596 张）按 alt 剔除、正文截图 218 张传 CDN；繁体章额外出「（简体版）」（opencc tw2sp）；按「第N章」中文数字转阿拉伯排序（非文件名前缀序）；站点专用转换器与复用流程见 `examples/vbird-server/`（fetch_all.py + crawl_vbird.py + README） |
 | aaaaaashu.gitbooks.io/mac-dev-setup（《Mac 开发配置手册》，GitBook 2.6.7 静态站，2026-10-17） | 正文 = `section.normal` | 容器自带边界（`div.book-body > div.navigation*` 在外） | 无源仓库（GitHub 同名 repo 不存在）→ 抓 HTML；13 页（侧栏 `ul.summary` 定序，平铺）；bs4 递归渲染（**嵌套列表丢前缀坑见坑 32**）；无站内图，2 张外链图源站已 404 保留；转换器 `examples/mac-dev-setup/` |
 | community.emc.com（EMC 中文支持论坛，Jive/DECN，**站已下线**，2026-10-18） | 正文 = `<!-- [DocumentBodyStart:…] -->` 后的 `div.jive-rendered-content`（**从 Common Crawl WARC 取 HTML**） | `<!-- [DocumentBodyEnd` | 8 篇系列（DOC-16067/68/69/80-84，互为链接）；项目符 `ü/Ø/•/–` 是字面字符→手写映射成嵌套列表；`/servlet/JiveServlet/downloadImage/` 图 CC 未收录（4 张只救回 2 张，靠转载站镜像）；转换器 `examples/emc-community-cc/`（见坑 36） |
+| sketchcn.com（《Sketch 中文用户手册》，**Adobe Muse 单页站 + 域名在售**，2026-10-20） | 正文 = 手风琴导航 `<ul>` 之后 → `<div class="verticalspacer">` 之前（**从 Common Crawl WARC 取 HTML**，CC-MAIN-2019-18 / 20190425144522） | （同上，容器自带边界） | 单页长文档按 `<h1>` 拆 15 章 + 前言 = 16 篇；h3/h4 是 `<p class="nomal-text" id="u…">` → 用翻译源 md 标题做 oracle 还原；项目符 `・` 字面字符；**44 张图 CC 明确无收录，全部由 GitHub 同源镜像仓 `i5ting/sketchcn` 补回**；转换器 `examples/sketchcn/`（见坑 37） |
