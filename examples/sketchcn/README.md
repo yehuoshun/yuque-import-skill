@@ -74,3 +74,35 @@ python3 ../../scripts/yuque_tree_import.py --root ./clean --book <book_id> --pro
 ```
 
 **100% 覆盖**才算过；比 grep 残留标签更硬。
+---
+
+## 第二批：Sketch 2 手册 + 15 篇技巧分享（同一个站，另建一库）
+
+老板拍板「另建一个」（2026-10-20）。同一镜像仓库里还有 `chinese-user-manual-for-sketch2.html`
+与 `sketch-tips-tricks-1~4.html`，一起入库。
+
+| 项 | 值 |
+|---|---|
+| 正文来源 | Sketch 2 手册 CC-MAIN-2019-18 / 20190425144526；技巧分享 tips1 CC-MAIN-2019-18、tips2·3 CC-MAIN-2019-13、tips4 CC-MAIN-2019-22（tips1 在 2019-13 的索引查询超时，用 2019-18 的） |
+| 语雀库 | id=84784119 `Sketch 中文网 · Sketch2 手册与技巧分享（2026-10-20）`，slug `sketchcn-sketch2-20261020`，分组「文章收集」36149506 |
+| 结构 | 29 节点：`00-前言` + `01-Sketch 2 用户手册/`（11 章）+ `02-技巧分享/`（15 篇） |
+| 导入 | `--toc-md` 目录树 29 行 / 1511B，PUT **0.8s**，结构核对 PASS，0 失败；根级前言落到两个 TITLE 之后 → 一发 `prependNode sibling` 归位 |
+| 验收 | TOC 27 DOC == 本地 27；全路径唯一 True；缺失 0；27 篇 word_count 全 >0；83 处 CDN 图逐篇对得上 |
+| 图 | **79 张**（其中 3 个动画 GIF 6.8MB/4.9MB/4.7MB）全传 CDN，0 失败 |
+
+### 这轮新增的 4 个坑（已写进 refs 坑 38）
+
+1. **一页多篇 → 按日期徽标重排**：每页 5 篇，每篇 `<h1>` 前有 `<div id="uNNNN-6"><p>Apr</p><p>4</p></div>`
+   月/日徽标 → 抽出来当元数据、剔掉徽标块、**全局按日期排序**后编号（15 篇 = 2014-03-09 ~ 06-02）。
+2. **底部翻页按钮 1/2/3/4**（`<a href="sketch-tips-tricks-N.html"><p>N</p></a>`）会被当成
+   `### 1 ### 2 ### 3 ### 4` → 按 href 模式整块剔掉。
+3. **连续 ≥3 个「标题」= 图的说明标签**：`隐藏工具栏/隐藏图层列表/隐藏检查器/同时隐藏图层列表和检查器`
+   四个短句被启发式全升成 `###` → 收尾 `demote_head_runs(lines, 3)` 整体降回普通行。
+4. **嵌套目录下图片引用要写 `../images/x`**：`yuque_rewrite_images.py` 按 **md 文件所在目录**解析
+   相对路径（`base = os.path.dirname(fp)`）→ 文档进子目录后写 `images/x` 会全报「本地缺失」（0 上传）。
+   另外：图收集时 **tips 那边已经是 markdown 图引用**，别只用 HTML 的 `src=` 正则抓（会漏 37 张）。
+
+复用流程：`python3 build_extra.py` → `yuque_rewrite_images.py clean2 …` → 建库 + 移分组 + `--toc-md` + 前言归位。
+
+> 另记一条 API 坑：`create-book --desc` 超长约 250 字符会返回 **`HTTP 400 验证失败，一般是路径名冲突…`**
+> （报错完全误导，跟库名/slug 无关；实测 251 字通过、261 字被拒）。排查时拿短 desc 同名同 slug 试一发即可区分。

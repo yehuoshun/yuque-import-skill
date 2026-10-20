@@ -308,6 +308,13 @@
   "imported_at": "2026-10-18T16:03:54+0800",
   "note": "master @ 4500ac6（2015-01-05）；GitBook 源（SUMMARY.md + tutNN/zh.md + tutNN/res/）。方案 B 按 SUMMARY 重建树：00-前言.md + 01-OpenGL基本知识(01..08) + 02-OpenGL中级教程(09..18)，21 节点（2 目录 / 19 文档）；114 张图全传 CDN（1.5s 节流 ~3min 0 失败）→ 先重写后重建（同名图 icon_smile.gif 在 tut08/tut13 各一份，防串台）；标题以 SUMMARY 为准（磁盘 heading 有笔误）；toc-md PUT 0.5s；根级前言 prependNode 归位；四查全绿 + 19 篇逐篇回读 0 差 0 空"
  },
+ "http://sketchcn.com/ （Sketch 2 手册 + 技巧分享）": {
+  "commit": "sketchcn-sketch2 (Common Crawl)",
+  "book_id": 84784119,
+  "book_url": "sketchcn-sketch2-20261020",
+  "imported_at": "2026-10-20T20:54:00+0800",
+  "note": "同站第二批（老板拍板另建一库）：Sketch 2 用户手册（CC-MAIN-2019-18 / 20190425144526）+ 15 篇技巧分享（tips1 2019-18；tips2/3 2019-13；tips4 2019-22，按页面月/日徽标全局按日期正序重排，2014-03-09 ~ 06-02）；29 节点 = 00-前言 + 01-Sketch 2 用户手册(11 章) + 02-技巧分享(15 篇)；79 张配图（含 3 个 5MB 级动画 GIF）全传 CDN，83 处引用重写；toc-md 目录树 29 行/1511B PUT 0.8s、结构核对 PASS、0 失败，根级前言落到两 TITLE 之后 → prependNode sibling 归位；四查全绿（TOC 27 DOC == 本地 27 / 全路径唯一 / 缺失 0 / 27 篇 word_count 全 >0 / 83 处 CDN 图逐篇对得上）；正文覆盖自检 5 页 376 段 100% 命中"
+ },
  "http://sketchcn.com/sketch-chinese-user-manual.html": {
   "commit": "sketchcn-2019-04-25 (Common Crawl)",
   "book_id": 84783868,
