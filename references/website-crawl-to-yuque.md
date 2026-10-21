@@ -8,7 +8,8 @@
 > cn.linux.vbird.org/linux_basic（同站基础学习篇，复用同一转换器，2026-10-16）、
 > docs.freebsd.org/zh-cn/books/handbook（FreeBSD 官方文档站，Asciidoctor/Hugo，2026-10-17）、
 > jinbuguo.com/lfs/lfs62（LFS 6.2 中文版，DocBook XSL 老多页站 + GitHub 镜像，2026-10-17）、
-> sketchcn.com（《Sketch 中文用户手册》Adobe Muse 单页站，**域名已停售下线** → CC 2019-04-25 快照 + GitHub 同源镜像仓库救图，2026-10-20）。
+> sketchcn.com（《Sketch 中文用户手册》Adobe Muse 单页站，**域名已停售下线** → CC 2019-04-25 快照 + GitHub 同源镜像仓库救图，2026-10-20）、
+> zh.d2l.ai（《动手学深度学习》Sphinx 书站，**站点无 TeX 源 → 反向改吃源仓库 `.md`**，2026-10-21）。
 > 通用爬虫模板：`scripts/yuque_website_crawl.py`（正则/窗口式，复制到 tmp/<站点>/crawl.py 改 SITE 配置区）；DOM 规整的站（GitBook/Asciidoctor/Hugo）用 bs4 递归渲染更稳，可抄 `examples/freebsd-handbook/`、`examples/mac-dev-setup/`。
 
 ## 一、流程（六步）
@@ -215,6 +216,14 @@
     - **子目录相对路径（与坑 38 同族）**：根级 `_img/` `_math/` + 文档落 depth-1 子目录时，引用要写 `../_img/x`（`yuque_rewrite_images.py` 按 md 所在目录解析，写 `_img/x` 会全报本地缺失）。
     - 转换器 + 复现命令：`examples/hrl-boyuai/`（`fetch_pages.py` / `convert.py` / `build.py`，含「子目录前缀」修法）。
 
+**【姊妹案例】MyST/Sphinx 书站的「md 源仓库」取法（zh.d2l.ai / 《动手学深度学习》，2026-10-21 实战，`examples/d2l-zh/`）**：
+    - **站点无 TeX 源 ≠ 只能当图**：d2l 站上公式同样是 MathJax SVG（无 alttext，与坑 41 同款），但源仓库 `d2l-ai/d2l-zh`（Apache-2.0）**逐章就是 `.md` 源、公式真 LaTeX** → 走**源仓库 md** 口径，站点 HTML 只当 oracle。**动手前先查源仓库**：hrl 的仓只有纯代码 notebook（只能当图），d2l 的仓有全量 md（保真度直接拉满）。
+    - **站点 HTML 的两个 oracle 用途**：① 源 md 标题不带编号 → 按**页内顺序**对 `<span class="section-number">` 补出 `## 2.3.1 标量`（比对前归一化空白与 `[**…**]` 强调标记）；② `:numref:`/`:eqref:` 的**渲染文本只能从站上取**（源里只有标签名）→ 抽 `numref`（引用处文本）/`defs`（定义处编号）/`bibkey→引文` 三张表，标签按 Sphinx 规则归一（`lower().replace('_','-').replace('+','-')`）。
+    - **四个框架选项卡 → 只留 PyTorch**：MyST `:begin_tab:` + 代码单元格首行 `#@tab`；**无 `#@tab` 标记的单元格 = mxnet（站上默认面板）**（拿站上各面板代码块与源单元格逐块比对证实）→ 只留 `pytorch`/`all`；多框架列表（`:begin_tab:`mxnet, tensorflow``）要按 `[,\s]+` 拆开判。
+    - ⚠️ **裸 `:end_tab:` 会让转换器吞掉文件尾（本次最险的一条）**：d2l 源的块结束标记是**裸的** `:end_tab:`（不带反引号参数），而 begin 参数可能是多框架列表 —— 正则若只认「单框架 + 带参 end」，后一个 `:begin_tab:`pytorch`` 会一路扫到 **EOF**，**整篇后半段被静默吞掉**（首跑症状：文档只剩 911B、指令残留 29 处、图片没重写、正文无声缺失）。修法三件套：begin 按 `[,\s]+` 拆列表判 pytorch / end 兼容两种写法 `(?:`[^`]*`)?` / **扫不到闭合必须兜底当普通文本**（所有跨行块扫描同理，代码栅栏一样）。
+    - `:eqlabel:` 别跟 `:label:`/`:width:` 一起提前删（否则公式编号全灭）；图片目录导入前必须移出导入根（硬规则 10，本次首跑节点 341 ≠ 156）。
+    - 复现命令 + 完整转换规则表 + 验收记录：`examples/d2l-zh/README.md`。
+
 ## 五、站点案例速查
 
 | 站点 | 窗口起点 | 窗口终点 | 备注 |
@@ -240,3 +249,4 @@
 | sketchcn.com（《Sketch 中文用户手册》，**Adobe Muse 单页站 + 域名在售**，2026-10-20） | 正文 = 手风琴导航 `<ul>` 之后 → `<div class="verticalspacer">` 之前（**从 Common Crawl WARC 取 HTML**，CC-MAIN-2019-18 / 20190425144522） | （同上，容器自带边界） | 单页长文档按 `<h1>` 拆 15 章 + 前言 = 16 篇；h3/h4 是 `<p class="nomal-text" id="u…">` → 用翻译源 md 标题做 oracle 还原；项目符 `・` 字面字符；**44 张图 CC 明确无收录，全部由 GitHub 同源镜像仓 `i5ting/sketchcn` 补回**；转换器 `examples/sketchcn/`（见坑 37） |
 | hrl.boyuai.com（《动手学强化学习》，dumi/umi SSR 书站，2026-10-21） | 正文 = `div.__dumi-default-layout-content` 的 `>` 之后（从类名后第一个 `>` 起，坑 41） | 下一个 `<script>` | 24 篇（21 章 + 前言 + 总结 + 课件页）+ 3 个空部分页→TITLE；**公式 1737 处全是 MathJax SVG、无 TeX 源/无 alttext/无 MathML** → 抽 svg 传 CDN 当图（795 唯一；**嵌套 svg 要贪婪匹配**；ex→px）；代码 `prism-code language-*` 的 token-line；2 张内联 base64 图要解码；子目录引用补 `../`；课件 17 PDF 只留 OSS 直链；六查全绿；库 84821175；`examples/hrl-boyuai/`（坑 41） |
 | aibydoing.com（《动手实战人工智能》，Quantecon/Jupyter-Book 站，**作者反全站复制**，2026-10-21） | `<main class="qe-page__content">` 内 `div.main-content.alert.alert-light`（剔 div.alert 必须豁免它，坑 40） | 容器自带边界（prev-next-area/giscus/buymecoffee 是独立节点） | 96 篇 notebook（13 章节）+ 首页 = 97 节点；span.math `\(..\)`→`$..$`；Pygments pre→代码块；图 523 张全传 CDN（covers 装饰图剔）；**版权红线先停手报老板拍板（B=私人库自用）**；六查全绿；库 84820613 |
+| zh.d2l.ai（《动手学深度学习》，Sphinx 2.0.0 书站，2026-10-21） | **不爬 HTML**：站上公式是 MathJax SVG 无 TeX 源 → 直接吃源仓库 `d2l-ai/d2l-zh` 的 `.md`（真 LaTeX）；站点 HTML 只当**标题编号 + `:numref:` 渲染文本**的 oracle | — | 140 文档 + 16 章目录 = 156 节点；只留 **PyTorch**（4 框架选项卡，未标 `#@tab` = mxnet）；图 184 全传 CDN；图片目录必须移出导入根（硬规则 10）；六查全绿；库 84822487；`examples/d2l-zh/` |

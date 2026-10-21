@@ -356,5 +356,12 @@
   "book_url": "hrl-boyuai-20261021",
   "imported_at": "2026-10-21T17:19:00+0800",
   "note": "张伟楠、沈键、俞勇《动手学强化学习》在线版（dumi/umi SSR 站）。网站口径：27 节点（21 章正文 + 前言 + 总结展望 + 课件页 + 3 TITLE）；⚠️ 公式 1737 处全是 MathJax SVG、站上无 LaTeX 源/无 MathML/无 alttext → 抽 <svg> 传 CDN 当图（795 唯一，嵌套 svg 需贪婪匹配、ex→px）；课件 17 个 PDF 只留官方 OSS 直链不上传。"
+ },
+ "https://zh.d2l.ai": {
+  "commit": "e6b18cce",
+  "book_id": 84822487,
+  "book_url": "d2l-zh-20261021",
+  "imported_at": "2026-10-21T19:10:00+0800",
+  "note": "网站口径 + 源仓库 md（来源标注按硬规则 11）：站上公式是 MathJax SVG 无 TeX 源 → 改吃 d2l-ai/d2l-zh master @ e6b18cce 的 .md 真 LaTeX，站点 HTML 只当标题编号/numref 渲染文本 oracle；只留 PyTorch（4 框架选项卡，未标 #@tab = mxnet）→ 140 文档 + 16 章目录 = 156 节点；184 张图全传 CDN；标题编号 923 / 公式编号 76（=源 eqlabel 全覆盖）/ 表 7 / 参考文献 159 条（从站上 zreferences 页倒推）；六查全绿（幽灵 0 / 占位 0 / fail 0）。中途停手一次（图片目录误留导入根 → 节点 341≠156，移出后续跑）+ 清 1 篇未落账孤儿 doc。转换器 examples/d2l-zh/"
  }
 }
