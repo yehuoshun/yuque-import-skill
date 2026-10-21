@@ -33,11 +33,11 @@
   "note": "默认分支 main @ a44686d（2026-10-20，上一版 7d1ec85 / 84711790，旧库保留）。prep 3943（351 目录/3592 文件）→ 删 docs/images（22 图先传 CDN、25 处引用重写）后 3917 节点（347/3570）<5000 不分库；toc-md 目录树 3917 行 / 212KB 一次 PUT 21.6s、结构核对 PASS、0 失败；对账 0 错位、全路径唯一 True、docs total 3570 == TOC DOC 3570（幽灵 0）、根级 TITLE 在前 DOC 在后（toc-md 常态非缺陷）、3570 篇逐篇回读 0 差异；4 张 app 图 CDN 占位 + icon.ico 二进制占位与上版一致"
  },
  "https://github.com/morluto/rea": {
-  "commit": "58d6043",
-  "book_id": 84779255,
-  "book_url": "rea-58d6043",
-  "imported_at": "2026-10-20T15:20:00+0800",
-  "note": "默认分支 main @ 58d6043（perf(ghidra): omit redundant raw results #5355；距上版 9e259f87c 共 83 commit / 300+ 文件变动）。prep 原始 5026 节点 → 按硬规则 9/23 口径剔除 .github（44 文件 / 8 目录，CI workflow + issue 模板 = 脚手架）后 4962 节点（380 目录 / 4582 文件）<5000 单库。配图：仓库 10 张图中有 md 引用的 4 张传语雀 CDN（img_map 随上版 tmp 清理丢失，重传），85 处图片语法引用 + 21 处「查看大图」普通链接全部重写为 CDN；未引用图（favicon/social-card/其余 4 张 figures svg）与图目录一并删净，licenses/dinosaur.txt（被 3 篇 md 引用）保留。toc-md 整树 4984 行 / 251KB 一次 PUT —— ⚠️ 首次 30s 读超时失败（实测 PUT 需 35.4s），已把整树 PUT 单独放宽到 300s（脚本改动，其余接口仍 30s）后重跑 PASS。四查全绿：TOC 4984 == 本地 4962 + 22 分片（verify PASS 本地文件 4582 / DOC 4604 / 缺失 0 / 分片 21→43 连续 / 全路径唯一 True）、对账错位 DOC 0、幽灵 0（docs total 4604 == TOC DOC 4604）、深层 3 篇 word_count>0 + 4 张 CDN 图 200 + 分片内容 21/21 逐字符相等。旧库 84713190（9e259f87c）按老板旧库保留口径不动"
+  "commit": "d0067ba",
+  "book_id": 84816207,
+  "book_url": "rea-d0067ba",
+  "imported_at": "2026-10-21T10:45:00+0800",
+  "note": "默认分支 main @ d0067ba（fix(native)!: preserve Swift pointer nullability and import bindings，2026-10-21 08:17；距上版 58d6043 共 151 commit）。**首例「单库超 5000 → 按顶层目录拆 2 库」**（老板 2026-10-21 拍板方案 A，描述互指对方 URL）：prep 5335 节点 → 剔 .github（45 文件 / 7 目录，沿用 10-20 口径）→ 删未引用图与 assets 图目录 → 5270 节点；拆主库 84816207 `rea-d0067ba`（除 tests/，本地 3621 = 276 目录 / 3345 文件）+ 副库 84816208 `rea-tests-d0067ba`（仅 tests/，1649 = 112 / 1537）。配图 10 张中 4 张被 md 引用全传 CDN（85 处 md 图 + 21 处「查看大图」普通链接 → 同一张 CDN URL），其余 6 张未引用不传、assets 图目录删净、licenses/dinosaur.txt 保留、third_party 5 个 submodule 空目录按 .gitmodules 保留。并行导入（v2 QPS 100 足够，合速 ~2.4 节点/秒）：A 09:42→10:27、B 09:42→10:03，0 失败；A toc-md 整树 3643 行 / 180KB PUT 24.0s 结构 PASS，B 1649 行 PUT 8.7s PASS。四查全绿：verify 两库 PASS（A 本地 3345 → DOC 3367 = 单篇 3324 + 分片 21 文件→43 节点、缺失 0、分片号连续、全路径唯一 True；B 1537→1537、缺失 0）；对账 --fix 两库错位 0；幽灵 0（A 3368 → 删断点残留 doc `wasm-interface.txt` 后 3367==TOC DOC；B 1538 → 删重复 doc `jsonOutput.test.ts` 后 1537==1537，均 DELETE 200 + 回查 404）；分片内容 21/21 与本地逐字符相等；CDN 图 4/4 HTTP 200；根级 TITLE 在前 DOC 在后（天然正确）。历史：58d6043=84779255、9e259f87c=84713190、84682363（旧库按老板口径全保留）"
  },
  "https://github.com/howie6879/owllook": {
   "commit": "8ded1ea",
