@@ -196,6 +196,13 @@
 
 39. **`create-book` 描述太长 → `HTTP 400 验证失败`，报错信息完全误导**（2026-10-20 实捶）：报「一般是路径名冲突，或者文章标题不符合要求」但**换名字/换 slug 都没用**，真正原因是 `--desc` 超长（实测 251 字通过、261 字被拒，约 250 封顶）。排查姿态：拿短 desc + 同名同 slug 试一发就能区分（本次白白建/删了 5 个测试库）。
 
+40. **aibydoing.com（Quantecon/Jupyter-Book 站 + 作者反全站复制，2026-10-21 实战）**：
+    - **动手前先查站内版权声明**：作者明文「请勿整理全站内容分发成电子书/请勿帮开源化/商用需授权」→ 与开源仓库（带 license）不同，网站类**导入前先探站看版权页，碰红线必须停手报老板拍板**（本次老板拍「B=全量导，仅私人库自用不分发」才动手；库描述也注明「纯私人学习用途」）
+    - **正文容器自带 alert 类**：Quantecon 主题正文 = `main.qe-page__content > div.main-content.alert.alert-light` → 剔广告按 `div.alert` 删会把正文一起剁（首跑全库 0 图）→ **必须豁免 main-content**；封面/Pro 卡/buymecoffee 是独立 `div.alert` 兄弟节点，可精准剔
+    - **math 是 `span.math` 内嵌 `\(...\)`/`\[...\]`** → 还原成 `$/$$`；代码是 Pygments `div.highlight-ipython3 > pre`（get_text 即代码，语言看 highlight-xxx class）；目录卡片（标题/字数/更新时间）在首页 h3 分组下 `a > div.custom-card`
+    - **QA 误报甄别**：grep「上一章/Pro 会员/${」≠ 导航污染——先看上下文再动（作者行文引用、LaTeX `${...}$`）
+    - 另：`yuque_tree_import.py` 的 `save_prog` 在 `--progress` 传裸文件名时 `os.makedirs('')` 直接崩（v1.3.97 已修：dirname 空则跳过）
+
 
 ## 五、站点案例速查
 
@@ -220,3 +227,4 @@
 | aaaaaashu.gitbooks.io/mac-dev-setup（《Mac 开发配置手册》，GitBook 2.6.7 静态站，2026-10-17） | 正文 = `section.normal` | 容器自带边界（`div.book-body > div.navigation*` 在外） | 无源仓库（GitHub 同名 repo 不存在）→ 抓 HTML；13 页（侧栏 `ul.summary` 定序，平铺）；bs4 递归渲染（**嵌套列表丢前缀坑见坑 32**）；无站内图，2 张外链图源站已 404 保留；转换器 `examples/mac-dev-setup/` |
 | community.emc.com（EMC 中文支持论坛，Jive/DECN，**站已下线**，2026-10-18） | 正文 = `<!-- [DocumentBodyStart:…] -->` 后的 `div.jive-rendered-content`（**从 Common Crawl WARC 取 HTML**） | `<!-- [DocumentBodyEnd` | 8 篇系列（DOC-16067/68/69/80-84，互为链接）；项目符 `ü/Ø/•/–` 是字面字符→手写映射成嵌套列表；`/servlet/JiveServlet/downloadImage/` 图 CC 未收录（4 张只救回 2 张，靠转载站镜像）；转换器 `examples/emc-community-cc/`（见坑 36） |
 | sketchcn.com（《Sketch 中文用户手册》，**Adobe Muse 单页站 + 域名在售**，2026-10-20） | 正文 = 手风琴导航 `<ul>` 之后 → `<div class="verticalspacer">` 之前（**从 Common Crawl WARC 取 HTML**，CC-MAIN-2019-18 / 20190425144522） | （同上，容器自带边界） | 单页长文档按 `<h1>` 拆 15 章 + 前言 = 16 篇；h3/h4 是 `<p class="nomal-text" id="u…">` → 用翻译源 md 标题做 oracle 还原；项目符 `・` 字面字符；**44 张图 CC 明确无收录，全部由 GitHub 同源镜像仓 `i5ting/sketchcn` 补回**；转换器 `examples/sketchcn/`（见坑 37） |
+| aibydoing.com（《动手实战人工智能》，Quantecon/Jupyter-Book 站，**作者反全站复制**，2026-10-21） | `<main class="qe-page__content">` 内 `div.main-content.alert.alert-light`（剔 div.alert 必须豁免它，坑 40） | 容器自带边界（prev-next-area/giscus/buymecoffee 是独立节点） | 96 篇 notebook（13 章节）+ 首页 = 97 节点；span.math `\(..\)`→`$..$`；Pygments pre→代码块；图 523 张全传 CDN（covers 装饰图剔）；**版权红线先停手报老板拍板（B=私人库自用）**；六查全绿；库 84820613 |

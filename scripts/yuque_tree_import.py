@@ -459,7 +459,9 @@ def create_node(token, base, book, root, rel, is_dir, up, parent_uuid, max_body=
             "doc_id": records[0]["doc_id"], "segments": records}
 
 def save_prog(prog, path):
-    os.makedirs(os.path.dirname(path), exist_ok=True)
+    d = os.path.dirname(path)
+    if d:  # 2026-10-21 aibydoing 实捶：--progress 传裸文件名时 dirname=''，makedirs('') 直接崩
+        os.makedirs(d, exist_ok=True)
     tmp = path + ".tmp"
     json.dump(prog, open(tmp, "w"), ensure_ascii=False)
     os.replace(tmp, path)
