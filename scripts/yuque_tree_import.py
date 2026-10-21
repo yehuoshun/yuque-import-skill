@@ -23,6 +23,15 @@ import argparse, json, os, sys, time, urllib.request, urllib.error, uuid
 IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg", ".bmp"}
 
 
+def human_size(size: int) -> str:
+    """人类可读体积（修：15KB 曾被整除成「0 MB」写进占位注释）。"""
+    if size < 1024:
+        return "%d B" % size
+    if size < 1048576:
+        return "%.1f KB" % (size / 1024)
+    return "%.1f MB" % (size / 1048576)
+
+
 def upload_image(cookie, ctoken, user_id, path):
     """语雀 Web API 上传图片 → CDN URL。失败返回 None(回退占位说明)."""
     ext = os.path.splitext(path)[1].lower()
@@ -348,8 +357,8 @@ def fmt_content(path, up=None, max_body=524_288):
             url = upload_image(up["cfg"]["cookie"], up["cfg"]["ctoken"], up["user_id"], path)
             if url:
                 name = os.path.basename(path)
-                return [("", "![%s](%s)\n\n<!-- 图片 %d MB 已上传语雀 CDN, 展示见上 -->\n" % (name, url, size // 1048576))]
-        return [("", "<!-- 二进制文件 %d MB, 跳过内容导入(语雀 body 上限 4MB), 原文件见 GitHub -->\n" % (size // 1048576))]
+                return [("", "![%s](%s)\n\n<!-- 图片 %s 已上传语雀 CDN, 展示见上 -->\n" % (name, url, human_size(size)))]
+        return [("", "<!-- 二进制文件 %s, 跳过内容导入(语雀 body 上限 4MB), 原文件见 GitHub -->\n" % human_size(size))]
     lang = FENCE_LANG.get(ext, "")
     if ext == ".md":
         wrap = lambda s: s
