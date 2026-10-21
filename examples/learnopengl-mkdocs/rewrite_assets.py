@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""【可复用】MkDocs/静态站源仓库：md 内本地资源（图片 / mp4 / zip·rar）→ 语雀上传 + 重写（LearnOpenGL CN 实战产物）
+"""【可复用】MkDocs/静态站源仓库：md 内本地资源（图片 / PDF / mp4·zip·rar）→ 语雀上传 + 重写（LearnOpenGL CN 实战产物）
 比通用脚本多两件事：
   1) 路径归一化：源仓库的相对路径是按 MkDocs「站点 URL 深度」写的（`../img/` 从 `01 xxx/01.md`
      出发其实应指根下 img/；嵌套目录里还写成 `../../../img/`）→ 先按 md 所在目录解析，失败就
      逐级剥 `../` 再按导入根解析，最后按后缀唯一匹配。
-  2) 三类资源：图片走 upload_image(type=image)；mp4/zip/rar 走 type=attachment。
-用法: python3 lo-rewrite.py <root> <map.json> [--throttle 5] [--dry]
-语法: python3 lo-rewrite.py <root> <map.json>
+  2) 按扩展名分流：图片走 upload_image(type=image)；**PDF 走 type=attachment**；
+     其余非图片（mp4/zip/rar/7z）**默认不上传（2026-10-21 口径：附件只给 PDF）**，原文保留。
+用法: python3 rewrite_assets.py <root> <map.json> [--throttle 5] [--dry] [--allow-attach]
 """
 import argparse, json, os, re, sys, time, mimetypes, urllib.request, urllib.error, uuid
 
@@ -25,6 +25,11 @@ USER_ID = "25689388"
 
 def is_ext(u):
     return bool(re.match(r'^(https?:|data:|mailto:|#)', u.strip()))
+
+
+def attach_allowed(abspath, a):
+    """2026-10-21 口径（硬规则 12）：附件只给 PDF；其余非图片资源默认不上传、原文保留。"""
+    return os.path.splitext(abspath)[1].lower() == ".pdf" or a.allow_attach
 
 
 def upload_attach(cookie, ctoken, path):
@@ -62,11 +67,33 @@ def upload_attach(cookie, ctoken, path):
     return None
 
 
+def get_url(abspath, key, a, cfg, mp):
+    if key in mp:
+        return mp[key]
+    if a.dry:
+        return "DRY"
+    ext = os.path.splitext(abspath)[1].lower()
+    if ext in IMG_EXT:
+        u = upload_image(cfg["cookie"], cfg["ctoken"], USER_ID, abspath)
+    else:
+        u = upload_attach(cfg["cookie"], cfg["ctoken"], abspath)
+    if u:
+        mp[key] = u
+        json.dump(mp, open(a.map, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+        print("  ↑ %s -> %s" % (key, u[:70]), flush=True)
+        time.sleep(a.throttle)
+    else:
+        print("  ✗ 上传失败 %s" % key, flush=True)
+    return u
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("root"); ap.add_argument("map")
     ap.add_argument("--throttle", type=float, default=5.0)
     ap.add_argument("--dry", action="store_true")
+    ap.add_argument("--allow-attach", action="store_true",
+                    help="允许非 PDF 资源走 type=attachment（2026-10-21 口径：附件只给 PDF，默认关）")
     ap.add_argument("--cookie-config",
                     default="~/.openclaw/workspace/skills/yuque-ai-mcp/config/config.json")
     a = ap.parse_args()
@@ -100,26 +127,7 @@ def main():
             return os.path.join(root, hits[0]), None
         return None, "missing"
 
-    def get_url(abspath, key):
-        if key in mp:
-            return mp[key]
-        if a.dry:
-            return "DRY"
-        ext = os.path.splitext(abspath)[1].lower()
-        if ext in IMG_EXT:
-            u = upload_image(cfg["cookie"], cfg["ctoken"], USER_ID, abspath)
-        else:
-            u = upload_attach(cfg["cookie"], cfg["ctoken"], abspath)
-        if u:
-            mp[key] = u
-            json.dump(mp, open(a.map, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-            print("  ↑ %s -> %s" % (key, u[:70]), flush=True)
-            time.sleep(a.throttle)
-        else:
-            print("  ✗ 上传失败 %s" % key, flush=True)
-        return u
-
-    stat = {"img": 0, "file": 0, "missing": 0, "ext": 0, "fail": 0}
+    stat = {"img": 0, "file": 0, "skip_noattach": 0, "missing": 0, "ext": 0, "fail": 0}
     for dp, dns, fns in os.walk(root):
         for fn in sorted(fns):
             if not fn.lower().endswith(".md"):
@@ -135,8 +143,12 @@ def main():
                 if why == "missing":
                     stat["missing"] += 1
                     print("  缺失 %s : %s" % (os.path.relpath(p, root), src)); return prefix + src + suffix
+                if kind == "file" and not attach_allowed(apath, a):
+                    stat["skip_noattach"] += 1
+                    print("  未上传(非 PDF) %s : %s" % (os.path.relpath(p, root), src))
+                    return prefix + src + suffix
                 key = os.path.relpath(apath, root).replace(os.sep, "/")
-                u = get_url(apath, key)
+                u = get_url(apath, key, a, cfg, mp)
                 if not u:
                     stat["fail"] += 1; return prefix + src + suffix
                 stat[kind] += 1

@@ -2,9 +2,14 @@
 # -*- coding: utf-8 -*-
 """legado（aoaostar/legado @ fd0ec7f9）→ 语雀「原版 + 解析」双轨构建。
 
+⚠️ 2026-10-21 口径变更（硬规则 12：**附件只给 PDF**）：
+   `upload` / `all` 模式**已停用**（默认拒绝执行；确需复现历史双轨才设 `LEGADO_ALLOW_ATTACH=1`）。
+   新口径 = 解析单轨：只跑 `prep`，不传原件附件，索引里的「原件」列改给上游直链。
+   本脚本保留作历史 3 版（fd0ec7f9 / 0dde287 / 8b13d08）的复现记录。
+
 产出目录结构（clean_dir = tmp/legado-fd0ec7f9-book/）：
   00-前言.md
-  01-原版附件.md              ← 原版轨：21 条资源原件（20 独立文件）附件
+  01-原版附件.md              ← 原版轨（已停用）：21 条资源原件（20 独立文件）附件
   02-书源.md ... 07-在线朗读引擎.md   ← 解析轨索引（每分类一篇）
   08-解析/                    ← 解析轨正文（README / index.html / sources/*.md）
 
@@ -33,7 +38,7 @@ COOKIE_CFG = "~/.openclaw/workspace/skills/yuque-ai-mcp/config/config.json"
 COMMIT = "fd0ec7f9"
 STACK = 57018723
 
-sys.path.insert(0, os.path.join(ROOT, "yuque-import-skill", "scripts"))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "scripts"))
 from yuque_tree_import import load_upload_cfg  # noqa
 
 
@@ -331,6 +336,11 @@ def gen_docs(cats):
 
 if __name__ == "__main__":
     mode = sys.argv[1] if len(sys.argv) > 1 else "all"
+    if mode in ("upload", "all") and os.environ.get("LEGADO_ALLOW_ATTACH") != "1":
+        print("[停用] 2026-10-21 口径：附件只给 PDF（硬规则 12）——legado 原件不再上传附件；"
+              "\n       新口径只跑 `prep`（解析单轨 + 索引给上游直链）。"
+              "\n       复现历史双轨才设 LEGADO_ALLOW_ATTACH=1。", file=sys.stderr)
+        sys.exit(2)
     cats = parse_readme()
     print("分类 %d / 条目 %d" % (len(cats), sum(len(c["entries"]) for c in cats)), flush=True)
     if mode in ("upload", "all"):

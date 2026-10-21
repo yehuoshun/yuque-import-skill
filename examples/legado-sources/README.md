@@ -1,5 +1,7 @@
 # legado「阅读」APP 资源索引站（aoaostar/legado）→ 语雀 实战样例
 
+> ⚠️ **口径变更（2026-10-21 老板拍板，硬规则 12：附件只给 PDF）**：legado 这套「原件附件轨」**停用**——`build.py upload` 已加硬拦截（需 `LEGADO_ALLOW_ATTACH=1` 才跑）。新口径 = **解析单轨**：只跑 `prep`（生成 `00-前言` + 分类索引 + `08-解析/`），索引里的「原件」列改给**上游直链** `legado.aoaostar.com/sources/<file>`。历史 3 版（`fd0ec7f9` / `0dde287` / `8b13d08`）已按旧双轨入库，**不动**。
+
 > 2026-10-18 老板拍板「B = 索引 + 附件（原版 + 解析双轨）/ 新规则：库描述必须标注来源」；
 > 库 id **84711589**、slug `legado-fd0ec7f9`、分组「开源项目」(57018723)、private。
 > 源：`https://github.com/aoaostar/legado` @ **fd0ec7f9**（默认分支 **`release`**；站点 <https://legado.aoaostar.com>）

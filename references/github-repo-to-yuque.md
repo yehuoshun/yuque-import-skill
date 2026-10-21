@@ -249,7 +249,7 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
 **坑 42（MkDocs 教程站：相对路径按「站点 URL 深度」写 + 视频/数据包走附件，2026-10-18 LearnOpenGL CN 实战）**：站点 `learnopengl-cn.github.io` 是 MkDocs 渲染产物，源仓库 `LearnOpenGL-CN/LearnOpenGL-CN`（默认分支是 **`new-theme`** 不是 main！）`homepage` 自证 → 走源仓库口径。
     - **导入根 = `docs/`**，且要剔主题脚手架 `css/` `mathjax/`（只在 mkdocs.yml 里被引用，正文不引用）；`docs/img/README.md`（图片目录版权说明）随 img 目录一起剔。
     - **⭐ 相对路径不是按文件位置写的，是按渲染后站点 URL 深度写的**：`docs/01 Getting started/05 Shaders.md` 里写 `../img/01/05/x.png`（站点 URL `/01 Getting started/05 Shaders/` → 上一级才对），嵌套目录里更夸张写成 `../../../img/08/01/x.jpg` → **通用 `yuque_rewrite_images.py` 直接报 26 处「本地缺失」**（会把图全留成相对路径 = 裂图）。对策：自写带**路径归一化**的重写脚本——① 先按 md 所在目录解析；② 失败则**逐级剥 `../`** 再按导入根解析；③ 仍失败则**按后缀唯一匹配**（`img/08/01/x.jpg`）。实战脚本：`tmp/lo-rewrite.py`（本次实现，可复用）。
-    - **非图片资源（mp4 / zip / rar）**：`<video src="...mp4" controls>` 这种 HTML 视频标签要单独一条正则（`(<video\b[^>]*?\bsrc=)(["'])([^"']+)(["'])`）；上传用 **`type=attachment`**（`upload_attach()`，MIME 按扩展名）→ 返回 `https://www.yuque.com/attachments/...`（**会话门控**，同 PDF 附件性质，老板口径接受）。zip/rar 这类正文里 `[这里](../data/x.zip)` 的下载链接同样走附件 + 重写。
+    - **非图片资源（mp4 / zip / rar）**：`<video src="...mp4" controls>` 这种 HTML 视频标签要单独一条正则（`(<video\b[^>]*?\bsrc=)(["'])([^"']+)(["'])`）；⚠️ **2026-10-21 起不再上传附件（硬规则 12：附件只给 PDF）**——旧做法是 `type=attachment`（`upload_attach()`）→ `https://www.yuque.com/attachments/...`；新做法：**保留原相对路径/上游外链、不重写、不删**，并在文档里注明「未上传」。zip/rar 这类正文里 `[这里](../data/x.zip)` 的下载链接同理。
     - **量级与限流**：本次 358 处图引用 + 20 处文件引用 = 369 个资源，`--throttle 5`（~12-15 个/分）全程 **0 失败**、约 27 分钟（贴着 ~500 张/窗口的 429 红线，别把 throttle 调更小）。
     - 收尾：82 节点（15 目录 / 67 文档）toc-md **PUT 1.1s**；**4 个根级 DOC（index/intro/legacy/code_repo）被排到 8 个 TITLE 目录之后** → 复用 `examples/puppet-cookbook/fix_root_order.py`（改写 EXPECT 为期望根级序）**4 轮收敛**；四查全绿 + 67 篇逐篇回读 0 差、word_count 无 0。
     - 版权：正文本站译文 CC BY-NC 4.0，**图片/素材 © Joey de Vries 保留所有权利** → 只进私有库、不同步公开渠道。
@@ -262,7 +262,8 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
     - **toc-md 后根级 DOC `00-前言.md` 又被排到 TITLE 之后**（老坑 29）→ 一发 `prependNode/action_mode=sibling`（node_uuid=前言, target_uuid=首个 TITLE）归位。
     - 实测：114 张图 1.5s 节流全传 CDN（~3 分钟、0 失败、114 引用 ↔ 114 图 1:1）；toc-md **PUT 0.5s**；四查全绿 + 19 篇逐篇回读 0 差 0 空。可复用脚本 + README：`examples/opengl-tutorials/`。
 
-**坑 44（资源索引型仓库：仓库不装正文而装清单 →「原版 + 解析」双轨 + 分类索引，2026-10-18 aoaostar/legado @ fd0ec7f9 实战）**：`aoaostar/legado` 是「阅读」APP 的资源索引站（默认分支 **`release`** 不是 main；CI 每天重写 `README.md`/`index.html`），仓库里只有 README（分类目录）+ index.html + `sources/*.json`（21 条引用 / 20 个文件 / 48.8MB，最大 `b778fe6b.json` 20MB / 3907 条书源）。老板口径：B = 索引 + 附件**双轨**。
+**坑 44（资源索引型仓库：仓库不装正文而装清单 → 解析单轨 + 分类索引，2026-10-18 aoaostar/legado @ fd0ec7f9 实战）**：`aoaostar/legado` 是「阅读」APP 的资源索引站（默认分支 **`release`** 不是 main；CI 每天重写 `README.md`/`index.html`），仓库里只有 README（分类目录）+ index.html + `sources/*.json`（21 条引用 / 20 个文件 / 48.8MB，最大 `b778fe6b.json` 20MB / 3907 条书源）。老板口径：B = 索引 + 附件**双轨**。
+    ⚠️ **口径已变更（2026-10-21 老板拍板，硬规则 12）**：**附件只给 PDF**——原「原件附件轨」（`sources/*.json` 上传 `type=attachment` 建 `01-原版附件.md`）**停用**。新做法：只留解析轨 + 分类索引，索引里的「原件」列给**上游直链**（`legado.aoaostar.com/sources/<file>`，仓库 README 本来就有）；历史 3 版（`fd0ec7f9`/`0dde287`/`8b13d08`）已按旧双轨入库，**不动**。下文双轨描述保留作历史记录。
     - **别把 20MB JSON 原样当文档导**（会走 512KB 切分 → 几十个分片，既丑又把「原件」当正文）。
     - **解析轨**：每个 JSON 逐条转表 → `08-解析/sources/<名>.json.md`（书源/TTS 列 名称+网址+分组+启用；净化规则列正则；主题单对象列字段值；zip 解包内 `readConfig.json` 列字段）→ **体积暴降**（20MB 原件 → 303KB 文档），全部 <512KB **零分片**。
     - **原版轨**：`type=attachment` 上传全部原件（`upload_attach`，MIME 按扩展名，大文件 timeout 拉到 300s + 5s 节流）→ 根级 `01-原版附件.md` 表格列 分类/名称/条数/📎原件/直链/`legado://` 一键导入。实测 20 文件（含 10.8MB / 6.9MB×2 / 20MB）全传成功，带 cookie `curl -L` 复拉 **md5 全对**。
