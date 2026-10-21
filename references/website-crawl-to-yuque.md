@@ -203,6 +203,17 @@
     - **QA 误报甄别**：grep「上一章/Pro 会员/${」≠ 导航污染——先看上下文再动（作者行文引用、LaTeX `${...}$`）
     - 另：`yuque_tree_import.py` 的 `save_prog` 在 `--progress` 传裸文件名时 `os.makedirs('')` 直接崩（v1.3.97 已修：dirname 空则跳过）
 
+41. **dumi（umi）静态书站 + MathJax SVG 公式、无 TeX 源（hrl.boyuai.com / 《动手学强化学习》，2026-10-21 实战）**：
+    - **识别**：`window.g_useSSR=true` + `<script src="/umi.js">` + `div.__dumi-default-layout-content` = dumi SSR 站，**正文全在 HTML**（不用跑 JS）。先查官方 GitHub：本次 `boyu-ai/Hands-on-RL` **只有纯代码 notebook（0 个 markdown cell）** → 无正文源，只能抓 HTML（网站口径）。
+    - **⚠️ 公式是 MathJax SVG，TeX 源已不可得**：`<mjx-container><svg>`，**无 `alttext`、无 assistive-mml、无 MathML**（`grep -c alttext` = 0）；`data-c` 只有字符码、`data-mjx-texclass` 只有类别 → 都还原不出 TeX；umi.js / searchIndex 里也没有正文 → **保真只能「公式当图」**：抽 `<svg>` 存 `.svg` → `upload_image` 传 CDN（**接口吃 svg**，回 `cdn.nlark.com/…/*.svg`）→ 正文 `![](cdn)`。本次 1737 处 → 去重 795 个唯一。
+    - **抽 svg 必须贪婪匹配**：MathJax 的伸缩符号（大括号/求和号）会生成**嵌套 `<svg>`** → 非贪婪 `(<svg\b.*?</svg>)` 会在第一个内层 `</svg>` 截断（本次 795 里 8 个截成半截）→ 改 `(<svg\b.*</svg>)` + `re.S`。自检两发：`ET.parse` 全过 + 每个 `xlink:href="#id"` 都能在自身 `<defs>` 找到。
+    - **`ex` → `px` 换算**：MathJax 尺寸写成 `width="40.6ex"`，抽成独立文件用 `<img>` 引时 `ex` 相对字体不可靠 → 按 `1ex≈8px` 改写。
+    - **正文窗口起点别从 `index("__dumi-default-layout-content")` 算**：那是类名属性**内部**，会把开标签尾巴 `…">` 带进正文首行 → 从该串后的第一个 `>` 之后起。
+    - **转换**：代码 = `<pre class="prism-code language-X">` 的逐行 `<div class="token-line">`（先删 copy `<button>`）；表格 = `table>thead/tbody`（外层可能套 `div.__dumi-default-table`）；标题锚点 = `<hN><a aria-hidden><span class="icon icon-link"></span></a>标题`；外链图标 = `svg.__dumi-default-external-link-icon`（丢弃）；站内链 → 纯文本。
+    - **空的「部分页」建 TITLE 不建 DOC**：`/chapter/1` `/chapter/2` `/chapter/3` 只有翻页器 → 建成「基础篇/进阶篇/前沿篇」三个 TITLE。
+    - **内联 base64 图**：正文里有 `<img src="data:image/png;base64,…">`（本次 2 张真插图，不是装饰）→ 必须解码另存，只匹配 `/static/` 会把它们整张丢掉（图数 84 vs 82 的差值就是它们）。
+    - **子目录相对路径（与坑 38 同族）**：根级 `_img/` `_math/` + 文档落 depth-1 子目录时，引用要写 `../_img/x`（`yuque_rewrite_images.py` 按 md 所在目录解析，写 `_img/x` 会全报本地缺失）。
+    - 转换器 + 复现命令：`examples/hrl-boyuai/`（`fetch_pages.py` / `convert.py` / `build.py`，含「子目录前缀」修法）。
 
 ## 五、站点案例速查
 
@@ -227,4 +238,5 @@
 | aaaaaashu.gitbooks.io/mac-dev-setup（《Mac 开发配置手册》，GitBook 2.6.7 静态站，2026-10-17） | 正文 = `section.normal` | 容器自带边界（`div.book-body > div.navigation*` 在外） | 无源仓库（GitHub 同名 repo 不存在）→ 抓 HTML；13 页（侧栏 `ul.summary` 定序，平铺）；bs4 递归渲染（**嵌套列表丢前缀坑见坑 32**）；无站内图，2 张外链图源站已 404 保留；转换器 `examples/mac-dev-setup/` |
 | community.emc.com（EMC 中文支持论坛，Jive/DECN，**站已下线**，2026-10-18） | 正文 = `<!-- [DocumentBodyStart:…] -->` 后的 `div.jive-rendered-content`（**从 Common Crawl WARC 取 HTML**） | `<!-- [DocumentBodyEnd` | 8 篇系列（DOC-16067/68/69/80-84，互为链接）；项目符 `ü/Ø/•/–` 是字面字符→手写映射成嵌套列表；`/servlet/JiveServlet/downloadImage/` 图 CC 未收录（4 张只救回 2 张，靠转载站镜像）；转换器 `examples/emc-community-cc/`（见坑 36） |
 | sketchcn.com（《Sketch 中文用户手册》，**Adobe Muse 单页站 + 域名在售**，2026-10-20） | 正文 = 手风琴导航 `<ul>` 之后 → `<div class="verticalspacer">` 之前（**从 Common Crawl WARC 取 HTML**，CC-MAIN-2019-18 / 20190425144522） | （同上，容器自带边界） | 单页长文档按 `<h1>` 拆 15 章 + 前言 = 16 篇；h3/h4 是 `<p class="nomal-text" id="u…">` → 用翻译源 md 标题做 oracle 还原；项目符 `・` 字面字符；**44 张图 CC 明确无收录，全部由 GitHub 同源镜像仓 `i5ting/sketchcn` 补回**；转换器 `examples/sketchcn/`（见坑 37） |
+| hrl.boyuai.com（《动手学强化学习》，dumi/umi SSR 书站，2026-10-21） | 正文 = `div.__dumi-default-layout-content` 的 `>` 之后（从类名后第一个 `>` 起，坑 41） | 下一个 `<script>` | 24 篇（21 章 + 前言 + 总结 + 课件页）+ 3 个空部分页→TITLE；**公式 1737 处全是 MathJax SVG、无 TeX 源/无 alttext/无 MathML** → 抽 svg 传 CDN 当图（795 唯一；**嵌套 svg 要贪婪匹配**；ex→px）；代码 `prism-code language-*` 的 token-line；2 张内联 base64 图要解码；子目录引用补 `../`；课件 17 PDF 只留 OSS 直链；六查全绿；库 84821175；`examples/hrl-boyuai/`（坑 41） |
 | aibydoing.com（《动手实战人工智能》，Quantecon/Jupyter-Book 站，**作者反全站复制**，2026-10-21） | `<main class="qe-page__content">` 内 `div.main-content.alert.alert-light`（剔 div.alert 必须豁免它，坑 40） | 容器自带边界（prev-next-area/giscus/buymecoffee 是独立节点） | 96 篇 notebook（13 章节）+ 首页 = 97 节点；span.math `\(..\)`→`$..$`；Pygments pre→代码块；图 523 张全传 CDN（covers 装饰图剔）；**版权红线先停手报老板拍板（B=私人库自用）**；六查全绿；库 84820613 |
