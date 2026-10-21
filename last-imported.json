@@ -19,11 +19,11 @@
   "imported_at": "2026-10-16T14:20:00+0800"
  },
  "https://github.com/aoaostar/legado": {
-  "commit": "0dde287",
-  "book_id": 84776109,
-  "book_url": "legado-0dde287",
-  "imported_at": "2026-10-20T09:33:00+0800",
-  "note": "默认分支 release @ 0dde287（Add sync changes，2026-10-19 10:32）；沿用老板 10-18 拍板口径『B』=索引+附件（原版+解析双轨）。32 节点（2 目录/30 文档）：00-前言 + 01-原版附件（20 个原件 type=attachment，48.8MB 含 20MB，抽 3 个 md5 全对）+ 02..07 六分类索引 + 08-解析（README/index.html/20 篇 JSON 逐条转表，零分片，最大 303KB）。toc-md 目录树 32 行 PUT 0.7s、结构核对 PASS、0 失败；根级 TITLE（08-解析）排到根级 DOC 之前 → 一发 appendNode sibling 归位（与上一版同坑）；四查全绿（32==32==30+2、全路径唯一、幽灵 0、根级序一致、30 篇逐篇回读 0 差）。历史：fd0ec7f9=84711589、06b8162=84678623（旧库按老板口径保留）"
+  "commit": "8b13d08",
+  "book_id": 84817392,
+  "book_url": "legado-8b13d08",
+  "imported_at": "2026-10-21T11:10:00+0800",
+  "note": "默认分支 release @ 8b13d08（Add sync changes，上游同步时间 2026-10-21 10:38）；沿用老板 10-18 拍板口径『B』=索引+附件（原版+解析双轨）。仓库形状与上版一致：6 分类 / 21 条引用 / 20 个原件文件 / 47MB。32 节点（2 目录/30 文档）：00-前言 + 01-原版附件（20 个原件 type=attachment，抽 4 个带 cookie curl -L 复拉 md5 全对，含 20MB b778fe6b.json）+ 02..07 六分类索引 + 08-解析（README/index.html/20 篇 JSON 逐条转表，零分片，最大 303KB）。toc-md 目录树 32 行 PUT 0.7s、结构核对 PASS、0 失败；根级 TITLE（08-解析）又排到根级 DOC 之前 → 一发 appendNode sibling 归位（连续第 3 版同坑）；五查全绿（32==32==30+2、全路径唯一 True、缺失 0、对账错位 0、幽灵 0 docs30==TOC DOC30、30 篇逐篇回读 0 差、word_count 0 篇=0）。历史：0dde287=84776109、fd0ec7f9=84711589、06b8162=84678623（旧库按老板口径全保留）"
  },
  "https://github.com/swjybky/deepwrite": {
   "commit": "a44686d",

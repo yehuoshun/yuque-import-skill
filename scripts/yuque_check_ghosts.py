@@ -52,13 +52,14 @@ def fetch_toc(token, book):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--book", required=True)
-    ap.add_argument("--toc", help="已有的 toc.json（没有就现拉）")
+    ap.add_argument("--toc", help="已有的 toc.json（没有就现拉；吃原始 API 响应 {data:[...]}，裸 list 也兼容）")
     ap.add_argument("--delete", action="store_true", help="删除幽灵 doc（默认只报）")
     args = ap.parse_args()
 
     token = load_token("TOKEN_L91")
     if args.toc:
-        toc = json.load(open(args.toc))["data"]
+        raw = json.load(open(args.toc))
+        toc = raw["data"] if isinstance(raw, dict) else raw   # 兼容自己 dump 的裸 list（2026-10-21 实踩：直接喂 data 数组会 TypeError）
     else:
         toc = fetch_toc(token, args.book)
     toc_doc_ids = {n["doc_id"] for n in toc if n.get("type") == "DOC"}

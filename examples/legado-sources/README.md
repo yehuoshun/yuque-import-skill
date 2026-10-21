@@ -67,6 +67,8 @@ url = "https://www.yuque.com/api/upload/attach?attachable_type=User&attachable_i
 
 - **2026-10-20 重导 `0dde287`**（库 **84776109**，slug `legado-0dde287`，同口径 B）：仓库形状与分类数不变（6 分类 / 21 条 / 20 文件 / 47MB）；`build.py` 只改 4 处参数（`SRC` / `OUT` / `ATTACH_MAP` / `COMMIT`）+ `sys.path`，跑 `prep → upload → prep`（20 附件 2.5 分钟）→ `create-book → move-stack → toc-md` 即可，32 节点 0 失败、四查全绿。**同坑复现**：根级 TITLE（`08-解析`）又排到根级 DOC 之前，照旧一发 `appendNode sibling` 归位。旧库 `84711589`（fd0ec7f9）、`84678623`（06b8162）按老板口径保留。
 
+- **2026-10-21 重导 `8b13d08`**（库 **84817392**，slug `legado-8b13d08`，同口径 B）：仓库形状与上版完全一致（6 分类 / 21 条引用 / 20 个原件文件 / 47MB，上游同步时间 2026-10-21 10:38）；`build.py` 同样只改 4 处参数（`SRC` / `OUT` / `ATTACH_MAP` / `COMMIT`）+ `sys.path`（skill 现在在 `workspace/code/yuque-import-skill`）→ `prep → upload → prep`（20 附件 ~2.5 分钟；抽 4 个带 cookie `curl -L` 复拉 **md5 全对**，含 20MB `b778fe6b.json`）→ `create-book → move-stack → toc-md`，32 节点 0 失败、五查全绿（幽灵 0 / 对账错位 0 / 30 篇逐篇回读 0 差 / `word_count` 0 篇 = 0）。**同坑第 3 次复现**：根级 TITLE（`08-解析`）仍排在根级 DOC 之前，照旧一发 `appendNode action_mode=sibling` 归位。旧库 84776109（0dde287）、84711589（fd0ec7f9）、84678623（06b8162）按老板口径保留。
+
 ## 复用
 
 ```bash

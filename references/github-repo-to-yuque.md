@@ -313,4 +313,5 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
     - ① **杀进程残留**：断点那一刻 `POST /docs` 已成功、但 `progress.json` 还没落盘就 `kill -9`（A 的 `wasm-interface.txt`，created_at 正好是 kill 的那一秒）。
     - ② **重试双写**：创建响应超时/异常 → 脚本重试 → 服务端其实已建好（B 的 `jsonOutput.test.ts`，高负载下重试产生）。
     - **抓法**：逐页拉 `GET /repos/{id}/docs` 取全部 doc_id，与 TOC 的 DOC doc_id 集合求差；**别只看 `meta.total` 数字**——数字对不上时得知道是哪个。现成脚本：`scripts/yuque_check_ghosts.py --book <id>`（退出码 0/1，已成为验收第 5 查；`--delete` 自动删+回查 404）。
+      ⚠️ `--toc` 参数吃**原始 API 响应**（`{"data":[…]}`）；自己 dump 出来的裸数组以前会 `TypeError: list indices must be integers`（2026-10-21 实踩）→ v1.3.92 起两种形状都兼容，不传 `--toc` 则由脚本现拉。
     - **收法**：`DELETE /repos/{id}/docs/{id}`（本次两个都 200），**回查 `GET …/docs/{id}` 应为 404**，再复核 `meta.total == TOC DOC`。删前先确认同名文件在 TOC 里**已有一份**（避免误删真身，同坑 10）——脚本会自动打印 TOC 同名 doc_id 供确认。
