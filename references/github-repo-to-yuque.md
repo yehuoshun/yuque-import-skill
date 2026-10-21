@@ -49,12 +49,16 @@
    ```
    - toc-md 原理：`POST /repos/{book}/docs` 建文档后**自动挂 TOC 根**，收尾拼一棵 Markdown 目录树 → 一次 `PUT /api/v2/repos/{book_id} {toc: "..."}`（官方 OAS 20260722）。同树实测：与 batch 模式 TOC **集合+顺序完全一致**，134 节点 PUT 仅 1.1s，收尾从 ~80 分钟降到秒级，且**不需要 cookie**
    - 旧全量命令（无 `--toc-md`，逐节点挂真实父）：测试时高频创建会触发 TOC 写路径积压（坑 67），现已不推荐
+   - **并行导入（2026-10-21 老板拍板可行，见坑 48）**：一次拆成多个库（硬规则 9）或同一批导多个仓库时，**可以并行跑**——toc-md 全程只走 v2（100 QPS），低 QPS 的 Web API 只用在上传附件（且已提前做完）。实测两库并行合速 **~2.4 节点/秒**（单库 ~1.2），比串行省 ~25 分钟。
+     - ⚠️ **前置条件：请求数 ≤ 5000/小时**（账号级，同账号所有 Token 共享）。估算：**一次导入的请求数 ≈ 文件数**（目录不耗请求、分片各算 1），多库/多仓同时跑要把总数加起来看（本次 A 3345 + B 1537 ≈ 4900，已卡边）；超了就串行或跨小时错峰。
+     - 中止串行链改并行时：**先把链里「第二个库」的命令掐掉**（`kill -9` 包装 shell + python），否则前库跑完会再起一遍后库、两个进程写同一账本。前库靠账本断点续传，重启后自动 skip 已记账节点。
 5. **心跳汇报**：25% / 50% / 75% / 完成，各报一次（读 progress 账本算百分比）
 6. **对账**：`python3 scripts/yuque_toc_reconcile.py --root <clean_dir> --book <book_id> --progress <账本> [--fix]`
-7. **验收四查**（缺一不可）：
+7. **验收五查**（缺一不可）：
    - TOC 节点数 == 本地节点数 —— **⚠️ 只对无分片库成立**；超限分片后节点数必然 > 本地文件数（标题 `x.json (1/14)`），改用 `scripts/yuque_import_verify.py` 做「本地文件树 ↔ TOC 全映射 + 分片号连续 + 全路径唯一」验收（2026-10-15 legado 固化）
+   - 有分片时跑 `scripts/yuque_verify_shards.py`（分片**内容**逐字符比对，路径 PASS 不代表正文没丢）
    - 对账「错位 DOC: 0」
-   - 幽灵文档 = 0：`yuque_list_docs` 的 total == TOC 里 DOC 数（cleanup_leftover 只删 TOC 条目不删 doc 本体，曾积 7 个幽灵）
+   - **幽灵文档 = 0**：`python3 scripts/yuque_check_ghosts.py --book <id>`（2026-10-21 升为必做，见坑 49）——不能只看 `meta.total` 数字，要对 doc_id 集合求差；toc-md 模式也会中（断点残留 / 重试双写）
    - 深层路径抽查（如 `apps/.../components/xxx.vue`、`package.json`）实际可达
 
 收尾：汇报库链接 + 节点数 + 对账结果；更新 `memory/YYYY-MM-DD.md`。
@@ -93,7 +97,8 @@
 
 15. **目录标题一律原样写，禁转义（2026-10-16 实测）**：`PUT /repos/{id}` 的 markdown `toc` 里，`[weird[1] (x).md](slug)` 原样写是对的；加反斜杠 `\[` 或 HTML 实体 `&#91;` 会被**当字面量写进标题**（标题变脏）。语雀按**最后一个 `](slug)`** 切分——实测 7/7 恶心标题全对：`x]` / `a]b` / `a](b` / `p[q](r` / `尾]` / `(paren]` / `】中文】` / `a\b`
 16. **官方 v2 的 removeNode 语义（2026-10-16 核 OAS 20260722）**：`action_mode=sibling` 删当前节点，`action_mode=child` **删当前节点及子节点**；官方明写「删除节点不会删除关联文档」（→ 幽灵 doc 必须另走 `DELETE /repos/{id}/docs/{id}`）。旧「removeNode 乐观回显清库」事故更像 **action_mode 用错/缺省**（挂在根上就得清库），不再是单纯的响应假成功问题
-17. **限流（官方文档）**：每小时最多 5000 次、每秒最多 100 次，**同账号所有 Token 共享**；响应头带 `X-RateLimit-Limit/Remaining`。**batchMove 单次节点数服务端硬上限 = 500**（超过报 HTTP 400 `limit_exceeded: 单次最多只允许操作 500 个节点`，2026-10-16 rea 实战实测）；200 节点以内验证正常（无 100 上限）。逐节点干活很吃配额——toc-md 模式每文件只需 1 次请求，天然省配额
+17. **限流（官方文档）**：每小时最多 5000 次、每秒最多 100 次，**同账号所有 Token 共享**；响应头带 `X-RateLimit-Limit/Remaining`。**batchMove 单次节点数服务端硬上限 = 500**（超过报 HTTP 400 `limit_exceeded: 单次最多只允许操作 500 个节点`，2026-10-16 rea 实战实测）；200 节点以内验证正常（无 100 上限）。逐节点干活很吃配额——toc-md 模式每文件只需 1 次请求，天然省配额。
+    - ⚠️ **两个「5000」别混（2026-10-21 老板拍板）**：这里的 5000/小时是**账号级请求数（速率）**；硬规则 9 的 5000 是**单库节点数（容量）**。独立、同时生效。toc-md 下**估算请求数 ≈ 文件数**（目录不耗、分片各 1）——多库/多仓并行前先把总请求数加起来看会不会破 5000/小时（rea d0067ba 两库 3345+1537≈4900，已卡边，见坑 48）
 18. **batch 模式遇「同名目录」会串 uuid → 整树错位（2026-10-16 rea 重导版实战）**：仓库里有多处同名目录（如 `bridge/cutter` 与 `src/cutter`；`scripts/fixtures/firmware`、`scripts/verify/firmware`、`tests/fixtures/firmware`）时，batch 模式（节点统一挂根 + batchMove 归位）记录目录 uuid 会按标题匹配到「另一个同名的根级节点」，导致 progress 里**两条 rel 指向同一个 uuid**；随后 batchMove 按这些 uuid 归位 → 大批节点父链错乱（本次实测 2938 条错位、2179 文件路径对不上、TOC 全路径唯一 = False；用 verify 脚本一跑即现）。**对策：含同名目录/文件的仓库不要用 batch 模式，直接上 `--toc-md`（按本地树 DFS 拼 markdown 一次 PUT 设整棵目录，天然按层级区分同名，无 uuid 归属歧义）**
 19. **救援：batch 留下的错位树，用 toc-md 原地重建（免重导正文，2026-10-16 rea 实战）**：文档本体（doc_id/正文）是好的，只是父链乱。做法：① 拉全量 docs（`GET /repos/{id}/docs` 分页）建 `doc_id → slug` 映射；② 回填进 progress 各 segment 的 `slug`（batch 模式的 progress 不存 slug，否则 `build_toc_md` 直接 KeyError 'slug'）；③ 原样跑 `yuque_tree_import.py --toc-md`（全 skip → 只拼树 + 一次 PUT + 回读回填 uuid + 结构核对）。本次 4425 节点 PUT 22s，结构核对 PASS、对账 0 错位、verify PASS、幽灵 0，TOC 4446 节点（DOC 4080 + TITLE 366）全路径唯一 True。**toc-md 的 PUT 以本地树为准重排整棵目录，同名 TITLE/旧节点被复用重挂，无需手工清理**
 20. **batch 归位失败不会真正降级（2026-10-16 核实）**：`flush_group` 在 batchMove 异常分支只记 fail 并打「→ 降级单节点」，**实际并未逐节点降级**；失败节点不会自动兜底，重跑也不自愈。所以 batch 模式一旦批量失败就是硬伤 → 改用 toc-md 或手搓重建
@@ -307,5 +312,5 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
 **坑 49（toc-md 模式同样会留幽灵 doc，来源有两个，2026-10-21 实捶）**：验收「幽灵 0」不能只跑 reconcile——本次 A/B **各多出 1 个不在 TOC 里的 doc 本体**：
     - ① **杀进程残留**：断点那一刻 `POST /docs` 已成功、但 `progress.json` 还没落盘就 `kill -9`（A 的 `wasm-interface.txt`，created_at 正好是 kill 的那一秒）。
     - ② **重试双写**：创建响应超时/异常 → 脚本重试 → 服务端其实已建好（B 的 `jsonOutput.test.ts`，高负载下重试产生）。
-    - **抓法**：逐页拉 `GET /repos/{id}/docs` 取全部 doc_id，与 TOC 的 DOC doc_id 集合求差；**别只看 `meta.total` 数字**——数字对不上时得知道是哪个。
-    - **收法**：`DELETE /repos/{id}/docs/{id}`（本次两个都 200），**回查 `GET …/docs/{id}` 应为 404**，再复核 `meta.total == TOC DOC`。删前先确认同名文件在 TOC 里**已有一份**（避免误删真身，同坑 10）。
+    - **抓法**：逐页拉 `GET /repos/{id}/docs` 取全部 doc_id，与 TOC 的 DOC doc_id 集合求差；**别只看 `meta.total` 数字**——数字对不上时得知道是哪个。现成脚本：`scripts/yuque_check_ghosts.py --book <id>`（退出码 0/1，已成为验收第 5 查；`--delete` 自动删+回查 404）。
+    - **收法**：`DELETE /repos/{id}/docs/{id}`（本次两个都 200），**回查 `GET …/docs/{id}` 应为 404**，再复核 `meta.total == TOC DOC`。删前先确认同名文件在 TOC 里**已有一份**（避免误删真身，同坑 10）——脚本会自动打印 TOC 同名 doc_id 供确认。
