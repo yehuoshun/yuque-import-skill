@@ -328,5 +328,19 @@
   "book_url": "san-management-primer-20261018",
   "imported_at": "2026-10-18T23:57:00+0800",
   "note": "EMC 中文支持论坛《SAN 管理入门系列》8 篇（DOC-16067/16068/16069/16080-16084）。源站 community.emc.com 已下线（302→dell.com 403）、archive.org 被沙箱屏蔽 → 走 Common Crawl 2019 快照（CC-MAIN-2019-47/39/26/18、2018-43/34）取 WARC 还原正文。toc-md 一次 PUT 0.4s、结构核对 PASS、8 篇 word_count 全 >0、图 2/4（第 6/8 篇图经 cnblogs pipci 镜像转 CDN；第 1/5 篇源图 CC 未收录缺失）"
+ },
+ "https://github.com/LLMBook-zh/LLMBook-zh.github.io": {
+  "commit": "7be1a80",
+  "book_id": 84818579,
+  "book_url": "llmbook-zh-7be1a80",
+  "imported_at": "2026-10-21T14:10:00+0800",
+  "note": "人大《大语言模型》（赵鑫等）官方站仓库。双轨：从 LLMBook.pdf（391页/书签224条）抽 15 章正文（5 部分目录）+ 25 个 PDF 走附件（全书 10.8MB + 24 份课件）+ code/23 篇 + README；站点脚手架/封面图不入库。81 节点（64 文档/17 目录）。toc-md 结构核对 PASS；六查全绿（含全库占位扫描：3 篇曾被 NUL 控制符写成占位，已用 PUT 更新修复）。附件 md5 抽 2/2 对。"
+ },
+ "https://github.com/intro-llm/intro-llm.github.io": {
+  "commit": "ba94fed",
+  "book_id": 84818580,
+  "book_url": "intro-llm-ba94fed",
+  "imported_at": "2026-10-21T14:10:00+0800",
+  "note": "复旦《大规模语言模型：从理论到实践》（张奇等）官方站仓库。双轨：从 chapter/LLM-TAP-v2.pdf（533页/书签202条）抽 12 章正文 + 两版全书 PDF 走附件（21MB/56MB）+ 8 个 pptx 只留「未上传」说明 + code/ch5（DeepSpeed-Chat 全套）+ README；css/js/fonts/images/index.html 不入库。133 节点（92 文档/41 目录）。六查全绿（第五/六章曾被 NUL 写成占位，已修）。附件 md5 抽 2/2 对。"
  }
 }

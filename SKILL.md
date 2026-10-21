@@ -93,6 +93,7 @@ python3 scripts/yuque_toc_reconcile.py --root /path/to/dir --book <book_id> --pr
    `python3 scripts/yuque_check_ghosts.py --book <id> [--toc <toc.json>] [--delete]`（退出码 0 = 无幽灵；脚本会拉全量 `GET /repos/{id}/docs` 与 TOC 的 DOC doc_id 集合**求差**，**别只看 `meta.total` 数字**——对不上时得知道是哪一个；口径 = `docs total == TOC DOC 数`）
    - 两个常见来源：① `kill -9` / 重启那一刻 `POST /docs` 已成功但账本未落盘；② 创建响应超时/异常 → 脚本重试 → 服务端其实已建好（双写）。**toc-md 模式同样会中**。
    - 清理：`DELETE /repos/{id}/docs/{id}`（200）+ 回查 `GET …/docs/{id}` 应 404 + 复核 `meta.total == TOC DOC`；**删前先确认同名文件在 TOC 里已有一份**（防误删真身，同坑 10）。
+6. **全库「占位文档」扫描 = 0 篇（2026-10-21 升为必做，见 `references` 坑 50）**：逐页拉 `GET /repos/{id}/docs`，**每篇 `word_count` 必须 >0**（或 body 不以 `<!-- 二进制文件`/`<!-- 源仓库中该文件为空` 开头）。**别只抽查几篇**——中招总是少数篇（PDF 抽章混入 NUL/控制符 → 整篇被当二进制；GBK 源码同族，坑 36），抽查必漏。修复用账本里的 slug 走 `PUT /repos/{id}/docs/{slug}` 更新**已有 doc**（不新建，否则出幽灵）。
 
 ---
 
@@ -131,7 +132,7 @@ python3 scripts/yuque_repo_import.py prep --url <git-url> --dir /home/admin/.ope
 # 2. dry-run 核数 → 3. 建库 → 4. 移分组（内置等待+验证）
 python3 scripts/yuque_repo_import.py create-book --name "<项目名>（<commit>）" --slug <项目名>-<commit> --desc "<url> @ <commit>"
 python3 scripts/yuque_repo_import.py move-stack --book-id <book_id> --stack-id 57018723
-# 5. test 6 → 全量（后台+心跳 25/50/75/完成）→ 对账 → 验收四查
+# 5. test 6 → 全量（后台+心跳 25/50/75/完成）→ 对账 → 验收六查
 python3 scripts/yuque_tree_import.py --root <clean_dir> --book <book_id> --progress <账本> --test 6
 ```
 
@@ -153,6 +154,8 @@ GitBook 3.x 源仓库的书（站点给链接但同名 source repo 在 GitHub，
 触发模板：「把这本 PDF 书/这个站（只有 PDF）导入语雀」。SOP：`references/pdf-book-to-yuque.md`；实战首例 + 脚本：`examples/ostep-pdf/`（fetch_ostep.py + extract_ostep.py + README 含排版识别表与 8 条坑）。
 
 要点：PyMuPDF `get_text("dict")` 按字号/字体/缩进重建结构；断词用 `words_alpha.txt` 词表判断「删连字符拼接 vs 保留复合词」；矢量图文字会混入正文，图本身按老板口径可跳过；只有 PDF 的官方站走网站口径（库名带日期、分组「文章收集」）。
+
+**变体：仓库 = 书 PDF + 课件 + 代码（双轨，2026-10-21 两本 LLM 书固化）** —— 源是 GitHub 仓库时走**开源项目口径**（库名带 commit、分组「开源项目」），内容拆成 `01-正文/`（PDF 按**书签**抽逐章文档）+ `02-代码/` + `03-课件/`（PDF 走附件 / PPTX 不上传）+ `04-原件（全书 PDF）/`（PDF 附件），脚手架不入库。⚠️ 抽章必须**剥 C0 控制符**（`\x00` 等会整篇被判二进制→占位，坑 50），验收要**全库**扫 `word_count>0`（六查第 6 条）。复用脚本 + 完整坑清单：`examples/llmbooks-dual-track/`（`build_lib.py`，含附件文档「预建+账本注入」手法）。
 
 ## 网站抓取导入（网页 → 语雀，2026-10-13 固化，2026-10-14 补命名规范）
 

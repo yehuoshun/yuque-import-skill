@@ -54,12 +54,13 @@
      - 中止串行链改并行时：**先把链里「第二个库」的命令掐掉**（`kill -9` 包装 shell + python），否则前库跑完会再起一遍后库、两个进程写同一账本。前库靠账本断点续传，重启后自动 skip 已记账节点。
 5. **心跳汇报**：25% / 50% / 75% / 完成，各报一次（读 progress 账本算百分比）
 6. **对账**：`python3 scripts/yuque_toc_reconcile.py --root <clean_dir> --book <book_id> --progress <账本> [--fix]`
-7. **验收五查**（缺一不可）：
+7. **验收六查**（缺一不可）：
    - TOC 节点数 == 本地节点数 —— **⚠️ 只对无分片库成立**；超限分片后节点数必然 > 本地文件数（标题 `x.json (1/14)`），改用 `scripts/yuque_import_verify.py` 做「本地文件树 ↔ TOC 全映射 + 分片号连续 + 全路径唯一」验收（2026-10-15 legado 固化）
    - 有分片时跑 `scripts/yuque_verify_shards.py`（分片**内容**逐字符比对，路径 PASS 不代表正文没丢）
    - 对账「错位 DOC: 0」
    - **幽灵文档 = 0**：`python3 scripts/yuque_check_ghosts.py --book <id>`（2026-10-21 升为必做，见坑 49）——不能只看 `meta.total` 数字，要对 doc_id 集合求差；toc-md 模式也会中（断点残留 / 重试双写）
    - 深层路径抽查（如 `apps/.../components/xxx.vue`、`package.json`）实际可达
+   - **全库「占位文档」扫描 = 0 篇**（2026-10-21 升为必做，见坑 50）：逐页拉 `GET /repos/{id}/docs`，**每篇 `word_count` 必须 >0**（或 body 不以 `<!-- 二进制文件`/`<!-- 源仓库中该文件为空` 开头）；**别只抽查 3 篇**——同一次导入往往是少数几篇中招（本次 RUC 3/15 篇、fudan 2/12 篇），抽查必漏。
 
 收尾：汇报库链接 + 节点数 + 对账结果；更新 `memory/YYYY-MM-DD.md`。
 
@@ -321,3 +322,10 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
     - **抓法**：逐页拉 `GET /repos/{id}/docs` 取全部 doc_id，与 TOC 的 DOC doc_id 集合求差；**别只看 `meta.total` 数字**——数字对不上时得知道是哪个。现成脚本：`scripts/yuque_check_ghosts.py --book <id>`（退出码 0/1，已成为验收第 5 查；`--delete` 自动删+回查 404）。
       ⚠️ `--toc` 参数吃**原始 API 响应**（`{"data":[…]}`）；自己 dump 出来的裸数组以前会 `TypeError: list indices must be integers`（2026-10-21 实踩）→ v1.3.92 起两种形状都兼容，不传 `--toc` 则由脚本现拉。
     - **收法**：`DELETE /repos/{id}/docs/{id}`（本次两个都 200），**回查 `GET …/docs/{id}` 应为 404**，再复核 `meta.total == TOC DOC`。删前先确认同名文件在 TOC 里**已有一份**（避免误删真身，同坑 10）——脚本会自动打印 TOC 同名 doc_id 供确认。
+
+**坑 50（PDF 抽章混入 C0/NUL 控制符 → 整篇正文被判成二进制写成占位，2026-10-21 两本 LLM 书实捶）**：把「书 PDF + 课件 + 代码」型仓库做**双轨导入**（PDF 抽成逐章文档 + 原件挂附件）时，PyMuPDF 抽出的正文里会混进**公式/字体的渲染残渣**（`\x00` 开头、`\x00\x01` 等 C0 控制符）。这些控制符落进 md 后，导入器的二进制检测（`"\x00" in text` → binary）会把这**整篇**判成二进制 → 正文写成 `<!-- 二进制文件 0 MB, 跳过内容导入 -->` 占位、`word_count=0`，**结构类验收（节点数/全路径/对账/幽灵）全绿也拦不住**（同族事故见坑 36 GBK）。
+   - **本次规模**：RUC《大语言模型》15 章中 **3 章中招**（第八/十/十二章，NUL 1~3 个）；fudan《大规模语言模型》12 章中 **2 章中招**（第五/六章）。
+   - **根因修法（写在抽取器里，别事后补）**：抽出的文本先剥 C0 控制符再落盘 —— `re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f]", "", s)`（**保留 `\t\n\r`**）；落盘后再扫一遍兜底。
+   - **事后修法**（已入库的）：剥控制符重写本地 md → `PUT /repos/{book}/docs/{slug}` 更新**已存在的 doc**（用账本里的 slug，**不要新建**，否则出幽灵）→ 复核 `word_count>0` + body 与本地**逐字符相等**。
+   - **验收口径变更**：验收从「深层抽查 3 篇 word_count>0」升级为「**全库**逐篇 `word_count>0`（或 body 非占位）」（见 §二·7 第 6 查）——抽查必漏（中招是少数篇）。
+   - 可复用脚本：`examples/llmbooks-dual-track/`（`build_lib.py`：抽章 + 剥控制符 + 附件/PPTX 文档预建 + 账本注入，`README.md` 含完整流程与验收）。
