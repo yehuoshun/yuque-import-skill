@@ -225,6 +225,18 @@
     - 复现命令 + 完整转换规则表 + 验收记录：`examples/d2l-zh/README.md`。
     - **更省事的一档（pumpkin-book，2026-10-22）**：docsify/GitBook 这类**直接渲染 md 的站**，站上页面与源仓库 md 往往**逐字节相同**（先 `curl` 一个页面 + `wc -c` 与仓库同名文件比一下就知道）→ 不吃 HTML、也不用 oracle。⚠️ 但**站点可能落后于仓库**（南瓜书线上还是 docsify、master 已迁 vitepress），只要页面 md 与仓库 md 相同就以仓库为准。
 
+52. **「纯净书仓」：GitHub Pages 书站 + `manuscript/` md 源（eremes81/game-design-ai-practice-zh-hans /《游戏策划实务即用的 AI·Claude Code 活用法》简体中文版，2026-10-22 实战）**：
+    - **识别**：仓库根 = 站点源 —— `index.html`（2.1MB，**全书拼一起的渲染产物，别当正文吃**）+ `manuscript/`（102 个 `.md` = 真正正文）+ `assets/cover.svg` + `robots.txt`/`sitemap.xml`/`.nojekyll`。**只吃 `manuscript/`**，脚手架一律不入库。
+    - **无 `SUMMARY.md`**：中文标题只在**每篇首个 H1**，部分名在 `README.md`「完整目录」的 `### 第N部分 · XXX` → **README 当 oracle、H1 当标题源**（两者逐条核对）。
+    - ⚠️ **H1 == 文档标题 → 剥掉该 H1**（否则语雀「文档标题 + 正文首行 H1」双标题）。规则收紧为「**只剥等于最终标题的那一个**」（本书 102 篇剥 100；front-matter 的 H1 是书名 ≠ 标题 → 保留）→ 零信息损失。（对比 pumpkin 的「扫全文首个 `# `」：那版是整篇首 H1 一律剥。）
+    - ⚠️ **标题里含半角 `/` → 文件系统不允许** → 换全角 `／`（本书 5 处：`UX/UI`、`ArtGuide/06_UI`、`iOS / Android / PC`、`触摸 / 鼠标输入`、`decisions/`、`公司 / 个人 PC`）。语雀 toc-md 收全角无碍。
+    - ⚠️ **部分章的 H1 是异体**（part21/part23 写成 `Part 21 · 第1章. xxx`）→ 归一化成 `21.1 xxx`，否则与全书 `N.M` 风格断层。
+    - **两位序号目录前缀**（`01-第1部分 · 基础` … `24-第24部分 · 运营实战`、`99-后记与附录`）→ 字典序天然正确，**不用 fix_order**（对比 nndl 的「一<三<二」归位坑）。
+    - ✅ **全书 67 处内联 `<svg>`（作者手绘矢量图）语雀 markdown 导入原样保留**（回读 body 里 `<svg>` 完整、` ```mermaid ` 块也在）→ 这类书**不需要**像 d2l/hrl 那样把公式抽成图传 CDN。
+    - **图 = 上游本来就缺的占位符**（README 明说「少数示例位图为无原图的占位符」）：全树无 `images/`，2 处 `![](images/…)` 保留原样不重写、别找。
+    - 根级 DOC（`00-序` / `01-版权页`）toc-md 后会排到 25 个 TITLE **之后** → `prependNode` sibling 归位（坑 29 复发）。⚠️ **连移两个节点要按逆序 prepend**：先 `01-版权页` → prepend 到第一个 TITLE 前，再 `00-序` → prepend 到 `01-版权页` 前；**同 target 连续 prepend 会反序**（本次先序后版权页，得到 `版权页, 序`）。
+    - 结果：127 节点 / 0 失败 / 结构核对 PASS / 六查全绿；库 84860110，slug `game-design-ai-practice-zh-hans-20261022`；`examples/game-design-ai-practice/`（`build_lib.py` 7 条规则 + 验收表）。
+
 ## 五、站点案例速查
 
 | 站点 | 窗口起点 | 窗口终点 | 备注 |
@@ -253,3 +265,4 @@
 | zh.d2l.ai（《动手学深度学习》，Sphinx 2.0.0 书站，2026-10-21） | **不爬 HTML**：站上公式是 MathJax SVG 无 TeX 源 → 直接吃源仓库 `d2l-ai/d2l-zh` 的 `.md`（真 LaTeX）；站点 HTML 只当**标题编号 + `:numref:` 渲染文本**的 oracle | — | 140 文档 + 16 章目录 = 156 节点；只留 **PyTorch**（4 框架选项卡，未标 `#@tab` = mxnet）；图 184 全传 CDN；图片目录必须移出导入根（硬规则 10）；六查全绿；库 84822487；`examples/d2l-zh/` |
 | llmknowledge.org/zh（《理解现代大语言模型系统-从RAG到全景》，koe，2026-10-22） | 同 d2l 姊妹案例：**不爬 HTML**，吃源仓库 `koemia/llmknowledge` 的**单个大 md**（102KB/711 行）；站点 10 页 = md 10 个 H2 一一对应（标题一字不差），站点 HTML 只当 oracle 验证切分 | — | 单 md 按 H2 切 10 篇（开始之前/第一~七章/附录工具库/速记卡片）；**49 个脚注定义内联在正文里**随章走、93 处引用全保真（语雀渲染 `[^x]` 原样）；7 张 SVG 图是 `<img src>` 形式 → 切分时转 `![alt](src)` 再传 CDN；**CC BY-NC-ND 4.0 许可**（非商业·署名·禁止演绎）→ 同 aibydoing 口径私人库自用、描述注明版权来源；10 节点/0 失败/六查全绿；库 84856349，slug `llmknowledge-zh-20261022`；`examples/llmknowledge/` |
 | datawhalechina.github.io/pumpkin-book（Datawhale《南瓜书》，**docsify 站但源仓库已迁 vitepress**，2026-10-22） | **不爬 HTML**：线上还跑旧 docsify（`_sidebar.md` + `chapterN/chapterN.md`），实测线上 `chapter1/chapter1.md` 与仓库 `docs/chapter1/chapter1.md` **逐字节相同（18349B）** → 站点无独立内容，**连 oracle 都不用**，直接吃仓库 `docs/`（比 d2l 还省一档） | — | 20 节点（0 目录/20 文件全平铺）= 00-前言（README HTML 清洗）+ 01-勘误表 + 第1~16章 + 法文版残篇 2 篇；`> [!IMPORTANT]` callout → `> **📌 本章学习须知**`；**剥 H1 要扫全文首个 `# xxx` 行**（章节 1-11 的 H1 在 callout 之后，只看首行会漏 11 篇）；**图只救 `raw.githubusercontent` 的 7 张**（前言 6 + 法文版 roc.png），16 处公式图全在 Datawhale 自家阿里云 OSS（SVG，保持原样比转 CDN 更高保真）；六查全绿；库 84856649，slug `pumpkin-book-20261022`；`examples/pumpkin-book/` |
+| eremes81.github.io/game-design-ai-practice-zh-hans（《游戏策划实务即用的 AI·Claude Code 活用法》简体中文版，**GitHub Pages 书站 + 纯净书仓**，2026-10-22） | **不爬 HTML**：仓库 `manuscript/` 就是站点源（`index.html` 是 2.1MB 单文件渲染产物）；无 SUMMARY → README「完整目录」当部分名 oracle、每篇 H1 当标题源 | — | 127 节点（**25 目录 + 102 文档**，24 部分 100 章 + 附录 A–N + 后记）；`01-第1部分…` 序号前缀免 fix_order；H1==标题则剥（100/102）；标题 `/`→`／`（5 处）；part21/23 异体 H1 归一化 `N.M`；**67 处内联 `<svg>` 语雀原样保留**（不用抽图传 CDN）；图全是上游缺的占位符；根级 DOC 归位（两发按逆序）；六查全绿；库 84860110，slug `game-design-ai-practice-zh-hans-20261022`；`examples/game-design-ai-practice/`（坑 52） |

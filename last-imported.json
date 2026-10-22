@@ -405,5 +405,12 @@
     "book_url": "llm-agent-20261022",
     "imported_at": "2026-10-22T14:52:00+0800",
     "note": "大模型与智能体（人邮 2026）419 页 17 章 → 18 文档/4 目录（共用基础/大模型/智能体/边界与未来）。蒲公英书系列（邱锡鹏 nndl.ai）→ 网站口径（分组文章收集 36149506），老板拍板「多本就分开」→ 每本一个库。站点 nndl/nndl.github.io 是 Jekyll 落地页（只有封面/介绍/下载/阅读路径/可视化资源），书稿 LaTeX 源不公开，正文只能吃 GitHub release 的出版前电子稿 PDF。默认双轨：正文逐章提取 + PDF 原件走 type=attachment 挂根级 00-PDF 原件.md。提取要点：标题用书签文本锚定（节号/标题同 y 拆两行要合并；附录节号带字母）；右侧边注栏 margin_x=350 分流成 > 📝 引用块（单栏的通识版关掉）；代码行（LMMono*）攒成围栏代码块（否则代码注释 # 被当 H1）；页眉 y1<58 / 页脚 y0>640。验收六查全绿 + 附件 md5 对。"
+  },
+  "https://github.com/eremes81/game-design-ai-practice-zh-hans": {
+    "commit": "df9a7ab",
+    "book_id": 84860110,
+    "book_url": "game-design-ai-practice-zh-hans-20261022",
+    "imported_at": "2026-10-22T15:45:00+0800",
+    "note": "默认分支 main @ df9a7ab（구매 링크를 해당 언어판 채널만 남기도록 정리，2026-10-22）。网站口径（正本站 eremes81.github.io/game-design-ai-practice-zh-hans）+ 源仓库 manuscript/ md；库名带日期、分组「文章收集」36149506；CC BY-NC-SA 4.0 → 私人库自用。**首例「纯净书仓」**：index.html 是 2.1MB 全书渲染产物（不吃），只吃 manuscript/；无 SUMMARY → README「完整目录」当部分名 oracle + 每篇 H1 当标题；clean 树 = 25 目录（01-第1部分 · 基础 … 24-第24部分 · 运营实战、99-后记与附录）+ 102 文档（根级 00-序 · 封面 · 阅读方法 / 01-版权页），127 节点 < 5000 不分库。标题处理：H1==标题则剥（100/102）、半角 `/`→全角 `／`（5 处）、part21/23 异体 H1 `Part NN · 第M章`→`NN.M`、`\\~`→`~`。**内联 SVG 保真：全书 67 处 `<svg>` 语雀 markdown 导入原样保留**（回读 body svg 完整，mermaid 块也在）→ 不用抽图传 CDN。图 = 上游本来就缺的占位符（README 已声明），2 处 `![](images/…)` 保留原样不重写。toc-md 127 行/9.6KB 一次 PUT 1.4s、结构核对 PASS、0 失败；根级 DOC 排到 TITLE 之后 → prependNode sibling 两发按**逆序**归位（同 target 连续 prepend 会反序，本次先序后版权页拿到「版权页, 序」已打回重做），归位后 00-序 → 01-版权页 → 01-第1部分… → 99-后记与附录。六查全绿：TOC 127==本地 127、全路径唯一 True、缺失 0、幽灵 0（docs 102==TOC DOC 102）、102 篇 word_count 全 >0 无占位、抽查 2.3（wc 6233/svg 3/mermaid 1）与 24.2（wc 4191/mermaid 5）。无分片（最大文件 15.5KB）。新增 examples/game-design-ai-practice/（build_lib.py 7 条规则 + README）+ refs 坑 52 + 速查表行。"
   }
 }
