@@ -363,5 +363,12 @@
   "book_url": "d2l-zh-20261021",
   "imported_at": "2026-10-21T19:10:00+0800",
   "note": "网站口径 + 源仓库 md（来源标注按硬规则 11）：站上公式是 MathJax SVG 无 TeX 源 → 改吃 d2l-ai/d2l-zh master @ e6b18cce 的 .md 真 LaTeX，站点 HTML 只当标题编号/numref 渲染文本 oracle；只留 PyTorch（4 框架选项卡，未标 #@tab = mxnet）→ 140 文档 + 16 章目录 = 156 节点；184 张图全传 CDN；标题编号 923 / 公式编号 76（=源 eqlabel 全覆盖）/ 表 7 / 参考文献 159 条（从站上 zreferences 页倒推）；六查全绿（幽灵 0 / 占位 0 / fail 0）。中途停手一次（图片目录误留导入根 → 节点 341≠156，移出后续跑）+ 清 1 篇未落账孤儿 doc。转换器 examples/d2l-zh/"
+ },
+ "https://datawhalechina.github.io/pumpkin-book/": {
+  "commit": "58add39",
+  "book_id": 84856649,
+  "book_url": "pumpkin-book-20261022",
+  "imported_at": "2026-10-22T10:25:00+0800",
+  "note": "Datawhale《南瓜书》（西瓜书公式详解）→ 网站口径（分组文章收集 36149506）。源仓库 datawhalechina/pumpkin-book master @ 58add39（2026-01-21「从docsify迁移至vitepress」）；同一提交线上还挂着旧 docsify 站（datawhalechina.github.io/pumpkin-book），实测线上 chapter1/chapter1.md 与仓库 docs/chapter1/chapter1.md 逐字节相同（18349B）→ 直接吃仓库 docs/，站点无独立内容、连 oracle 都不用（同 d2l「源仓库 md」取法，比 d2l 还简单）。20 节点（0 目录/20 文件，全平铺）：00-前言（README HTML 清洗）+ 01-纸质版勘误表 + 02..17 第1~16章 + 18/19 法文版残篇（chapter1_FR/chapter2_FR）。只动三处：`> [!IMPORTANT]` callout → `> **📌 本章学习须知**`（语雀不认 callout）+ 去首个 H1（章节1-11 的 H1 在 callout 之后，剥 H1 要扫全文首个 `# xxx` 行，只看首行会漏 11 篇）+ 前言/法文版 HTML 清洗（div/center/h1/h2/img/a）；正文一字不改。图：16 处公式图全在 Datawhale 自家阿里云 OSS（SVG，保持原样，比转 CDN 高保真）；仅 7 张 raw.githubusercontent 图（前言 6 + 法文版 roc.png）本地有原图 → 传语雀 CDN 重写，导入前 _img/ 移出根目录（硬规则10）。未入库：docs/chapter2|chapter4 的 resources（pdf/pptx，正文零引用）、docs/index.md（vitepress home+script）、docs/public、.vitepress、package*.json、.github。toc-md 目录树 20 行/1043B PUT 0.6s 结构 PASS、0 失败；验收六查全绿：TOC 20==本地 20、全路径唯一 True、对账 0 错位、分片 N/A、幽灵 0（docs 20==TOC DOC 20）、20 篇 word_count 全>0 + CDN 图 7/7 HTTP 200。存 examples/pumpkin-book/（build.py + README）。"
  }
 }
