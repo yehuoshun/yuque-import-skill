@@ -267,6 +267,14 @@
     - 同一目录下**同卷同名章节**（本书 `卷2 第6章 Git` 有两份独立译文）→ 标题加「（译文一/二）」防同父重名（硬规则 6）。
     - 口径：无 repo → **网站口径**（库名 `开源软件架构（2026-10-22）`、slug `aosa-zh-20261022`、分组「文章收集」）；树 = 前言（根级）+ `卷1/` `卷2/` 两个 TITLE + 39 篇。结果：41 节点 / 74 图全传 CDN / 0 失败 / 结构核对 PASS / 六查全绿 + 39 篇逐篇回读 0 未命中；库 84864438。
 
+56. **wizardforcel / 老 gitbooks.io 静态站（GitBook 2.x，`https://<name>.gitbooks.io/<book>/content/`，2026-10-22《让开发自动化系列专栏》实战，`examples/wizardforcel-gitbook/`）**：
+    - ⚠️ **gitbooks.io 间歇 401**（同 progit2 坑）→ `fetch()` 必须退避重试（实测 6 次、2/4/6…s 后全 200）；首轮裸请求直接 401 抛异常。
+    - 结构固定：侧栏 `ul.summary li.chapter[data-path]` 就是页面清单（**顺序 = 侧栏序，不用手填**，标题里 `<b>N.</b>` 是序号）；正文容器 = `section.normal`（页外 nav-prev/nav-next 天然在外）。
+    - **无源仓库**（`wizardforcel/ibm-j-ap` 在 GitHub 不存在）→ 抓 HTML。**正文首个 H1 == 文档标题 → 剥掉**（语雀侧已有文档标题）。
+    - 图在 `img/`（相对路径）→ 边转边传 CDN；⚠️ **本站 `img/build-failure.jpg`、`img/cpd-ant.jpg` 源站 404**（建站时就缺）→ 保留原站 URL，裂图即上游如此，修不了。
+    - 文件名用 `NN-副标题.md` 两位序号前缀免归位；标题含 `/` 换全角。
+    - 结果：18 节点（0 目录/18 文档）/ 78 图传 CDN（2 上游 404）/ 0 失败 / 结构核对 PASS / 六查全绿 + 18 篇逐篇回读 0 未命中；库 84864611，slug `ibm-j-ap-20261022`。**同族站（ibm-j-cq 等）直接换 `--base` + `--book-name` 复用**。
+
 ## 五、站点案例速查
 
 | 站点 | 窗口起点 | 窗口终点 | 备注 |
@@ -299,3 +307,4 @@
 | refactoringguru.cn/design-patterns（《深入设计模式》设计模式全节，2026-10-22） | 正文 = `main div.page.text, main article.page.text`（**祖先过滤要排除 body/html**——body 也带 `no-feature`，坑 53）；`/design-patterns` 落地页另剔 `div.illustration-container` hero | 容器自带边界（prom/banner/aside.feature 独立节点） | 261 页（简介/目录/3 分类/22 模式/工厂比较/双分派/电子书页 + **10 语言 landing + 220 篇代码示例**）= 275 节点；`chpule/chpuri` 保留标点折空格、删 `&shy;`、结构图取非-indexed、图标即语义（优缺点/适用场景/星级）、卡片按 `.pattern-name/.pattern-aka/意图` 渲成列表；图只传 `content/`+`diagrams/`（151 张）；`--test N`+`--toc-md` 必报目录树失败=预期；根级 DOC 两发逆序归位（坑 29）；六查全绿 + 261 篇逐篇回读 0 未命中；库 84861074，slug `refactoringguru-design-patterns-20261022`；`examples/refactoringguru-design-patterns/`（坑 53） |
 | eremes81.github.io/game-design-ai-practice-zh-hans（《游戏策划实务即用的 AI·Claude Code 活用法》简体中文版，**GitHub Pages 书站 + 纯净书仓**，2026-10-22） | **不爬 HTML**：仓库 `manuscript/` 就是站点源（`index.html` 是 2.1MB 单文件渲染产物）；无 SUMMARY → README「完整目录」当部分名 oracle、每篇 H1 当标题源 | — | 127 节点（**25 目录 + 102 文档**，24 部分 100 章 + 附录 A–N + 后记）；`01-第1部分…` 序号前缀免 fix_order；H1==标题则剥（100/102）；标题 `/`→`／`（5 处）；part21/23 异体 H1 归一化 `N.M`；**67 处内联 `<svg>` 语雀原样保留**（不用抽图传 CDN）；图全是上游缺的占位符；根级 DOC 归位（两发按逆序）；六查全绿；库 84860110，slug `game-design-ai-practice-zh-hans-20261022`；`examples/game-design-ai-practice/`（坑 52） |
 | ituring.com.cn/book/1143（《开源软件架构》The Architecture of Open Source Applications 中文版 / iTran乐译开放书，**Vue SPA + 隐藏 JSON API**，2026-10-22） | **不爬 HTML**：页面是 SPA 外壳，正文全在 `api.ituring.com.cn` → 图书详情 `GET /api/book/{id}`（book 小写）拿 `ebook.chapters[]`，章节正文 `GET /api/Book/mini/{章节id}`（Book 大写）拿 `{subject, htmlOfBody}` | — | 39 章全 `isFree` 可读；`htmlOfBody` 脏 HTML（`<p>` 未闭合互相嵌套）→ 含块级子元素的 `<p>` 要下钻 render；图三类历史外链（aosabook.org 旧 `/images/`→新 `/static/`；raw.github.com 图床已删→官方 static；`/download/xxx` 补 host）；`.small` 无扩展名图先改 `.png` 再传 CDN；本书 `卷2 第6章 Git` 两份独立译文→标题加「（译文一/二）」；41 节点（2 目录/39 文档）六查全绿 + 39 篇逐篇回读 0 未命中；库 84864438，slug `aosa-zh-20261022`；`examples/ituring-aosa/`（坑 55） |
+| wizardforcel.gitbooks.io/<book>（老 gitbooks.io GitBook 2.x 静态站，无源仓库，2026-10-22《让开发自动化系列专栏》ibm-j-ap） | **抓 HTML**：侧栏 `ul.summary li.chapter[data-path]` 定页面清单（顺序=侧栏序）；正文容器 `section.normal` | — | ⚠️ **gitbooks.io 间歇 401** → fetch 退避重试（6 次）；18 节点（0 目录/18 文档，`NN-` 序号前缀免归位）；正文首 H1==标题则剥；图 `img/` 相对 → 边转边传 CDN（78/80，2 张上游 404）；标题 `/`→`／`；六查全绿 + 18 篇逐篇回读 0 未命中；库 84864611，slug `ibm-j-ap-20261022`；**可复用转换器** `examples/wizardforcel-gitbook/build.py`（坑 56） |

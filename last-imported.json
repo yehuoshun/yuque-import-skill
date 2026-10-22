@@ -465,5 +465,12 @@
   "book_url": "aosa-zh-20261022",
   "imported_at": "2026-10-22T22:37:00+0800",
   "note": "《开源软件架构》(The Architecture of Open Source Applications 中文版 / iTran乐译开放书，CC BY 3.0)。网站口径（无 repo），库 84864438（slug aosa-zh-20261022，分组「文章收集」36149506）。⚠️ 图灵社区是 Vue SPA，页面 HTML 无正文 → 真 API 在 api.ituring.com.cn：图书详情 GET /api/book/1143（book 小写）取 ebook.chapters[]，章节正文 GET /api/Book/mini/<章节id>（Book 大写）取 {subject, htmlOfBody}；39 章全 isFree 可读。转换器 examples/ituring-aosa/build.py：脏 HTML（<p> 不闭合互相嵌套）下钻 render；图三类历史外链归一化（aosabook.org 旧 /images/ 已 404→新 /static/；raw.github.com 图床仓已删→aosabook.org/static/violet/；/download/xxx 补 download.ituring.com.cn）；74 图全传 CDN（含 2 张 .small 无扩展名图改 .png 才传成功）。树 = 前言（根级）+ 卷1/卷2 两个 TITLE + 39 文档 = 41 节点；卷2 第6章 Git 源码里两份独立译文→加「（译文一/二）」防同父重名。部分章残缺（Glasgow 602B / PyPy / Yesod「待续」等，上游译本本身如此）。toc-md 目录树 41 行/1962B PUT 0.5s、结构核对 PASS、0 失败；六查全绿：TOC 41==本地 41、全路径唯一 True、对账 0、幽灵 0（docs 39==TOC DOC 39）、39 篇逐篇回读逐字符相等 0 差、word_count 39/39>0；抽 3 张 CDN 图 200。"
+ },
+ "https://wizardforcel.gitbooks.io/ibm-j-ap": {
+  "commit": null,
+  "book_id": 84864611,
+  "book_url": "ibm-j-ap-20261022",
+  "imported_at": "2026-10-22T22:59:00+0800",
+  "note": "IBM developerWorks《让开发自动化》系列专栏（Paul Duvall 著，17 篇 + 系列介绍），wizardforcel 老 gitbooks.io 简中译本。网站口径（GitHub 无 wizardforcel/ibm-j-ap 仓库 → 抓 HTML），库 84864611（slug ibm-j-ap-20261022，分组「文章收集」36149506）。站结构 = GitBook 2.x（侧栏 ul.summary li.chapter[data-path] 定页面清单/顺序，正文 section.normal）；⚠️ gitbooks.io 间歇 401 → fetch 退避重试 6 次。可复用转换器 examples/wizardforcel-gitbook/build.py（自动解析侧栏 + 正文首 H1==标题则剥 + 图 img/ 边转边传 CDN + NN- 序号前缀免归位）。18 节点（0 目录/18 文档）；80 图引用中 78 传 CDN，2 张（img/build-failure.jpg、img/cpd-ant.jpg）源站 404 为上游建站时就缺 → 保留原站 URL。toc-md 目录树 18 行/968B PUT 0.5s、结构核对 PASS、0 失败；六查全绿：TOC 18==本地 18、全路径唯一 True、对账 0、幽灵 0（docs 18==TOC DOC 18）、18 篇逐篇回读逐字符相等 0 差、word_count 18/18>0。"
  }
 }
