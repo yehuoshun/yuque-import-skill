@@ -430,5 +430,12 @@
   "book_url": "refactoringguru-design-patterns-20261022",
   "imported_at": "2026-10-22T17:10:00+0800",
   "note": "网站口径（RefactoringGuru 官方中文站设计模式全节，《深入设计模式》在线版）。261 页 → clean 树 275 节点（14 目录 / 261 文件）< 5000 单库：00-设计模式简介 + 01-设计模式目录 + 02/03/04 三分类（00-概览 + 22 模式 + 06-工厂模式比较 + 23-双分派与访问者）+ 05-代码示例（00-概览 + 05.01-C#…05.10-TypeScript 每语言 00-landing + 01..22 模式 = 10 landing + 220 示例）+ 06-深入设计模式（电子书销售页）。bs4 递归渲染器（examples/refactoringguru-design-patterns/fetch.py）：⭐ body 也带 no-feature 类 → 祖先过滤一票否决全站（11 页被滤成 1 字节，祖先检查须排除 body/html）；chpule/chpuri 承载中文标点+空格（收尾折回）；删软连字符 &shy;(\\xad)；结构图取非 indexed 那张；图标即语义（优缺点 fa-check/fa-times、适用场景 fa-bug/fa-bolt、星级 fa-star(-o)）；卡片页按 .pattern-name/.pattern-aka/意图 渲成列表；图只放行 patterns/content/ + patterns/diagrams/（151 张全传 CDN，0 失败）。toc-md 一次 PUT 2.2s 结构核对 PASS、0 失败（dir 13/doc 256/skip 6，试水 --test 6 的 5 篇续用）；根级 DOC(00/01) 排到 TITLE 后 → prependNode sibling 两发按逆序归位（坑 29）。六查全绿（TOC 275 == 本地 275 == docs 261+14；全路径唯一 True；对账 0 错位；幽灵 0；261 篇 word_count 全 >0；逐篇回读 261/261 命中）；无 PDF → 无附件轨。坑 53 + examples/refactoringguru-design-patterns/；分组「文章收集」36149506（回查确认）。"
+ },
+ "http://blog.csdn.net/lovelion/article/details/17517213": {
+  "commit": null,
+  "book_id": 84861605,
+  "book_url": "csdn-lovelion-design-patterns-20261022",
+  "imported_at": "2026-10-22T17:50:00+0800",
+  "note": "网站口径（CSDN 博客系列，刘伟/Sunny）。索引页 http://blog.csdn.net/lovelion/article/details/17517213 只有 129 条链接清单 → 拓成全量系列库：导学目录 + 129 篇 = 130 文件 / 163 节点（33 目录）< 5000 单库。树 = 00-导学目录 + 01-基础知识(3) + 02-面向对象设计原则(8) + 03-创建型模式(6 模式/25 篇) + 04-结构型模式(7/29) + 05-行为型模式(11/55) + 06-设计模式与足球(4) + 07-综合应用实例(2 组/5)。bs4 递归渲染器（examples/csdn-lovelion-design-patterns/crawl.py，索引结构内嵌 GROUPS）：正文 div#content_views（广告在容器外）；标题 h1.title-article；代码 <pre><code class=language-x>（225 块全带语言）。⭐ 新坑：CSDN 反爬 HTTP 521（2KB 空壳）→ 退避重试 + 以「无 content_views」为失败判据（首轮探测 130 页中 2 页中招，重试后全 200）；⚠️ CSDN 的 <table> 常是版式盒子（「思考」提示框：外层 1 行 1 格 + 内嵌表）→ 含嵌套 table 或每行 ≤1 格就渲成 > 引用块（本库 248 处）；老图域名 img-my/img-blog.csdn.net 带 Referer 全 200（187 张全传 CDN 0 失败），表情图 static.blog.csdn.net/xheditor/*.gif 已 404 跳过，无扩展名 URL 用 Content-Type 猜扩展名。toc-md 一次 PUT 1.2s 结构核对 PASS、0 失败；根级 DOC(00) 排到 TITLE 后 → 一发 prependNode sibling 归位（坑 29）。六查全绿（TOC 163 == 本地 163 == docs 130+33；全路径唯一 True；对账 0；幽灵 0；130 篇 word_count 全 >0（min 537）；逐篇回读 130/130 命中）；无附件轨。坑 54 + examples/csdn-lovelion-design-patterns/；分组「文章收集」36149506（回查确认）。"
  }
 }
