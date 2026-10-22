@@ -178,6 +178,7 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
 - 段落尾 `::` + 空行 + 列 0 指令 → 指令被吞进 literal 块，`::` 收成单冒号
 - **Sphinx 交叉引用角色 → 剥成纯文本**（不只是 `:doc:`，`:ref:`/`:term:`/`:func:` 等同族）。2026-10-17 linuxtools_rst 实测：docutils 不认这些角色 → `参见 :ref:`ldd`` **原样留在正文**（12 处垃圾）。修法：转换前 `ROLE_RE.sub(_strip_role, src)`，`:ref:`显示文本 <目标>`` → `显示文本`、`:ref:`目标`` → `目标`
 - **`.. image:: /_static/x.png` 是站点绝对路径**：转出来就是 `![]](/_static/x.png)`，`os.path.join` 遇绝对路径会**直接跳出导入根** → rewrite 报 missing。先在 md 里把 `(/` 前缀改成按层级算的相对路径（根下 `_static/`、子目录 `../_static/`），再跑 `yuque_rewrite_images.py`
+- **`.. literalinclude::` 必须转换前展开成 `.. code:: <lang>`**（docutils 不认 Sphinx 扩展指令，会**静默丢掉整段代码**）；**`doctitle_xform=False`** 否则首节提升为标题、子节全压成 h1（大纲扁平）；**块间要空行**（同类 li/表格/引用用单 `\n`）；`.. contents::` 剥掉；`pre` 围栏带语言 —— 见坑 55（2026-10-22 design_patterns）
 
 **坑 35（GitBook 3.x 源仓库的书，2026-10-18 yourtion/DataminingGuideBook 实战）**：老板给的是**站点**链接（`dataminingguide.books.yourtion.com`，页面 meta `generator=GitBook 3.2.2` + `author=Yourtion`），但**同名源仓库就是书稿源** → 先 `api.github.com/search/repositories?q=<书名>` 找到 `yourtion/DataminingGuideBook`，**吃 md 不抓 HTML**（口径随源走：库名带 commit、分组「开源项目」，同 TLCL/uCore）。两个特征要认清：
 - 这类 GitBook 3.x 源**没有目录层级**——正文是 `chapter-N/chapter-N-M.md` 扁平编号，层级与标题**只存在 SUMMARY.md 的缩进里** → 必须解析 SUMMARY.md 重建树，靠文件名推不出来
@@ -223,6 +224,8 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
 实测：47 节点（6 目录 / 41 文档）、18 图 CDN（49 处引用、0 缺失）、toc-md **PUT 0.6s**、四查全绿（41 篇逐字符回读 0 差 / 幽灵 0 / reconcile 0）；根级 TITLE/DOC 混排顺手二次归位（见 `api-notes.md` 根级排序条）。可复用脚本 + README：`examples/mastering-es-guide/`。
 
 **案例（Sphinx/readthedocs 书仓，2026-10-17 me115/linuxtools_rst 实战）**：需 Sphinx 源仓库（`conf.py`/`index.rst`/`Makefile`）导站时，**只导 toctree 覆盖的页面 + 图片**；仓库根常同时躺着脚手架（`_build/`、`der/`、`sphinx_rtd_theme/`、`*.zip`、`*.epub`）和**早期版本的重复单文件**（本次 `top.rst`/`020-file-manage.rst`/`crontab.rst` 与 `tool/top.rst`/`base/02_file_manage.rst`/`tool/crontab.rst` 撞车，`base/ref.rst`/`base/README.rst`/`base/crond introduce.rst` 不在任何 toctree）——按 toctree 展开收集，别整树导。本次：`index.rst` + `base/`(index+9) + `advance/`(index+3) + `tool/`(index+19) = **35 篇 → 38 节点**（3 目录）；6 张图传 CDN（`_static/` 里其余 4 张封面/psd 未被引用不传）；无需爬 HTML（站点就是这些 rst 渲染的）。
+
+**续例（同作者 me115/design_patterns《图说设计模式》，2026-10-22，坑 55）**：同族 Sphinx/reST 书稿，但正文靠 `.. literalinclude::` 内联各模式示例源码 → **转换器必须先展开 literalinclude**（否则「代码分析」节全空），另修 `doctitle_xform`（保层级）+ 块间空行 + `pre` 带语言围栏。脚手架全剔、**`code/` 不入库**（源码已内联 + 里含 `.o/.exe`）；上游 `_static` 图名大小写写错（`State1.png` vs 磁盘 `state1.png`，站点 404）→ 大小写不敏感解析。clean 25 节点（3 目录/22 文档）；脚本 `examples/design-patterns/`。
 
 **坑 40（AsciiDoc 书稿源 + 老 gitbooks.io 站当逐页 oracle，2026-10-18 sinosmond/puppet-27-cookbook-CN 实战）**：老板给的还是 gitbook.com 旧链（302 → gitbook 首页，死），但**书内 Footer/正文自述「源码位于 <repo>」** → 判据升级：老 gitbooks.io 书页（`https://<user>.gitbooks.io/<slug>/content/`）**还活着**时，先看书里有没有自述源仓库；本次 `sinosmond/puppet-27-cookbook-CN`（AsciiDoc 书稿）比抓 HTML 强得多（`[source,puppet]` 语言标签 / 块标题 / 出处引用都在）。
 
@@ -340,3 +343,12 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
    - **别急着改主脚本**：`split(None,1)` 是给 `"title"` 用的，改坏了会连累所有带 title 的引用；用外挂旁路最省事
    - **顺带**：修完后**必然还剩一批「真缺失」**（本次 14 处：ch08 `CBNet-1..8`/`mmdetection.png`、ch09 `9.10.5-1..5`）——上游改图名没更文，**修不了、别找**，原样留裂图并在报告里说明
    - 完整流程 + 三个可复用脚本（`fix_refs.py` / `upload_space_imgs.py` / `fix_root_order.py`）：`examples/deeplearning-500-questions/`
+
+**坑 55（Sphinx/reST 书稿：`literalinclude` 静默丢代码 + 首节提升压平大纲 + 块间无空行，2026-10-22 me115/design_patterns《图说设计模式》实战，v1.3.108 已修）**：Sphinx 工程（`conf.py`/`index.rst`/`Makefile`）用 `yuque_rst_convert.py` 转换时，三处会静默失真：
+   - ① **`.. literalinclude:: /code/X/main.cpp` 被 docutils 整条丢弃**（那是 Sphinx 扩展指令，docutils 不认 → report_level 压住系统消息，正文里「代码分析」节的代码**全没了**，四查全绿也拦不住）。修法：转换前展开成 `.. code:: <lang>`（**docutils 核心自带 code 指令**）——路径 `/` 开头 = Sphinx srcdir（`--srcdir`，默认同 `--src`）、否则相对当前 rst 目录；语言取 `:language:` 选项、否则按扩展名映射；**代码里含 `<`/`&` 由 docutils 转义、剥标签后 `h.unescape` 还原**，与源文件逐字符等（tab 会按 docutils 规则展开，站点同样）。
+   - ② **`doctitle_xform` 默认把首节提升为文档标题** → 剩余节全被渲成 `h1`，语雀大纲**扁平**（13 个 h1 并列）。修法：`settings_overrides["doctitle_xform"]=False`，恢复自然层级（章 h1 / 节 h2 / 小节 h3）。
+   - ③ **块级元素用单 `\n` 拼接** → 相邻两段 `<p>` 在 markdown 里**并成一段**。修法：块收成 `(kind, text)`，按类型 join（**同类 `li`/表格行/引用行/`dt`-`dd` 用 `\n`，其余 `\n\n`**）。顺带把 `.. contents:: 目录` 整条剥掉（本地大纲与语雀侧边大纲重复）。
+   - 另有：**`pre` 围栏带语言**（从 `<pre class="code cpp literal-block">` 的 class 取）→ ` ```cpp `；`_static/` 图片是 Sphinx **绝对路径** `/_static/x.jpg` → 先按目标目录深度改相对（根 `_static/`、子目录 `../_static/`）再跑 rewrite + 删目录（同 linuxtools 的 `/_static/` 处理）。
+   - **范围口径**：只导书稿正文（`index/read_uml/三个分类目录/readme`），脚手架（`conf.py`/`Makefile`/`make.bat`/`sphinx_rtd_theme/`/`.EAP`/`.vsd`）全剔；**`code/` 也不入库**——各章示例源码已由 literalinclude 内联进正文，且子目录是编译产物（84 个 `.o` + 16 个 `.exe`）。
+   - ⚠️ 上游 rst 图名**大小写写错**（`State1.png`/`State2.png` vs 磁盘小写 `state1.png`/`state2.png`，站点同错 = 404）→ 拷图按**大小写不敏感**解析真身。
+   - 可复用脚本：`examples/design-patterns/`（`build_lib.py` 建中文树 + `fix_root_order.py` 根级 DOC 归位）。实测 25 节点（3 目录/22 文档）、69 图传 CDN、toc-md PUT 0.9s、六查全绿 + 22 篇逐篇回读 0 差；库 84861785。

@@ -437,5 +437,12 @@
   "book_url": "csdn-lovelion-design-patterns-20261022",
   "imported_at": "2026-10-22T17:50:00+0800",
   "note": "网站口径（CSDN 博客系列，刘伟/Sunny）。索引页 http://blog.csdn.net/lovelion/article/details/17517213 只有 129 条链接清单 → 拓成全量系列库：导学目录 + 129 篇 = 130 文件 / 163 节点（33 目录）< 5000 单库。树 = 00-导学目录 + 01-基础知识(3) + 02-面向对象设计原则(8) + 03-创建型模式(6 模式/25 篇) + 04-结构型模式(7/29) + 05-行为型模式(11/55) + 06-设计模式与足球(4) + 07-综合应用实例(2 组/5)。bs4 递归渲染器（examples/csdn-lovelion-design-patterns/crawl.py，索引结构内嵌 GROUPS）：正文 div#content_views（广告在容器外）；标题 h1.title-article；代码 <pre><code class=language-x>（225 块全带语言）。⭐ 新坑：CSDN 反爬 HTTP 521（2KB 空壳）→ 退避重试 + 以「无 content_views」为失败判据（首轮探测 130 页中 2 页中招，重试后全 200）；⚠️ CSDN 的 <table> 常是版式盒子（「思考」提示框：外层 1 行 1 格 + 内嵌表）→ 含嵌套 table 或每行 ≤1 格就渲成 > 引用块（本库 248 处）；老图域名 img-my/img-blog.csdn.net 带 Referer 全 200（187 张全传 CDN 0 失败），表情图 static.blog.csdn.net/xheditor/*.gif 已 404 跳过，无扩展名 URL 用 Content-Type 猜扩展名。toc-md 一次 PUT 1.2s 结构核对 PASS、0 失败；根级 DOC(00) 排到 TITLE 后 → 一发 prependNode sibling 归位（坑 29）。六查全绿（TOC 163 == 本地 163 == docs 130+33；全路径唯一 True；对账 0；幽灵 0；130 篇 word_count 全 >0（min 537）；逐篇回读 130/130 命中）；无附件轨。坑 54 + examples/csdn-lovelion-design-patterns/；分组「文章收集」36149506（回查确认）。"
+ },
+ "https://github.com/me115/design_patterns": {
+  "commit": "0cbd785",
+  "book_id": 84861785,
+  "book_url": "design-patterns-0cbd785",
+  "imported_at": "2026-10-22T18:05:00+0800",
+  "note": "《图说设计模式》（me115，Sphinx/reST 书稿；站点 design-patterns.readthedocs.io 尚活可当 oracle）。开源项目口径，master @ 0cbd785。只导书稿正文（index/read_uml/三分类/readme）= 25 节点（3 目录/22 文档）；脚手架全剔（conf.py/Makefile/make.bat/sphinx_rtd_theme/design_patterns.EAP/state_diagram.vsd/dp_tmp.txt）；**code/ 不入库**（各章示例源码已由 literalinclude 内联进正文 + 子目录是编译产物 84 .o/16 .exe）。⭐ 新坑（转换器三修，v1.3.108）：① `.. literalinclude::` docutils 静默丢弃 → 展开成 `.. code:: <lang>`（srcroot 解析 / 开头路径 + 扩展名语言映射 + pre 围栏带语言）；② doctitle_xform=False 保层级（默认首节提升→子节全压 h1、大纲扁平）；③ 块间补空行（同类 li/表格/引用用单 \\n）避免相邻段并段 + 剥 `.. contents::`。`/_static/` 绝对路径改相对后 69 图传 CDN（--throttle 2，0 失败）、目录删净；上游 State1/State2.png 大小写写错（磁盘小写、站点 404）→ 大小写不敏感解析。toc-md PUT 0.9s 结构核对 PASS；根级 DOC 被排到 TITLE 后 → fix_root_order 3 轮归位。六查全绿（TOC 25==本地 25；全路径唯一；对账 0；无分片；幽灵 0 docs 22==TOC DOC 22；22 篇 word_count 全>0）+ 22 篇逐篇回读 0 差。新增 examples/design-patterns/（build_lib.py + fix_root_order.py + README）+ refs 坑 55 + SKILL 入口 + 速查表行。"
  }
 }

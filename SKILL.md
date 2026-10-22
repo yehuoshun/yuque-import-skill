@@ -138,6 +138,8 @@ python3 scripts/yuque_tree_import.py --root <clean_dir> --book <book_id> --progr
 
 完整 SOP + 坑清单：`references/github-repo-to-yuque.md`（必读，含 7 条踩过的坑）。
 
+**源仓库是 Sphinx/reST 书稿时**（`conf.py`/`index.rst`/`Makefile`，可用 `yuque_rst_convert.py`）：正文常用 `.. literalinclude::` 内联示例源码 → **转换器必须先展开成 `.. code:: <lang>`（否则代码静默全丢）**，另开 `doctitle_xform=False` 保层级、块间补空行、剥 `.. contents::`；脚手架全剔、**`code/` 不入库**（源码已内联 + 里多含 `.o/.exe`）；`_static/` 是绝对路径要先改相对再传 CDN。见坑 55 + `examples/design-patterns/`（2026-10-22《图说设计模式》）。
+
 **源仓库是 AsciiDoc 书稿时**（老 gitbook 书 + `book.txt`/`entries.txt`/`include::`，全树无 `.md`，2026-10-18 puppet-27-cookbook 实战）：走同一个开源项目口径，但要**自写 AsciiDoc→md 转换器**（规则表 + 8 条转换坑见 `examples/puppet-cookbook/README.md`）；老 gitbooks.io 渲染站还活着时，可拿它当**逐页正文 oracle**（校验转换器有没有丢字）。详见 references 坑 40。
 GitBook 3.x 源仓库的书（站点给链接但同名 source repo 在 GitHub，正文是 `chapter-N/chapter-N-M.md` 扁平编号、层级只在 SUMMARY.md 里）：可复用脚本 + README 见 `examples/datamining-guide/`（2026-10-18《面向程序员的数据挖掘指南》实战，含重建规则与 2 个新坑）。
 **老 GitBook「独立域名」型书仓**（`legacy.gitbook.com/...` 死链 / `*.gitbooks.io` 302 到已被抢注的空壳域名，如 learnes.net）：同样改吃源仓库 md；SUMMARY 常与磁盘**大小写不符 + 断链**，且**图可能是绝对外链**（raw.githubusercontent）需按 basename 反查本地文件重写成 CDN —— 复用脚本 + README 见 `examples/elasticsearch-guide/`（2026-10-18《Elasticsearch 权威指南（中文版）》实战，坑 36/37）。
