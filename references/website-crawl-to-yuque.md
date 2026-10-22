@@ -237,6 +237,20 @@
     - 根级 DOC（`00-序` / `01-版权页`）toc-md 后会排到 25 个 TITLE **之后** → `prependNode` sibling 归位（坑 29 复发）。⚠️ **连移两个节点要按逆序 prepend**：先 `01-版权页` → prepend 到第一个 TITLE 前，再 `00-序` → prepend 到 `01-版权页` 前；**同 target 连续 prepend 会反序**（本次先序后版权页，得到 `版权页, 序`）。
     - 结果：127 节点 / 0 失败 / 结构核对 PASS / 六查全绿；库 84860110，slug `game-design-ai-practice-zh-hans-20261022`；`examples/game-design-ai-practice/`（`build_lib.py` 7 条规则 + 验收表）。
 
+53. **RefactoringGuru 中文站（refactoringguru.cn/design-patterns，《深入设计模式》设计模式全节，2026-10-22 实战，`examples/refactoringguru-design-patterns/`）**：
+    - **形状**：261 页 = 简介/目录/3 分类 + 22 模式 + 工厂比较 + 双分派 + 电子书页 + **10 语言 landing + 22 模式 × 10 语言 = 220 篇代码示例**；HTML 结构规整（`div.section.*` / `figure.code>pre[lang]` / 卡片 `a.pattern-card*`）→ bs4 递归渲染器即可。
+    - ⭐ **`<body>` 也带 `no-feature` 类 → 祖先过滤会一票否决全站**：`/design-patterns` 落地页的 hero 在 `div.no-feature` 里，为剔它写了「祖先含 `no-feature` 就跳过」→ 卡片型页面（目录/分类/语言 landing/示例概览共 **11 页**）的 `<body>` 恰好也带该类 → **全被滤空成 1 字节文档**（首跑 10 个 1B 文件才暴露）。正解：祖先检查**排除 `body`/`html`/`main`**。教训：拿祖先类名做过滤，`body` 上的类名会一票否决一切。
+    - **CJK 排版辅助 span**：`span.chpuleN` 承载**中文标点本身**、`span.chpuriN` 承载**一个空格**（`<span class=chpule2>，</span><span class=chpuri2> </span>`）→ 必须保留其文本，收尾再把「标点+空格」折回标点，否则正文成「实例 ， 并」。
+    - **软连字符 `&shy;`（\xad）**遍布标题与代码（`Demo&shy;Single&shy;Thread`）→ 全局删 `\xad`。**`span.hidden-in-book`** = 站点显示/电子书隐藏的补充词（「单例**模式**」的「模式」）→ 保留。
+    - **结构图两个 img**：`structure-img-non-indexed`（桌面）/ `structure-img-indexed`（移动）→ 只取前一个（否则同图进两遍）。
+    - **图标即语义**：优缺点 `div.pros-cons` 左右两列 `<ul>`，首项 `<i class=fa-check>`=优点 / `fa-times`=缺点 → 插 `**优点：**`/`**缺点：**` 标签；适用场景 `div.applicability-problem`（`fa-bug`）/ `-solution`（`fa-bolt`）→ `> 🐞 …` / `⚡ …`；`span.fa-stars`/`dp-popularity` 的 `i.fa-star` vs `fa-star-o` → ★/☆。
+    - **卡片型页面正文全在 `<a class=pattern-card>` 里**（目录/分类/语言 landing）→ 不专门渲染就是「每字段一行、无项目符」；按 `.pattern-name`/`.pattern-aka`/意图渲成 `- **名称**（English） — 意图`。
+    - **图只放行 `/images/patterns/content/` 与 `/images/patterns/diagrams/`**；`patterns/cards/*-mini.png`、`patterns/icons/*.svg`、语言 hero `dp-bg` 全是装饰。
+    - ⚠️ **`--test N` + `--toc-md` 必报「生成目录树失败: 缺少文档记录」**——toc-md 要全量目录记录，是**预期行为不是真失败**。
+    - ⚠️ **toc-md 收尾后根级 DOC 又排到 TITLE 后**（坑 29 复发）→ 两发 `prependNode sibling` **按逆序**归位（先 `01` 到第一个 TITLE 前，再 `00` 到 `01` 前）。子目录 `05.NN-语言` 必须**两位零填**（`05.01`…`05.10`），否则字典序 `05.1 < 05.10 < 05.2`。
+    - 结果：275 节点（14 目录/261 文件）/ 151 图全传 CDN / 0 失败 / 结构核对 PASS / 六查全绿 + 261 篇逐篇回读 0 未命中；库 84861074。
+    - `yuque_rewrite_images.py --dry` 报的 2 处「本地缺失」是 PHP 代码样例里的 `<img src='$url'>`，**代码里的 HTML 是正文**，别当真缺失。
+
 ## 五、站点案例速查
 
 | 站点 | 窗口起点 | 窗口终点 | 备注 |
@@ -265,4 +279,5 @@
 | zh.d2l.ai（《动手学深度学习》，Sphinx 2.0.0 书站，2026-10-21） | **不爬 HTML**：站上公式是 MathJax SVG 无 TeX 源 → 直接吃源仓库 `d2l-ai/d2l-zh` 的 `.md`（真 LaTeX）；站点 HTML 只当**标题编号 + `:numref:` 渲染文本**的 oracle | — | 140 文档 + 16 章目录 = 156 节点；只留 **PyTorch**（4 框架选项卡，未标 `#@tab` = mxnet）；图 184 全传 CDN；图片目录必须移出导入根（硬规则 10）；六查全绿；库 84822487；`examples/d2l-zh/` |
 | llmknowledge.org/zh（《理解现代大语言模型系统-从RAG到全景》，koe，2026-10-22） | 同 d2l 姊妹案例：**不爬 HTML**，吃源仓库 `koemia/llmknowledge` 的**单个大 md**（102KB/711 行）；站点 10 页 = md 10 个 H2 一一对应（标题一字不差），站点 HTML 只当 oracle 验证切分 | — | 单 md 按 H2 切 10 篇（开始之前/第一~七章/附录工具库/速记卡片）；**49 个脚注定义内联在正文里**随章走、93 处引用全保真（语雀渲染 `[^x]` 原样）；7 张 SVG 图是 `<img src>` 形式 → 切分时转 `![alt](src)` 再传 CDN；**CC BY-NC-ND 4.0 许可**（非商业·署名·禁止演绎）→ 同 aibydoing 口径私人库自用、描述注明版权来源；10 节点/0 失败/六查全绿；库 84856349，slug `llmknowledge-zh-20261022`；`examples/llmknowledge/` |
 | datawhalechina.github.io/pumpkin-book（Datawhale《南瓜书》，**docsify 站但源仓库已迁 vitepress**，2026-10-22） | **不爬 HTML**：线上还跑旧 docsify（`_sidebar.md` + `chapterN/chapterN.md`），实测线上 `chapter1/chapter1.md` 与仓库 `docs/chapter1/chapter1.md` **逐字节相同（18349B）** → 站点无独立内容，**连 oracle 都不用**，直接吃仓库 `docs/`（比 d2l 还省一档） | — | 20 节点（0 目录/20 文件全平铺）= 00-前言（README HTML 清洗）+ 01-勘误表 + 第1~16章 + 法文版残篇 2 篇；`> [!IMPORTANT]` callout → `> **📌 本章学习须知**`；**剥 H1 要扫全文首个 `# xxx` 行**（章节 1-11 的 H1 在 callout 之后，只看首行会漏 11 篇）；**图只救 `raw.githubusercontent` 的 7 张**（前言 6 + 法文版 roc.png），16 处公式图全在 Datawhale 自家阿里云 OSS（SVG，保持原样比转 CDN 更高保真）；六查全绿；库 84856649，slug `pumpkin-book-20261022`；`examples/pumpkin-book/` |
+| refactoringguru.cn/design-patterns（《深入设计模式》设计模式全节，2026-10-22） | 正文 = `main div.page.text, main article.page.text`（**祖先过滤要排除 body/html**——body 也带 `no-feature`，坑 53）；`/design-patterns` 落地页另剔 `div.illustration-container` hero | 容器自带边界（prom/banner/aside.feature 独立节点） | 261 页（简介/目录/3 分类/22 模式/工厂比较/双分派/电子书页 + **10 语言 landing + 220 篇代码示例**）= 275 节点；`chpule/chpuri` 保留标点折空格、删 `&shy;`、结构图取非-indexed、图标即语义（优缺点/适用场景/星级）、卡片按 `.pattern-name/.pattern-aka/意图` 渲成列表；图只传 `content/`+`diagrams/`（151 张）；`--test N`+`--toc-md` 必报目录树失败=预期；根级 DOC 两发逆序归位（坑 29）；六查全绿 + 261 篇逐篇回读 0 未命中；库 84861074，slug `refactoringguru-design-patterns-20261022`；`examples/refactoringguru-design-patterns/`（坑 53） |
 | eremes81.github.io/game-design-ai-practice-zh-hans（《游戏策划实务即用的 AI·Claude Code 活用法》简体中文版，**GitHub Pages 书站 + 纯净书仓**，2026-10-22） | **不爬 HTML**：仓库 `manuscript/` 就是站点源（`index.html` 是 2.1MB 单文件渲染产物）；无 SUMMARY → README「完整目录」当部分名 oracle、每篇 H1 当标题源 | — | 127 节点（**25 目录 + 102 文档**，24 部分 100 章 + 附录 A–N + 后记）；`01-第1部分…` 序号前缀免 fix_order；H1==标题则剥（100/102）；标题 `/`→`／`（5 处）；part21/23 异体 H1 归一化 `N.M`；**67 处内联 `<svg>` 语雀原样保留**（不用抽图传 CDN）；图全是上游缺的占位符；根级 DOC 归位（两发按逆序）；六查全绿；库 84860110，slug `game-design-ai-practice-zh-hans-20261022`；`examples/game-design-ai-practice/`（坑 52） |
