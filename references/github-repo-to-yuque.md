@@ -352,3 +352,10 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
    - **范围口径**：只导书稿正文（`index/read_uml/三个分类目录/readme`），脚手架（`conf.py`/`Makefile`/`make.bat`/`sphinx_rtd_theme/`/`.EAP`/`.vsd`）全剔；**`code/` 也不入库**——各章示例源码已由 literalinclude 内联进正文，且子目录是编译产物（84 个 `.o` + 16 个 `.exe`）。
    - ⚠️ 上游 rst 图名**大小写写错**（`State1.png`/`State2.png` vs 磁盘小写 `state1.png`/`state2.png`，站点同错 = 404）→ 拷图按**大小写不敏感**解析真身。
    - 可复用脚本：`examples/design-patterns/`（`build_lib.py` 建中文树 + `fix_root_order.py` 根级 DOC 归位）。实测 25 节点（3 目录/22 文档）、69 图传 CDN、toc-md PUT 0.9s、六查全绿 + 22 篇逐篇回读 0 差；库 84861785。
+
+**复用记录：ecomfe/spec（2026-10-22 @ 18a2da2，库 84864088，12 节点）**
+    - 百度 ecomfe 前端团队「编码规范」合集（4598★），仓库形态极简、无脚手架：根级 12 篇 md（README + chart/javascript/es-next/html/css/less/e-json/module/package/directory/react）+ `chart/` 目录**纯配图**（23 张，全部被 `chart.md` 引用）。
+    - **`chart/` 是「配图目录」不是「子文档目录」**——硬规则 10 落地：23 张图先 `yuque_rewrite_images.py` 传 CDN（23 处引用重写 / 0 缺失）→ `rm -rf chart/`；`chart.md` 本就是根级文档，无需重建树。收尾 12 节点（0 目录 / 12 文档，扁平）。
+    - `.gitattributes`（16B 仓库配置）**不入库**（仓库脚手架，同硬规则 23）。
+    - ⚠️ **正文里的「示例代码」图片引用别当裂图**：`html-style-guide.md` 有 2 处 `<img src="image.png">`（演示 HTML 写法的代码片段，磁盘无实体）→ rewrite 脚本如实报「本地缺失 2」，**属预期、原样保留**（同坑 29 第②条思路：先判断是不是真配图再决定处理）。
+    - 实测：toc-md 目录树 12 行 / 455B **PUT 0.4s**、结构核对 PASS、0 失败；六查全绿（TOC 12 == 本地 12、全路径唯一、对账 0、幽灵 0、12 篇逐篇回读逐字符相等、word_count 12/12 >0）；抽 3 张 CDN 图 200。库名按仓库名口径「spec（18a2da2）」。
