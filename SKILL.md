@@ -159,6 +159,8 @@ GitBook 3.x 源仓库的书（站点给链接但同名 source repo 在 GitHub，
 
 **老书仓库（作者在 Windows 上边写边贴本地图路径）→ 图引用四类脏**（反斜杠 16 / 盘符绝对路径 3 / URL 编码中文名 5 / 文件名带空格 5）：前三类用 `fix_refs.py` 就地修（含按 basename 全树反查），带空格的 5 张用 `upload_space_imgs.py` 旁路单独传（主脚本的 `split(None,1)` 会截断带空格路径）→ 复用脚本 + README 见 `examples/deeplearning-500-questions/`（2026-10-22《深度学习500问》实战，81 节点 / 551 图，坑 51）。⚠️ 修完必剩一批**上游真缺失**（改图名没更文），修不了、别找。
 
+**变体：InfoQ 中文站迷你书（只有 PDF，且下载要登录，2026-10-22《硝烟中的Scrum和XP》首例，库 84860629）** —— 老域名 `infoq.com/cn/minibooks/*` 被 AWS WAF 挡（405）→ 用 `infoq.cn`；公开 API **必须 POST + JSON body**（`/public/v1/article/getDetail {"uuid":<slug>}`）；下载接口 `article/book_sign` 要登录（`-2000 未登录`）→ ⭐ **绕法：迷你书列表页有公开免登录合集 `static001.geekbang.org/resource/ebook/100books/book100.zip`（541MB），用 HTTP Range 读中央目录只抽目标条目 + zlib(-15)**。书签漏前言 → 按页码区间列文档映射。复用脚本 + 坑清单：`examples/infoq-minibook-pdf/`（`build.py` + README），SOP 细则见 `references/pdf-book-to-yuque.md` §七。
+
 **变体：仓库 = 书 PDF + 课件 + 代码（双轨，2026-10-21 两本 LLM 书固化）** —— 源是 GitHub 仓库时走**开源项目口径**（库名带 commit、分组「开源项目」），内容拆成 `01-正文/`（PDF 按**书签**抽逐章文档）+ `02-代码/` + `03-课件/`（PDF 走附件 / PPTX 不上传）+ `04-原件（全书 PDF）/`（PDF 附件），脚手架不入库。⚠️ 抽章必须**剥 C0 控制符**（`\x00` 等会整篇被判二进制→占位，坑 50），验收要**全库**扫 `word_count>0`（六查第 6 条）。复用脚本 + 完整坑清单：`examples/llmbooks-dual-track/`（`build_lib.py`，含附件文档「预建+账本注入」手法）。
 
 ## 网站抓取导入（网页 → 语雀，2026-10-13 固化，2026-10-14 补命名规范）

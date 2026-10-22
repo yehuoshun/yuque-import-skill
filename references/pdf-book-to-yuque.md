@@ -61,3 +61,22 @@ grep -nE '^[0-9]{1,3}$' 输出/*.md    # 页码/图标签残留抽查
 4. **页眉 y1<58 / 页脚 y0>640**（四本一致）；大字号 ≥14.5pt = 章/部分标题（丢，书签已生成 `#`）。
 5. **同一套源多本书 → 分开建库**（老板 2026-10-22 拍板；网站口径 / 分组「文章收集」）。
 6. ⚠️ **根级 TITLE 按 Unicode 字典序排**：`第一部分/第三部分/第二部分/附录` → 一<三<二<附，出来的顺序就是「一、三、二、附」→ 目录名要带 `NN-` 数字前缀；已在库里的用 `fix_order.py` 逐发 `prependNode/sibling` 换回（一次挪一个，回读校验循环收敛）。根级 DOC 仍会落到 TITLE 之后（老坑 29），同脚本一并归位。
+## 七、InfoQ 中文站迷你书（下载要登录 → 从公开合集 zip 里 Range 抽）
+
+**触发**：`infoq.cn/minibook/<slug>`（InfoQ 中文站「企业软件开发丛书」迷你书）。2026-10-22《硝烟中的Scrum和XP》实战，库 84860629 / 25 节点。
+
+1. **老域名 `infoq.com/cn/minibooks/*` 已被 AWS WAF 挡死**（405 Human Verification）→ 用 `infoq.cn`
+2. **公开 API 必须 POST + JSON body**（GET 一律 404）：`POST /public/v1/article/getDetail {"uuid":"<slug>"}`
+   → 拿 `type:8`(电子书) / `ebook.pdf` / `content_url`（签名直链，内容是"简介+目录+下载"页，非全书正文）
+3. **下载接口要登录**：`POST /public/v1/article/book_sign {"uuid","type"}` → `-2000 未登录`（前台 `loginUser ? … : login()`）
+4. ⭐ **绕法**：迷你书列表页挂着**公开免登录**合集 `static001.geekbang.org/resource/ebook/100books/book100.zip`（541MB / 104 条目）
+   → **HTTP Range 读中央目录**（EOCD 在尾 64KB）→ 定位目标条目 → 只 Range 抽该条 + `zlib.decompress(-15)`
+   → 拿到官方 PDF。注意：本地文件头 `csize` 常为 0（data descriptor）→ **长度只信中央目录**
+5. **书签不够用**：原生书签只到"简介…"，**漏了前言部分**（被并进"目录"页）→ 按**页码区间**手工列文档映射（跳过目录页）
+6. 版式：`SimSun 10.5` 正文 / `SimHei 16` 章标题 / 14pt 段标题；列表符号三种（`Wingdings \x83`、`SymbolMT •`、`CourierNew o`）→ 一/二级；
+   页眉 `y<70`、章节大号数字 96pt 丢；**广告块位置每页不同** → 用"含 `infoq.com`/`http://` 的行 + 其上 ≤2 行 ≥13.5pt"识别，残留标题用 `中文站.*社区` 兜底
+7. **按 y 聚类成逻辑行**（tol 1.3pt）能同时修好"行被字体切碎"和**表格行**（≥3 段、列间距 >28pt → ` | ` 拼）
+8. ⚠️ **账本条目必须有对应的磁盘文件**：`build_toc_md()` 只遍历磁盘、`skip` 判据是 `rel in prog["nodes"]` ——
+   预建的 PDF 附件文档若不在导入树里落占位文件，就**进不了 TOC**（docs 25 vs TOC 24 幽灵）。补占位文件重跑即好（`doc 0 / skip 25`）
+
+复用脚本 + 完整坑清单：`examples/infoq-minibook-pdf/`（`build.py` + README）。

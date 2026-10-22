@@ -412,5 +412,16 @@
     "book_url": "game-design-ai-practice-zh-hans-20261022",
     "imported_at": "2026-10-22T15:45:00+0800",
     "note": "默认分支 main @ df9a7ab（구매 링크를 해당 언어판 채널만 남기도록 정리，2026-10-22）。网站口径（正本站 eremes81.github.io/game-design-ai-practice-zh-hans）+ 源仓库 manuscript/ md；库名带日期、分组「文章收集」36149506；CC BY-NC-SA 4.0 → 私人库自用。**首例「纯净书仓」**：index.html 是 2.1MB 全书渲染产物（不吃），只吃 manuscript/；无 SUMMARY → README「完整目录」当部分名 oracle + 每篇 H1 当标题；clean 树 = 25 目录（01-第1部分 · 基础 … 24-第24部分 · 运营实战、99-后记与附录）+ 102 文档（根级 00-序 · 封面 · 阅读方法 / 01-版权页），127 节点 < 5000 不分库。标题处理：H1==标题则剥（100/102）、半角 `/`→全角 `／`（5 处）、part21/23 异体 H1 `Part NN · 第M章`→`NN.M`、`\\~`→`~`。**内联 SVG 保真：全书 67 处 `<svg>` 语雀 markdown 导入原样保留**（回读 body svg 完整，mermaid 块也在）→ 不用抽图传 CDN。图 = 上游本来就缺的占位符（README 已声明），2 处 `![](images/…)` 保留原样不重写。toc-md 127 行/9.6KB 一次 PUT 1.4s、结构核对 PASS、0 失败；根级 DOC 排到 TITLE 之后 → prependNode sibling 两发按**逆序**归位（同 target 连续 prepend 会反序，本次先序后版权页拿到「版权页, 序」已打回重做），归位后 00-序 → 01-版权页 → 01-第1部分… → 99-后记与附录。六查全绿：TOC 127==本地 127、全路径唯一 True、缺失 0、幽灵 0（docs 102==TOC DOC 102）、102 篇 word_count 全 >0 无占位、抽查 2.3（wc 6233/svg 3/mermaid 1）与 24.2（wc 4191/mermaid 5）。无分片（最大文件 15.5KB）。新增 examples/game-design-ai-practice/（build_lib.py 7 条规则 + README）+ refs 坑 52 + 速查表行。"
+  },
+  "https://www.infoq.cn/minibook/scrum-xp-from-the-trenches": {
+    "source_page": "https://www.infoq.cn/minibook/scrum-xp-from-the-trenches",
+    "old_url": "http://www.infoq.com/cn/minibooks/scrum-xp-from-the-trenches",
+    "pdf": "https://static001.geekbang.org/resource/ebook/100books/book100.zip → book100/scrum-and-xp-chinese-version.pdf",
+    "pdf_md5": "e1e54cc71db570ada3dc8ce44c89e290",
+    "pdf_pages": 150,
+    "book_id": 84860629,
+    "book_url": "scrum-xp-from-the-trenches-20261022",
+    "imported_at": "2026-10-22T16:26:00+0800",
+    "note": "《硝烟中的Scrum和XP——我们如何实施 Scrum》（Henrik Kniberg 著/李剑译/郑柯审校，InfoQ 中文站迷你书）2026-10-22；网站口径（分组 文章收集 36149506）+ 双轨（正文按页码区间抽章 + PDF 原件附件）；25 节点 = 00-PDF 原件 + 扉页与版权 + 5 篇前言（译者序/致谢/序×2/前言，书签漏了，按页码补）+ 18 章（简介…有关作者）；图不抠（老板拍）；六查全绿（TOC==本地==docs 25、幽灵 0、全库 word_count>0、24 篇逐字节回读 0 差、附件实拉 200 application/pdf md5 一致）；toc-md PUT 0.6s。PDF 来源 = 公开合集 zip HTTP Range 抽取（下载接口要登录）"
   }
 }
