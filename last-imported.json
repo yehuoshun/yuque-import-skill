@@ -458,5 +458,12 @@
   "book_url": "spec-18a2da2",
   "imported_at": "2026-10-22T21:56:00+0800",
   "note": "百度 ecomfe 前端编码规范合集。master @ 18a2da2（2020-01-13，修改两处笔误 #61，4598★）。仓库形态极简：根级 12 篇 md（README/chart/javascript/es-next/html/css/less/e-json/module/package/directory/react）+ chart/ 目录纯配图（23 张，全部被 chart.md 引用）。口径：硬规则 10 —— 23 张图先传 CDN（23 处引用重写 / 0 缺失 / 外链 0）→ 删 chart/ 目录；.gitattributes（16B 仓库配置）不入库 → 12 节点（0 目录 / 12 文档，扁平）。html-style-guide.md 里 2 处 <img src=\"image.png\"> 是「代码示例文本」非真实配图（本地无实体）→ 原样保留、别当裂图。toc-md 目录树 12 行 / 455B PUT 0.4s、结构核对 PASS、0 失败；六查全绿：TOC 12 == 本地 12、全路径唯一 True、对账错位 0、幽灵 0（docs 12 == TOC DOC 12）、12 篇逐篇回读逐字符相等 0 差、word_count 12/12 >0；抽 3 张 CDN 图 200。库名按仓库名口径「spec（18a2da2）」。"
+ },
+ "http://www.ituring.com.cn/book/1143": {
+  "commit": null,
+  "book_id": 84864438,
+  "book_url": "aosa-zh-20261022",
+  "imported_at": "2026-10-22T22:37:00+0800",
+  "note": "《开源软件架构》(The Architecture of Open Source Applications 中文版 / iTran乐译开放书，CC BY 3.0)。网站口径（无 repo），库 84864438（slug aosa-zh-20261022，分组「文章收集」36149506）。⚠️ 图灵社区是 Vue SPA，页面 HTML 无正文 → 真 API 在 api.ituring.com.cn：图书详情 GET /api/book/1143（book 小写）取 ebook.chapters[]，章节正文 GET /api/Book/mini/<章节id>（Book 大写）取 {subject, htmlOfBody}；39 章全 isFree 可读。转换器 examples/ituring-aosa/build.py：脏 HTML（<p> 不闭合互相嵌套）下钻 render；图三类历史外链归一化（aosabook.org 旧 /images/ 已 404→新 /static/；raw.github.com 图床仓已删→aosabook.org/static/violet/；/download/xxx 补 download.ituring.com.cn）；74 图全传 CDN（含 2 张 .small 无扩展名图改 .png 才传成功）。树 = 前言（根级）+ 卷1/卷2 两个 TITLE + 39 文档 = 41 节点；卷2 第6章 Git 源码里两份独立译文→加「（译文一/二）」防同父重名。部分章残缺（Glasgow 602B / PyPy / Yesod「待续」等，上游译本本身如此）。toc-md 目录树 41 行/1962B PUT 0.5s、结构核对 PASS、0 失败；六查全绿：TOC 41==本地 41、全路径唯一 True、对账 0、幽灵 0（docs 39==TOC DOC 39）、39 篇逐篇回读逐字符相等 0 差、word_count 39/39>0；抽 3 张 CDN 图 200。"
  }
 }

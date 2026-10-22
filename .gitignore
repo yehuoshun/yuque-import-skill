@@ -2,3 +2,11 @@ progress*.json
 __pycache__/
 *.pyc
 scripts/progress/
+
+# 抓取/转换中间产物（不入库）
+examples/*/raw/
+examples/*/site/
+examples/*/pages/
+examples/*/*.log
+examples/*/*.err
+examples/*/img_map*.json
