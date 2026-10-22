@@ -329,3 +329,14 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
    - **事后修法**（已入库的）：剥控制符重写本地 md → `PUT /repos/{book}/docs/{slug}` 更新**已存在的 doc**（用账本里的 slug，**不要新建**，否则出幽灵）→ 复核 `word_count>0` + body 与本地**逐字符相等**。
    - **验收口径变更**：验收从「深层抽查 3 篇 word_count>0」升级为「**全库**逐篇 `word_count>0`（或 body 非占位）」（见 §二·7 第 6 查）——抽查必漏（中招是少数篇）。
    - 可复用脚本：`examples/llmbooks-dual-track/`（`build_lib.py`：抽章 + 剥控制符 + 附件/PPTX 文档预建 + 账本注入，`README.md` 含完整流程与验收）。
+
+**坑 51（源仓库是「Windows 手写 md」：图引用四类脏，2026-10-22 scutan90/DeepLearning-500-questions 实捶）**：老书仓库（作者在 Windows 上边写边贴本地路径）的图片引用会同时出现四类脏，**只跑 `yuque_rewrite_images.py` 会漏掉一大批图（显示裂图）**：
+   - ① **反斜杠**：`img\ch14\思维导图.png`（本次 16 处）
+   - ② **盘符绝对路径**：`H:/<repo>/ch18_.../img/x.png`、`C:\Users\<用户名>\Desktop\x.png`（3 处）——文件其实就在 `img/` 里
+   - ③ **URL 编码的中文名**：`img/ch7/DCGAN%E7%BB%93%E6%9E%84%E5%9B%BE.png`（5 处，`urllib.parse.unquote` 后就是磁盘上的 `DCGAN结构图.png`）
+   - ④ **文件名带空格**：`img/ch8/Mask R-CNN-01.png`、`img/ch7/lsgan loss compare.png`（5 处）——`yuque_rewrite_images.py` 为吃 `![alt](path "title")` 做了 `raw.split(None, 1)`，**会把带空格路径截断**（`img/ch8/Mask`）→ 判「本地缺失」整条漏传
+   - **治前 3 类**：`fix_refs.py`（`examples/deeplearning-500-questions/`）就地修——候选顺序「原样 → `\`→`/` → `unquote` → 组合」都不中时，再按 **basename 在全树反查**（唯一命中才替换；多命中且恰有一个在本 md 子树内才用），本次修 21 处
+   - **治第 4 类**：`upload_space_imgs.py` 单独扫「本地存在且路径含空格」的引用 → `upload_image` 传 CDN → 替换成 https（主脚本随后自动跳过），本次 5 张
+   - **别急着改主脚本**：`split(None,1)` 是给 `"title"` 用的，改坏了会连累所有带 title 的引用；用外挂旁路最省事
+   - **顺带**：修完后**必然还剩一批「真缺失」**（本次 14 处：ch08 `CBNet-1..8`/`mmdetection.png`、ch09 `9.10.5-1..5`）——上游改图名没更文，**修不了、别找**，原样留裂图并在报告里说明
+   - 完整流程 + 三个可复用脚本（`fix_refs.py` / `upload_space_imgs.py` / `fix_root_order.py`）：`examples/deeplearning-500-questions/`
