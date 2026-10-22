@@ -444,5 +444,12 @@
   "book_url": "design-patterns-0cbd785",
   "imported_at": "2026-10-22T18:05:00+0800",
   "note": "《图说设计模式》（me115，Sphinx/reST 书稿；站点 design-patterns.readthedocs.io 尚活可当 oracle）。开源项目口径，master @ 0cbd785。只导书稿正文（index/read_uml/三分类/readme）= 25 节点（3 目录/22 文档）；脚手架全剔（conf.py/Makefile/make.bat/sphinx_rtd_theme/design_patterns.EAP/state_diagram.vsd/dp_tmp.txt）；**code/ 不入库**（各章示例源码已由 literalinclude 内联进正文 + 子目录是编译产物 84 .o/16 .exe）。⭐ 新坑（转换器三修，v1.3.108）：① `.. literalinclude::` docutils 静默丢弃 → 展开成 `.. code:: <lang>`（srcroot 解析 / 开头路径 + 扩展名语言映射 + pre 围栏带语言）；② doctitle_xform=False 保层级（默认首节提升→子节全压 h1、大纲扁平）；③ 块间补空行（同类 li/表格/引用用单 \\n）避免相邻段并段 + 剥 `.. contents::`。`/_static/` 绝对路径改相对后 69 图传 CDN（--throttle 2，0 失败）、目录删净；上游 State1/State2.png 大小写写错（磁盘小写、站点 404）→ 大小写不敏感解析。toc-md PUT 0.9s 结构核对 PASS；根级 DOC 被排到 TITLE 后 → fix_root_order 3 轮归位。六查全绿（TOC 25==本地 25；全路径唯一；对账 0；无分片；幽灵 0 docs 22==TOC DOC 22；22 篇 word_count 全>0）+ 22 篇逐篇回读 0 差。新增 examples/design-patterns/（build_lib.py + fix_root_order.py + README）+ refs 坑 55 + SKILL 入口 + 速查表行。"
+ },
+ "https://llmknowledge.org/zh": {
+  "commit": "note",
+  "book_id": 84856349,
+  "book_url": "llmknowledge-zh-20261022",
+  "imported_at": "2026-10-22T09:58:00+0800",
+  "note": "《理解现代大语言模型系统-从RAG到全景》第二版（koe）→ 网站口径，库 84856349（slug llmknowledge-zh-20261022，分组「文章收集」36149506）。站点 llmknowledge.org/zh（别名 llmknowledge.pages.dev/zh/，队列用后者）；口径 = 吃源仓库 koemia/llmknowledge 的单大 md（102KB/711 行，不爬 HTML），站点 10 页 = md 10 个 H2 一一对应（标题一字不差）→ 站点 HTML 只当 oracle。CC BY-NC-ND 4.0 → 私人库自用、描述注明版权。10 节点 = 开始之前 + 第一~七章 + 附录工具库 + 速记卡片；7 张 SVG 图（md 里 <img src>）转 ![](src) 后传 CDN；49 处脚注定义内联随章走、93 处引用全保真。v1.3.100；examples/llmknowledge/（split.py）。⚠️ 本条为事后补账（原窗口漏记，2026-10-22 20:30 补）。"
  }
 }
