@@ -80,3 +80,16 @@ grep -nE '^[0-9]{1,3}$' 输出/*.md    # 页码/图标签残留抽查
    预建的 PDF 附件文档若不在导入树里落占位文件，就**进不了 TOC**（docs 25 vs TOC 24 幽灵）。补占位文件重跑即好（`doc 0 / skip 25`）
 
 复用脚本 + 完整坑清单：`examples/infoq-minibook-pdf/`（`build.py` + README）。
+
+## 八、作者个人站点托管的原书 PDF（2026-10-23 ALP 实战，库 84902899 / 28 节点）
+
+**触发**：书单条目原链已死（如 SourceForge 项目 403），但作者本人 GitHub Pages 托管原书全本 PDF → 直接 PDF 口径整导。
+
+1. **字体先普查再写规则**：正文/代码/标题/页眉/页码各归各字体；页眉页码字体（如 `RotisSansSerif-Bold/-ExtraBold`）整类丢弃
+2. ⚠️ **代码行判定必须在 size<=9.2（表格/侧栏/脚注）分支之前**，否则 7pt 代码行被侧栏吞成 blockquote 单行
+3. **断词（行尾连字符）判据**：拼接后是词典真词 → 合并（pro-gram→program）；两边各自是真词 → 保留（world-wide）；连字符要归一化（U+2010/2011/2013/00AD → ASCII `-`）；ligature ﬁﬂﬀﬃﬄ → fi/fl/ff/ffi/ffl
+4. **换行标题相邻同级别合并**（16pt 标题折行会被拆成两个 h2：`8.8 … Locking Physical` + `Memory`）
+5. **空目录会进 TOC**：转换器顺手建的空 `figs/` 被当 TITLE 节点导进 TOC → 导前 `find <root> -type d -empty -delete`；已导错了就删本地空目录**重跑 `--toc-md`**（skip 已有节点 + 全量 PUT 替换 TOC，重跑安全）
+6. **PDF 原件附件**：上传用 `type=attachment`（非 image），`Content-Type: application/pdf`，其余同图片 multipart；URL 挂「PDF 原件」篇
+7. 章内脚注收章末「脚注」小节（`[^n]`）；表格转 Markdown 表格；无位图的书直接跳图（原书 43 个图块全是 logo/章首装饰）
+8. ⚠️ 自写验收器拼全路径**别用 `chain[1:]`**：顶层节点 chain[0] 就是自身，会剥掉自己 → 假重复空串；要用 `'/'/'.join(chain(n))` 全链
