@@ -536,5 +536,12 @@
   "book_url": "gitimmersion-c3e64514",
   "imported_at": "2026-10-23T16:30:00+0800",
   "note": "书单队列 #001《沉浸式学 Git》。书单原链 igit.linuxtoy.org 已死（origin 404 + Wayback 沙箱不通）→ 按标题精确命中换源 qiwihui/gitimmersion（Sphinx/reST 书稿，无图）。23 节点（0 目录/23 文档：00-前言 + lab 01-18 + 50-53 平铺，lab 19-49 上游未译=残缺 22/54 已在描述标注）；未完成译本坑 58 口径：toctree 挂 53 篇实际只 22 篇，缺的没造节点。toc-md PUT 0.6s 结构核对 PASS、0 失败；六查全绿：TOC 23==本地 23、全路径唯一 True、对账 0 错位、幽灵 0（docs 23==TOC DOC 23）、23 篇 word_count 全 >0、抽查 3 篇（00/05/52）逐字符相等。88 code-block + 2 个 :: 字面块围栏全保留（90 fences 零丢失）。复用 scripts/yuque_rst_convert.py（坑 55）+ 新 build 脚本 tmp/gitimmersion-src/build_lib.py（H1 剥离做文件名、上游标题带斜杠 52.高级/未来的主题 文件名替换）"
+ },
+ "https://github.com/rogerdudler/git-guide": {
+  "commit": "66f4eb9",
+  "book_id": 84900566,
+  "book_url": "git-guide-66f4eb9",
+  "imported_at": "2026-10-23T16:40:00+0800",
+  "note": "《git - the simple guide》中文版（书单 fpb52 #002，原链 https://rogerdudler.github.io/git-guide/index.zh.html）gh-pages @ 66f4eb9（2024-02-22 停更）。**开源项目口径**判定：站点 = 仓库 gh-pages 的 GitHub Pages 渲染产物（仓库 homepage 自证 rogerdudler.github.com/git-guide），仓库即正文源；书单条目只指中文单页 → **只收 index.zh.html**，其余 14 个语言页 + css/js/files 不入。单页短文（13.6KB / 13 个 H2）→ 按 H2 拆章：00-前言（书名+摘要+目录+来源/致谢）+ 01-安装…13-链接与资源，库根平铺 14 篇；评论块（disqus）/页脚广告位/语言导航栏剔除。正文图 2 张（trees/branches.png）传 CDN（0 失败，HTTP 200）；arrow.png 纯装饰不收。toc-md PUT 0.5s 结构核对 PASS、0 失败。**六查全绿**：TOC 14==本地 14、全路径唯一 True、对账 0 错位、幽灵 0（docs 14==TOC DOC 14）、word_count 14/14>0、14 篇逐篇回读逐字符相等。库 84900566，slug git-guide-66f4eb9，分组「开源项目」57018723。转换器 tmp/git-guide-66f4eb9/build.py（bs4 按 .scrollblock 渲染；无新坑，refs 不动）"
  }
 }
