@@ -515,5 +515,12 @@
   "book_url": "gradle-guide-20261023",
   "imported_at": "2026-10-23T14:10:00+0800",
   "note": "《Gradle 使用指南》中文翻译（UDN 开源文档 wiki，Gradle 1.x 时代译本）。网站口径（静态多页 wiki，无源仓库）。⚠️ 队列原条「Gradle 中文使用文档」= yuedu.baidu.com/ebook/f23af265998fcc22bcd10da2（百度阅读），该电子书已随平台下线（302 跳 yd.baidu.com 首页）+ Wayback 连不上 → 老板 2026-10-23 拍板换源到本站。库 84898768（slug gradle-guide-20261023，分组「文章收集」36149506）。站点结构：侧栏页面清单 = 每页 `div.left_title > a[href]`（顺序=书序，index 是「关于」）；正文容器 `div.markdown-body`（紧跟的 `div.previous-and-next` 在容器外→天然切掉）；扁平无层级。37 节点（0 目录/37 文档）= 00-关于 + 36 章（NN-中文标题 前缀免归位）；9 张图 images/*.png 相对 → 传 CDN 9/9（0 失败）。toc-md 目录树 37 行/1608B PUT 0.7s、结构核对 PASS、0 失败；根级全 DOC 无排序问题。六查全绿：TOC 37==本地 37、全路径唯一 True、对账 0、幽灵 0（docs 37==TOC DOC 37）、37 篇 word_count 全 >0、逐篇回读 37/37 逐字符相等。新增 examples/udn-gradle/（build.py + README）+ refs 案例表行 + SKILL 入口（坑 59：UDN wiki 表格表头用 td 不是 th）；skill bump v1.3.121。"
+ },
+ "https://web.archive.org/web/20170616013024/http://local.joelonsoftware.com/wiki/Chinese_(Simplified)": {
+  "commit": "cc-2017-26-20170628",
+  "book_id": 84899616,
+  "book_url": "joel-on-software-zh-20261023",
+  "imported_at": "2026-10-23T15:30:00+0800",
+  "note": "队列给的是 Wayback 快照链接（archive.org 本沙箱 HTTP 000 不可达，已知网络限制）→ 改走 Common Crawl CC-MAIN-2017-26（2017-06-28 快照，与队列 Wayback 20170616 同期）取原页 HTML。源站 local.joelonsoftware.com DNS 已死。站点性质：MediaWiki 1.16 Monobook 单页，页面即 12 篇 Joel Spolsky 文章中文译本合集（非单篇）。网站口径（无 repo）：库名「Joel谈软件（2026-10-23）」、slug joel-on-software-zh-20261023、分组「文章收集」36149506、描述标来源（177 字符 ≤250）。正文容器 div#bodyContent（Monobook 皮肤；#mw-content-text 是 Vector 皮肤，本站不存在）；按 h2 拆 12 篇、丢 #toc 目录 table；文件名 NN-标题.md 两位序号前缀；标题半角 / 换全角（80／20）；正文字面 <a>（ASP.NET 篇）转义 \\<a>；5 张插图 CA1–CA5.jpg（均在「给计算机系学生的建议」篇）CC 明确无收录（archive.org / arquivo.pt / timetravel 全不可达）→ 丢弃 + 该篇文末加注释。toc-md 一次 PUT 0.5s、结构核对 PASS、0 失败；六查全绿（TOC 12==本地 12、全路径唯一 True、verify 12/12 单文档映射 缺失 0、对账错位 0、幽灵 0 docs12==TOC DOC12、12 篇 word_count 全>0）+ 12 篇逐篇回读 0 差。"
  }
 }
