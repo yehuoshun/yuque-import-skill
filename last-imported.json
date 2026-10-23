@@ -543,5 +543,12 @@
   "book_url": "git-guide-66f4eb9",
   "imported_at": "2026-10-23T16:40:00+0800",
   "note": "《git - the simple guide》中文版（书单 fpb52 #002，原链 https://rogerdudler.github.io/git-guide/index.zh.html）gh-pages @ 66f4eb9（2024-02-22 停更）。**开源项目口径**判定：站点 = 仓库 gh-pages 的 GitHub Pages 渲染产物（仓库 homepage 自证 rogerdudler.github.com/git-guide），仓库即正文源；书单条目只指中文单页 → **只收 index.zh.html**，其余 14 个语言页 + css/js/files 不入。单页短文（13.6KB / 13 个 H2）→ 按 H2 拆章：00-前言（书名+摘要+目录+来源/致谢）+ 01-安装…13-链接与资源，库根平铺 14 篇；评论块（disqus）/页脚广告位/语言导航栏剔除。正文图 2 张（trees/branches.png）传 CDN（0 失败，HTTP 200）；arrow.png 纯装饰不收。toc-md PUT 0.5s 结构核对 PASS、0 失败。**六查全绿**：TOC 14==本地 14、全路径唯一 True、对账 0 错位、幽灵 0（docs 14==TOC DOC 14）、word_count 14/14>0、14 篇逐篇回读逐字符相等。库 84900566，slug git-guide-66f4eb9，分组「开源项目」57018723。转换器 tmp/git-guide-66f4eb9/build.py（bs4 按 .scrollblock 渲染；无新坑，refs 不动）"
+ },
+ "https://github.com/danielkummer/git-flow-cheatsheet": {
+  "commit": "6217de3",
+  "book_id": 84901280,
+  "book_url": "git-flow-cheatsheet-6217de3",
+  "imported_at": "2026-10-23T17:41:00+0800",
+  "note": "《git-flow 备忘清单》简体中文单页（书单 fpb52 #003，原链 http://danielkummer.github.io/git-flow-cheatsheet/index.zh_CN.html）gh-pages @ 6217de3（2024-12-18 停更）。开源项目口径判定：站点=仓库 gh-pages 的 Pages 渲染产物，部署 index.zh_CN.html 与仓库同名文件 md5 一致（22eddd6c），仓库即正文源；书单条目只指中文单页 → 只收 index.zh_CN.html，其余 20 个语言页 + css/files(psd/sprweb) 不入。单页短文按 H2 拆章：00-前言 + 01-关于…09-Backlog = 10 节点（0 目录，扁平）。正文命令块（原 blockquote）转 ```bash 围栏。2 张正文图传 CDN。六查全绿：TOC 10==本地 10、全路径唯一、对账 0 错位、幽灵 0（docs 10==TOC DOC 10）、word_count 10/10>0、10 篇逐段回读逐字符相等。库 84901280，分组「开源项目」57018723。转换器 tmp/git-flow-cheatsheet/build.py（bs4 按 #main>.scrollblock 递归渲染）。⚠️ 分支流程图是 CSS 精灵（img/flow-sprites.png 背景图，无 img 引用），markdown 无法承载 → 未入库（正文文字自足）；如需图要按 background-position 裁精灵另传。"
  }
 }
