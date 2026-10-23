@@ -522,5 +522,12 @@
   "book_url": "joel-on-software-zh-20261023",
   "imported_at": "2026-10-23T15:30:00+0800",
   "note": "队列给的是 Wayback 快照链接（archive.org 本沙箱 HTTP 000 不可达，已知网络限制）→ 改走 Common Crawl CC-MAIN-2017-26（2017-06-28 快照，与队列 Wayback 20170616 同期）取原页 HTML。源站 local.joelonsoftware.com DNS 已死。站点性质：MediaWiki 1.16 Monobook 单页，页面即 12 篇 Joel Spolsky 文章中文译本合集（非单篇）。网站口径（无 repo）：库名「Joel谈软件（2026-10-23）」、slug joel-on-software-zh-20261023、分组「文章收集」36149506、描述标来源（177 字符 ≤250）。正文容器 div#bodyContent（Monobook 皮肤；#mw-content-text 是 Vector 皮肤，本站不存在）；按 h2 拆 12 篇、丢 #toc 目录 table；文件名 NN-标题.md 两位序号前缀；标题半角 / 换全角（80／20）；正文字面 <a>（ASP.NET 篇）转义 \\<a>；5 张插图 CA1–CA5.jpg（均在「给计算机系学生的建议」篇）CC 明确无收录（archive.org / arquivo.pt / timetravel 全不可达）→ 丢弃 + 该篇文末加注释。toc-md 一次 PUT 0.5s、结构核对 PASS、0 失败；六查全绿（TOC 12==本地 12、全路径唯一 True、verify 12/12 单文档映射 缺失 0、对账错位 0、幽灵 0 docs12==TOC DOC12、12 篇 word_count 全>0）+ 12 篇逐篇回读 0 差。"
+ },
+ "https://einverne.gitbook.io/selenium-doc/": {
+  "commit": "gitbook-v2-20261023",
+  "book_id": 84899817,
+  "book_url": "selenium-doc-zh-20261023",
+  "imported_at": "2026-10-23T15:42:00+0800",
+  "note": "现代 GitBook v2 平台（*.gitbook.io，Next.js/RSC）。⭐ 不爬 HTML：站自带官方 Markdown 导出——/llms.txt 全量索引（顺序=侧栏序）+ 页面 URL 加 .md（根页 /master.md）；/~gitbook/site-index 给带面包屑层级 JSON。网站口径（源仓库 fool2fish/selenium-doc 已 GitHub 404，GitBook 版为 gitlab.com/einverne/selenium-doc 改版）：库名「Selenium 中文文档（2026-10-23）」、slug selenium-doc-zh-20261023、分组「文章收集」36149506、描述 174 字符标来源。10 节点（2 目录/8 文档）：01-官方文档/ 4 篇 + 02-wiki/ 3 篇 + 根级 00-介绍.md。要点：每页 md 首块 GitBook 样板 callout 整块剥；首个 H1==标题则剥；分组页（官方文档/wiki，页+子页并存，正文只是子页链接清单）当 TITLE 用、正文丢；目录名加数字前缀还原站点序（ASCII wiki 排在中文前）；根级 00-介绍.md 补 1 发 prependNode 归位（坑 29）。图：6 张外链 seleniumhq.org/docs/_images/* 全 404（seleniumhq.org/docs 已撤）→ GitHub 代码搜索按文件名反查，官方镜像仓 vdt/selenium 的 selenium-core/selenium-website/src/main/rst/images/ 找齐 6/6（raw.githubusercontent 被墙走 gh-proxy）→ 传 CDN 6/6（HTTP 200 尺寸全对）。toc-md 一次 PUT 0.7s、结构核对 PASS、0 失败；六查全绿（TOC 10==本地 10、全路径唯一 True、verify 8/8 单文档映射 缺失 0、对账错位 0、幽灵 0 docs8==TOC DOC8、8 篇 word_count 全>0）+ 8 篇逐篇回读 0 差。"
  }
 }
