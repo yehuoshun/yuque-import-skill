@@ -529,5 +529,12 @@
   "book_url": "selenium-doc-zh-20261023",
   "imported_at": "2026-10-23T15:42:00+0800",
   "note": "现代 GitBook v2 平台（*.gitbook.io，Next.js/RSC）。⭐ 不爬 HTML：站自带官方 Markdown 导出——/llms.txt 全量索引（顺序=侧栏序）+ 页面 URL 加 .md（根页 /master.md）；/~gitbook/site-index 给带面包屑层级 JSON。网站口径（源仓库 fool2fish/selenium-doc 已 GitHub 404，GitBook 版为 gitlab.com/einverne/selenium-doc 改版）：库名「Selenium 中文文档（2026-10-23）」、slug selenium-doc-zh-20261023、分组「文章收集」36149506、描述 174 字符标来源。10 节点（2 目录/8 文档）：01-官方文档/ 4 篇 + 02-wiki/ 3 篇 + 根级 00-介绍.md。要点：每页 md 首块 GitBook 样板 callout 整块剥；首个 H1==标题则剥；分组页（官方文档/wiki，页+子页并存，正文只是子页链接清单）当 TITLE 用、正文丢；目录名加数字前缀还原站点序（ASCII wiki 排在中文前）；根级 00-介绍.md 补 1 发 prependNode 归位（坑 29）。图：6 张外链 seleniumhq.org/docs/_images/* 全 404（seleniumhq.org/docs 已撤）→ GitHub 代码搜索按文件名反查，官方镜像仓 vdt/selenium 的 selenium-core/selenium-website/src/main/rst/images/ 找齐 6/6（raw.githubusercontent 被墙走 gh-proxy）→ 传 CDN 6/6（HTTP 200 尺寸全对）。toc-md 一次 PUT 0.7s、结构核对 PASS、0 失败；六查全绿（TOC 10==本地 10、全路径唯一 True、verify 8/8 单文档映射 缺失 0、对账错位 0、幽灵 0 docs8==TOC DOC8、8 篇 word_count 全>0）+ 8 篇逐篇回读 0 差。"
+ },
+ "https://github.com/qiwihui/gitimmersion": {
+  "commit": "c3e64514",
+  "book_id": 84900413,
+  "book_url": "gitimmersion-c3e64514",
+  "imported_at": "2026-10-23T16:30:00+0800",
+  "note": "书单队列 #001《沉浸式学 Git》。书单原链 igit.linuxtoy.org 已死（origin 404 + Wayback 沙箱不通）→ 按标题精确命中换源 qiwihui/gitimmersion（Sphinx/reST 书稿，无图）。23 节点（0 目录/23 文档：00-前言 + lab 01-18 + 50-53 平铺，lab 19-49 上游未译=残缺 22/54 已在描述标注）；未完成译本坑 58 口径：toctree 挂 53 篇实际只 22 篇，缺的没造节点。toc-md PUT 0.6s 结构核对 PASS、0 失败；六查全绿：TOC 23==本地 23、全路径唯一 True、对账 0 错位、幽灵 0（docs 23==TOC DOC 23）、23 篇 word_count 全 >0、抽查 3 篇（00/05/52）逐字符相等。88 code-block + 2 个 :: 字面块围栏全保留（90 fences 零丢失）。复用 scripts/yuque_rst_convert.py（坑 55）+ 新 build 脚本 tmp/gitimmersion-src/build_lib.py（H1 剥离做文件名、上游标题带斜杠 52.高级/未来的主题 文件名替换）"
  }
 }
