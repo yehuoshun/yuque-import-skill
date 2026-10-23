@@ -493,5 +493,12 @@
     "book_url": "autoanthony-78e6c9d",
     "imported_at": "2026-10-23T10:35:00+0800",
     "note": "默认分支 main @ 78e6c9d（杀戮尖塔2 卡牌生成/改造模组，C#；距上版 1dde250 有更新）。全仓库口径：247 节点（27 目录 / 220 文件）< 5000 单库。硬规则 10：唯一图片 ChaosMode/assets/mod_image.png 传 CDN + 重写 README.md/README.zh-CN.md 各 1 处 + 删文件本体（ChaosMode/assets/localization/ 为正文 json，保留）。3 个 >512KB 大文件自动分片（catalog_runtime_specs.json 2 片 / native_reference_cards.json 5 片 / native_reference_components.json 2 片）→ TOC 253 节点 / DOC 226。toc-md 目录树 253 行/11.8KB 一次 PUT 1.9s、结构核对 PASS、0 失败；根级顺序天然正确（TITLE 在前 / DOC 在后）。六查全绿：TOC 253 == 本地 247+6 分片、全路径唯一 True、单文档映射 217+3 分片文件 0 缺失、分片号连续、对账错位 0、幽灵 0（docs 226 == TOC DOC 226）、226 篇 word_count 仅 1 篇为 0（audits/.../0.3.5_pre_component_api.json.gz 二进制占位，预期）、3 个分片文件逐片回拉内容零丢失。旧库 84486855 AutoAnthony（1dde250，2026-10-12）按老板口径保留。"
+  },
+  "https://github.com/lf201014/STS2_MarisaMod": {
+    "commit": "186005c",
+    "book_id": 84896891,
+    "book_url": "sts2-marisamod-186005c",
+    "imported_at": "2026-10-23T11:20:00+0800",
+    "note": "默认分支 main @ 186005c（杀戮尖塔2「魔理沙」Mod，Godot 4 + C#）。距上版 2ced719（库 84555533，10-14）仅 1 commit / 11 文件（新增 MarisaMod.sln.DotSettings + 卡牌/本地化改动）→ 另建新库、旧库保留。全仓库口径（与本仓历史两版一致，含 .import 208 / .uid 184 元数据、windows/ 构建产物、marisamod.pck 21MB 占位）。964 节点（65 目录 / 899 文件）< 5000 单库。199 张图自动传 CDN（cookie 就绪），icon.svg 走文本。toc-md 一次 PUT 6.9s 结构 PASS；对账 0 错位、幽灵 0（docs 899 == TOC DOC 899）、679 篇文本逐篇回读 0 差、word_count 220 篇 0（199 图 CDN + 21 二进制占位，预期）。"
   }
 }

@@ -359,3 +359,11 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
     - `.gitattributes`（16B 仓库配置）**不入库**（仓库脚手架，同硬规则 23）。
     - ⚠️ **正文里的「示例代码」图片引用别当裂图**：`html-style-guide.md` 有 2 处 `<img src="image.png">`（演示 HTML 写法的代码片段，磁盘无实体）→ rewrite 脚本如实报「本地缺失 2」，**属预期、原样保留**（同坑 29 第②条思路：先判断是不是真配图再决定处理）。
     - 实测：toc-md 目录树 12 行 / 455B **PUT 0.4s**、结构核对 PASS、0 失败；六查全绿（TOC 12 == 本地 12、全路径唯一、对账 0、幽灵 0、12 篇逐篇回读逐字符相等、word_count 12/12 >0）；抽 3 张 CDN 图 200。库名按仓库名口径「spec（18a2da2）」。
+
+**复用记录：lf201014/STS2_MarisaMod（2026-10-23 @ 186005c，库 84896891，964 节点；本仓第 4 版）**
+    - 杀戮尖塔2「魔理沙」Mod（Godot 4 + C#）。历史三版：84301043（10-07 全仓库 958 节点，无描述+随机 slug）、84355418（10-09）、84555533（10-14 @ 2ced719，963 节点，slug `sts2_marisamod-2ced719`）。
+    - **Godot 工程的「全仓库口径」= 连 `.import`（208）/`.uid`（184）/`windows/` 构建产物（DLL/lib/exp + 6 个 `~*.TMP` 链接器残渣）/`marisamod.pck`（21MB）一起导**——与本仓历史三版完全一致，别自作主张剔元数据。
+    - **图不需要手工 rewrite**：仓库里只有 1 篇 md（README，无图引用），199 张图全靠 `.tscn`/`.tres` 的 res:// 路径引用 → 直接交给 tree_import 的二进制分支自动传 CDN（`![name](cdn)` 嵌文档），**别跑 `yuque_rewrite_images.py`（一条都匹配不上）**。`icon.svg` 是文本走代码围栏（svg 只在「被判二进制」时才走 CDN 分支）。
+    - 验收：`word_count==0` 会有 220 篇（199 图 + 21 二进制占位），**这是预期不是事故**——别按「全库 word_count>0」硬卡；卡的是「文本篇 word_count>0」（本次 679/679）。
+    - 增量重导很快：HEAD 距上版只 1 commit/11 文件时，prep+导 964 节点 ~11 分钟（图传 CDN 占一半时间），toc-md PUT 6.9s。
+    - 顺带：`git clone --depth 1` 后想核「上版到本版改了啥」→ `curl api.github.com/repos/<o>/<r>/compare/<old>...<new>`（比翻本地强，沙箱无 GitHub 登录也能用）。
