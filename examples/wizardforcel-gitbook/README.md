@@ -30,4 +30,6 @@ python3 build.py --base https://wizardforcel.gitbooks.io/ibm-j-ap/content/ \
 
 ## 同族后续
 
-队列里 `wizardforcel.gitbooks.io/ibm-j-cq`（《追求代码质量》）等同款站，直接换 `--base` + `--book-name` 复用。
+✅ **2026-10-23 实锤复用**：`wizardforcel.gitbooks.io/ibm-j-cq`（《追求代码质量系列专栏》，Andrew Glover 著，14 篇 + 系列介绍）→ 库 **84896434**（slug `ibm-j-cq-20261023`，分组「文章收集」36149506），15 节点，37 图全传 CDN，六查全绿。**零改动**直接换 `--base` + `--book-name` 复用，未踩新坑。
+
+⚠️ **test 6 与 toc-md 不兼容**（本族新坑）：`--test 6` 只建前 6 篇文档，toc-md 收尾拼整树时缺文档记录报 `生成目录树失败: 缺少文档记录` → 小库（<30 节点）跳过 test 直接全量，秒完。

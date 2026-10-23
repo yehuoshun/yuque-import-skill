@@ -472,5 +472,12 @@
   "book_url": "ibm-j-ap-20261022",
   "imported_at": "2026-10-22T22:59:00+0800",
   "note": "IBM developerWorks《让开发自动化》系列专栏（Paul Duvall 著，17 篇 + 系列介绍），wizardforcel 老 gitbooks.io 简中译本。网站口径（GitHub 无 wizardforcel/ibm-j-ap 仓库 → 抓 HTML），库 84864611（slug ibm-j-ap-20261022，分组「文章收集」36149506）。站结构 = GitBook 2.x（侧栏 ul.summary li.chapter[data-path] 定页面清单/顺序，正文 section.normal）；⚠️ gitbooks.io 间歇 401 → fetch 退避重试 6 次。可复用转换器 examples/wizardforcel-gitbook/build.py（自动解析侧栏 + 正文首 H1==标题则剥 + 图 img/ 边转边传 CDN + NN- 序号前缀免归位）。18 节点（0 目录/18 文档）；80 图引用中 78 传 CDN，2 张（img/build-failure.jpg、img/cpd-ant.jpg）源站 404 为上游建站时就缺 → 保留原站 URL。toc-md 目录树 18 行/968B PUT 0.5s、结构核对 PASS、0 失败；六查全绿：TOC 18==本地 18、全路径唯一 True、对账 0、幽灵 0（docs 18==TOC DOC 18）、18 篇逐篇回读逐字符相等 0 差、word_count 18/18>0。"
+ },
+ "https://wizardforcel.gitbooks.io/ibm-j-cq": {
+  "commit": null,
+  "book_id": 84896434,
+  "book_url": "ibm-j-cq-20261023",
+  "imported_at": "2026-10-23T10:06:00+0800",
+  "note": "IBM developerWorks《追求代码质量》系列专栏（Andrew Glover 著，14 篇 + 系列介绍），wizardforcel 老 gitbooks.io 简中译本。网站口径（GitHub 无同名源仓库 → 抓 HTML），库 84896434（slug ibm-j-cq-20261023，分组「文章收集」36149506）。完全复用 examples/wizardforcel-gitbook/build.py（ibm-j-ap 同族，零改动）——GitBook 2.x 侧栏 ul.summary 自动定序 + 正文 section.normal。15 节点（0 目录/15 文档）：00-系列介绍 + 14 篇（Ajax 单元测试/TestNG-Abbot/AOP/XMLUnit/JUnitPerf/敏捷构建/可重复系统测试/JUnit4 vs TestNG/冗长代码/代码度量/架构质量/构建脚本气味/FIT/覆盖报告）。37 图全传 CDN 0 失败；两处标题脏点（12「让开发自动化: 除掉构建脚本中的气味」、13「追逐代码质量: 决心采用 FIT」）上游如此照原样。⚠️ test 6 + toc-md 不兼容（test 只建前 6 篇文档，toc-md 收尾缺文档记录无法拼整树）→ 小库直接全量。toc-md 目录树 15 行/892B PUT 0.5s、结构核对 PASS、0 失败；六查全绿：TOC 15==本地 15、全路径唯一 True、对账 0、幽灵 0（docs 15==TOC DOC 15）、word_count 15/15>0（min 47=系列介绍）、逐篇回读 15/15 逐字符相等 0 差；CDN 图抽查 5/5 200。"
  }
 }
