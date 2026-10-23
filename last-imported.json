@@ -550,5 +550,12 @@
   "book_url": "git-flow-cheatsheet-6217de3",
   "imported_at": "2026-10-23T17:41:00+0800",
   "note": "《git-flow 备忘清单》简体中文单页（书单 fpb52 #003，原链 http://danielkummer.github.io/git-flow-cheatsheet/index.zh_CN.html）gh-pages @ 6217de3（2024-12-18 停更）。开源项目口径判定：站点=仓库 gh-pages 的 Pages 渲染产物，部署 index.zh_CN.html 与仓库同名文件 md5 一致（22eddd6c），仓库即正文源；书单条目只指中文单页 → 只收 index.zh_CN.html，其余 20 个语言页 + css/files(psd/sprweb) 不入。单页短文按 H2 拆章：00-前言 + 01-关于…09-Backlog = 10 节点（0 目录，扁平）。正文命令块（原 blockquote）转 ```bash 围栏。2 张正文图传 CDN。六查全绿：TOC 10==本地 10、全路径唯一、对账 0 错位、幽灵 0（docs 10==TOC DOC 10）、word_count 10/10>0、10 篇逐段回读逐字符相等。库 84901280，分组「开源项目」57018723。转换器 tmp/git-flow-cheatsheet/build.py（bs4 按 #main>.scrollblock 递归渲染）。⚠️ 分支流程图是 CSS 精灵（img/flow-sprites.png 背景图，无 img 引用），markdown 无法承载 → 未入库（正文文字自足）；如需图要按 background-position 裁精灵另传。"
+ },
+ "https://blog.csdn.net/lxlmycsdnfree/article/details/80886903": {
+  "commit": "csdn-20261023",
+  "book_id": 84901429,
+  "book_url": "cpumemory-part1-20261023",
+  "imported_at": "2026-10-23T17:58:00+0800",
+  "note": "书单 fpb52 #004《每个程序员都应该了解的内存知识 (第一部分)》。原链 OSChina translate 403 判死（2026-10-15 实测）→ 子代理找到同款中文译本 CSDN 镜像（lxlmycsdnfree 80886903，译自 Ulrich Drepper《What Every Programmer Should Know About Memory》LWN 2007 第一部分；全文译本仓库 https://github.com/SinosGray/cpumemory）。网站口径：库 84901429『每个程序员都应该了解的内存知识（2026-10-23）』slug cpumemory-part1-20261023，分组「文章收集」36149506。单篇 46KB md（1 节点），15 图全传 CDN（15/15 200）。⚠️ 子代理在收尾阶段因模型超时中断，验收由主代理接手补跑：TOC 1==本地 1、对账 0、幽灵 0（docs 1==TOC DOC 1）、word_count 14259>0、正文逐字符相等。转换器 tmp/memory-article-1part/convert.py（坑：html.parser 会把 <img/> 后正文错误嵌进 img 元素 → 解析前先把 img 替换成文本标记）。"
  }
 }
