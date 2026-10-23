@@ -508,5 +508,12 @@
   "book_url": "gradle-2-user-guide-45947642",
   "imported_at": "2026-10-23T13:48:00+0800",
   "note": "《Gradle 2 用户指南》中文译本（waylau，纯 GitBook 源，2017-01-26 `add v 3` 后停更）。开源项目口径（有 repo）→ 库 84898523（slug gradle-2-user-guide-45947642，分组「开源项目」57018723）。仓库扁平：66 个 `Chapter NN. xxx.md` + 5 个 `Appendix *.md` + README + SUMMARY（73 md）+ .gitignore；无本地图，24 处图引用全是外链（99btgc01.info 死域名 + gradle logo CDN）原样保留。⚠️ 未完成译本：只 Chapter 01-23 有正文，Chapter 24-66 + Appendix A/B/C 是标题-only 空壳（~70B）；官方站 waylau.gitbooks.io/gradle-2-user-guide 侧栏只发布 24 页（index+ch01-23+附录E）=发布层。口径=发布层 ∪ 有正文孤儿 → 26 篇（README + ch01-23 + Appendix D(5.1KB 孤儿) + Appendix E）；剔 46 个空壳 + SUMMARY.md（=目录本身）+ .gitignore（脚手架）。26 节点（0 目录/26 文档），toc-md 目录树 26 行/1930B PUT 0.9s、结构核对 PASS、0 失败；根级全 DOC 无排序问题。六查全绿：TOC 26==本地 26、全路径唯一 True、对账 0、幽灵 0（docs 26==TOC DOC 26）、26 篇 word_count 全 >0、逐篇回读 26/26 逐字符相等。新增 refs 坑 58 + SKILL 入口 + 本账本；skill bump v1.3.120。"
+ },
+ "http://doc.yonyoucloud.com/doc/wiki/project/gradle/": {
+  "commit": null,
+  "book_id": 84898768,
+  "book_url": "gradle-guide-20261023",
+  "imported_at": "2026-10-23T14:10:00+0800",
+  "note": "《Gradle 使用指南》中文翻译（UDN 开源文档 wiki，Gradle 1.x 时代译本）。网站口径（静态多页 wiki，无源仓库）。⚠️ 队列原条「Gradle 中文使用文档」= yuedu.baidu.com/ebook/f23af265998fcc22bcd10da2（百度阅读），该电子书已随平台下线（302 跳 yd.baidu.com 首页）+ Wayback 连不上 → 老板 2026-10-23 拍板换源到本站。库 84898768（slug gradle-guide-20261023，分组「文章收集」36149506）。站点结构：侧栏页面清单 = 每页 `div.left_title > a[href]`（顺序=书序，index 是「关于」）；正文容器 `div.markdown-body`（紧跟的 `div.previous-and-next` 在容器外→天然切掉）；扁平无层级。37 节点（0 目录/37 文档）= 00-关于 + 36 章（NN-中文标题 前缀免归位）；9 张图 images/*.png 相对 → 传 CDN 9/9（0 失败）。toc-md 目录树 37 行/1608B PUT 0.7s、结构核对 PASS、0 失败；根级全 DOC 无排序问题。六查全绿：TOC 37==本地 37、全路径唯一 True、对账 0、幽灵 0（docs 37==TOC DOC 37）、37 篇 word_count 全 >0、逐篇回读 37/37 逐字符相等。新增 examples/udn-gradle/（build.py + README）+ refs 案例表行 + SKILL 入口（坑 59：UDN wiki 表格表头用 td 不是 th）；skill bump v1.3.121。"
  }
 }
