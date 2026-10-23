@@ -13,10 +13,11 @@
     "imported_at": "2026-10-16T14:44:00+0800"
   },
   "https://github.com/EbookFoundation/free-programming-books": {
-    "commit": "eb55e4e8",
-    "book_id": 84817639,
-    "book_url": "free-programming-books-eb55e4e8",
-    "imported_at": "2026-10-21T11:35:00+0800"
+    "commit": "52e40c13",
+    "book_id": 84897155,
+    "book_url": "free-programming-books-52e40c13",
+    "imported_at": "2026-10-23T11:12:00+0800",
+    "note": "第 4 版重导（HEAD eb55e4e8 → 52e40c13，2026-10-22 10:45；eb55e4e8..52e40c13 共 4 commit / 7 文件改、无增删，竞价榜单类链接修复批次 #13529/#13539/#13551/#13536/#13538）。口径与上版一致：开源项目整仓库（11 目录 / 234 文件 = 245 节点 < 5000 单库），分组「开源项目」57018723（move-stack 第 3 次验证：第 1 轮未过、第 2 轮通过）。无图需处理（仓库仅 favicon.ico 一个二进制，走占位注释）。toc-md 目录树 245 行 / 11059B 一次 PUT 1.8s、结构核对 PASS、0 失败；根级顺序天然正确（TITLE 8 个在前 / DOC 6 个在后，合老板 Windows 规则）；六查全绿：TOC 245==本地 245、全路径唯一 True、verify PASS（234/234 单文档映射、缺失 0、无分片）、对账错位 0、幽灵 0（docs 234==TOC DOC 234）、234 篇逐篇回读正文非空（word_count==0 仅 3 篇且均属允许：favicon.ico 二进制占位 + 上游 0 字节空文件 -hy.md / -cs-cp.md）；抽查 10 篇逐字符比对：8 篇完全相等，-zh.md 仅差开头 BOM（语雀不存 BOM，正文一致）、fpb-lint.yml 为 yaml 围栏（` ```yaml `）差异，均无害。旧库：eb55e4e8=84817639（2026-10-21）、f42a51cd=84639221、012801db=84635453 按老板口径保留。"
   },
   "https://github.com/aoaostar/legado": {
     "commit": "8b13d08",
