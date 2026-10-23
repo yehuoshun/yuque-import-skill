@@ -150,6 +150,7 @@ GitBook 3.x 源仓库的书（站点给链接但同名 source repo 在 GitHub，
 **章节目录名无语义（`tutNN/`）+ 逐章自带 `tutNN/res/` 同名图**：可读标题只在 `SUMMARY.md` 里 → 按 SUMMARY 重建树（`NN-标题` 剥「第N课：」）；⚠️ **先在原布局跑 CDN 重写、再重建树**（同名图跨章串台）；标题只信 SUMMARY（磁盘 heading 有笔误）—— 复用脚本 + README 见 `examples/opengl-tutorials/`（2026-10-18《OpenGL 教程》实战，21 节点，坑 43）。
 **资源索引型仓库（仓库不装正文，装的是「别的 App 的资源清单」，如 `aoaostar/legado` 的「阅读」APP 书源站）**：走**解析单轨**（⚠️ **2026-10-21 口径变更**：附件只给 PDF，原「原件附件轨」**停用**——历史 3 版 `fd0ec7f9`/`0dde287`/`8b13d08` 都是双轨，脚本 `upload` 模式不再执行，源码留档）——把每个 `sources/*.json` 逐条转表（书源/TTS 列名称+网址、净化规则列正则）挂 `08-解析/sources/`，索引里的「原件」列改为**上游直链**（`legado.aoaostar.com/sources/<file>`，仓库 README 本来就有），不再建 `01-原版附件.md`；顶上加 6 篇分类索引（名称/条数/来源网站/上游更新时间/直链/一键导入）；站点/CI 产物（`CNAME`/`cache.lock`/`.github/`）不入库 —— 复用脚本 `examples/legado-sources/`（2026-10-18 legado fd0ec7f9 首版，32 节点，坑 44）。
 **单篇长文型仓库（仓库里只有一篇文章，不是多章书）**：按 `## N.` 拆篇 + README 做 `00-译者说明.md`，英文原文不收，文件名剥「N.」与标题内链接/sup；拆篇会让原文内部锚点（脚注 `#f1`）跨文档失效，原样保留 —— 口径见 references 坑 41（2026-10-18《傻瓜函数编程》实战，15 节点）。
+**未完成译本（纯 GitBook 源，仓库里一堆「标题-only 空壳」章）**：先扫官方站侧栏 `li.chapter[data-path]`（= **实际发布的书页清单**）+ `wc -c` 全量量空壳 → 导入根 = **发布层 ∪ 有正文的孤儿**，标题-only 空壳全剔、`SUMMARY.md`（=目录本身）剔；扁平 GitBook 源无层级，直接平铺 —— 口径 + 实测见 references 坑 58（2026-10-23 waylau/Gradle-2-User-Guide，26 节点，库 84898523）。
 
 ## PDF 书导入（只有 PDF 的官方站，2026-10-18 固化）
 

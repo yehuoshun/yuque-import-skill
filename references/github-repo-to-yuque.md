@@ -367,3 +367,14 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
     - 验收：`word_count==0` 会有 220 篇（199 图 + 21 二进制占位），**这是预期不是事故**——别按「全库 word_count>0」硬卡；卡的是「文本篇 word_count>0」（本次 679/679）。
     - 增量重导很快：HEAD 距上版只 1 commit/11 文件时，prep+导 964 节点 ~11 分钟（图传 CDN 占一半时间），toc-md PUT 6.9s。
     - 顺带：`git clone --depth 1` 后想核「上版到本版改了啥」→ `curl api.github.com/repos/<o>/<r>/compare/<old>...<new>`（比翻本地强，沙箱无 GitHub 登录也能用）。
+
+**坑 58（未完成译本：官方站侧栏 = 发布层，仓库里的「标题-only 空壳」未发布 → 剔空壳，2026-10-23 waylau/Gradle-2-User-Guide 实战）**：纯 GitBook 源仓库（`README.md` + `SUMMARY.md` + 扁平 `Chapter NN. xxx.md`）可能是**烂尾译本**——本次磁盘 73 个 md，但 66 章里只有 `Chapter 01–23` 有正文，`Chapter 24–66`（43 个）+ `Appendix A/B/C`（3 个）全是**标题-only 空壳**（~70B = 一行标题 + `===` 下划线 + 一个空格）。
+- **判据（两个一起用）**：① 官方站（`https://<user>.gitbooks.io/<book>/`）侧栏 `li.chapter[data-path]` = **实际发布的书页清单**（本次 24 页 = index + ch01-23 + 附录E）——**空壳文件站上根本不发布**（SUMMARY.md 也只列了这 24 条，二者一致）；② `wc -c` 全量扫各章，量出空壳（阈值 ~150B）。
+- **口径**：导入根 = **官方站发布层 ∪「有正文的孤儿」**。本次 = `README.md` + `Chapter 01–23` + `Appendix E`（站上发布）+ `Appendix D`（5.1KB 有正文但站上未发布 → 按「内容不丢」纳入）= **26 篇**；**剔掉** 46 个标题-only 空壳 + `SUMMARY.md`（= 目录本身，非书页；站上 index 才是首页）+ `.gitignore`（脚手架，硬规则 23）。**收尾主动向老板报残缺度**（本次报「译本只到 23 章 + 附录 D/E」）。
+- **其他**：扁平 GitBook 源**无层级**（SUMMARY 全是同级 `* [..]`）→ 直接平铺、0 目录节点；本次图 24 处**全是外链**（`99btgc01.info` 死域名 + gradle logo CDN）→ **0 本地图**，不传 CDN、原样保留（同坑 36 的「死外链原样留」）。
+- **实测**：26 节点（0 目录 / 26 文档）；toc-md 目录树 26 行 / 1930B **PUT 0.9s**、结构核对 PASS、0 失败；六查全绿（TOC 26==本地 26、全路径唯一 True、对账 0、幽灵 0、**26 篇 word_count 全 >0**、逐篇回读 **26/26 逐字符相等**）；库 **84898523**（slug `gradle-2-user-guide-45947642`）。⚠️ 全程直接 `--toc-md` 全量跑，**别配 `--test 6`**（本文件坑 26）。
+
+**复用记录：waylau/Gradle-2-User-Guide（2026-10-23 @ 45947642，库 84898523，26 节点）**
+    - 纯 GitBook 源《Gradle 2 用户指南》中文译本（waylau，2017-01-26 `add v 3` 后停更）。扁平结构，无子目录、无本地图。
+    - 口径见上文坑 58（发布层 24 页 + 孤儿 `Appendix D`；剔 46 个标题-only 空壳 + `SUMMARY.md` + `.gitignore`）。
+    - 与 waylau 同族书对照：`waylau/gradle-3-user-guide`（README 里提及）如老板要可同法导。
