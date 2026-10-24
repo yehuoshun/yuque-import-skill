@@ -586,5 +586,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/the-labview-journey-14616e2c",
   "imported_at": "2026-10-24T18:16:00+0800",
   "note": "开源项目口径（源仓库 = 站点 lv.qizhen.xyz 的源，Docusaurus + sidebars.js 结构），按「标题/站点反查源仓库」命中；原链 https://lv.qizhen.xyz。75 节点（8 目录/67 文档）< 5000 单库，分组「开源项目」57018723（move-stack 第 2 轮回查验证通过）。图处理：858 处图片引用全量重写，1225 张图传语雀 CDN（0 失败，期间撞限流 429 自动等待重试后跑完）、连图带目录删净、正文 0 处本地引用残留；admonition（::: tip/note/warning 等）转引用块；剥 front matter；文档名 = 首个 H1（数字前缀保序）。toc-md 目录树 75 行/3538B 一次 PUT 0.8s、结构核对 PASS、0 失败；六查全绿：TOC 75==本地 75、全路径唯一 True、对账错位 0、幽灵 0（docs 67==TOC DOC 67）、67/67 word_count>0（min 17）、抽查 8 篇逐字符一致（前言/后记/参考书目/界面设计/发布产品/项目和库/什么是LabVIEW/初识LabVIEW）。注：本条由并行子会话跑到 17:58 因模型请求超时中断（图片阶段已完成），主会话接手续跑 build+导入+验收。"
+ },
+ "https://github.com/eremes81/game-design-ai-practice-zh-hant": {
+  "commit": "5fc54af",
+  "book_id": 84931610,
+  "book_url": "https://www.yuque.com/yehuoshun/game-design-ai-practice-zh-hant-5fc54af",
+  "imported_at": "2026-10-24T21:22:00+0800",
+  "note": "书单 fpb52 #009《遊戲策劃實務即用的 AI · Claude Code 活用法》。开源项目口径：源仓库 = 站点 gh-pages 的源（index.html 2.1MB 为构建产物、manuscript/ 才是书稿 md）。HEAD main @ 5fc54af。口径：只导内容树 manuscript/（README/index.html/assets/LICENSE/robots.txt/sitemap.xml 为仓库落地页与构建产物，不入库；README 的语言版本/许可说明已由 00-卷首/01-版權頁 覆盖）。重排 clean 树 26 目录 / 102 文件 = 128 节点 < 5000 单库：00-卷首（序言與閱讀方法、版權頁）+ 01..24 各「第N部分」目录（标题取自 README 完整目錄，章节名带 1.0/8.1 原编号）+ 25-後記與附錄（後記 + 附錄 A–N）；90 篇 YAML front matter 已剥；无 >512KB 文件（最大 31KB）→ 无分片；仓库无内文图（5 处图引用上游即为无原图占位符：char_skill_ui.png / images/…，README 自述「可能顯示為壞圖」）→ 零 CDN 上传、原样保留。分组「开源项目」57018723（move-stack 第 2 轮验证通过）。toc-md 目录树 128 行/9326B 一次 PUT 0.9s、结构核对 PASS、0 失败（26 目录/102 文档/跳过 0）；六查全绿：TOC 128==本地 128、全路径唯一 True、verify PASS（102/102 单文档映射、缺失 0、无分片）、对账错位 0、幽灵 0（docs 102==TOC DOC 102）、全库 102 篇 word_count>0（min 257）、抽查 8 篇逐字符完全相等（序言/版權頁/後記/附錄J/12.2/5.4/15.2/24.3）；根级 26 个均为 TITLE 目录、顺序 00→25 天然正确（无根级 DOC 归位问题）。"
  }
 }
