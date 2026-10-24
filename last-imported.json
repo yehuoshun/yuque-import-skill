@@ -593,5 +593,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/game-design-ai-practice-zh-hant-5fc54af",
   "imported_at": "2026-10-24T21:22:00+0800",
   "note": "书单 fpb52 #009《遊戲策劃實務即用的 AI · Claude Code 活用法》。开源项目口径：源仓库 = 站点 gh-pages 的源（index.html 2.1MB 为构建产物、manuscript/ 才是书稿 md）。HEAD main @ 5fc54af。口径：只导内容树 manuscript/（README/index.html/assets/LICENSE/robots.txt/sitemap.xml 为仓库落地页与构建产物，不入库；README 的语言版本/许可说明已由 00-卷首/01-版權頁 覆盖）。重排 clean 树 26 目录 / 102 文件 = 128 节点 < 5000 单库：00-卷首（序言與閱讀方法、版權頁）+ 01..24 各「第N部分」目录（标题取自 README 完整目錄，章节名带 1.0/8.1 原编号）+ 25-後記與附錄（後記 + 附錄 A–N）；90 篇 YAML front matter 已剥；无 >512KB 文件（最大 31KB）→ 无分片；仓库无内文图（5 处图引用上游即为无原图占位符：char_skill_ui.png / images/…，README 自述「可能顯示為壞圖」）→ 零 CDN 上传、原样保留。分组「开源项目」57018723（move-stack 第 2 轮验证通过）。toc-md 目录树 128 行/9326B 一次 PUT 0.9s、结构核对 PASS、0 失败（26 目录/102 文档/跳过 0）；六查全绿：TOC 128==本地 128、全路径唯一 True、verify PASS（102/102 单文档映射、缺失 0、无分片）、对账错位 0、幽灵 0（docs 102==TOC DOC 102）、全库 102 篇 word_count>0（min 257）、抽查 8 篇逐字符完全相等（序言/版權頁/後記/附錄J/12.2/5.4/15.2/24.3）；根级 26 个均为 TITLE 目录、顺序 00→25 天然正确（无根级 DOC 归位问题）。"
+ },
+ "https://cocode.qizhen.xyz": {
+  "commit": "0fdf1d3",
+  "book_id": 84931711,
+  "book_url": "https://www.yuque.com/yehuoshun/cocode-0fdf1d3",
+  "imported_at": "2026-10-24T21:33:00+0800",
+  "note": "书单 fpb52 #010《重构程序员》（本次新增条目）。开源项目口径：原链是站点 https://cocode.qizhen.xyz（Docusaurus v3.10.1）→ 按「站点反查源仓库」命中 ruanqizhen/cocode（作者阮奇桢，与 #008 The LabVIEW Journey 同一人）。HEAD main @ 0fdf1d3（2026-10-10 停更）。口径：只导 docs/ 书稿树（Docusaurus 脚手架 docusaurus.config.js/sidebars.js/src/static/i18n/package*.json 不入库）。顺序权威 = sidebars.js；文档名 = 首个 H1（带 01.. 数字前缀保序，与 #008 同口径）；README 的 YAML front matter（description）已剥。clean 树 6 目录 / 43 文件 = 49 节点：00-前言 + 01-入门篇：零基础上手(8) + 02-工具与实战篇：个人敏捷开发(11) + 03-高阶架构篇：从单兵到自动化系统(11) + 04-趣味篇：AI 的奇妙行为学(7) + 05-附录(4) + 根级 06-结束语。图：2 张正文图（static/img/coffee_order_sketch.png、mobile_layout_bug.png，md 里是站点绝对路径 /img/…）→ 传语雀 CDN 并重写，2/2 HTTP 200；static/ 其余（logo.png/favicon.ico）未被正文引用、不入库。无 >512KB 文件（最大 21KB）→ 无分片。分组「开源项目」57018723（move-stack 第 2 轮验证通过）。toc-md 目录树 49 行/2385B 一次 PUT 0.6s、结构核对 PASS、0 失败（6 目录/43 文档/跳过 0）；六查全绿：TOC 49==本地 49、全路径唯一 True、verify PASS（43/43 单文档映射、缺失 0、无分片）、对账错位 0、幽灵 0（docs 43==TOC DOC 43）、全库 43 篇 word_count>0（min 1451）、抽查 8 篇逐字符完全相等；根级 5 个 TITLE 目录 + 根级 DOC 06-结束语（排最后，合 sidebar 顺序，天然正确）。"
  }
 }
