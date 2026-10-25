@@ -649,5 +649,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/exvim-docs-zh-20261025",
   "imported_at": "2026-10-25T11:39:00+08:00",
   "note": "网站口径：exVim 中文用户手册 docs-zh 13 页（Jekyll 站 div.content 容器），源站 2 页 404 死链未收（build-your-distribution/select-your-plugin）；24 图 CDN；孤立反引号转义防围栏错乱；六查全绿"
+ },
+ "https://github.com/judasn/IntelliJ-IDEA-Tutorial": {
+  "commit": "52832d1",
+  "book_id": 84961427,
+  "book_url": "https://www.yuque.com/yehuoshun/intellij-idea-tutorial-52832d1",
+  "imported_at": "2026-10-25T21:35:30+08:00",
+  "note": "开源项目 44 节点(43篇+教程说明) 平铺；孤儿 vm-settings 收录；268 图 CDN(含 18 引用式补传)；六查全绿"
  }
 }
