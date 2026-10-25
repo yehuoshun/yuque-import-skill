@@ -663,5 +663,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/vimcdoc-a6c7800",
   "imported_at": "2026-10-26T01:06:55+08:00",
   "note": "开源项目 132 节点(131 cnx+教程说明)+2 分片(version6/7 超限)；Vim help 原生格式代码块导入；tags-cn 机器索引不入库；六查全绿+分片验收"
+ },
+ "http://jinlong.github.io/2013/08/29/devtoolsecrets/": {
+  "commit": null,
+  "book_id": 84963056,
+  "book_url": "https://www.yuque.com/yeuhoshun/devtoolsecrets-20261026",
+  "imported_at": "2026-10-26T02:04:16+08:00",
+  "note": "网站口径 9 节点(8章+说明) 单篇拆章；27 图 CDN；六查全绿"
  }
 }
