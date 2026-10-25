@@ -628,5 +628,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/designiot-0b8332b",
   "imported_at": "2026-10-25T10:45:00+08:00",
   "note": "开源项目口径：只导 src/ 书稿内容树 23 篇（pre/end/futrue 子目录保留），README/css/template/build 构建产物不入库；清洗围栏外 strong/blockquote/裸HTML块/坏标题；26 图 CDN（3 张外链 ebook.designiot.cn 死链→本地同名图）；六查全绿"
+ },
+ "http://www.study-area.org/tips/vim/index.html": {
+  "commit": null,
+  "book_id": 84956394,
+  "book_url": "https://www.yuque.com/yehuoshun/studyarea-vim-20261025",
+  "imported_at": "2026-10-25T10:57:00+08:00",
+  "note": "网站口径：Edward Lee《大家來學VIM》繁中 10 章（2000.05.05 版），big5→utf-8；html5lib 解析（老 HTML 未闭合 P/TABLE 导致 html.parser 树错乱）；剥外层布局壳 + p 含块级元素走遍历；六查全绿"
  }
 }
