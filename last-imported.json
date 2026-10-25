@@ -656,5 +656,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/intellij-idea-tutorial-52832d1",
   "imported_at": "2026-10-25T21:35:30+08:00",
   "note": "开源项目 44 节点(43篇+教程说明) 平铺；孤儿 vm-settings 收录；268 图 CDN(含 18 引用式补传)；六查全绿"
+ },
+ "https://github.com/vimcn/vimcdoc": {
+  "commit": "a6c7800",
+  "book_id": 84962953,
+  "book_url": "https://www.yuque.com/yehuoshun/vimcdoc-a6c7800",
+  "imported_at": "2026-10-26T01:06:55+08:00",
+  "note": "开源项目 132 节点(131 cnx+教程说明)+2 分片(version6/7 超限)；Vim help 原生格式代码块导入；tags-cn 机器索引不入库；六查全绿+分片验收"
  }
 }
