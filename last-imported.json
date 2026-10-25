@@ -621,5 +621,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/deerchao-regex-30min-20261025",
   "imported_at": "2026-10-25T10:32:00+08:00",
   "note": "网站口径：deerchao《正则表达式30分钟入门教程》v2.4.1(2019-11-15) 单页按 h2 拆 23 篇（剥目录导航），1 图 CDN；六查全绿（TOC23/对账0/幽灵0/word_count全>0/抽查3篇逐字符相等，19章CRLF已修）"
+ },
+ "https://github.com/phodal/designiot": {
+  "commit": "0b8332b",
+  "book_id": 84956294,
+  "book_url": "https://www.yuque.com/yehuoshun/designiot-0b8332b",
+  "imported_at": "2026-10-25T10:45:00+08:00",
+  "note": "开源项目口径：只导 src/ 书稿内容树 23 篇（pre/end/futrue 子目录保留），README/css/template/build 构建产物不入库；清洗围栏外 strong/blockquote/裸HTML块/坏标题；26 图 CDN（3 张外链 ebook.designiot.cn 死链→本地同名图）；六查全绿"
  }
 }
