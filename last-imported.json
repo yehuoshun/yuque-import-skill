@@ -635,5 +635,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/studyarea-vim-20261025",
   "imported_at": "2026-10-25T10:57:00+08:00",
   "note": "网站口径：Edward Lee《大家來學VIM》繁中 10 章（2000.05.05 版），big5→utf-8；html5lib 解析（老 HTML 未闭合 P/TABLE 导致 html.parser 树错乱）；剥外层布局壳 + p 含块级元素走遍历；六查全绿"
+ },
+ "https://github.com/yangyangwithgnu/use_vim_as_ide": {
+  "commit": "a56c441",
+  "book_id": 84956591,
+  "book_url": "https://www.yuque.com/yehuoshun/use-vim-as-ide-a56c441",
+  "imported_at": "2026-10-25T11:21:00+08:00",
+  "note": "开源项目口径：README 149KB 单文件按 <h2> 拆 10 章（卷首捐赠/公告/版本/目录剥），h3→##；vim 按键序列 <CR>/<leader>/<C-a> 实体化保护；56 图 CDN（2 张外部捐赠码剥）；CC0 1.0；⚠️并发双写事故：误发两个 tree_import 进程共用 progress.json → 全量双写 10 幽灵，已删+回查 404+复核；六查全绿"
  }
 }
