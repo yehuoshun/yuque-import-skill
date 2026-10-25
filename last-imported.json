@@ -607,5 +607,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/learnxinyminutes-docs-78548dd",
   "imported_at": "2026-10-24T23:25:00+0800",
   "note": "书单 fpb52 #020《Learn X in Y minutes》（在线教育组，018-020 里唯一可获得者；018 CodeSchool 死站、019 Coursera 无书稿已跳过）。口径：原链是站点 https://learnxinyminutes.com → 反查到源仓库 adambard/learnxinyminutes-docs（12.4k★，HEAD master @ 78548dd，2026-09-21 仍在更）；站点即其渲染产物。开源项目·整仓库口径（同 EbookFoundation/free-programming-books 先例）：剔 .github/ lint/ images/（images 先传 CDN 再删）与非教程根级文件（LICENSE.txt/hre.csv/pets.csv/CONTRIBUTING.md/dotfiles）。clean 树 38 目录（语言码 ar/be/…/zh-cn/zh-tw）/ 880 文件 = 918 节点 < 5000 单库。front matter（contributors/translators）不剥丢，转成正文顶部一行归属注「> 📝 贡献者：… ｜ 译者：…」。图：7 张被引用的 /images/ 教程图（solidity remix×6 + metamask-kovan）传语雀 CDN 并重写，7/7 HTTP 200；images/ 目录（含 15 张）未入库。无 >512KB 文件 → 无分片。分组「开源项目」57018723（move-stack 第 2 轮验证通过）。toc-md 目录树 918 行/29707B 一次 PUT 4.8s、结构核对 PASS、0 失败（38 目录/880 文档/跳过 0，建文档 ~10.5 分钟 23:11:27→23:21:55）。六查全绿：TOC 918==本地 918、全路径唯一 True、verify PASS（880/880 单文档映射、缺失 0、无分片）、对账错位 0、幽灵 0（docs 880==TOC DOC 880）、全库 880 篇 word_count>0（min 146）、抽查 12+30 篇按 progress 账本 rel 路径映射逐字符完全相等（⚠️ 不能按 basename 映射——同名文件跨语言目录撞名会假报 DIFF）。根级顺序：38 个语言 TITLE 目录在前、202 篇英文根文档在后（toc-md 常态，非缺陷）。"
+ },
+ "https://www.runoob.com/regexp/regexp-tutorial.html": {
+  "commit": "runoob-20261025 (网站)",
+  "book_id": 84956009,
+  "book_url": "runoob-regexp-20261025",
+  "imported_at": "2026-10-25T10:05:00+0800",
+  "note": "菜鸟教程《正则表达式》系列 13 篇（教程/简介/语法/修饰符/元字符/运算符优先级/匹配规则/位置匹配/分组和引用/选择和分支/断言/示例/使用总结），网站口径·文章收集；quiz 测验页=交互 JS 无正文未收录；交互测试工具（tryit/regex-test/runoob-regexp card）已剥；43 图全 CDN；六查全绿（TOC 13、对账 0、幽灵 0、13/13 逐字符相等、word_count min 593）"
  }
 }
