@@ -614,5 +614,12 @@
   "book_url": "runoob-regexp-20261025",
   "imported_at": "2026-10-25T10:05:00+0800",
   "note": "菜鸟教程《正则表达式》系列 13 篇（教程/简介/语法/修饰符/元字符/运算符优先级/匹配规则/位置匹配/分组和引用/选择和分支/断言/示例/使用总结），网站口径·文章收集；quiz 测验页=交互 JS 无正文未收录；交互测试工具（tryit/regex-test/runoob-regexp card）已剥；43 图全 CDN；六查全绿（TOC 13、对账 0、幽灵 0、13/13 逐字符相等、word_count min 593）"
+ },
+ "https://deerchao.net/tutorials/regex/regex.htm": {
+  "commit": null,
+  "book_id": 84956193,
+  "book_url": "https://www.yuque.com/yehuoshun/deerchao-regex-30min-20261025",
+  "imported_at": "2026-10-25T10:32:00+08:00",
+  "note": "网站口径：deerchao《正则表达式30分钟入门教程》v2.4.1(2019-11-15) 单页按 h2 拆 23 篇（剥目录导航），1 图 CDN；六查全绿（TOC23/对账0/幽灵0/word_count全>0/抽查3篇逐字符相等，19章CRLF已修）"
  }
 }
