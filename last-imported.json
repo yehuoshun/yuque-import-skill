@@ -747,5 +747,12 @@
   "book_url": "https://www.yuque.com/yeuhoshun/gruntjs-net-docs-20261026",
   "imported_at": "2026-10-26T14:41:52+0800",
   "note": "网站口径；gruntjs.com 中文镜像站（gruntjs.net）；5 组 29 篇 = 34 节点；15 张图全外链（徽章/GitHub 头像）不转存；插件列表 JS 动态渲染未收；六查全绿(TOC34/唯一/对账0/幽灵0/word_count29>0/逐字符 29/29)"
+ },
+ "https://github.com/nimojs/gulp-book": {
+  "commit": null,
+  "book_id": 84990704,
+  "book_url": "https://www.yuque.com/yeuhoshun/gulp-book-b365ed6",
+  "imported_at": "2026-10-26T15:06:07+0800",
+  "note": "开源项目口径 @ b365ed6（master；仓库由 nimojs 改名为 nimoc）；7 章 + README + SUMMARY + 00 说明 = 10 节点；1 图 CDN；剔 demo/ 示例工程与 .gitignore；六查全绿(TOC10/唯一/对账0/幽灵0/word_count10>0/逐字符 10/10)"
  }
 }
