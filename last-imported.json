@@ -691,5 +691,12 @@
   "book_url": "https://www.yuque.com/yeuhoshun/frontend-resource-sharing-2-20261026",
   "imported_at": "2026-10-26T09:38:45+0800",
   "note": "网站口径(GitHub Issue) 6 节点(5类+说明) 资源清单 165 链接 URL+描述 转 md 列表；无图；六查全绿"
+ },
+ "https://github.com/hacke2/hacke2.github.io/issues/1": {
+  "commit": null,
+  "book_id": 84986362,
+  "book_url": "https://www.yuque.com/yeuhoshun/frontend-resource-sharing-1-20261026",
+  "imported_at": "2026-10-26T09:53:38+0800",
+  "note": "网站口径(GitHub Issue) 2 节点(正文+说明) 资源清单约 88 链接 URL+描述混排 转 md 列表；无图；六查全绿"
  }
 }
