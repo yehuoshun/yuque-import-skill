@@ -677,5 +677,12 @@
   "book_url": "https://www.yuque.com/yeuhoshun/frontend-code-standards-20261026",
   "imported_at": "2026-10-26T09:15:59+08:00",
   "note": "网站口径 11 节点(10章+说明) Isobar 规范单页 h1 切章；2 图 CDN；SyntaxHighlighter/注释/嵌套li 三坑；六查全绿"
+ },
+ "https://github.com/fouber/blog/issues/2": {
+  "commit": null,
+  "book_id": 84985971,
+  "book_url": "https://www.yuque.com/yeuhoshun/fouber-dev-diary-20261026",
+  "imported_at": "2026-10-26T09:25:21+08:00",
+  "note": "网站口径(GitHub Issue) 2 节点(正文+说明) 单篇 34KB 不拆；7 图 CDN(raw.githubusercontent 走 gh-proxy)；六查全绿"
  }
 }
