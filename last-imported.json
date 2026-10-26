@@ -787,5 +787,12 @@
   "book_url": "https://www.yuque.com/yeuhoshun/wireshark-manual-20261027",
   "imported_at": "2026-10-27T01:53:19+0800",
   "note": "网站口径（换源）：原链 man.lupaworld.com 已404 + web.archive 本机不可达 → 换源 wizardforcel.gitbooks.io/wireshark-manual（老 GitBook 2.x 渲染站，同书名中译本，即 Wireshark User's Guide 中文版）；13 节点（0 目录/13 文档，NN- 前缀平铺）；101 图全传 CDN；剥页内自动目录块 + 源文字面锚点标签；六查全绿(TOC13/唯一/对账0/幽灵0/word_count13>0/逐字符 13/13)"
+ },
+ "http://shouce.jb51.net/ApacheMenu/": {
+  "commit": null,
+  "book_id": 84997222,
+  "book_url": "https://www.yuque.com/yeuhoshun/apache-manual-20261027",
+  "imported_at": "2026-10-27T03:10:10+0800",
+  "note": "网站口径（换源）：原链 works.jinbuguo.com 域名已死(DNS失败) + www.jinbuguo.com 502 + web.archive 本机不可达 + CC索引 flaky → 换源存活镜像 shouce.jb51.net/ApacheMenu/（金步国译《Apache 2.2 中文版参考手册》，与书单同书同译者）；13 目录 / 171 文档（按原 sitemap 13 分区建目录）；9 张正文图全传 CDN，nav 图标丢弃；GB2312→UTF-8；约 10 篇 developer/platform 页仍为英文原文；六查全绿(TOC184/唯一/对账0/幽灵0/word_count>0/抽样回读一致)"
  }
 }
