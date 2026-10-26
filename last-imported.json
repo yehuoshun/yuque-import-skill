@@ -719,5 +719,12 @@
   "book_url": "https://www.yuque.com/yeuhoshun/cn-chrome-devtools-36597b5",
   "imported_at": "2026-10-26T11:50:52+0800",
   "note": "开源项目口径 @ 36597b5；md/ 内容树 + README/目录页 = 26 节点(5目录/21文档)；剔 LICENSE/.gitignore/images(27图传CDN)；未收：4 个空占位 + 2 篇未翻译存根；六查全绿(TOC26/唯一/对账0/幽灵0/word_count21>0/逐字符 21/21，3 篇源带 BOM 属预期)"
+ },
+ "http://www.ituring.com.cn/minibook/950": {
+  "commit": null,
+  "book_id": 84989803,
+  "book_url": "https://www.yuque.com/yeuhoshun/chrome-extension-app-dev-20261026",
+  "imported_at": "2026-10-26T14:06:25+0800",
+  "note": "网站口径；图灵 SPA 正文走 api.ituring.com.cn（book 1421 首发版 / miniBookId 950）→ 16 章 103 篇 = 119 节点；2 图 CDN；六查全绿(TOC119/唯一/对账0/幽灵0/word_count103>0/逐字符 103/103)"
  }
 }
