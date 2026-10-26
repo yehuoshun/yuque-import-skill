@@ -768,5 +768,12 @@
   "book_url": "https://www.yuque.com/yeuhoshun/http-api-guide-cfc1db8",
   "imported_at": "2026-10-26T15:26:57+0800",
   "note": "开源项目口径 @ cfc1db8；README(13 章) + SUPPLEMENT(8 章) 按 H2 拆章 + 00 说明 = 22 节点；无图；剔 LICENSE.md；剥「目录」块与失效页内锚点；六查全绿(TOC22/唯一/对账0/幽灵0/word_count22>0/逐字符 22/22)"
+ },
+ "https://github.com/darcyliu/google-styleguide/blob/master/JSONStyleGuide.md": {
+  "commit": "0f49fc7",
+  "book_id": 84991064,
+  "book_url": "https://www.yuque.com/yeuhoshun/json-style-guide-0f49fc7",
+  "imported_at": "2026-10-26T15:32:06+0800",
+  "note": "开源项目口径 @ 0f49fc7（darcyliu/google-styleguide 只收 JSONStyleGuide.md）；按 H2 拆 14 章 + 00 说明 = 15 节点；2 图 CDN（正文老 googlecode 死链→映射仓库内同名 png）；剥标题尾闭合 #；六查全绿(TOC15/唯一/对账0/幽灵0/word_count15>0/逐字符 15/15)"
  }
 }
