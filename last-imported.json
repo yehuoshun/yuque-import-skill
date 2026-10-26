@@ -712,5 +712,12 @@
   "book_url": "https://www.yuque.com/yeuhoshun/mars-92112bb",
   "imported_at": "2026-10-26T10:16:33+0800",
   "note": "开源项目口径 @ 92112bb 21 节点(5目录/16文档) 剔 LICENSE/.gitignore；本地图 1 张 CDN；六查全绿"
+ },
+ "https://github.com/CN-Chrome-DevTools/CN-Chrome-DevTools": {
+  "commit": "36597b5",
+  "book_id": 84988284,
+  "book_url": "https://www.yuque.com/yeuhoshun/cn-chrome-devtools-36597b5",
+  "imported_at": "2026-10-26T11:50:52+0800",
+  "note": "开源项目口径 @ 36597b5；md/ 内容树 + README/目录页 = 26 节点(5目录/21文档)；剔 LICENSE/.gitignore/images(27图传CDN)；未收：4 个空占位 + 2 篇未翻译存根；六查全绿(TOC26/唯一/对账0/幽灵0/word_count21>0/逐字符 21/21，3 篇源带 BOM 属预期)"
  }
 }
