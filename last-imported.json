@@ -740,5 +740,12 @@
   "book_url": "https://www.yuque.com/yeuhoshun/growth-ebook-37b443c",
   "imported_at": "2026-10-26T14:32:56+0800",
   "note": "开源项目口径 @ 37b443c（gh-pages）；只收 chapters/ 内容树 61 篇 + 00 说明 = 62 节点；119 图 CDN；剔 build/css/img/marketing/template/Makefile/*.tex/index.html 等脚手架 + 合并版 growth.md；六查全绿(TOC62/唯一/对账0/幽灵0/word_count62>0/逐字符 62/62)"
+ },
+ "http://www.gruntjs.net": {
+  "commit": null,
+  "book_id": 84990340,
+  "book_url": "https://www.yuque.com/yeuhoshun/gruntjs-net-docs-20261026",
+  "imported_at": "2026-10-26T14:41:52+0800",
+  "note": "网站口径；gruntjs.com 中文镜像站（gruntjs.net）；5 组 29 篇 = 34 节点；15 张图全外链（徽章/GitHub 头像）不转存；插件列表 JS 动态渲染未收；六查全绿(TOC34/唯一/对账0/幽灵0/word_count29>0/逐字符 29/29)"
  }
 }
