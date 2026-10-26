@@ -698,5 +698,12 @@
   "book_url": "https://www.yuque.com/yeuhoshun/frontend-resource-sharing-1-20261026",
   "imported_at": "2026-10-26T09:53:38+0800",
   "note": "网站口径(GitHub Issue) 2 节点(正文+说明) 资源清单约 88 链接 URL+描述混排 转 md 列表；无图；六查全绿"
+ },
+ "https://github.com/hoosin/mobile-web-favorites": {
+  "commit": null,
+  "book_id": 84986709,
+  "book_url": "https://www.yuque.com/yeuhoshun/mobile-web-favorites-14a44c1",
+  "imported_at": "2026-10-26T10:10:42+0800",
+  "note": "开源项目口径 @ 14a44c1 44 节点(43章+说明) README 单文按 H2 拆章；本地图 1 张 CDN + 外链 1 张保留；六查全绿"
  }
 }
