@@ -780,5 +780,12 @@
   "book_url": "https://www.yuque.com/yeuhoshun/json-style-guide-0f49fc7",
   "imported_at": "2026-10-26T15:32:06+0800",
   "note": "开源项目口径 @ 0f49fc7（darcyliu/google-styleguide 只收 JSONStyleGuide.md）；按 H2 拆 14 章 + 00 说明 = 15 节点；2 图 CDN（正文老 googlecode 死链→映射仓库内同名 png）；剥标题尾闭合 #；六查全绿(TOC15/唯一/对账0/幽灵0/word_count15>0/逐字符 15/15)"
+ },
+ "https://wizardforcel.gitbooks.io/wireshark-manual/content/": {
+  "commit": null,
+  "book_id": 84997190,
+  "book_url": "https://www.yuque.com/yeuhoshun/wireshark-manual-20261027",
+  "imported_at": "2026-10-27T01:53:19+0800",
+  "note": "网站口径（换源）：原链 man.lupaworld.com 已404 + web.archive 本机不可达 → 换源 wizardforcel.gitbooks.io/wireshark-manual（老 GitBook 2.x 渲染站，同书名中译本，即 Wireshark User's Guide 中文版）；13 节点（0 目录/13 文档，NN- 前缀平铺）；101 图全传 CDN；剥页内自动目录块 + 源文字面锚点标签；六查全绿(TOC13/唯一/对账0/幽灵0/word_count13>0/逐字符 13/13)"
  }
 }
