@@ -761,5 +761,12 @@
   "book_url": "https://www.yuque.com/yeuhoshun/gulpjs-com-cn-docs-20261026",
   "imported_at": "2026-10-26T15:20:16+0800",
   "note": "网站口径；gulpjs.com 中文镜像（gulpjs.com.cn，Docusaurus v3）；5 组 25 篇 = 30 节点；6 图 CDN；缺页 recipes/automate-releases(404)/插件列表(JS)/英文占位页未收；源 HTML 混 NUL→初导 8 篇被判二进制，用 repair_placeholders 回填；六查全绿(TOC30/唯一/对账0/幽灵0/word_count25>0/逐字符 25/25)"
+ },
+ "https://github.com/bolasblack/http-api-guide": {
+  "commit": "cfc1db8",
+  "book_id": 84990999,
+  "book_url": "https://www.yuque.com/yeuhoshun/http-api-guide-cfc1db8",
+  "imported_at": "2026-10-26T15:26:57+0800",
+  "note": "开源项目口径 @ cfc1db8；README(13 章) + SUPPLEMENT(8 章) 按 H2 拆章 + 00 说明 = 22 节点；无图；剔 LICENSE.md；剥「目录」块与失效页内锚点；六查全绿(TOC22/唯一/对账0/幽灵0/word_count22>0/逐字符 22/22)"
  }
 }
