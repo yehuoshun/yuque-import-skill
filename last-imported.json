@@ -733,5 +733,12 @@
   "book_url": "https://www.yuque.com/yeuhoshun/chrome-extension-dev-docs-20261026",
   "imported_at": "2026-10-26T14:21:08+0800",
   "note": "网站口径；360 工程师译 Chromium 官方扩展开发文档（open.chrome.360.cn/extension_dev）→ 6 分类 35 页 = 41 节点；56 图 CDN；六查全绿(TOC41/唯一/对账0/幽灵0/word_count35>0/逐字符 35/35)；1 图源站已死(w.qhimg.com DNS 失)保原链"
+ },
+ "https://github.com/phodal/growth-ebook": {
+  "commit": "37b443c",
+  "book_id": 84990201,
+  "book_url": "https://www.yuque.com/yeuhoshun/growth-ebook-37b443c",
+  "imported_at": "2026-10-26T14:32:56+0800",
+  "note": "开源项目口径 @ 37b443c（gh-pages）；只收 chapters/ 内容树 61 篇 + 00 说明 = 62 节点；119 图 CDN；剔 build/css/img/marketing/template/Makefile/*.tex/index.html 等脚手架 + 合并版 growth.md；六查全绿(TOC62/唯一/对账0/幽灵0/word_count62>0/逐字符 62/62)"
  }
 }
