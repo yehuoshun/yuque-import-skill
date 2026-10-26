@@ -726,5 +726,12 @@
   "book_url": "https://www.yuque.com/yeuhoshun/chrome-extension-app-dev-20261026",
   "imported_at": "2026-10-26T14:06:25+0800",
   "note": "网站口径；图灵 SPA 正文走 api.ituring.com.cn（book 1421 首发版 / miniBookId 950）→ 16 章 103 篇 = 119 节点；2 图 CDN；六查全绿(TOC119/唯一/对账0/幽灵0/word_count103>0/逐字符 103/103)"
+ },
+ "http://open.chrome.360.cn/extension_dev/overview.html": {
+  "commit": null,
+  "book_id": 84990023,
+  "book_url": "https://www.yuque.com/yeuhoshun/chrome-extension-dev-docs-20261026",
+  "imported_at": "2026-10-26T14:21:08+0800",
+  "note": "网站口径；360 工程师译 Chromium 官方扩展开发文档（open.chrome.360.cn/extension_dev）→ 6 分类 35 页 = 41 节点；56 图 CDN；六查全绿(TOC41/唯一/对账0/幽灵0/word_count35>0/逐字符 35/35)；1 图源站已死(w.qhimg.com DNS 失)保原链"
  }
 }
