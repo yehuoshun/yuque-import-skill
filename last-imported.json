@@ -801,5 +801,12 @@
   "book_url": "https://www.yuque.com/yeuhoshun/nginx-stu-zh-20261027",
   "imported_at": "2026-10-27T03:30:31+0800",
   "note": "网站口径（换源）：原链 ttlsa.com 双协议 DNS 解析失败（域名死）+ GitHub 无本书源仓 + web.archive.org 本机不可达 + CC 索引 504 → 换源 GitHub 镜像仓 cloudsmithy/2 的 PDF 原件（Nginx教程从入门到精通(运维生存时间TTLSA出品).pdf，201 页/8.3MB，Word 产出、文本层完整）；PDF 书签（276 条）抽章建树：4 分区（Nginx基础21/NGINX变量详解8/Nginx模块与案例51/常见问题3）= 84 篇 + 根级封面与目录；53 张内嵌图全传 CDN（54 处引用）；PDF 原件走 type=attachment 附件挂 00-封面与目录.md；六查全绿(TOC88/唯一/对账0/幽灵0/word_count 84篇全>0/逐篇回读84篇0差)"
+ },
+ "https://github.com/taobao/nginx-book": {
+  "commit": "3c991ef",
+  "book_id": 84997298,
+  "book_url": "https://www.yuque.com/yehuoshun/nginx-book-3c991ef",
+  "imported_at": "2026-10-27T03:48:18+0800",
+  "note": "开源项目口径（源仓库优先）：书单原链 tengine.taobao.org/book 存活（Sphinx 站），其源仓库 = taobao/nginx-book（master @3c991ef，2023-11-20），线上站即该仓 source/ 的构建产物、逐章对照无缺失/无多余 → 走源仓库。仅导书稿正文 source/（index+module_development/source_analysis 两篇 toctree 空壳不建节点只当目录 + ch01-14 + 附录A/B/C）= 20 节点（2 目录/18 文档）；脚手架全剔（conf.py/Makefile/exts/ 构建插件与主题）；22 张图全传语雀 CDN 后删目录。复用 scripts/yuque_rst_convert.py（Sphinx/reST，literalinclude/层级/块间空行主脚本已含）；csv-table 表头沿上游 delim 口径畸形（线上站同样，保真）。toc-md 20 行/1015B 一次 PUT 0.6s、结构核对 PASS、0 失败；根级 00-前言 被排到 TITLE 后 → prependNode 归位（坑 29）。六查全绿(TOC20==本地20/全路径唯一/对账错位0/幽灵0 docs18==TOC DOC18/word_count 18篇全>0/逐篇回读18篇0差)"
  }
 }
