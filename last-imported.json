@@ -670,5 +670,12 @@
   "book_url": "https://www.yuque.com/yeuhoshun/devtoolsecrets-20261026",
   "imported_at": "2026-10-26T02:04:16+08:00",
   "note": "网站口径 9 节点(8章+说明) 单篇拆章；27 图 CDN；六查全绿"
+ },
+ "http://coderlmn.github.io/code-standards/": {
+  "commit": null,
+  "book_id": 84985881,
+  "book_url": "https://www.yuque.com/yeuhoshun/frontend-code-standards-20261026",
+  "imported_at": "2026-10-26T09:15:59+08:00",
+  "note": "网站口径 11 节点(10章+说明) Isobar 规范单页 h1 切章；2 图 CDN；SyntaxHighlighter/注释/嵌套li 三坑；六查全绿"
  }
 }
