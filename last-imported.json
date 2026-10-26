@@ -1,10 +1,10 @@
 {
  "https://github.com/Anduin2017/HowToCook": {
-  "commit": "0e106eea",
-  "book_id": 84817850,
-  "book_url": "howtocook-0e106eea",
-  "imported_at": "2026-10-21T12:25:00+0800",
-  "note": "默认分支 master @ 0e106eea（[ci skip] Automatic file changes/fix，2026-10-20 18:07；距上版 f6da4528 仅 2 commit，只动 README.md +1/-1）。口径与上版一致（硬规则 10）：358 张配图全传 CDN（350 唯一 URL / 353 处引用重写 / 12 外链跳过 / 0 缺失）+ 连图带目录删净 → 622 节点（216 目录 / 406 文件）< 5000 单库。toc-md 目录树 622 行 / 23KB 一次 PUT 3.4s、结构核对 PASS、0 失败；根级顺序天然正确（TITLE 在前 / DOC 在后，合 Windows 规则）；五查全绿（TOC 622 == 本地 622、全路径唯一 True、缺失 0、对账错位 0、幽灵 0 docs406==TOC DOC406、406 篇 word_count 全 >0 且二进制占位 0）。旧库 84776562（f6da4528）按老板口径保留。历史：f6da4528=84776562（2026-10-20 硬规则 10 首落地 622）、743d7f46=84598602（760 篇含 355 空图片节点，旧口径）、84295491（fkigao 976）、84453956（2026-10-12）——旧库保留。上版 note：默认分支 master @ f6da4528（学习用刀图文教程 #1889，2026-10-20）；本地 622 节点（216 目录 / 406 文件）< 5000 单库。⭐ 硬规则 10 首次在 HowToCook 落地：358 张配图不再建占位文档——350 处引用传语雀 CDN + 重写（含 4 处「文件名带括号」手工补，已修 MD_RE 正则并补单测）+ 删全部图片与图片目录；正文 0 处本地引用残留。toc-md 目录树 622 行 / 23KB 一次 PUT 4.5s、结构核对 PASS、0 失败；根级顺序天然正确（TITLE 目录在前、DOC 文件在后，符合老板 Windows 规则）；四查全绿（TOC 622 == 本地 622、全路径唯一 True、幽灵 0 docs406==TOC DOC406、406 篇 word_count 全 >0 + 抽查 4 篇正文 CDN 图可达、CDN 直链 200/562KB）。历史：743d7f46=84598602（760 篇含 355 个空图片节点，旧口径）、84295491（fkigao 976）、84453956（2026-10-12）——旧库按老板口径保留"
+  "commit": "5fb3140c",
+  "book_id": 84991630,
+  "book_url": "https://www.yuque.com/yeuhoshun/howtocook-5fb3140c",
+  "imported_at": "2026-10-26T18:20:00+0800",
+  "note": "默认分支 master @ 5fb3140c（10-25，2 fix：红烧肘子单位 / README 生成错误即退；距上版 0e106eea 只动少量 md）。口径与上版一致（硬规则 10）：358 张配图全传 CDN（214 jpg / 96 jpeg / 42 png / 3 webp / 3 svg，350 唯一 URL / **重写 353 处引用** / 外链跳过 12 / 本地缺失 0）+ 连图带目录删净 → 622 节点（216 目录 / 406 文件）< 5000 单库。toc-md 目录树 622 行 / 23142B 一次 PUT 4.6s、结构核对 PASS、0 失败；根级顺序天然正确（TITLE 在前 / DOC 在后）。六查全绿：TOC 622==本地 622、全路径唯一 True、对账错位 0、幽灵 0（docs 406==TOC DOC 406）、406 篇 word_count 全 >0、抽查 8 篇逐字符一致。历史（旧库按老板口径全保留）：0e106eea=84817850、f6da4528=84776562、743d7f46=84598602、84295491（fkigao 976）、84453956（2026-10-12）。"
  },
  "https://github.com/Alchyr/ModTemplate-StS2": {
   "commit": "2c900a0",
@@ -20,26 +20,31 @@
   "note": "第 4 版重导（HEAD eb55e4e8 → 52e40c13，2026-10-22 10:45；eb55e4e8..52e40c13 共 4 commit / 7 文件改、无增删，竞价榜单类链接修复批次 #13529/#13539/#13551/#13536/#13538）。口径与上版一致：开源项目整仓库（11 目录 / 234 文件 = 245 节点 < 5000 单库），分组「开源项目」57018723（move-stack 第 3 次验证：第 1 轮未过、第 2 轮通过）。无图需处理（仓库仅 favicon.ico 一个二进制，走占位注释）。toc-md 目录树 245 行 / 11059B 一次 PUT 1.8s、结构核对 PASS、0 失败；根级顺序天然正确（TITLE 8 个在前 / DOC 6 个在后，合老板 Windows 规则）；六查全绿：TOC 245==本地 245、全路径唯一 True、verify PASS（234/234 单文档映射、缺失 0、无分片）、对账错位 0、幽灵 0（docs 234==TOC DOC 234）、234 篇逐篇回读正文非空（word_count==0 仅 3 篇且均属允许：favicon.ico 二进制占位 + 上游 0 字节空文件 -hy.md / -cs-cp.md）；抽查 10 篇逐字符比对：8 篇完全相等，-zh.md 仅差开头 BOM（语雀不存 BOM，正文一致）、fpb-lint.yml 为 yaml 围栏（` ```yaml `）差异，均无害。旧库：eb55e4e8=84817639（2026-10-21）、f42a51cd=84639221、012801db=84635453 按老板口径保留。"
  },
  "https://github.com/aoaostar/legado": {
-  "commit": "8b13d08",
-  "book_id": 84817392,
-  "book_url": "legado-8b13d08",
-  "imported_at": "2026-10-21T11:10:00+0800",
-  "note": "默认分支 release @ 8b13d08（Add sync changes，上游同步时间 2026-10-21 10:38）；沿用老板 10-18 拍板口径『B』=索引+附件（原版+解析双轨）。仓库形状与上版一致：6 分类 / 21 条引用 / 20 个原件文件 / 47MB。32 节点（2 目录/30 文档）：00-前言 + 01-原版附件（20 个原件 type=attachment，抽 4 个带 cookie curl -L 复拉 md5 全对，含 20MB b778fe6b.json）+ 02..07 六分类索引 + 08-解析（README/index.html/20 篇 JSON 逐条转表，零分片，最大 303KB）。toc-md 目录树 32 行 PUT 0.7s、结构核对 PASS、0 失败；根级 TITLE（08-解析）又排到根级 DOC 之前 → 一发 appendNode sibling 归位（连续第 3 版同坑）；五查全绿（32==32==30+2、全路径唯一 True、缺失 0、对账错位 0、幽灵 0 docs30==TOC DOC30、30 篇逐篇回读 0 差、word_count 0 篇=0）。历史：0dde287=84776109、fd0ec7f9=84711589、06b8162=84678623（旧库按老板口径全保留）"
+  "commit": "5c0ee9e",
+  "book_id": 84991634,
+  "book_url": "https://www.yuque.com/yeuhoshun/legado-5c0ee9e",
+  "imported_at": "2026-10-26T18:20:00+0800",
+  "note": "默认分支 release @ 5c0ee9e（Add sync changes，2026-10-26 02:27Z）。沿用 2026-10-21 新口径「解析单轨」（硬规则 12：附件只给 PDF，原「原件附件轨」停用）——**未建 01-原版附件、未上传 sources/*.json**；索引「原件」列改为上游直链 https://legado.aoaostar.com/sources/<file>。31 节点（2 目录 / 29 文档）：00-前言 + 02..07 六篇分类索引 + 08-解析（README/index.html + 20 篇 JSON 逐条转表，零分片）。CNAME / sources/cache.lock / .github 不入库。toc-md 目录树 31 行 / 1232B PUT 0.5s、结构核对 PASS、0 失败；根级 TITLE（08-解析）又排到根级 DOC 之前 → 一发 appendNode/sibling 归位（连续第 4 版同坑）。六查全绿：TOC 31==本地 31、全路径唯一 True、对账错位 0、幽灵 0（docs 29==TOC DOC 29）、29 篇 word_count 全 >0、逐篇回读 29/29 逐字符相等。⚠️ 已知遗留：examples/legado-sources/build.py 的 gen_docs() 仍是旧双轨逻辑（与新口径不符），本次在 tmp/reimp-A-legado/build.py 改造，共享脚本待更新。历史：8b13d08=84817392、0dde287=84776109、fd0ec7f9=84711589、06b8162=84678623（旧库全保留）。"
  },
  "https://github.com/swjybky/deepwrite": {
-  "commit": "b9bd92f",
-  "book_id": 84926783,
-  "book_url": "deepwrite-b9bd92f",
-  "imported_at": "2026-10-24T12:15:00+0800",
-  "note": "默认分支 main @ b9bd92f（2026-10-24，v1.7.4 chore: update release manifest；上一版 a44686d / 84777697，旧库保留不删）。prep 4000（351 目录/3649 文件）→ 删 docs/images（22 图先传 CDN、25 处引用重写）后 3974 节点（347/3627）<5000 不分库；toc-md 目录树 3974 行 / 215530B 一次 PUT 19.6s、结构核对 PASS、0 失败；对账 0 错位、全路径唯一 True、docs total 3627 == TOC DOC 3627（幽灵 0）、根级 TITLE 在前 DOC 在后（toc-md 常态非缺陷）；3627 篇全量扫描 word_count==0 仅 5 篇且全为非文本（4 张 app 图 CDN 嵌入 + icon.ico 二进制占位），文本误判占位 0；与上版差异 = +57 文件（目录数不变），4 张 app 图 CDN 占位 + icon.ico 二进制占位与上版一致"
+  "commit": "bbce89b",
+  "book_id": 84991695,
+  "book_url": "https://www.yuque.com/yeuhoshun/deepwrite-bbce89b",
+  "imported_at": "2026-10-26T18:20:00+0800",
+  "note": "默认分支 main @ bbce89b（2026-10-26 06:03Z，v1.7.4 release manifest 之后）。prep 4009（351 目录 / 3658 文件）→ 删 docs/images（22 张图先传 CDN + **重写 25 处引用 / 0 缺失**）后 3983 节点（347 / 3636）< 5000 不分库；toc-md 目录树 3983 行 / 216127B 一次 PUT **27.6s**、结构核对 PASS、0 失败；根级 TITLE 在前 / DOC 在后（toc-md 常态，未强改）。六查全绿：TOC 3983==本地 3983、全路径唯一 True、对账错位 0、幽灵 0（docs 3636==TOC DOC 3636）、**全库 word_count==0 仅 5 篇且全为非文本**（wechat.jpg / alipay.jpg / app-icon.png / icon.png 4 张 app 图 CDN 占位 + icon.ico 二进制占位）= 预期值、文本误判 0、抽查 12 篇逐字符相等。途中 16:35 撞账号级 429（5000/小时，与并行子会话共享）→ 脚本等 17:01 整点续跑，断点零丢失、最终 0 失败。HTTPS clone 502 → 走 SSH。历史（旧库全保留）：b9bd92f=84926783、a44686d=84777697。"
  },
  "https://github.com/morluto/rea": {
-  "commit": "d87e73f2",
-  "book_id": 84927870,
-  "book_id_tests": 84927871,
-  "book_url": "rea-d87e73f2",
-  "imported_at": "2026-10-24T15:15:00+0800",
-  "note": "默认分支 main @ d87e73f2（test(javascript): execute the registered Webpack export fixture (#6951)，2026-10-24 13:27(+08)；距上版 9eb829ac 共 928 commit / 2442 文件变动 +191285/-35011）。**单库超 5000 → 沿用 10-21「方案 A」拆 2 库**（描述互指对方完整 URL）：prep 6350 节点（442 目录 / 5908 文件）→ 剔 .github（46 文件+8 目录=54 节点，沿用 10-20 口径）→ 删 11 张图（5 张被引用传 CDN + 6 张未引用）与空图目录 → 6283 节点；主库 84927870 `rea-d87e73f2`（除 tests/，本地 4306 = 315 目录 / 3991 文件）+ 副库 84927871 `rea-tests-d87e73f2`（仅 tests/，1977 = 117 / 1860）。配图：仓库 11 张图，5 张被 md 引用（docs/assets/{discord.svg,rea-hopper-analysis.png,rea-showcases.svg,rea-showcases-dark.svg} + website/public/assets/figures/rea-investigation-flow.svg）→ 全传 CDN（--throttle 2，0 失败；复用上版 3 张 CDN URL 缓存）；四类引用都改：markdown 图 + HTML `<img src>`（脚本吃，89 处）+ `<source srcset>` 暗色（22 处，脚本不吃）+ 「Open the full-size figure」普通链接（22 处，脚本不吃，同一 CDN URL，同坑 29）；其余 6 张未引用不传、图目录删净；`website/public/assets/licenses/dinosaur.txt` 保留；third_party 5 个 submodule 空目录按 .gitmodules 补回。并行导入（v2 100 QPS 够；两库请求数 3991+1860≈5851 略超账号级 5000/小时 → **主库 14:38 撞 429，脚本按设计等到 15:01 整点刷新续跑**，B 14:22 先完成）：A 13:59→15:13、B 13:59→14:22，**两库 0 失败**；A toc-md 整树 4333 行 PUT 22.7s 结构 PASS，B 1977 行 PUT 11.5s PASS。六查全绿：TOC A 4333 == 本地 4306+分片27、B 1977 == 本地 1977；verify 两库 PASS（A 3991 文件→DOC 4018 = 单篇 3969 + 分片 22 文件→49 节点、缺失 0、分片号连续、全路径唯一 True；B 1860→1860、缺失 0）；对账两库错位 0；幽灵 0（A docs 4018 == TOC DOC 4018；B 初查 1 个重试双写 `ownedArtifactReaderCleanup.test.ts`(id 289422221，TOC 已有真身 289422247) → 删后 1860 == 1860）；**全库 word_count>0（A 4018 篇 / B 1860 篇，0 篇为 0）**；**分片内容 22/22 逐字符相等**（3 个 json：6.5.0.contributions 3 片 / 6.6.0.contributions 2 片 / javascript-route-inventory 6 片 + 19 个 messages.po 各 2 片）；CDN 图 5/5 HTTP 200；正文抽查 A 18 篇 + B 6 篇逐字符相等。历史（旧库按老板口径全保留）：9eb829ac=84897349/84897352、d0067ba=84816207/84816208、58d6043=84779255、9e259f87c=84713190、84682363、84565779。"
+  "commit": "3d565fa4",
+  "book_id": [
+   84991739,
+   84991740
+  ],
+  "book_url": [
+   "https://www.yuque.com/yeuhoshun/rea-3d565fa4",
+   "https://www.yuque.com/yeuhoshun/rea-tests-3d565fa4"
+  ],
+  "imported_at": "2026-10-26T18:20:00+0800",
+  "note": "默认分支 main @ 3d565fa42（8 位 3d565fa4；比 16:00 巡检时的 258a1dd3 又新）。**单库超 5000 → 沿用 10-21「方案 A」拆 2 库**（描述互指对方完整 URL，134/126 字符）：主库 84991739 `rea-3d565fa4`（除 tests/，本地 4648 = 330 目录 / 4318 文件）+ 副库 84991740 `rea-tests-3d565fa4`（仅 tests/，2099 = 118 / 1981）。预处理：剔 .github（47 文件 / 8 目录）；11 张图**仅传被引用的 5 张**（复用上版 CDN 缓存，0 新传），四类引用全改（md + `<img src>` 93 处 / `<source srcset>` 暗色 23 处 / 「Open the full-size figure」普通链接 23 处），**残留本地图引用 0**；保留 website/public/assets/licenses/dinosaur.txt；third_party 5 个 submodule 空目录按 .gitmodules 补回。**卡点（重要）**：账号级 429（与并行子会话共享 5000/小时）→ 16:35 首次撞 429 等 17:01 续跑；**17:29 二次 429 时「同进程只等一次整点」导致失败抖动 → kill 后 17:30 重启（账本断点续传）→ 干净等到 18:01 → 18:14 完成**，最终 0 失败、零丢失。六查全绿：TOC 主库 4679 == 本地 4648+31 分片、副库 2099==2099；import_verify 两库 PASS（主库 4318 文件 → 单文档 4295 + 23 个分片文件 → 54 节点、缺失 0；副库 1981→1981）；全路径唯一 True；对账错位 0；幽灵 0；**全库 word_count>0**（主库 4349/4349、副库 1981/1981，0 篇为 0）；**分片内容 23/23 逐字符零丢失**；CDN 图 5/5 = HTTP 200；抽查主库 20 篇 + 副库 12 篇逐字符相等。历史（旧库全保留）：d87e73f2=84927870/84927871、9eb829ac=84897349/84897352、d0067ba=84816207/84816208、58d6043=84779255、9e259f87c=84713190、84682363、84565779。"
  },
  "https://github.com/howie6879/owllook": {
   "commit": "8ded1ea",
