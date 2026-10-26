@@ -13,12 +13,12 @@
 特性:
   - 断点续传: progress.json 记账（默认输出到 --progress 指定路径），中断后重跑自动跳过已完成
   - 每节点落盘一次: 中断最多丢 1 个节点（血泪教训: 批量落盘会丢一批节点+挂错父级）
-  - 限流重试: 429/5xx 指数退避
+  - 限流重试: 429 分两类处理——「小时配额(整点刷新, 可跨整点多次等待, 上限 --quota-max-waits)」与「秒级限速(短退避)」; 5xx 指数退避
   - 内容格式: .md 原样 / .cs → ```csharp / 其余 → ``` 纯文本
   - 超限自动处理: 二进制文件→占位说明; 文本超 512KB(可调 --max-body)→自动切块+注记(默认 512KB, 2026-10-14 老板定: 1MB 语雀端加载慢)
   - 切分策略(2026-10-14 老板定): 按语义边界切, 禁硬拆——JSON 顶层数组按条目边界(每段可解析), 其余按行边界(不切破行); 每段带头部范围注记
 """
-import argparse, json, os, sys, time, urllib.request, urllib.error, uuid
+import argparse, json, os, random, sys, time, urllib.request, urllib.error, uuid
 
 IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg", ".bmp"}
 
@@ -87,7 +87,8 @@ def web_api(cfg, login, method, url, body=None, retries=4):
     返回解析后的 JSON; HTTP 429/5xx 指数退避重试."""
     import ssl
     data = json.dumps(body).encode() if body is not None else None
-    for i in range(retries):
+    i = 0
+    while i < retries:
         req = urllib.request.Request(url, data=data, method=method)
         req.add_header("Cookie", cfg["cookie"])
         req.add_header("x-csrf-token", cfg["ctoken"])
@@ -103,15 +104,28 @@ def web_api(cfg, login, method, url, body=None, retries=4):
         except urllib.error.HTTPError as e:
             if e.code in (401, 403):
                 raise RuntimeError(f"Web API 认证失败 HTTP {e.code}(cookie/ctoken 过期?): {e.read().decode()[:200]}")
-            if e.code in (429, 500, 502, 503, 504):
+            if e.code == 429:
+                rem, ra = _rl_headers(e)
+                if ra is not None and ra <= 30:
+                    time.sleep(ra + 1)          # 秒级限速: 按 Retry-After
+                    continue
+                if rem == 0 and _QUOTA_WAITS < _QUOTA_MAX_WAITS:
+                    wait_quota_reset()          # 小时配额: 可跨整点重复等待(不消耗 retries)
+                    continue
+                i += 1                          # 秒级限速 / 无头 429: 短退避(不盲等一小时)
+                time.sleep(2 ** i * 1.5 + 1)
+                continue
+            if e.code in (500, 502, 503, 504):
+                i += 1
                 time.sleep(2 ** i * 1.5 + 1)
                 continue
             raise RuntimeError(f"Web API HTTP {e.code}: {e.read().decode()[:200]}")
         except Exception:
-            if i == retries - 1:
+            i += 1
+            if i >= retries:
                 raise
             time.sleep(2 ** i * 1.5 + 1)
-    raise RuntimeError("web_api retries exhausted")
+    raise RuntimeError("Web API retries exhausted")
 
 
 def batch_move(cfg, login, book, node_uuids, target_uuid):
@@ -162,28 +176,61 @@ def load_token(env):
                 return line.strip().split("=", 1)[1].strip().strip('"').strip("'")
     raise SystemExit(f"找不到 token: 设置环境变量 {env} 或写入 credentials.env")
 
-_QUOTA_WAITED = False
+# 账号级小时配额（5000 次/小时，整点刷新；同账号所有 Token 共享）。
+# 旧实现用「进程内只等一次」布尔：二次 429 直接掉进短退避并 raise，节点被静置 10/20/30 分钟
+# 后记 fail（2026-10-26 rea 主库实捶，只能 kill 重启）。现改为：可重复跨整点等待 + 计数上限兜底 + 按响应头决策。
+_QUOTA_WAITS = 0
+_QUOTA_MAX_WAITS = 12   # main() 里由 --quota-max-waits 覆盖
+
+
+def _rl_headers(e):
+    """从 HTTPError 读限流头 → (X-RateLimit-Remaining, Retry-After)，缺失返回 None。"""
+    h = getattr(e, "headers", None)
+    if not h:
+        return (None, None)
+    rem, ra = h.get("X-RateLimit-Remaining"), h.get("Retry-After")
+    rem = int(rem) if rem is not None and str(rem).isdigit() else None
+    ra = int(ra) if ra is not None and str(ra).isdigit() else None
+    return (rem, ra)
+
+
+def probe_remaining(token, base):
+    """廉价探测当前小时剩余额度（GET /user 读响应头）；失败返回 None（调用方按非配额处理）。"""
+    req = urllib.request.Request(base + "/user", method="GET")
+    req.add_header("X-Auth-Token", token)
+    try:
+        with urllib.request.urlopen(req, timeout=15) as r:
+            v = r.headers.get("X-RateLimit-Remaining")
+            return int(v) if v is not None and v.isdigit() else None
+    except urllib.error.HTTPError as e:
+        return _rl_headers(e)[0]
+    except Exception:
+        return None
 
 
 def wait_quota_reset(pad=60, cap=3600):
-    """语雀账号级小时配额（5000 次/小时）是**整点刷新** → 撞 429 后等到「下一个整点 + pad 秒」再试。
+    """语雀账号级小时配额（5000 次/小时）**整点刷新** → 撞 429 后等到「下一个整点 + pad 秒」。
 
-    pad 默认 60s（2026-10-18 老板定：给 1 分钟余量，防网络波动导致整点没刷上）。
-    同进程只等一次（否则每个请求都睡一小时）；等过之后仍 429 就按短退避走，最终 raise。
+    pad 默认 60s（2026-10-18 老板定：给 1 分钟余量）。
+    **可重复调用**（由 _QUOTA_MAX_WAITS 兜底防死循环）：多进程/并行导入共享同一账号配额时，
+    整点刷新的额度可能被别的进程瞬间吃掉 → 醒来仍 429 就再等下一个整点。
     """
-    global _QUOTA_WAITED
+    global _QUOTA_WAITS
     import datetime as _dt
     now = _dt.datetime.now()
     nxt = (now + _dt.timedelta(hours=1)).replace(minute=0, second=0, microsecond=0)
     wait = min((nxt - now).total_seconds() + pad, cap)
-    print("[quota] 429 配额耗尽 → 等到 %s +%ds（%.0fs）后重试" % (nxt.strftime("%H:%M"), pad, wait), flush=True)
+    _QUOTA_WAITS += 1
+    print("[quota] 429 小时配额耗尽 → 等到 %s +%ds（%.0fs）后重试（第 %d/%d 次）" % (
+        nxt.strftime("%H:%M"), pad, wait, _QUOTA_WAITS, _QUOTA_MAX_WAITS), flush=True)
     time.sleep(wait)
-    _QUOTA_WAITED = True
+    time.sleep(random.uniform(0, 15))   # 抖动：错开并行进程同时苏醒再撞配额
 
 
 def api(token, base, method, path, payload=None, retries=4, timeout=30):
     data = json.dumps(payload).encode() if payload is not None else None
-    for i in range(retries):
+    i = 0
+    while True:
         req = urllib.request.Request(base + path, data=data, method=method)
         req.add_header("X-Auth-Token", token)
         req.add_header("Content-Type", "application/json")
@@ -191,19 +238,38 @@ def api(token, base, method, path, payload=None, retries=4, timeout=30):
             with urllib.request.urlopen(req, timeout=timeout) as r:
                 return json.loads(r.read().decode())
         except urllib.error.HTTPError as e:
-            if e.code == 429 and not _QUOTA_WAITED:
-                # 小时配额整点刷新 → 等整点+60s 再试（只等一次）
-                wait_quota_reset()
+            if e.code == 429:
+                # 配额等待**不消耗** retries 预算（否则等完一轮仍 429 就 raise → 节点被记 fail）
+                rem, ra = _rl_headers(e)
+                if ra is not None and ra <= 30:
+                    time.sleep(ra + 1)              # 秒级限速: 按 Retry-After
+                    continue
+                is_quota = (rem == 0)
+                if rem is None:
+                    # 无限流头: 探测一次再定性，避免把瞬时 429 误判成小时配额（白睡一小时）
+                    is_quota = (probe_remaining(token, base) == 0)
+                if is_quota:
+                    if _QUOTA_WAITS >= _QUOTA_MAX_WAITS:
+                        raise RuntimeError("quota waits exhausted (429 持续, 已等 %d 次整点)" % _QUOTA_WAITS)
+                    wait_quota_reset()
+                    continue
+                time.sleep(2 ** i * 1.5 + 1)        # 秒级限速: 短退避(计 retries)
+                i += 1
+                if i >= retries:
+                    raise RuntimeError("retries exhausted (429 秒级限速)")
                 continue
-            if e.code in (429, 500, 502, 503, 504):
+            if e.code in (500, 502, 503, 504):
                 time.sleep(2 ** i * 1.5 + 1)
+                i += 1
+                if i >= retries:
+                    raise RuntimeError("retries exhausted (HTTP %d)" % e.code)
                 continue
             raise RuntimeError(f"HTTP {e.code}: {e.read().decode()[:200]}")
         except Exception:
-            if i == retries - 1:
+            i += 1
+            if i >= retries:
                 raise
             time.sleep(2 ** i * 1.5 + 1)
-    raise RuntimeError("retries exhausted")
 
 def walk(root, excludes=None):
     """同级内目录在前、文件在后，各自按名称排序（Windows 资源管理器习惯）.
@@ -696,11 +762,15 @@ def main():
     ap.add_argument("--pend-sleep", type=float, default=600, help="失败静置基础秒数, 按轮次递增(第n次等待 = pend_sleep×n, 默认 600 → 10/20/30 分钟)")
     ap.add_argument("--max-body", type=int, default=524_288, help="单文档 body 上限(字节), 超限自动切块; 默认 512KB(2026-10-14 老板定: 1MB 语雀端加载慢)")
     ap.add_argument("--pend-retries", type=int, default=3, help="失败静置重试最大轮数(超出则记 fail 跳过)")
+    ap.add_argument("--quota-max-waits", type=int, default=12, help="429 小时配额最多跨整点等待次数(默认 12), 超出才 raise")
     ap.add_argument("--batch-mode", action="store_true", help="批处理模式(2026-10-16): 节点统一挂根+攒批 batchMove 到目标目录, 规避高频子树挂载积压(坑67); 需 cookie 有效")
     ap.add_argument("--toc-md", action="store_true", help="官方一次性目录模式(2026-10-16): 逐文件 POST /docs + 一次 PUT /repos/{id} 设 markdown 目录树(官方 OAS 20260722 能力), 请求数与收尾耗时比 batch 模式低一个数量级")
     ap.add_argument("--batch-size", type=int, default=50, help="batch 模式每批节点数(默认 50)")
     ap.add_argument("--x-login", default="yehuoshun", help="Web API x-login 用户名(batch 模式用)")
     args = ap.parse_args()
+
+    global _QUOTA_MAX_WAITS
+    _QUOTA_MAX_WAITS = args.quota_max_waits
 
     if args.batch_mode and args.toc_md:
         raise SystemExit("--batch-mode 与 --toc-md 互斥, 二选一")
