@@ -705,5 +705,12 @@
   "book_url": "https://www.yuque.com/yeuhoshun/mobile-web-favorites-14a44c1",
   "imported_at": "2026-10-26T10:10:42+0800",
   "note": "开源项目口径 @ 14a44c1 44 节点(43章+说明) README 单文按 H2 拆章；本地图 1 张 CDN + 外链 1 张保留；六查全绿"
+ },
+ "https://github.com/AlloyTeam/Mars": {
+  "commit": null,
+  "book_id": 84986807,
+  "book_url": "https://www.yuque.com/yeuhoshun/mars-92112bb",
+  "imported_at": "2026-10-26T10:16:33+0800",
+  "note": "开源项目口径 @ 92112bb 21 节点(5目录/16文档) 剔 LICENSE/.gitignore；本地图 1 张 CDN；六查全绿"
  }
 }
