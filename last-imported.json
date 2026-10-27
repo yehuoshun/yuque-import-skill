@@ -815,5 +815,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/androidnote-ee63cc3",
   "imported_at": "2026-10-27T04:09:32+0800",
   "note": "开源项目口径（有源仓库）：书单原链即 GitHub 仓 CharonChui/AndroidNote（master @ee63cc3，2026-09-18，3944★，活跃）。仓库为 Android 学习笔记合集，565 文件里 551 个 .md（无本地图片，正文图全为 raw.githubusercontent 外链）。only 收 md 内容树，剔 .obsidian/(Obsidian 配置)、.gitignore、.DS_Store(垃圾) 及 3 个非 md 附件（JavaKnowledge/UML类图.pdf 542KB + 2 个 AIAgent docx 7.4MB/576KB，均无 md 引用、按硬规则 12 不上传）= 594 节点（43 目录/551 文档）。HTTPS clone 502 → 改 SSH（git@github.com:）成功（同 #48/#53）。toc-md 594 行/28977B 一次 PUT 3.6s、结构核对 PASS、0 失败；根级 README.md 被排到 18 个 TITLE 后 → prependNode/sibling 归位（坑 29）。六查全绿(TOC594==本地594/全路径唯一594=594/对账错位0/幽灵0 docs551==TOC DOC551/word_count 551篇全>0/逐篇逐字符回读551篇0差)"
+ },
+ "https://github.com/bboyfeiyu/android-tech-frontier": {
+  "commit": "9538823",
+  "book_id": 84997313,
+  "book_url": "https://www.yuque.com/yehuoshun/android-tech-frontier-9538823",
+  "imported_at": "2026-10-27T09:24:46+0800",
+  "note": "开源项目口径（换源=作者改名）：书单原链 bboyfeiyu/android-tech-frontier 已 301 转移为 hehonghui/android-tech-frontier（10577★，master @9538823，最后 push 2021-02-05，停更但内容完整）。内容为 Android 技术前线周刊合集（issue-* 目录 + android-blog 等），289 文档 98 目录，图片走本地传 CDN（img_map 38 条）；无本地附件。⚠️ 中途子线程两次因 gateway 断连死亡（04:22 导入本身已完成：387 节点 0 失败，move-stack 已过 stack=57018723），04:28 后主会话接管完成验证+收尾；期间沙箱重建 ~/.ssh 丢失，主会话手工恢复（新 key 挂 GitHub id 167760228，未删旧 key）。六查全绿(TOC387==本地387/全路径唯一387=387/对账错位0/幽灵0 docs289==TOC DOC289/word_count 289篇>0 其中4篇源文件本身为空占位/逐篇逐字符回读289篇0差——其中2篇仅差文件头BOM\\ufeff，语雀回读无BOM，归一后完全一致)"
  }
 }
