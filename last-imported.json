@@ -857,5 +857,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/point-of-android-34d325c",
   "imported_at": "2026-10-27T16:32:49+0800",
   "note": "开源项目口径：源仓库 FX-Max/Point-of-Android @34d325c10485ff3bdf54cea708dfa540ae513e74 （2021-09-17 停更，单文件仓库）。仓库仅 1 个 README.md（199 行/6.8KB）= Android 学习资料链接导航，14 个 ## 分类（异步/Activity/Intent/线程通信/UI/网络/OOM/ANR/事件分发/IPC/底层Linux/存储/架构/其他），条目全是外部博文链接（CSDN 为主，正文在源站）。口径 = 坑 41 单篇长文型：README 按 ## 拆 14 篇分类清单 + 00-说明.md（来源+原 README 头尾部原文），无图（0 本地图，全外链）；外链 52 条全保留，0 丢失。六查全绿（TOC15==本地15/全路径唯一/对账错位0/幽灵0 docs15==TOC DOC15/word_count 15篇全>0/逐篇回读15篇0差）。⚠️ move-stack 10 次重试恒 200{} 未落位——cookie Web API 写侧风控（2026-10-27）仍未恢复，分组待补（应在 stack 57018723 开源项目）；内容链路（v2 toc-md）全程正常不受影响。"
+ },
+ "https://github.com/3dgen/cppwasm-book/tree/master/zh": {
+  "commit": "34d325c",
+  "book_id": 85034630,
+  "book_url": "https://www.yuque.com/yehuoshun/cppwasm-book-946acba",
+  "imported_at": "2026-10-27T21:30:10+0800",
+  "note": "开源项目口径：源仓库 3dgen/cppwasm-book @946acba55aaf6426e6ebfe4946e95d896aa2f6a4（2024-04-17 最后一更，1401 star，已出版纸书）。原链带 /tree/master/zh → 正文确在 zh/ 子目录：老 GitBook 3.x 源仓库（book.json structure.readme=preface.md，SUMMARY.md=目录，站点 3dgen.cn/cppwasm-book）。口径 = 坑 58 发布层：只吃 SUMMARY.md 未注释条目（7 章 × 章导读 + 33 节 = 40 篇）+ preface.md 作 00-前言；标题-only 空壳全剔 6 个（ch0-intro/readme 28B、ch5-03-fetch / ch5-04-net-frame / ch6-03-threads-frame / ch7-04-touch / ch8-* 全 6B，SUMMARY 里也都是注释状态）；en/ 英文版与 examples/ 源码不入库；zh/README.md 是仓库门面（与 preface 重复）不入库。结构 = 00-前言 + 7 个「第N章 …」TITLE（各含 00-本章导读 + 节）。图 59 处 / 59 张全部传 CDN 重写（52 张章节 images/*.png + cover.png + weixin-wasm-hackers.jpg），图片目录已删净、0 本地缺失、0 残留本地引用。六查全绿（TOC48==本地48 / 全路径唯一 True / 对账错位 0 / 幽灵 0 docs41==TOC DOC41 / word_count 41 篇全>0 最小 39 / 逐篇回读 41 篇 0 差）+ 根级 DOC 顺序修正（prependNode 把 00-前言 提到首章前）。⚠️ move-stack 10 次重试恒 200{} 未落位——cookie Web API 写侧风控（2026-10-27，连续 ≥1 天）仍未恢复，分组待补（应在 stack 57018723 开源项目）；内容链路 v2 toc-md 全程正常。"
  }
 }
