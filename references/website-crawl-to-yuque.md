@@ -323,3 +323,14 @@
 - **定位法**：`python3 -c "d=open(f,'rb').read(); print([i for i,b in enumerate(d) if b==0])"` 扫本地 md；对照组想 md 有 NUL 但**源 HTML 也必须有**（先确认不是自己引入的）。
 - **预防**：转换器 `clean()` / 取代码文本处一律 `replace('\x00','')`（顺手也去掉 `\u200b`/`\ufeff`）。
 - **善后（已污染文档不用删库重建）**：`scripts/yuque_repair_placeholders.py --book <id> --source <本地目录>` —— TOC 路径重建 → 找零词文本 → `PUT /repos/{id}/docs/{slug}` 回填 body（本次 8/8 一次成功）。**别**清 progress 重跑（会新建 doc 变幽灵）；也**别**只抽查几篇（坑 50 同族：中招总是少数篇）。
+
+**坑 72（LaTeX2HTML 多页静态站：`nodeN.html` 平铺 + GBK + UA 风控，2026-10-28 `c-faq-chn.sourceforge.net`《C 语言常见问题集》实战）**：texinfo/LaTeX 书用 LaTeX2HTML 2002-2-1 出的站，388 页 = 目录页 + 387 内容页。要点：
+1. **UA 决定生死**：`Mozilla/5.0` 直接 403，curl 默认 UA 放行 → 抓取走 `subprocess curl`，别用 urllib 裸请求（也别改成长浏览器 UA，实测同样 403）。
+2. **GBK 硬编码**：`decode('gb18030','ignore')`；utf-8 解出来是静默乱码。
+3. **切片**：`End of Navigation Panel` 后第一个 `-->` 起 → **最后一个** `<DIV CLASS="navigation">` 止（`rfind`，页尾还有 prev/next 面板）。
+4. **首个标题丢弃**（文献页是 H2）；**`CLASS="ChildLinks"` 的 `<UL>` 整块跳过**（本章问题清单，留着全重复）；**`<BR>` 在标题内忽略**。
+5. **`<DT>`/`<DD>` 无闭合标签**（`<DT><A>x</A> <DD>正文`）→ 遇 `<DD>` 隐式收尾 `<DT>`；只靠 endtag 会**整段丢失**。
+6. **`<PRE>` 独立缓冲**（行进缓冲会把代码换行压成空格）+ 收尾按公共缩进去缩进；**段落内中文换行要吃掉空格**（否则「不能放 入」）。
+7. **章节页只有子链接** → 不建 `00-导读`，只建 TITLE；无子节的章（前言/致谢/文献）落根级文档。
+8. 极短页（「参见第 17 章。」）是**上游真短**，回读一致即可，别补。
+- **本例实测**：387 节点（20 目录 / 367 文档 = 364 问答 + 前言/感谢/文献），1 张公式图传 CDN；六查全绿（TOC 387==本地 387、路径唯一、对账 0、幽灵 0 docs367==TOC DOC367、367 篇 word_count 全 >0 共 58,152 词、367 篇回读 0 差）；库 **85036448**（slug `c-faq-chn-20261028`）。脚本 `examples/c-faq-latex2html/{fetch,converter,build}.py`。

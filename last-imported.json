@@ -892,5 +892,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/beej-guide-zhcn-2843ddc",
   "imported_at": "2026-10-28T01:10:35+0800",
   "note": "书单 #63《Beej's Guide to Network Programming 簡體中文版》。书单原链=正體站 beej-zhtw-gitbook.netdpi.net，其「簡體中文版」页指向 beej-zhcn.netdpi.net → 按标题取简体源仓 myliao2007/beej-zhcn @2843ddc（CC0，30★，译者廖明沂 2014 修订）。按 SUMMARY.md 重建层级：89 节点=10 目录+79 文档（章节号前缀保序，章目录内含 00-章名 导读）；1 图 client-server-interactive.png 传 CDN。六查全绿：TOC 89==本地 89、路径唯一、对账错位 0、幽灵 0（docs 79==TOC DOC 79）、79 篇 word_count 全>0（57,576 词）、79 篇逐篇回读 0 差。根级 DOC 落在 TITLE 之后（坑 29）→ 5 发 prependNode 归位，顺序与 SUMMARY 一致。⚠️ move-stack 恒返 200{}（风控未恢复）→ 分组待补。"
+ },
+ "https://c-faq-chn.sourceforge.net/ccfaq/ccfaq.html": {
+  "commit": "",
+  "book_id": 85036448,
+  "book_url": "https://www.yuque.com/yehuoshun/c-faq-chn-20261028",
+  "imported_at": "2026-10-28T01:58:36+0800",
+  "note": "书单 #64《C 语言常见问题集》。源站 c-faq-chn.sourceforge.net（中译本 0.9.4，2005-06-23，原著 Steve Summit，译者朱群英/孙云），LaTeX2HTML 2002-2-1 生成 node1..node388：node1=目录页跳过，其余 387 页。自写解析器：GBK 解码 + 取 Nav 面板之间正文 + 表格/dl/代码块转换。WAF 坑：UA=Mozilla/5.0 直返 403，curl UA 放行。按 ccfaq.html 目录重建 23 章：387 节点=20 目录+367 文档（364 问答 + 前言/感谢/文献），章节目录页只含子链接 → 不建 00- 导读文档；1 张公式图 img1.png 传 CDN。六查全绿：TOC 387==本地 387、路径唯一、对账错位 0、幽灵 0（docs 367==TOC DOC 367）、367 篇 word_count 全>0（58,152 词）、367 篇逐篇回读 0 差。根级 1 发 prependNode（01-前言 → 02 章目录）。⚠️ move-stack 恒返 200{} → 分组（文章收集 36149506）待补。"
  }
 }
