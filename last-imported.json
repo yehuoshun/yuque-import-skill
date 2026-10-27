@@ -850,5 +850,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/material-design-zh-fb61f42f",
   "imported_at": "2026-10-27T15:46:27+0800",
   "note": "fpb-057 ✅ 导入+验收完成 ｜ 库 85028477 slug material-design-zh-fb61f42f ｜ Google Material Design 中文协同翻译 @ fb61f42f ｜ 来源 https://github.com/1sters/material_design_zh @ fb61f42f（翻译协作仓，正文 SOURCE/ 树）｜ 62 节点 = 10 章节 TITLE + 52 文档（18 认领未翻译空壳剔；含 4 根级元文档 00-学习指南/01-翻译协作说明/README/TOC）｜ 图 748 传 CDN（img_map 缓存 748 条；外链 ~266 跳过=七牛 qiniudn webm；2 处上游真缺失修不了保留原链）｜ 六查全绿（TOC==62、路径唯一、对账 0、幽灵 0、word_count 52/52>0、逐篇回读 52/52 0 差）｜ ⚠️ move-stack→57018723 今日语雀侧系统故障（PUT 200 {} 不落位，fpb-056 同病 20+ 次未愈），库未分组，待重试 move-stack --book-id 85028477 --stack-id 57018723 --no-wait"
+ },
+ "https://github.com/FX-Max/Point-of-Android": {
+  "commit": "34d325c",
+  "book_id": 85031439,
+  "book_url": "https://www.yuque.com/yehuoshun/point-of-android-34d325c",
+  "imported_at": "2026-10-27T16:32:49+0800",
+  "note": "开源项目口径：源仓库 FX-Max/Point-of-Android @34d325c10485ff3bdf54cea708dfa540ae513e74 （2021-09-17 停更，单文件仓库）。仓库仅 1 个 README.md（199 行/6.8KB）= Android 学习资料链接导航，14 个 ## 分类（异步/Activity/Intent/线程通信/UI/网络/OOM/ANR/事件分发/IPC/底层Linux/存储/架构/其他），条目全是外部博文链接（CSDN 为主，正文在源站）。口径 = 坑 41 单篇长文型：README 按 ## 拆 14 篇分类清单 + 00-说明.md（来源+原 README 头尾部原文），无图（0 本地图，全外链）；外链 52 条全保留，0 丢失。六查全绿（TOC15==本地15/全路径唯一/对账错位0/幽灵0 docs15==TOC DOC15/word_count 15篇全>0/逐篇回读15篇0差）。⚠️ move-stack 10 次重试恒 200{} 未落位——cookie Web API 写侧风控（2026-10-27）仍未恢复，分组待补（应在 stack 57018723 开源项目）；内容链路（v2 toc-md）全程正常不受影响。"
  }
 }
