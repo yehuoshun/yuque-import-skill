@@ -885,5 +885,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/nccl-2fae5f0",
   "imported_at": "2026-10-27T22:48:19+0800",
   "note": "开源项目口径（limingth/NCCL @2fae5f0，522★，2022-09-14 最后提交）：作者李明的自建 C 语言课程书稿《新概念C语言》，不是译本。仓库形态 = Unit-1/(24 课) + Unit-2/(24 课) + Unit-3/(仅 Lesson 49) + Unit-4/(空 README)，全 .md 扁平 lesson 文件（无 SUMMARY/无脚手架），根 README 即全书大纲（4 Unit × 24 = 96 课规划）。⚠️ 残缺（作者自己在 README 里写明「Unit 3/4 仍在规划中」）：96 课实存 49 课，Unit3 缺 50–72、Unit4 全空 → 老板 2026-10-27 拍板「照导现有 49 课」，Unit-4 不建空目录，库描述 + Unit-3 导读里都写明残缺度。⭐ 口径细节：① 跳过 slides/（14 个 pandoc/beamer 生成的 Lesson-1~14 课件 PDF，是 Unit-1 同名 md 的派生品，非独立内容）、enrollment.md（招生广告含报价）、Unit-4 空壳、二进制（a.out/demo/readfile.o）；② 13 篇原文是 CRLF → 统一转 LF（不转则代码块/表格断行）；③ 标题取文件 H1「Lesson N <英文> <中文>」剥掉 「Lesson N」前缀，落成 NN-<双语标题>.md（Lesson-31/32/40 的 H1 与根 README 列表不一致，以文件 H1 为准）；④ 标题里的半角 * 洗成 ＊（Lesson 6「9*9」）；⑤ Unit-N/README.md 作 00-导读（去掉 setext 标题、站内相对 Lesson-N.md 链接转纯文本防语雀内链断），导读里保留了逐课知识点大纲；⑥ Unit-3/parser-tree.md 自标「Lesson 37 Parse Tree」却放在 Unit-3 且与 Unit-2 Lesson 37（词频统计器）编号撞车 → 按老板拍板归为 90-附加-语法分析树（原编号 Lesson 37），收在 Unit-3 尾部；⑦ Lesson 49 正文仅 243B 且指向同目录代码 → 建 TITLE「49-代码」收 readfile.c/state.c/test.c/Makefile（.c 走纯文本代码块）。14 张图（堆排序 8 / Dijkstra 2 / Huffman 2 / 地图导航 1 / Unit-1 导读 nitrous 1）全传 CDN 后删图片目录。六查全绿：TOC 62==本地 62 / 路径唯一 62/62 / 对账 0 错位 / 幽灵 0（docs 58 == TOC DOC 58）/ word_count 58 篇全>0（最小 17，总 28,648 词）/ 逐篇回读 58 篇 0 异常（4 个 .c 仅语雀代码围栏差异）；另补 1 次 prependNode 把 00-前言.md 提到 Unit-1 前（根级序 00-前言→Unit-1→Unit-2→Unit-3）。⚠️ move-stack 本日未再试（连败日，按规矩隔日一次），分组待补（应在 stack 57018723 开源项目）。"
+ },
+ "https://github.com/myliao2007/beej-zhcn": {
+  "commit": "2843ddc",
+  "book_id": 85036349,
+  "book_url": "https://www.yuque.com/yehuoshun/beej-guide-zhcn-2843ddc",
+  "imported_at": "2026-10-28T01:10:35+0800",
+  "note": "书单 #63《Beej's Guide to Network Programming 簡體中文版》。书单原链=正體站 beej-zhtw-gitbook.netdpi.net，其「簡體中文版」页指向 beej-zhcn.netdpi.net → 按标题取简体源仓 myliao2007/beej-zhcn @2843ddc（CC0，30★，译者廖明沂 2014 修订）。按 SUMMARY.md 重建层级：89 节点=10 目录+79 文档（章节号前缀保序，章目录内含 00-章名 导读）；1 图 client-server-interactive.png 传 CDN。六查全绿：TOC 89==本地 89、路径唯一、对账错位 0、幽灵 0（docs 79==TOC DOC 79）、79 篇 word_count 全>0（57,576 词）、79 篇逐篇回读 0 差。根级 DOC 落在 TITLE 之后（坑 29）→ 5 发 prependNode 归位，顺序与 SUMMARY 一致。⚠️ move-stack 恒返 200{}（风控未恢复）→ 分组待补。"
  }
 }

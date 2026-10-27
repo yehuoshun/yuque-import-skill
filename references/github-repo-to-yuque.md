@@ -420,3 +420,11 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
 9. **`slides/` 是派生品**：14 个 `Lesson-1~14.pdf` 由 Unit-1 同名 md 经 pandoc/beamer 生成（`md2pdf.sh`/`Makefile` 在仓库里）→ 不导、不上附件，笔记里说明一句即可。
 10. **残缺度三处写明**：原书规划 96 课（4×24），仓库实存 49 课（Unit1 24 + Unit2 24 + Unit3 仅 Lesson 49，Unit4 只有空 README，作者自己写「Unit 3/4 仍在规划中」）→ 库描述 + `00-Unit-3 导读` 末尾 + 账本 note 都写清，**Unit-4 不建空壳目录**。
 - **本例实测**：`limingth/NCCL` @ `2fae5f0`（2022-09-14 最后更，522★）；62 节点（4 目录 / 58 文档），14 图全 CDN（0 缺失）；六查全绿（TOC 62==本地 62、62 路径唯一、对账 0 错位、幽灵 0 docs58==TOC DOC58、word_count 58 篇全 >0 最小 17 总 28,648 词、逐篇回读 58/58 0 异常）；根级序补 1 次 prependNode（`00-前言 → Unit-1 → Unit-2 → Unit-3`）；库 **85035630**（slug `nccl-2fae5f0`）。脚本 `examples/nccl/build_lib.py`。
+
+**坑 72（老 GitBook 2.x 源仓库：认 SUMMARY.md 而不是文件名，2026-10-28 `myliao2007/beej-zhcn`《Beej 网络编程指南 简体中文版》实战）**：仓库根 `SUMMARY.md` + 章节 md（无 book.json/conf.py/sidebars），是第三类 GitBook 形态（≠ gitbooks.io 渲染站，≠ gitbook.io 新平台 llms.txt）。要点：
+1. **目录树以 SUMMARY.md 为唯一真相**：`* [标题](路径.md)`，缩进 2 空格 = 下一层，标题里的 `\_` 要还原；文件名字典序常与阅读序不符。
+2. **「目录自身有正文」**（`1. 前言 → introduction/README.md`）→ 该目录下放 `00-<章名>.md` 存这份正文，子节 `01-…` 起。
+3. **根级 DOC 一定落后**（坑 29 常态）：`01-簡介.md`/`02-…` 导完排到所有 TITLE 之后 → 按 SUMMARY 序补 `prependNode`（本次 5 发）。`NN-` 前缀只保 TITLE 内部序，救不了根级 DOC。
+4. **图在 `.gitbook/assets/`**，md 写 `../.gitbook/assets/x.png` → 重写目标路径必须**按文档深度**算前缀（章目录里是 `../imgs/`，二级是 `../../imgs/`）；写死一个前缀 → `--dry` 报「本地缺失」。仓库里没被引用的图/PDF 是孤儿，不进库。
+5. **源仓库 ≠ 书单链接**：书单给的是正體站（`beej-zhtw.netdpi.net`），站内「簡體中文版」页才指向 `beej-zhcn.netdpi.net` 与同名仓库 → 按**书单标题**选简体源仓，别照链接导成繁体。
+- **本例实测**：@ `2843ddc`（2024-05-06，CC0，30★）；89 节点（10 目录 / 79 文档），1 图 CDN；六查全绿（TOC 89==本地 89、路径唯一、对账 0、幽灵 0 docs79==TOC DOC79、79 篇 word_count 全 >0 共 57,576 词、79 篇回读 0 差）；库 **85036349**（slug `beej-guide-zhcn-2843ddc`）。脚本 `examples/beej-zhcn/build.py`。
