@@ -864,5 +864,19 @@
   "book_url": "https://www.yuque.com/yehuoshun/cppwasm-book-946acba",
   "imported_at": "2026-10-27T21:30:10+0800",
   "note": "开源项目口径：源仓库 3dgen/cppwasm-book @946acba55aaf6426e6ebfe4946e95d896aa2f6a4（2024-04-17 最后一更，1401 star，已出版纸书）。原链带 /tree/master/zh → 正文确在 zh/ 子目录：老 GitBook 3.x 源仓库（book.json structure.readme=preface.md，SUMMARY.md=目录，站点 3dgen.cn/cppwasm-book）。口径 = 坑 58 发布层：只吃 SUMMARY.md 未注释条目（7 章 × 章导读 + 33 节 = 40 篇）+ preface.md 作 00-前言；标题-only 空壳全剔 6 个（ch0-intro/readme 28B、ch5-03-fetch / ch5-04-net-frame / ch6-03-threads-frame / ch7-04-touch / ch8-* 全 6B，SUMMARY 里也都是注释状态）；en/ 英文版与 examples/ 源码不入库；zh/README.md 是仓库门面（与 preface 重复）不入库。结构 = 00-前言 + 7 个「第N章 …」TITLE（各含 00-本章导读 + 节）。图 59 处 / 59 张全部传 CDN 重写（52 张章节 images/*.png + cover.png + weixin-wasm-hackers.jpg），图片目录已删净、0 本地缺失、0 残留本地引用。六查全绿（TOC48==本地48 / 全路径唯一 True / 对账错位 0 / 幽灵 0 docs41==TOC DOC41 / word_count 41 篇全>0 最小 39 / 逐篇回读 41 篇 0 差）+ 根级 DOC 顺序修正（prependNode 把 00-前言 提到首章前）。⚠️ move-stack 10 次重试恒 200{} 未落位——cookie Web API 写侧风控（2026-10-27，连续 ≥1 天）仍未恢复，分组待补（应在 stack 57018723 开源项目）；内容链路 v2 toc-md 全程正常。"
+ },
+ "https://github.com/wuzhouhui/awk": {
+  "commit": "34d325c",
+  "book_id": 85035154,
+  "book_url": "https://www.yuque.com/yehuoshun/awk-787d83c",
+  "imported_at": "2026-10-27T22:05:44+0800",
+  "note": "开源项目口径：源仓库 wuzhouhui/awk @ 787d83cbf2a2f1686d026000a6054e531bb7b538（2022-07-31 最后一更；Aho/Kernighan/Weinberger《The AWK Programming Language》社区中文译本，8 章 + 前言 + 2 附录 + 索引全部译完）。仓库同时带中文成书 PDF 与 latex_src/ → 正文口径 = 吃 LaTeX 源转 Markdown（awkcode 483 / pattern 44 / tabular 20 / tabbing 15 / exercise 84 / summary 7 全是显式环境，比 PDF 抽章零歧义）；PDF 只当图片来源。结构 = 根级 00-前言.md + 8 个「第N章 …」TITLE（各含 00-本章导读 + 节文档）+ 附录 TITLE（附录A AWK 总结 / 附录B 部分习题答案）+ 根级 索引.md；一节一篇 56 篇，表按章还原「表 N.M」，习题还原「习题 N.M」，\ref 两遍扫描全解析（章号还原中文数字）。图 18 张（6 eps + 14 tikz，全部无 caption）：从成书 PDF 按「图后正文首句」锚点 + 矢量图形簇裁 300dpi PNG，全部传 CDN 重写（18/18，0 缺失，images/ 已删净）；djvu 与 eps 原件不上传。六查全绿（TOC 65==本地 65 / 56 条 DOC 路径唯一 True / 对账 0 错位 / 幽灵 0 docs56==TOC DOC56 / word_count 56 篇全>0 最小 111 / 逐篇回读 56 篇 0 差）+ 根级顺序修正（11 次 prependNode：00-前言 提到首、索引 压到末，八章按一～八排序）。⚠️ move-stack 10 次重试恒 200{} 未落位——cookie Web API 写侧风控（2026-10-27，连续 ≥1 天）仍未恢复，分组待补（应在 stack 57018723 开源项目）；内容链路 v2 toc-md 全程正常。"
+ },
+ "http://awk.readthedocs.org/en/latest/index.html": {
+  "commit": null,
+  "book_id": 85035422,
+  "book_url": "https://www.yuque.com/yehuoshun/awk-youngsterxyf-20261027",
+  "imported_at": "2026-10-27T22:25:41+0800",
+  "note": "网站口径（Sphinx 站 awk.readthedocs.io「AWK程序设计语言」）：译者 youngsterxyf / pylemon，readthedocs 站最后更新 2017-10-26，属**残缺译本**——全站只有 2 页（=2 个 rst 源）：① 一. AWK入门指南（1.1–1.7 第 1 章全译，14,184 字符）② 二. AWK语言详解（只写到 2.1 模式即断，2,185 字符）。正文直接吃 RST 源 _sources/*.rst.txt（200，比抓 HTML 干净），genindex/search 等 Sphinx 脚手架不导；全站 0 图（无 image:: 指令、_images/ 404）→ 没跑 rewrite。⚠️ 决策（老板 2026-10-27 拍板「照导」）：#60 已导同一本书的完整译本（库 85035154，LaTeX 源 8 章+2 附录），本站覆盖度低且残缺 → 仍按网站口径另建独立版本库留档，残缺度与重复度已主动上报，库描述与 00-前言、二章导读里都写明「完整译本另见 85035154」。⭐ 转换器没复用 yuque_rst_convert.py：docutils 中间层把行内字面量 ``emp.data`` 吃掉（<tt> 无属性 → 正则 <(code|tt)>[^>]*> 多要一个 > 不匹配 → 反引号错位丢字，本文 133 处）、``| `` 行块（终端会话/模式摘要）被压成一行、段落尾「：::」残留冒号 → 自写 examples/awk-youngsterxyf-site/build_lib.py（章节/段落/字面块/行块/简单表/toctree 构造全集，行块用行尾双空格硬换行、无表头简单表造空表头同 awk LaTeX 口径）。结构 = 根级 00-前言.md（书名+作者+译者+译本状态）+ TITLE「一. AWK入门指南」（00-本章导读 + 1.1–1.7 七篇）+ TITLE「二. AWK语言详解」（00-本章导读 + 2.1 模式，导读末尾注明 2.1 后中断）。13 节点。六查全绿：TOC 13==本地 13 / DOC 11 路径唯一 / 对账 0 错位 / 幽灵 0 docs11==TOC DOC11 / word_count 11 篇全>0（最小 93）/ 逐篇回读 11 篇 0 差；另补 1 次 prependNode 把 00-前言 提到根级首位。⚠️ move-stack 5 次恒 200{} 未落位——cookie Web API 写侧风控（2026-10-27，连续 ≥1 天未恢复）仍未恢复，分组待补（应在 stack 36149506 文章收集）；内容链路 v2 toc-md 全程正常。"
  }
 }
