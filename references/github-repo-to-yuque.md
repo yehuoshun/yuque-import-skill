@@ -61,6 +61,7 @@
    - **幽灵文档 = 0**：`python3 scripts/yuque_check_ghosts.py --book <id>`（2026-10-21 升为必做，见坑 49）——不能只看 `meta.total` 数字，要对 doc_id 集合求差；toc-md 模式也会中（断点残留 / 重试双写）
    - 深层路径抽查（如 `apps/.../components/xxx.vue`、`package.json`）实际可达
    - **全库「占位文档」扫描 = 0 篇**（2026-10-21 升为必做，见坑 50）：逐页拉 `GET /repos/{id}/docs`，**每篇 `word_count` 必须 >0**（或 body 不以 `<!-- 二进制文件`/`<!-- 源仓库中该文件为空` 开头）；**别只抽查 3 篇**——同一次导入往往是少数几篇中招（本次 RUC 3/15 篇、fudan 2/12 篇），抽查必漏。
+   - **逐篇回读比对：映射必须走 progress 账本的 rel 路径 → doc_id，禁止按 basename 取文档（2026-10-24 实捶）**：跨语言/多目录仓库大量同名文件（`root/haml.md` vs `de/haml.md`、`nl/typescript.md` vs `es/typescript.md`），按 basename 映射会取到**别语言版本** → 一堆假 DIFF / 假缺失。正解：`progress.json` 里 `rel_path → doc_id` 是唯一可靠映射，逐条拉取比对。
 
 收尾：汇报库链接 + 节点数 + 对账结果；更新 `memory/YYYY-MM-DD.md`。
 

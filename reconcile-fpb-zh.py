@@ -7,6 +7,10 @@ free-programming-books-zh 书单 ↔ 语雀实际库 对账 + 未导入清单编
   2. 语雀账号全量库名（精确匹配）——可查 10-15 等未记账批次（Git 系列等）
 用法:
     python3 reconcile-fpb-zh.py <书单markdown文件> [--json <last-imported.json>] [--out <输出txt>] [--repos <全量库json>]
+
+已知假阳性（2026-10-26/27 实捶）:
+    title-starts 误命中：书名带「前端代码规范」的条目 #117 会命中同名前缀的 Isobar 规范库
+    （#34 所建）→ recon 多算 1；对账报告里若剩 1 条存疑，先按 name-starts 人工复核。
 """
 import json, os, re, sys
 
