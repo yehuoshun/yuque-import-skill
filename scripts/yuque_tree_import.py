@@ -32,8 +32,28 @@ def human_size(size: int) -> str:
     return "%.1f MB" % (size / 1048576)
 
 
-def upload_image(cookie, ctoken, user_id, path):
-    """语雀 Web API 上传图片 → CDN URL。失败返回 None(回退占位说明)."""
+def classify_429(headers):
+    """429 三分法（2026-10-27 fpb52 #56/#57 并行限流事故固化）。
+    入参为小写 key 的响应头 dict（缺省容忍）。返回：
+      'hifreq' 高频秒级限速：Retry-After<=30s（QPS 超速，等几秒即可重试）
+      'quota'  v2 API 小时配额耗尽：X-RateLimit-Remaining=0 或 Retry-After>30s（rolling 1h 窗口，
+              必须停到 reset，见坑 24/X-RateLimit 头）
+      'cdn'    附件上传端账号级风控：无头 429「操作过于频繁」（连传 ~500 张触发，~40 分钟自愈，
+              见 references 坑 24 freebsd-ask 实战）
+    """
+    ra = headers.get('retry-after')
+    rem = headers.get('x-ratelimit-remaining')
+    if ra is not None and str(ra).isdigit():
+        return 'hifreq' if int(ra) <= 30 else 'quota'
+    if rem is not None and str(rem).isdigit() and int(rem) == 0:
+        return 'quota'
+    return 'cdn'
+
+
+def upload_image(cookie, ctoken, user_id, path, err_sink=None):
+    """语雀 Web API 上传图片 → CDN URL。失败返回 None(回退占位说明).
+    err_sink（可选 dict，调用方传入）：失败时填充 {'code': int, 'headers': {小写key: 值}}，
+    供调用方按 classify_429 区分限流类型；不传则完全向后兼容。"""
     ext = os.path.splitext(path)[1].lower()
     boundary = "----YuqueImport" + uuid.uuid4().hex
     with open(path, "rb") as f:
@@ -59,6 +79,9 @@ def upload_image(cookie, ctoken, user_id, path):
                 d = json.loads(r.read().decode())
             return d.get("data", {}).get("url") or None
         except urllib.error.HTTPError as e:
+            if err_sink is not None:
+                err_sink['code'] = e.code
+                err_sink['headers'] = dict((k.lower(), v) for k, v in (e.headers.items() if e.headers else []))
             if e.code in (429, 500, 502, 503, 504) and i < 5:
                 time.sleep(min(5 * (2 ** i), 60))
                 continue

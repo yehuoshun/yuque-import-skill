@@ -16,8 +16,10 @@
 约定:
   - 外链（http/https/data:）原样跳过，不下载不替换
   - key = 相对 <clean_dir> 的路径 → url 存 img_map.json，重跑只补未传的
-  - 语雀附件接口有账号级限流（连传 ~500 张即 429，见 references 坑 24）→ --throttle 控速，
-    失败自动等 120s 重试（最多 60 轮）
+  - 语雀附件接口有账号级限流（连传 ~500 张即 429，见 references 坑 24）→ --throttle 控速；
+    失败按 429 三分法处置（classify_429）：Retry-After<=30s 秒级快等重试 / v2 配额退出(码 3) /
+    附件无头风控短退避后退出(码 3)——退出前 img_map 已实时落盘，等窗口重跑只补未传的（断点续传）
+  - 退出码：0=完成；3=配额/风控退出（断点已存，reset/自愈后可重跑续传）
   - 脚本跑完请把图片目录从导入根**删干净**，否则每张图会变成独立占位文档（SKILL 硬规则 10）
   - img_map.json 本身也不能留在导入根目录里
   - markdown 图片带 title 的写法 `![alt](path "title")` 也吃（2026-10-18 ucore 实踩：旧版把 path+title 整体当 src → 报本地缺失）
@@ -32,7 +34,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from yuque_tree_import import load_upload_cfg, upload_image  # noqa: E402
+from yuque_tree_import import classify_429, load_upload_cfg, upload_image  # noqa: E402
 
 # path 部分允许「一层成对括号」（菜谱/图片命名常见 `石凉粉(冰粉)成品1.jpg`）：
 # 旧写法 `[^)]+` 会在第一个 `)` 处截断 → 判成「本地缺失」整条漏传（2026-10-20 HowToCook 实踩，4 处）
@@ -92,8 +94,9 @@ def main():
                 # 统计恒为 0/0/0（datamining-guide 实踩，差点误判「一张图都没找到」）
                 return "DRY:" + src
             if key not in mp:
+                err = {}
                 for attempt in range(60):
-                    url = upload_image(cfg["cookie"], cfg["ctoken"], args.user_id, p)
+                    url = upload_image(cfg["cookie"], cfg["ctoken"], args.user_id, p, err_sink=err)
                     if url:
                         mp[key] = url
                         json.dump(mp, open(args.img_map, "w", encoding="utf-8"),
@@ -101,9 +104,40 @@ def main():
                         print("上传 %s -> %s" % (key, url[:60]), flush=True)
                         time.sleep(args.throttle)
                         break
-                    print("上传失败(重试%d): %s — 等 120s（疑似限流）" % (attempt + 1, key),
-                          flush=True)
-                    time.sleep(120)
+                    code = err.get("code")
+                    hdrs = err.get("headers", {})
+                    if code == 429:
+                        kind = classify_429(hdrs)
+                        if kind == "hifreq":
+                            ra = int(hdrs.get("retry-after", 1))
+                            print("高频限速(Retry-After %ds) 等 %ds 重试: %s" % (ra, ra + 1, key),
+                                  flush=True)
+                            time.sleep(ra + 1)
+                            continue
+                        if kind == "quota":
+                            reset = hdrs.get("x-ratelimit-reset", "?")
+                            print("配额耗尽(reset=%s) 保存断点退出(码3)，窗口开可重跑续传: %s"
+                                  % (reset, key), flush=True)
+                            json.dump(mp, open(args.img_map, "w", encoding="utf-8"),
+                                      ensure_ascii=False)
+                            sys.exit(3)
+                        # cdn：附件端无头风控（~40 分钟自愈）——短退避 3 次仍失败则退出
+                        if attempt < 3:
+                            wait = min(5 * (2 ** attempt), 30)
+                            print("附件风控(疑似 429 无头) 退避 %ds: %s" % (wait, key), flush=True)
+                            time.sleep(wait)
+                            continue
+                        print("附件风控(疑似 ~40min 自愈) 保存断点退出(码3): %s" % key, flush=True)
+                        json.dump(mp, open(args.img_map, "w", encoding="utf-8"),
+                                  ensure_ascii=False)
+                        sys.exit(3)
+                    # 非 429（5xx/网络/其它）：指数退避 8 次，仍失败则记缺失不阻塞全批
+                    if attempt < 8:
+                        time.sleep(min(5 * (2 ** attempt), 60))
+                        continue
+                    missing.append((fp, src))
+                    print("连续失败放弃(记缺失): %s" % key, file=sys.stderr)
+                    break
             return mp.get(key)
 
         def sub_md(m):
