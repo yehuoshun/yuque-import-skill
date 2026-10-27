@@ -836,5 +836,19 @@
   "book_url": "https://www.yuque.com/yehuoshun/learning-go-20261027",
   "imported_at": "2026-10-27T12:10:00+0800",
   "note": "书单条目《学习Go语言》导入。探站实锤：原链 http://mikespook.com/learning-go/ 存活（HTTP 200）但只是书的落地页（简介+更新记录），无连载正文；页面自指 GitHub 源仓库 mikespook/Learning-Go-zh-cn。仓库口径：master=第二版残篇（仅前言+2章，2018 停更），v1 分支=完整第一版 LaTeX 书稿（11 章 tex + 41 练习题 + fig/tab/src，164 文件 @ v1 HEAD 19857af8f2）→ 按任务书「站存活走网站口径」原则取 v1 全本，自写 LaTeX→Markdown 转换器（convert.py ~600 行：env 深度配对 / % 注释剥离保护代码块 / coderemark-longremark-epi balanced 提取 / lstlisting escapechar |..| 短注转代码注释+长注含图移出码块 / lstinputlisting linerange 占位防 inline 污染 / tabular→md 表含 verb 保护 / label-map 80 条引用解析 / go.bib 42 条 cite 链接）。库：学习Go语言（20261027）/ learning-go-20261027 / 分组「文章收集」36149506（move-stack 第 2 次验证）/ 描述双来源（站点+仓库@19857af8f2）符合硬规则 11。9 篇文档（00-前言 ~ 08-附录A，91KB），5 张图（3 svg 示意图 + 2 avatar）全传 CDN 并重写引用（img_map.json 缓存），site/fig 已删净不入库。toc-md 目录树 9 行一次 PUT 0.4s、结构核对 PASS、0 失败。六查全绿：TOC 9==本地 9、对账错位 0、幽灵 0、9 篇 word_count 全 >0（738~10349）、抽样回读 01/06 两章语雀 body 与本地去标签后字节数完全一致（15960/15960、3171/3171）且开头逐字相同、图片 CDN 引用回读确认。残留 LaTeX 命令=0（正文仅剩 Go 代码内合法 \\n）。"
+ },
+ "https://github.com/Wcc723/google_design_translate": {
+  "commit": "b12d99c",
+  "book_id": 85028586,
+  "book_url": "https://www.yuque.com/yehuoshun/gmd-tw-b12d99c",
+  "imported_at": "2026-10-27T15:46:27+0800",
+  "note": "fpb-056 ✅ 导入+验收完成 ｜ 库 85028586 slug gmd-tw-b12d99c ｜ Google Material Design 正體中文版 @ b12d99c ｜ 来源 https://github.com/Wcc723/google_design_translate @ b12d99c ｜ 64 节点（10 目录 + 54 文档，-en 英文原版与脚手架剔除）｜ 图 865 已传 CDN / 缺 0（外链 56 保留=上游动画素材）｜ 六查全绿（TOC==64、路径唯一、对账 0、幽灵 0、word_count 54/54>0、逐篇回读 0 差）｜ ⚠️ move-stack→57018723 今日语雀侧系统失败（PUT 200 {} 不落位，非 429；fpb-057 同卡，20+ 次重试未愈），库未分组，待重试 move-stack --book-id 85028586 --stack-id 57018723 --no-wait"
+ },
+ "https://github.com/1sters/material_design_zh": {
+  "commit": "fb61f42f",
+  "book_id": 85028477,
+  "book_url": "https://www.yuque.com/yehuoshun/material-design-zh-fb61f42f",
+  "imported_at": "2026-10-27T15:46:27+0800",
+  "note": "fpb-057 ✅ 导入+验收完成 ｜ 库 85028477 slug material-design-zh-fb61f42f ｜ Google Material Design 中文协同翻译 @ fb61f42f ｜ 来源 https://github.com/1sters/material_design_zh @ fb61f42f（翻译协作仓，正文 SOURCE/ 树）｜ 62 节点 = 10 章节 TITLE + 52 文档（18 认领未翻译空壳剔；含 4 根级元文档 00-学习指南/01-翻译协作说明/README/TOC）｜ 图 748 传 CDN（img_map 缓存 748 条；外链 ~266 跳过=七牛 qiniudn webm；2 处上游真缺失修不了保留原链）｜ 六查全绿（TOC==62、路径唯一、对账 0、幽灵 0、word_count 52/52>0、逐篇回读 52/52 0 差）｜ ⚠️ move-stack→57018723 今日语雀侧系统故障（PUT 200 {} 不落位，fpb-056 同病 20+ 次未愈），库未分组，待重试 move-stack --book-id 85028477 --stack-id 57018723 --no-wait"
  }
 }

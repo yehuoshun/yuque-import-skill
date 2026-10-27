@@ -2,6 +2,8 @@
 
 > 基地址：`https://www.yuque.com/api/v2`，认证头：`X-Auth-Token: <token>`
 
+⚠️ **cookie Web API 写侧账号级风控（2026-10-27 fpb52 #56/#57 系统性实证，20+ 次重试未愈）**：`PUT /api/mine/book_stack/move` **恒返 200 + `{}` 静默不落位**（非 429、无限流头、config ctoken==cookie 内 ctoken 排查过 CSRF）——move-stack 验证全败，22 个库待归位。同刻附件上传 429、**GET book_stacks 正常、v2 写（改描述/toc-md 导入）完全正常** → 只有 cookie Web API 写侧被控。**系统性佐证**：并发 3 库（85028586/85028477/测试库 85029508）同刻同病；但历史库分组正常（10-12 前都能移）→ 当日故障，非长期行为。**判别三件套**：① PUT 恒 200{} + 回查 book_stacks 不落位；② 多库并发同病；③ v2 GET/PUT 正常作对照组。**处置**：内容链路（导入 toc-md）走 v2 不受影响 → **先导内容、move-stack 后补**（move 幂等，后补无副作用）；窗口未观测到自愈（≥1 天），隔日重试 `move-stack --book-id <id> --stack-id <sid> --no-wait`。
+
 ⚠️ **cookie 类登录态会无声过期（2026-10-24 实捶）**：文件在 ≠ 登录在——`config.json` 里的 cookie/ctoken 可能已失效（响应 401/跳登录），文件时间戳还是旧的。脚本不会主动告诉你过期。**每小时轮次是发现它的唯一探针**（跑库时 v2 API 正常但 Web API（上传/batchMove）全 401 就该警觉）；连续多轮同一错误 = 该换凭据了，别再等。
 
 ## 根节点判定（最容易翻车的点）
