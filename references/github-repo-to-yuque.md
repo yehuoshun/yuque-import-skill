@@ -404,3 +404,19 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
 12. **根级顺序**：toc-md 后根级 TITLE 会按 Unicode 字典序变成 `一 三 二 五 八 六 四`，根级 DOC 还会掉到 TITLE 后面 → 按目标顺序**逆序 prependNode 到首位**（本次 11 次 PUT）归位。
 13. **附件（硬规则 12）**：本书中文 PDF 原件 1.3MB、体积可控 → 可作唯一附件（本次未建附件轨，正文已全量 Markdown）；`.djvu`（英文原版 3MB）与 `images/*.eps` 一律不上传。
 - **本例实测**：源仓库 `wuzhouhui/awk` @ `787d83c`（2022-07-31 最后一更，8 章 + 前言 + 2 附录 + 索引全译）；**65 节点**（9 目录 / 56 文档）；toc-md 目录树 65 行 2744B **PUT 0.6s**、结构核对 PASS、0 失败；18 图全 CDN（0 缺失）；六查全绿（TOC 65==本地 65、56 条 DOC 路径唯一、对账 0 错位、幽灵 0、56 篇 word_count 全 >0 最小 111、逐篇回读 56/56 0 差）；库 **85035154**（slug `awk-787d83c`）。⚠️ move-stack 10 次重试恒 `200 {}`（cookie 写侧风控未恢复，连续 ≥1 天）→ 分组待补 stack 57018723。
+
+**坑 70（Sphinx/readthedocs 站吃 `_sources/*.rst.txt`，2026-10-27 `awk.readthedocs.io` 实战）**：Sphinx 站正文最干净的源是 `_sources/<page>.rst.txt`（比抓 HTML 少 nav/sidebar），但 `yuque_rst_convert.py` 的 docutils 中间层会**吃掉行内字面量**——`<tt>` 无属性时正则 `<(code|tt)>[^>]*>` 多要一个 `>` 就不匹配，反引号错位导致丢字（awk 站 133 处）；另 `| ` 开头的**行块（line block）会被压成一行**（终端会话/模式摘要全糊）。纯 RST 小书直接自写薄转换器（章节/段落/字面块/行块/简单表/toctree 构造全集，行块用行尾双空格硬换行、无表头简单表造空表头）→ `examples/awk-youngsterxyf-site/build_lib.py`。
+
+**坑 71（课程书稿仓库「Unit-N/Lesson-M.md」扁平结构，2026-10-27 `limingth/NCCL`《新概念C语言》实战）**：仓库无 SUMMARY/book.json/conf.py 任何脚手架，只有 `README.md`（全书大纲）+ `Unit-N/` 目录，每目录 `Lesson-M.md` 平铺 + `README.md` 当单元导读。转换要点：
+
+1. **序号必须零填充**：原文件名 `Lesson-1.md`/`Lesson-10.md` 字典序 = 1,10,11,…,2 → 一律落成 `NN-<标题>.md`。
+2. **标题取文件 H1，不取根 README 列表**：两者常不一致（`Unit-1/Lesson-31` H1 =「ll 和 date」、README 写「ll (ls -l)」；`Lesson-32` H1 =「Bash Clone」、README 写「MyBash 项目」；`Lesson-40` H1 =「MyDictionary项目」）→ 文件为真，README 只是大纲。
+3. **CRLF 必须转 LF**：13 篇原文件是 CRLF（Unit-1 集中），不转则缩进代码块与表格断行。
+4. **标题半角 `*` 洗成 `＊`**：`Lesson 6 Print 9*9 multiplication table` —— 标题里的 `*` 会被 markdown 当强调。
+5. **单元 README 的站内 `Lesson-N.md` 相对链接转纯文本**：语雀里是死链；且 toc-md 目录树按最后一个 `](slug)` 切标题，留着会污染标题。
+6. **`../images/` 天然可解析**：把 `images/` 原样拷到导入根，`Unit-N/x.md` 的 `../images/a.png` 正好指向根图片目录 → rewrite_images 直接上传，**不需要像 cppwasm-book 那样按章重映射**。
+7. **同编号异内容要归位**：`Unit-3/parser-tree.md` 自标「Lesson 37 Parse Tree」，与 Unit-2 Lesson 37（词频统计器）撞号，且放错目录 → 改名 `90-附加-语法分析树（原编号 Lesson 37）` 收在 Unit-3 尾部，别硬塞回 Unit-2。
+8. **极薄正文 + 同名代码目录**：Lesson 49 正文仅 243B、内容全在同名目录 → 建 TITLE `49-代码` 收 `readfile.c`/`state.c`/`test.c`/`Makefile`（`.c` 走纯文本代码块，**验收时回读会报「小差异」——语雀自动加 ``` 围栏，属正常，不算异常**）；`a.out`/`demo`/`*.o` 二进制不导。
+9. **`slides/` 是派生品**：14 个 `Lesson-1~14.pdf` 由 Unit-1 同名 md 经 pandoc/beamer 生成（`md2pdf.sh`/`Makefile` 在仓库里）→ 不导、不上附件，笔记里说明一句即可。
+10. **残缺度三处写明**：原书规划 96 课（4×24），仓库实存 49 课（Unit1 24 + Unit2 24 + Unit3 仅 Lesson 49，Unit4 只有空 README，作者自己写「Unit 3/4 仍在规划中」）→ 库描述 + `00-Unit-3 导读` 末尾 + 账本 note 都写清，**Unit-4 不建空壳目录**。
+- **本例实测**：`limingth/NCCL` @ `2fae5f0`（2022-09-14 最后更，522★）；62 节点（4 目录 / 58 文档），14 图全 CDN（0 缺失）；六查全绿（TOC 62==本地 62、62 路径唯一、对账 0 错位、幽灵 0 docs58==TOC DOC58、word_count 58 篇全 >0 最小 17 总 28,648 词、逐篇回读 58/58 0 异常）；根级序补 1 次 prependNode（`00-前言 → Unit-1 → Unit-2 → Unit-3`）；库 **85035630**（slug `nccl-2fae5f0`）。脚本 `examples/nccl/build_lib.py`。
