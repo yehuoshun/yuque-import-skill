@@ -28,6 +28,7 @@ description: 语雀知识库全量目录导入与对账修复技能。把本地�
    📌 **多库（同一源拆成多个知识库）必须互指（2026-10-21 老板拍板）**：每个库的描述里都要写清「本库包含什么 + 其余部分另见对方**完整 URL**」，格式 `来源：<URL> @ <commit> ｜ <本库范围> ｜ <其余范围>另见 <对方库完整 URL> ｜ 导入 <日期>`；**两边都写，禁止只写一边**（只写一边等于断链）。拆库口径见硬规则 9 + `references` 坑 47。
 12. **附件（`type=attachment`）只给 PDF（2026-10-21 老板拍板）**：**只有 PDF 原件允许上传附件**；其他任何文件一律**不上传附件**——包括资源索引型仓库的原件 JSON（legado 那套「原件附件轨」停用）、MkDocs 站的 mp4/zip/rar、素材包等。落地：① 原件若上游有直链（如 `legado.aoaostar.com/sources/<file>`）就在索引里给**直链**，不上传；② 本地才有的非 PDF 资源**保留原相对路径、不重写、不删**，并在文档里注明「未上传」；③ **图片例外**，仍走 `type=image` CDN（硬规则 10，那是图片接口不是附件）。
 13. **并行导入不同任务可行，但同一 progress.json 绝不允许跑两个进程（2026-10-25 十幽灵事故）**：**并行没问题**——rea 拆库（10-21，两库各 progress 并行）、fpb52 子并发（10-23，互不共享文件）都实证过：v2 API 100 QPS 够，**唯一红线 = 账号级请求数 5000/h 合计别超**（10-24 两库并行合计 ~5851 撞过 429，动手前先提前算总数）。**严禁的是同一任务/同一 progress.json 被两个进程同时写**：双写竞争 → 断点账本互相覆盖，导入/重建交错 → 幽灵文档（docs 数 ≠ TOC DOC 数）。本次实况：误发两个 `tree_import --toc-md` 共用 `/tmp/p029-progress.json` → 全量双写 10 幽灵（docs 20 vs TOC 10），逐个 DELETE + 回查 404 才清掉。**铁律：一个 progress.json 只能有一个进程；多任务并行必须各用各的 progress.json；发命令前确认没有残留旧进程在写同一账本。**
+14. **禁 shell 循环 wrapper 套娃，子代理退出前必须清自己起的进程（2026-10-27 fpb52 #56/#57 两次事故）**：传图/导入命令必须是**单次进程**——禁止 `for i in seq 1 60; do …; sleep; done` 式 wrapper、`timeout` 套娃、后台循环等一切无限/长循环重试（曾现：40 轮×900s、60 轮×20min、30 轮 move-stack wrapper，全在子代理退出后继续空转吃资源，还抢写同一 img_map 造成竞态）。**允许的只有**：单次有限 sleep（≤15min，到点自醒继续，如等配额 reset 窗口）。**退出纪律**：子代理/后台任务结束或撞 429 前，先 `ps` 清掉自己开的所有后台进程再退出；主会话在子代理超时/完成后也要例行 `ps aux | grep` 查残留。
 
 ---
 
@@ -143,6 +144,7 @@ python3 scripts/yuque_tree_import.py --root <clean_dir> --book <book_id> --progr
 
 **源仓库是 AsciiDoc 书稿时**（老 gitbook 书 + `book.txt`/`entries.txt`/`include::`，全树无 `.md`，2026-10-18 puppet-27-cookbook 实战）：走同一个开源项目口径，但要**自写 AsciiDoc→md 转换器**（规则表 + 8 条转换坑见 `examples/puppet-cookbook/README.md`）；老 gitbooks.io 渲染站还活着时，可拿它当**逐页正文 oracle**（校验转换器有没有丢字）。详见 references 坑 40。
 GitBook 3.x 源仓库的书（站点给链接但同名 source repo 在 GitHub，正文是 `chapter-N/chapter-N-M.md` 扁平编号、层级只在 SUMMARY.md 里）：可复用脚本 + README 见 `examples/datamining-guide/`（2026-10-18《面向程序员的数据挖掘指南》实战，含重建规则与 2 个新坑）。
+**变体：老 GitBook 2.x 中文译本仓（站点渲染源在 GitHub，2026-10-27 gmd-tw 实战）**：源仓库 `Wcc723/google_design_translate`（Material Design 正體中文版，2015 停更）——**吃仓库 md、站点只当结构 oracle**（SUMMARY.md 即目录）；发布面 = SUMMARY 收录的 53 篇中文 md + README 作前言（00-），**剔 50 篇 `-en.md` 英文原版** + 脚手架（chapter/、book.json、cover.*）+ 旧命名孤儿；转换要点：`## <h2 id='x'>T</h2>` 剥属性留标题、**色票 `<section class="color-group">` → markdown 表格**（名稱/色階/色碼）、`<video>/<embed>` → `[🎬 影片](URL)` 标记行、站内 `.md` 链接/锚点 → 纯文本、**外链图按 URL basename 反查本地重写 CDN**；64 节点（10 目录/54 文档）、865 图、六查全绿（库 85028586 gmd-tw-b12d99c）。
 **老 GitBook「独立域名」型书仓**（`legacy.gitbook.com/...` 死链 / `*.gitbooks.io` 302 到已被抢注的空壳域名，如 learnes.net）：同样改吃源仓库 md；SUMMARY 常与磁盘**大小写不符 + 断链**，且**图可能是绝对外链**（raw.githubusercontent）需按 basename 反查本地文件重写成 CDN —— 复用脚本 + README 见 `examples/elasticsearch-guide/`（2026-10-18《Elasticsearch 权威指南（中文版）》实战，坑 36/37）。
 **站点域名直接死掉 + SUMMARY 多层嵌套 + 旧版整编孤儿**（如 `kibana.logstash.es` DNS 不解析，仓库 `homepage` 指认源仓库）：复用脚本 + README 见 `examples/elkstack-guide/`（2026-10-18《ELKstack 中文指南》实战，坑 38；含空链接/断链节点落 TITLE、点分编号多层命名、v3 旧版孤儿归档、外链图「能救的救」口径）。
 
