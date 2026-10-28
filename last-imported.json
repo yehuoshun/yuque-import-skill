@@ -906,5 +906,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/clang-tutorial-96e02b1b",
   "imported_at": "2026-10-28T10:26:21+0800",
   "note": "书单 #65《C 语言教程》（wangdoc.com/clang 阮一峰 C 语言教程，Loppo 静态站）。开源项目口径：源仓库 wangdoc/clang-tutorial @96e02b1b（2025-03-26，README='C 语言入门教程'，Loppo 构建，footer 直链仓库）。docs/ 42 篇 = 22 章（chapters.yml 序，中文章名带 01-~22- 前缀；io.md 标题 'I/O 函数' 的 / 换全角 ／ 防路径切割）+ 标准库目录 20 个头文件页（17 按 chapters.yml + stdarg/stdbool/stddef 3 篇未列入追加末尾，站点亦有此 3 页 200）。无图无超限。43 节点=1 目录+42 文档，toc-md 秒级，六查全绿（TOC 43==本地、对账 0、幽灵 0、word_count 全>0 min116/max9325、回读 42/42 零异常）。⚠️ move-stack 恒返 200 {} 第 10 个挂账，分组（开源项目 57018723）待补。"
+ },
+ "https://www.dotcpp.com/course/c/": {
+  "commit": "",
+  "book_id": 85067012,
+  "book_url": "https://www.yuque.com/yehuoshun/dotcpp-c-course-20261028",
+  "imported_at": "2026-10-28T10:51:22+0800",
+  "note": "书单 #66《C 语言入门教程》（dotcpp.com 编程网站长黄老师教程，2022-03-26 发布，免费含配套题库）。网站口径：首页 JS 内嵌 dl/dd 目录 = 14 章（第一章~第十四章，章 slug c-intros~c-appendix）+ 87 篇；正文在每篇课程页 <!-- S 正文 -->..<!-- E 正文 -->；<pre class=brush:xx> 代码块（&nbsp; 伪缩进还原空格）；坑：标签删除正则 alternation 里 |i| 吞 <img>（<img 被当 <i> 斜体删掉）→ img 替换必须提前 + 标签正则加 (?=[\\s>])；章 slug 含连字符（c-struct-union）→ [a-z-]+ 才能匹配全；文件名标题加 <章号>- 前缀防「本章总结与作业」跨章重名。14 章目录（01-C语言的过去与未来 ~ 14-附录）+ 87 文档；4 图（3 png+1 jpg）下载本地→rewrite 传 CDN（cookie 复用 beej-build/cookie.json）。101 节点=14 目录+87 文档，toc-md PUT 4.2s，六查全绿（TOC 101==本地、对账 0、幽灵 0、word_count 全>0 min19、回读 87/87 零异常）。⚠️ move-stack 恒返 200 {} 第 11 个挂账，分组（开源项目 57018723）待补。"
  }
 }
