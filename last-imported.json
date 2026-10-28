@@ -899,5 +899,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/c-faq-chn-20261028",
   "imported_at": "2026-10-28T01:58:36+0800",
   "note": "书单 #64《C 语言常见问题集》。源站 c-faq-chn.sourceforge.net（中译本 0.9.4，2005-06-23，原著 Steve Summit，译者朱群英/孙云），LaTeX2HTML 2002-2-1 生成 node1..node388：node1=目录页跳过，其余 387 页。自写解析器：GBK 解码 + 取 Nav 面板之间正文 + 表格/dl/代码块转换。WAF 坑：UA=Mozilla/5.0 直返 403，curl UA 放行。按 ccfaq.html 目录重建 23 章：387 节点=20 目录+367 文档（364 问答 + 前言/感谢/文献），章节目录页只含子链接 → 不建 00- 导读文档；1 张公式图 img1.png 传 CDN。六查全绿：TOC 387==本地 387、路径唯一、对账错位 0、幽灵 0（docs 367==TOC DOC 367）、367 篇 word_count 全>0（58,152 词）、367 篇逐篇回读 0 差。根级 1 发 prependNode（01-前言 → 02 章目录）。⚠️ move-stack 恒返 200{} → 分组（文章收集 36149506）待补。"
+ },
+ "https://github.com/wangdoc/clang-tutorial": {
+  "commit": "96e02b1b",
+  "book_id": 85066652,
+  "book_url": "https://www.yuque.com/yehuoshun/clang-tutorial-96e02b1b",
+  "imported_at": "2026-10-28T10:26:21+0800",
+  "note": "书单 #65《C 语言教程》（wangdoc.com/clang 阮一峰 C 语言教程，Loppo 静态站）。开源项目口径：源仓库 wangdoc/clang-tutorial @96e02b1b（2025-03-26，README='C 语言入门教程'，Loppo 构建，footer 直链仓库）。docs/ 42 篇 = 22 章（chapters.yml 序，中文章名带 01-~22- 前缀；io.md 标题 'I/O 函数' 的 / 换全角 ／ 防路径切割）+ 标准库目录 20 个头文件页（17 按 chapters.yml + stdarg/stdbool/stddef 3 篇未列入追加末尾，站点亦有此 3 页 200）。无图无超限。43 节点=1 目录+42 文档，toc-md 秒级，六查全绿（TOC 43==本地、对账 0、幽灵 0、word_count 全>0 min116/max9325、回读 42/42 零异常）。⚠️ move-stack 恒返 200 {} 第 10 个挂账，分组（开源项目 57018723）待补。"
  }
 }
