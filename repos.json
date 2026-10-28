@@ -1,7 +1,22 @@
 {
   "repos": [
     {
+      "url": "https://github.com/morluto/rea",
+      "enabled": true,
+      "watch": false
+    },
+    {
       "url": "https://github.com/EbookFoundation/free-programming-books",
+      "enabled": true,
+      "watch": false
+    },
+    {
+      "url": "https://github.com/Anduin2017/HowToCook",
+      "enabled": true,
+      "watch": false
+    },
+    {
+      "url": "https://github.com/swjybky/deepwrite",
       "enabled": true,
       "watch": false
     },
