@@ -934,5 +934,12 @@
   "book_url": "https://www.yuque.com/yeuhoshun/100-gcc-tips-f5f1f6e",
   "imported_at": "2026-10-28T19:43:37+0800",
   "note": "开源项目口径（hellogcc/100-gcc-tips @f5f1f6e，master，hellogcc 社区《100个gcc小技巧》，GFDL 授权）：纯 md 仓库无需转换，全量导入 31 节点（README + LICENSE + build.sh + utils/build.go + src/ 25 个技巧 + index 目录）。src/index.md 即目录（分类：信息显示/预处理/汇编/调试/连接/函数属性/常见错误/其它），内含 1 处死链 specify-dwarf-version.md（仓库无此文件，正文保留原文链接）。无图无超限。⚠️ toc-md 模式不能带 --test（收尾生成目录树需全量文档记录，test 6 报「缺少文档记录」——属脚本固有行为，test 6 已建 6 节点由全量续传 skip，非事故）。六查全绿：TOC 31==本地 31 / 路径唯一 / 对账错位 0 / 幽灵 0（docs 29==TOC DOC 29）/ word_count 29 篇全>0 / 逐篇回读 29/29 唯一差异 = 源文件 BOM（语雀剥 ﻿，正文一致）。⚠️ move-stack 恒返 200{} 挂账（第 14 个），分组待补（应在 stack 57018723 开源项目）。"
+ },
+ "https://github.com/hellogcc/100-gdb-tips/blob/master/src/index.md": {
+  "commit": "b134d12",
+  "book_id": 85073244,
+  "book_url": "https://www.yuque.com/yeuhoshun/100-gdb-tips-b134d12",
+  "imported_at": "2026-10-28T20:05:32+0800",
+  "note": "开源项目口径（hellogcc/100-gdb-tips @b134d12，master，hellogcc 社区《100个gdb小技巧》，GFDL）：纯 md 仓库（与 #69 100-gcc-tips 同源同构），全量导入 115 节点 = src/（109 技巧 + index 目录）+ utils/build.go + 根级 LICENSE/README.md/build.sh。⭐ 2 个 PDF 成品（《100个gdb小技巧（v1.0）.pdf》904K 发布版 + refcard.pdf 124K GDB 命令卡片，README 第 47 行引用）不混入 md 主树（tree_import 对非 md 会包代码围栏）→ 剔除后单独上传走 type=attachment（Web API cookie），建「00-附录：PDF 附件」文档挂 2 个附件链接，appendNode sibling 归位到 README.md 后。⚠️ 幽灵 2 个重试双写残留已删：289935068（send-signal.md 重复）、289935199（附录文档被双写）——POST /docs 服务端偶发重试双写，验收幽灵扫描必做。六查全绿：TOC 116==本地 115+附录 1 / 对账错位 0 / 幽灵 0（docs 114==TOC DOC 114）/ word_count 全>0 / 回读 113/113 零差异（2 篇首轮超时补拉一致）/ 附录正文含 2 PDF 链接。⚠️ move-stack 恒返 200{} 挂账（第 15 个），分组待补（应在 stack 57018723 开源项目）。"
  }
 }
