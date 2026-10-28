@@ -941,5 +941,9 @@
   "book_url": "https://www.yuque.com/yeuhoshun/100-gdb-tips-b134d12",
   "imported_at": "2026-10-28T20:05:32+0800",
   "note": "开源项目口径（hellogcc/100-gdb-tips @b134d12，master，hellogcc 社区《100个gdb小技巧》，GFDL）：纯 md 仓库（与 #69 100-gcc-tips 同源同构），全量导入 115 节点 = src/（109 技巧 + index 目录）+ utils/build.go + 根级 LICENSE/README.md/build.sh。⭐ 2 个 PDF 成品（《100个gdb小技巧（v1.0）.pdf》904K 发布版 + refcard.pdf 124K GDB 命令卡片，README 第 47 行引用）不混入 md 主树（tree_import 对非 md 会包代码围栏）→ 剔除后单独上传走 type=attachment（Web API cookie），建「00-附录：PDF 附件」文档挂 2 个附件链接，appendNode sibling 归位到 README.md 后。⚠️ 幽灵 2 个重试双写残留已删：289935068（send-signal.md 重复）、289935199（附录文档被双写）——POST /docs 服务端偶发重试双写，验收幽灵扫描必做。六查全绿：TOC 116==本地 115+附录 1 / 对账错位 0 / 幽灵 0（docs 114==TOC DOC 114）/ word_count 全>0 / 回读 113/113 零差异（2 篇首轮超时补拉一致）/ 附录正文含 2 PDF 链接。⚠️ move-stack 恒返 200{} 挂账（第 15 个），分组待补（应在 stack 57018723 开源项目）。"
+ },
+ "https://web.archive.org/web/20210413213859/http://www.nowamagic.net/librarys/books/contents/c": {
+  "book_id": 85075868,
+  "book_url": "https://www.yuque.com/yehuoshun/c-magic-nowamagic-20261029"
  }
 }
