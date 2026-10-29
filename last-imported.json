@@ -970,5 +970,12 @@
     "book_url": "https://www.yuque.com/yehuoshun/c-cpp-primer-5b224a8",
     "imported_at": "2026-10-29T12:55:00+0800",
     "note": "开源项目口径。仓库极小（MIT，最后提交 2021-04-12）：README.md（目录）+ 00.md（同一份目录的副本）+ 01.md~05.md 五章正文。口径：README/00.md 内容重复且只是章节目录 → 都不收，只落 5 章正文，平铺根级，文件名零填充 `NN-Chapter N - xxx.md`（字典序即书序）。转换：GitHub 风格 **Tab 缩进代码块**（01=57/02=30/03=45/04=44/05=8 个 Tab 行）统一转 ```cpp 围栏（块内空行合并进同一块），否则语雀里会塌成正文；剥首个 H1；剥各章文末 `## 导航`（上/下一章 `](NN.md)` 相对链接在语雀是死链，且与 TOC 重复）；标题半角 `*` 洗成全角 `＊`（`char*` → `char＊`，防文件名/toc-md 切分雷）；英文章名保留原样（含源仓库 refrence 拼写）。无图片。toc-md PUT 通过、0 失败；六查全绿：TOC 5==本地 5、顺序正确、reconcile 0 错位、幽灵 0（docs 5==TOC DOC 5）、word_count 5/5 全>0（346~3907 字）、回读 5/5 零异常。⚠️ move-stack 开源项目 57018723 三轮均返 {}（cookie 写侧风控），挂账。"
+  },
+  "https://github.com/forhappy/Cplusplus-Concurrency-In-Practice": {
+    "commit": "e15f3ee",
+    "book_id": 85108652,
+    "book_url": "https://www.yuque.com/yehuoshun/cpp-concurrency-in-practice-e15f3ee",
+    "imported_at": "2026-10-29T13:40:00+0800",
+    "note": "开源项目口径（MIT）。仓库 zh/ 按章分目录（README=本章导读+章节目录、正文 md、web-resources=资料汇）+ images/ + code/。**本书未写完**：Table-of-contents.md 计划 11 章+附录，实存正文只有第 1/3/4/5/6/7/8/11 章 + 附录 3 篇；第 2 章（2.1/2.2/2.3 全 0 字节）、第 9/10 章、6.7、8.1/8.3、附录『功能提升』『标准库变更』共 10 个文件是空壳 → 不建空目录、不收空文档，残缺度写进库描述。口径：章目录零填充 `第01章…第11章`+`附录 C++11 新标准概览`（字典序即书序）；章 README 只留『本章导读』段、砍掉后面与 TOC 重复的章节目录（否则死链+重复）；web-resources → `N.M 资料汇.md`；标题里 `<mutex>`/`std::atomic` 等尖括号与 `::` 洗净（避免 md 当 HTML/文件名雷）；**4 空格缩进代码块统一转 ```cpp 围栏**（全库约 1100 行；缩进的有序列表项用 `^ {4}(\\d+\\.|[-*+])\\s` 排除，不误伤）；剥首个 H1；标题尾部 `##` 关闭序列剥掉。正文只引 4 张图（images/ 8 张，另 4 张对应章节是空壳），按 basename 本地化后传 CDN。toc-md PUT 通过、0 失败；六查全绿：TOC 51==本地 51（9 目录/42 文档）、顺序全对、reconcile 0 错位、幽灵 0（docs 42==TOC DOC 42）、word_count 42/42 全>0、回读 42/42 零异常（CDN 引用 4==重写数）。⚠️ move-stack 开源项目 57018723 两轮均返 {}（cookie 写侧风控），挂账。"
   }
 }
