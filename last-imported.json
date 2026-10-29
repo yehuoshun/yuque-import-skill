@@ -998,5 +998,12 @@
     "book_url": "https://www.yuque.com/yeuhoshun/cpp-template-tutorial-f162c3a",
     "imported_at": "2026-10-30T00:55:00+0800",
     "note": "开源项目口径。《C++ Template 进阶指南》（wuye9036 系列博文整理）：仓库仅一个 119KB ReadMe.md 承载全书，按 H1 章 / H2 节拆篇（H3 留在节内）；章目录 01-前言 / 02-Template的基本语法 / 03-模板元编程基础 / 04-深入理解特化与偏特化 / 05-未完成章节，第 5 章是围栏内的第 6~10 章写作提纲（转成列表）。文末引用式脚注 [1][2][3] 构建时内联成 [text](url)；145 对围栏语言统一 cpp（1 处 C# → csharp）。标题-only 空壳 2.1 / 4.3.2 跳过，残缺度写入 00-说明.md；VS 工程源码（.sln/.vcxproj/stdafx/QuickSort.cpp）不入库。toc-md 24 行 PUT 0.6s、0 失败；六查全绿：TOC 24==本地 24、对账 0 错位、幽灵 0（docs 19==TOC DOC 19）、word_count 19/19>0（74~5804）、回读 19/19 零异常、无超限分片；正文 CJK 22,083 零丢失。⚠️ 新坑 75：TOC 顺序审计必须按 prev_uuid 链，扁平数组顺序不代表树序。⚠️ move-stack 开源项目 57018723 仍返 {}（服务端回归），挂账。"
+  },
+  "https://github.com/leeyiw/cgdb-manual-in-chinese": {
+    "commit": "114e1ea",
+    "book_id": 85115568,
+    "book_url": "https://www.yuque.com/yeuhoshun/cgdb-manual-zh-114e1ea",
+    "imported_at": "2026-10-30T03:15:00+0800",
+    "note": "开源项目口径。《CGDB中文手册》：译自 CGDB Manual（cgdb.github.com），CC BY-SA 4.0，译者李毅为（1~5 章）+ Peixu.Zhu（6.2/6.3），校对武飞/diseng。老 GitBook 2.x 形态（SUMMARY.md + 扁平 N.M.md，每页首行导航）：章= TITLE（01~07），章页 N.0.md → NN.00 章名.md，节 → NN.MM；00-说明.md 收录 README 的关于本书/授权/译者；build.py 不入库。⚠️ 坑 76：行尾双空格硬换行（第 3/4/5 章数百条命令）必须保留，clean 不能全文 rstrip；&lt;Esc&gt; 还原成 `<Esc>`；根级两个 DOC 逆序 prepend 归位。toc-md 32 行 PUT 0.6s、0 失败；六查全绿：TOC 32==本地 32、对账 0 错位、幽灵 0（docs 25==TOC DOC 25）、word_count 25/25>0（最小 51）、回读 25/25 零异常、无分片；正文 CJK 7,569 零丢失。⚠️ move-stack 开源项目 57018723 仍返 {}（服务端回归），挂账。"
   }
 }
