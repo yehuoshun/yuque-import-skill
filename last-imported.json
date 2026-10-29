@@ -981,6 +981,8 @@
  "http://www.sunistudio.com/cppfaq/": {
   "commit": null,
   "book_id": 85113087,
-  "book_url": "https://www.yuque.com/yehuoshun/cppfaq-lite-zh-20261029"
+  "book_url": "https://www.yuque.com/yehuoshun/cppfaq-lite-zh-20261029",
+  "imported_at": "2026-10-29T19:50:00+0800",
+  "note": "网站口径。sunistudio.com/cppfaq = Marshall Cline《C++ FAQ Lite》中文译本（申旻等译，各章译者不同），FrontPage 静态站 gbk/utf-8 混合编码。27 章 283 条 FAQ 按编号拆篇（章目录 NN-章名 + N.MM 标题.md 零填充免归位），代码围栏 cpp；标题双重方括号笔误（[[9.2]）正则容错；两条 HTML 结构（gbk 版 div.CodeBlock>tt / Word 版 margin-left:22.5pt 灰底行）统一用 html5lib 解析（Python html.parser 不实现隐式标签关闭，<p><p> 嵌套会吞全文）；rawtext:[N.M]:rawtext 更新链噪音剥除；图全为 updated.gif/new.gif 装饰标记不传。⚠️ 残缺 5 章：index 列出的 [30][34][38][39][40] 原站即 404（Wayback CDX 无任何 200 快照、GitHub 无同源中文镜像）→ 不建空壳，00-说明 写明。toc-md PUT 通过、0 失败；六查全绿：TOC 311==本地（27 目录+284 文件）、reconcile 0 错位、幽灵 0（docs 284==TOC DOC 284）、word_count 284/284 全>0、回读 6.06/35.02/9.02 零异常、无超限分片。⚠️ move-stack 文章收集 36149506 返 {}（服务端回归），挂账。"
  }
 }
