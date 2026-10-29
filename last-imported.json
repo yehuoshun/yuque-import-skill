@@ -963,5 +963,12 @@
     "book_url": "https://www.yuque.com/yehuoshun/c-book-perspective-20261029",
     "imported_at": "2026-10-29T12:10:00+0800",
     "note": "网站口径。链接 302 到现代 GitBook https://tinylab-1.gitbook.io/cbook（作者 吴章金/falcon·泰晓科技，CC BY-NC-ND 4.0）。用平台官方 Markdown 出口：llms.txt 索引 + 页面 URL 加 .md（根页 master.md），不抓 HTML；~gitbook/site-index 佐证 12 页扁平、无分组 → 导入根平铺 12 文档（00-简介 / 01-版本修订历史 / 02-前言 / 03~11 九章正文）。清洗：剥 GitBook 注入的 llms.txt 样板 callout、剥首个 H1、剥「配套视频已上线」推广行与页尾「关注作者公众号」二维码块（11/12 页重复）、站内 /cbook/*.md#anchor 锚点链→纯文本（含转义中括号 [\\[1\\]] 形态）、图片 \\& → & 归一化后本地化。6 张图传语雀 CDN。toc-md PUT 通过、0 失败；六查全绿：TOC 12==本地 12、reconcile 0 错位、幽灵 0（docs 12==TOC DOC 12）、word_count 12/12 全>0、回读 12/12 零异常（CDN 引用 6==重写数）；文件名 00-..11- 零填充 → 字典序即书序，无需归位。⚠️ move-stack 文章收集 36149506 三轮均返 {}（cookie 写侧风控），挂账。"
+  },
+  "https://github.com/andycai/cprimer": {
+    "commit": "5b224a8",
+    "book_id": 85108340,
+    "book_url": "https://www.yuque.com/yehuoshun/c-cpp-primer-5b224a8",
+    "imported_at": "2026-10-29T12:55:00+0800",
+    "note": "开源项目口径。仓库极小（MIT，最后提交 2021-04-12）：README.md（目录）+ 00.md（同一份目录的副本）+ 01.md~05.md 五章正文。口径：README/00.md 内容重复且只是章节目录 → 都不收，只落 5 章正文，平铺根级，文件名零填充 `NN-Chapter N - xxx.md`（字典序即书序）。转换：GitHub 风格 **Tab 缩进代码块**（01=57/02=30/03=45/04=44/05=8 个 Tab 行）统一转 ```cpp 围栏（块内空行合并进同一块），否则语雀里会塌成正文；剥首个 H1；剥各章文末 `## 导航`（上/下一章 `](NN.md)` 相对链接在语雀是死链，且与 TOC 重复）；标题半角 `*` 洗成全角 `＊`（`char*` → `char＊`，防文件名/toc-md 切分雷）；英文章名保留原样（含源仓库 refrence 拼写）。无图片。toc-md PUT 通过、0 失败；六查全绿：TOC 5==本地 5、顺序正确、reconcile 0 错位、幽灵 0（docs 5==TOC DOC 5）、word_count 5/5 全>0（346~3907 字）、回读 5/5 零异常。⚠️ move-stack 开源项目 57018723 三轮均返 {}（cookie 写侧风控），挂账。"
   }
 }
