@@ -956,5 +956,12 @@
     "book_url": "https://www.yuque.com/yehuoshun/thinkcpp-zh-20261029",
     "imported_at": "2026-10-29T12:00:00+0800",
     "note": "网站口径（换源）。原链 http://www.ituring.com.cn/book/1203 = 图灵社区乐译开放书《像计算机科学家一样思考（C++版)》(Allen B. Downey, GNU FDL)：ebook.chapters 15 章 isFree，但正文多为「本章内容」目录壳（大量 section article 已从图灵侧移除，/api/Article/{id} 404），仅 ch1 有 children，且 4/8/10/14 章正文缺失 → 换源 w3cschool 镜像 https://www.w3cschool.cn/hbvlgw/ （同一译本，sidebar #nestable_handbook 含全书 15 章 170 节）。正文容器 div.view-body.think-editor-content；剔 1 条「通义灵码」广告页；剥「C++ 」前缀、标题半角/洗名、link.w3cschool.cn 跳转链还原、ch12「术语表」按原书归位末位；172 文档 = 170 节 + ch1/ch15 两章导语（ch10 章页=10.1 正文与节重复已弃）；15 目录；17 图传语雀 CDN。toc-md PUT 通过、0 失败；六查全绿：TOC 187==本地 187、reconcile 0 错位、幽灵 0（docs 172==TOC DOC 172）、word_count 172/172 全>0、回读 172/172 零异常（CDN 引用 17==重写数）。⚠️ 收尾补字典序归位：toc-md 按 sorted() 生成，「第10章」排到「第1章」前、章内「12.10」排到「12.2」前 → 逐父节点 prependNode 逆序归位（root 15 + 各章 170）后复验顺序全对。⚠️ move-stack 文章收集 36149506 两轮均返 {}（cookie 写侧风控），挂账。"
+  },
+  "https://tinylab.gitbooks.io/cbook/content/": {
+    "commit": null,
+    "book_id": 85108036,
+    "book_url": "https://www.yuque.com/yehuoshun/c-book-perspective-20261029",
+    "imported_at": "2026-10-29T12:10:00+0800",
+    "note": "网站口径。链接 302 到现代 GitBook https://tinylab-1.gitbook.io/cbook（作者 吴章金/falcon·泰晓科技，CC BY-NC-ND 4.0）。用平台官方 Markdown 出口：llms.txt 索引 + 页面 URL 加 .md（根页 master.md），不抓 HTML；~gitbook/site-index 佐证 12 页扁平、无分组 → 导入根平铺 12 文档（00-简介 / 01-版本修订历史 / 02-前言 / 03~11 九章正文）。清洗：剥 GitBook 注入的 llms.txt 样板 callout、剥首个 H1、剥「配套视频已上线」推广行与页尾「关注作者公众号」二维码块（11/12 页重复）、站内 /cbook/*.md#anchor 锚点链→纯文本（含转义中括号 [\\[1\\]] 形态）、图片 \\& → & 归一化后本地化。6 张图传语雀 CDN。toc-md PUT 通过、0 失败；六查全绿：TOC 12==本地 12、reconcile 0 错位、幽灵 0（docs 12==TOC DOC 12）、word_count 12/12 全>0、回读 12/12 零异常（CDN 引用 6==重写数）；文件名 00-..11- 零填充 → 字典序即书序，无需归位。⚠️ move-stack 文章收集 36149506 三轮均返 {}（cookie 写侧风控），挂账。"
   }
 }
