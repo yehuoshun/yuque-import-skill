@@ -945,5 +945,9 @@
  "https://web.archive.org/web/20210413213859/http://www.nowamagic.net/librarys/books/contents/c": {
   "book_id": 85075868,
   "book_url": "https://www.yuque.com/yehuoshun/c-magic-nowamagic-20261029"
+ },
+ "https://hackmd.io/@lumynou5/CppTutorial-zh-tw": {
+  "book_id": 85106801,
+  "book_url": "https://www.yuque.com/yehuoshun/cpp101-hackmd-20261029"
  }
 }
