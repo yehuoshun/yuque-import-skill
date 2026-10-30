@@ -1110,5 +1110,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/go-doc-translations-fe925a2",
   "imported_at": "2026-10-30T14:45:00+0800",
   "note": "开源项目口径。源=golang-china/golangdoc.translations @fe925a2（最后提交 2018-07-20，BSD-style）—— golang.org 全站中文化的**半成品翻译工程**。三种双语载体各有分隔标记：① doc/zh_CN/*.html 英文块在 <div class=english> → 删掉即中文；② blog/zh_CN/content/*.article 用 .html _tr/div_begin_zh_CN.html … div_end 包裹 → 只留区间内；③ src/**/doc_zh_CN.go 每个 API 英文注释段在前、中文段在后 → 逐注释组从首个含中文段落起保留到组尾 + 声明签名。**核心判据=中文字符密度≥5%**（别用「文件含中文」：welcome.article 的「世界」是假阳性、go_spec 910 字但密度 0.6%）。实收：官方文档 18（25 篇 html 里剔 go_spec/go1 等 7 篇低密度）+ 标准库包文档 102（201 个 doc_zh_CN.go）+ 博客 8（92 篇里仅 8 篇有译文）；tour 6 篇、talks 42 篇全站零翻译 → 不建空壳。落库 157 节点=28 TITLE + 129 文档；4 张 gopher 图（站点绝对路径 /doc/gopher/x.png 需按文件名回退定位到 doc/zh_CN/gopher/）传 CDN。toc-md 157 行/5005B PUT 1.3s PASS、0 失败；六查全绿：TOC 157==本地、对账 0 错位、幽灵 0（docs 129==TOC DOC 129）、word_count 129/129>0（133~36779）、回读 129/129 零异常（4 CDN 引用==4 重写）；根级 00-说明 + 三个分区 TITLE 用 prependNode 归位成「说明→官方文档→标准库包文档→博客」。⚠️ move-stack 57018723 返 200 {}（服务端回归）→ 挂账。已知假阳性：html/template 包文档里 Go 样例 <img src=\"{{.X}}\"> 被图片重写脚本 HTML_RE 误判（--dry 报本地缺失 2，不影响导入）。脚本 examples/go-doc-translations/build.py。"
+ },
+ "https://github.com/songleo/the-little-go-book_ZH_CN": {
+  "commit": "4c124a9",
+  "book_id": 85149264,
+  "book_url": "https://www.yuque.com/yehuoshun/little-go-book-zh-cn-4c124a9",
+  "imported_at": "2026-10-30T14:50:00+0800",
+  "note": "开源项目口径。源=songleo/the-little-go-book_ZH_CN @4c124a9（2022-09-05；CC BY-NC-SA 4.0）= Karl Seguin《The Little Go Book》中文译本。仓库 eBook/ 下 48 个已是中文的 md：N.0=章导读、N.M=节、about-this-book/introduction=前言、conclusion=结语、directory=导航页。落库 54 节点=7 TITLE（前言 + 第01~06章）+ 47 文档；2 图（cover.jpg/wechat.jpg）传 CDN。处理：① 每篇首行 `# 标题` 取作文档名，章名两种写法（「第1章 基础知识」与「2.0 结构体」）都要剥前缀；② 末尾 `## 链接` 导航段整段剥——注意 4.2 接口.md 是**裸列表 + CRLF**（没有 `## 链接` 标题），要额外从尾部逐行剥 `- [目录]/上一节/下一节` 并 CRLF→LF；③ 根级 00-说明 的图必须写 `images/` 而不是 `../images/`（否则指到树外报本地缺失）。未收：getting-started.md（空壳，仅标题+导航链）、directory.md（导航页与 TOC 重复）。toc-md 54 行/2203B PUT 0.9s PASS、0 失败；六查全绿：TOC 54==本地、对账 0 错位、幽灵 0（docs 47==TOC DOC 47）、word_count 47/47>0（31~2575）、回读 47/47 零异常（2 CDN 引用==2 重写）；00-说明 prependNode 归位最前、结论自然落末。⚠️ move-stack 57018723 返 200 {} → 挂账。脚本 examples/little-go-book-zh-cn/build.py。"
  }
 }
