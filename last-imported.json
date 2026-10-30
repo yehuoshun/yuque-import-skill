@@ -1243,5 +1243,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/learnyouahaskell-zh-8247441",
   "imported_at": "2026-10-31T04:51:00+0800",
   "note": "fpb52 #115《HASKELL 趣學指南》(MnO2/learnyouahaskell-zh @ 8247441)：站点 learnyouahaskell.mno2.org 是繁中版 → 吃源仓库 zh-tw/ 的 md(站点即此繁中版)。一章一篇 14 章+FAQ，NN- 前缀；每章首 H1 剥；站内 .md/.html 链接转纯文本。图全在 .gitbook/assets/(引用 ../../.gitbook/assets/x%20%281%29.png，URL 编码)→unquote 解码+**净化文件名**(空格→_、去括号)后本地化。**新坑**：带空格/括号文件名会让 rewrite_images 的 split(None,1) 截断→本地缺失(115 图)。resource-1/resource.md 只 12B 空壳不收。16 节点(0目录/16文档)115 图 CDN。六查全绿(word_count 16/16>0 min 231、回读 0 异常、根序正确)。脚本 examples/learnyouahaskell-zh/build.py。⚠️ move-stack 57018723 返 200 {} 挂账。"
+ },
+ "https://github.com/huangzworks/real-world-haskell-cn": {
+  "commit": "f67b07d",
+  "book_id": 85155146,
+  "book_url": "https://www.yuque.com/yehuoshun/real-world-haskell-cn-f67b07d",
+  "imported_at": "2026-10-31T04:57:00+0800",
+  "note": "fpb52 #116《Real World Haskell 中文版》(huangzworks/real-world-haskell-cn @ f67b07d)：Sphinx/reST 书稿仓。yuque_rst_convert.py 转 md；**转换前先剥 rst 注释**(`.. xxx` 无 ``::`` 的行+缩进续行)——否则 chp/12 等会留 --> 垃圾；转换后再兜一道删围栏外行尾 ` -->` 无 CJK 的残留行。章 chp/N.rst→根级 NN-<H1>.md(零填充,标题取首个 # )；index→00-说明；convention→90-翻译约定。图 image/(引用混合 /image/x 绝对 与 ../image/x 相对)→统一改 image/x 拷根→传 CDN 删目录(18图)。code/(Haskell 源码,已由 literalinclude 内联)不入库。残缺度：第 17 章未译(toctree/磁盘都没有)。29 节点=27 章+说明+翻译约定，18 图 CDN。六查全绿(word_count 29/29>0 min 303、错位 0、幽灵 0、回读 0 异常、根序正确)。脚本 examples/real-world-haskell-cn/build.py。⚠️ move-stack 57018723 返 200 {} 挂账。"
  }
 }
