@@ -361,3 +361,13 @@
 6. **站内链与锚点链**：`/wiki/...`（原站已死）+ `#区段`（页内锚点）一律转纯文字，只留外链。
 7. **剔 MediaWiki 脚手架**：`.mw-editsection`（每个标题后的「编辑」链）、`.reference`（上标引用）。
 - **本例实测**：14 文档 + 00-说明 = **15 文档零目录**；toc-md 15 行 576B PUT 0.4s、结构核对 PASS、0 失败；六查全绿（TOC 15==本地 15、全路径唯一、对账 0 错位、幽灵 0 docs15==TOC DOC15、word_count 15/15>0 最小 104、回读 15/15 零异常）；库 **85147555**（slug `dart-language-tour-20261030`）。⚠️ move-stack 文章收集 36149506 返 `200 {}`（服务端回归）→ 挂账。脚本 `examples/dart-language-tour-wayback/build.py`（依赖 bs4 + html5lib）。
+
+**坑 87：Word 导出的老教程站（`.htm` 一堆 `mso-*` 样式 + VML 图形 + 示例外链）——「正文靠 p 样式分流、注释里的 VML 必须跳过、公式图按尺寸过滤」（2026-10-30 USTC《Fortran77和90/95编程入门》实战）**
+站点 `micro.ustc.edu.cn/Fortran/ZJDing/`（丁泽军，2001）是 **Microsoft Word 10 直接另存 HTML**：`<body>` 里只有一个 `div.Section1`，全靠 `<p>` 内联 `style` 区分层级（**没有 h1-h6**）。五条必踩：
+1. **层级判定只能看 `font-size` + 颜色**：节标题 `font-size:22pt`（与章标题同尺寸，但章标题文本以「第N章」开头 → 据此区分，节标题=文档名，正文里直接丢）；二级 `16pt`；`a) b) c)` 小节标题 = `color:red` + 文本 `^[a-z]\)`。
+2. **`isinstance(bs4.NavigableString)` 会把 `bs4.Comment` 一起收进去** → Word 的 `<!--[if gte vml 1]><v:shape …><![endif]-->` 条件注释**整段 VML 字符串漏进正文**（渲染出一堆 `v:shape/v:textbox`）。必须先 `if isinstance(c, bs4.Comment): continue`。
+3. **示例代码是外链不是内嵌**：正文只有 `[<a href="example/e_121_01.f">e_121_01.f</a>]`，源码在 `example/*.f|f90`（**GBK（部分 UTF-8）**，需 `gb18030` 兜底解码）→ 必须**逐文件抓下来就地内联成代码块**（否则读者点开全是死链）；同一示例被多次引用时去重。
+4. **公式/流程图全是图片**（MathType `Equation.3` OLE → GIF、Visio → VML/JPG）；**项目符号是 12×12 的 GIF**（每页重复几十次）→ 按 `width/height>16` 当正文图、否则丢掉，否则每页混入一堆碎图。
+5. **多级目录（章节子目录）下图片引用必须写 `../images/xxx`**：`yuque_rewrite_images.py` 的 `resolve()` 是**相对当前 md 所在目录**求 `normpath` 的——老书若把 md 放进「第N章 …/」子目录、图统一放 clean 根的 `images/`，就写 `../images/…`（本次首版写 `images/…` → 149 处全报「本地缺失」）。
+- **顺带**：正文里 `书签 span`（`mso-bookmark`）是空的，不重复；上下标 `<sup>/<sub>` 用 `^{…}`/`_{…}` 标记；`mso-list` 段落一律当列表项（**先于** margin 判代码，否则缩进列表被误判成代码块）；橙色 `#FF9900/#FF6600` 既是语法模板（→代码）也是成段中文「注意」（长且以「。」收尾 → 正文）。
+- **本例实测**：7 章目录 + 20 节文档 + 00-说明 = **28 节点**；71 个示例 .f/.f90 全内联、139 图（149 处引用）传 CDN；toc-md 28 行 PUT 0.6s、结构核对 PASS、0 失败；六查全绿（TOC 28==本地 28、对账 0 错位、幽灵 0 docs21==TOC DOC21、word_count 21/21>0、回读 21/21 零异常）；根级 00-说明 落末位 → 1 发 prependNode 归位最前。库 **85148654**（slug `fortran-zjding-20261030`）。⚠️ move-stack 文章收集 36149506 返 `200 {}`（服务端回归，连续多日）→ 挂账。脚本 `examples/fortran-zjding/build.py`（依赖 bs4 + html5lib）。
