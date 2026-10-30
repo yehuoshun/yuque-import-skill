@@ -1236,5 +1236,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/java-golang-guide-20261031",
   "imported_at": "2026-10-31T04:43:00+0800",
   "note": "fpb52 #110《Java程序员的Golang入门指南》(CSDN dc_726 article 46565241)：(上)篇。**CSDN 现带 JS WAF 安全验证**(HTTP 521+26KB 挑战页)：本机直连/m.blog.csdn.net/cookie jar/phoenix API/r.jina.ai 全失败；re-harness runner 出口同样 521。→ 正文取 Wayback 快照(20250511150824, /web/2id_/ 逐次 gzip 解压)。**(下)篇 46745947 无任何 Wayback 快照(CDX=[])** → 只收(上)。(下)的 id/标题从作者专栏页 category_5598457.html 的 Wayback 快照里挖出(标题 oracle)。口径=网站(文章收集 stack 36149506)；正文 div#content_views 按 h2 拆：00-说明 + 1.序言 + 2.你好世界 + 3.语法基础 = 4 节点无图。六查全绿(word_count 4/4>0 min 98)。脚本 examples/csdn-java-golang/(build.py+fetch.py)。⚠️ move-stack 36149506 返 200 {} 挂账。**残缺度：(下)未收**。"
+ },
+ "https://github.com/MnO2/learnyouahaskell-zh": {
+  "commit": "8247441",
+  "book_id": 85155144,
+  "book_url": "https://www.yuque.com/yehuoshun/learnyouahaskell-zh-8247441",
+  "imported_at": "2026-10-31T04:51:00+0800",
+  "note": "fpb52 #115《HASKELL 趣學指南》(MnO2/learnyouahaskell-zh @ 8247441)：站点 learnyouahaskell.mno2.org 是繁中版 → 吃源仓库 zh-tw/ 的 md(站点即此繁中版)。一章一篇 14 章+FAQ，NN- 前缀；每章首 H1 剥；站内 .md/.html 链接转纯文本。图全在 .gitbook/assets/(引用 ../../.gitbook/assets/x%20%281%29.png，URL 编码)→unquote 解码+**净化文件名**(空格→_、去括号)后本地化。**新坑**：带空格/括号文件名会让 rewrite_images 的 split(None,1) 截断→本地缺失(115 图)。resource-1/resource.md 只 12B 空壳不收。16 节点(0目录/16文档)115 图 CDN。六查全绿(word_count 16/16>0 min 231、回读 0 异常、根序正确)。脚本 examples/learnyouahaskell-zh/build.py。⚠️ move-stack 57018723 返 200 {} 挂账。"
  }
 }
