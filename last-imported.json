@@ -1208,5 +1208,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/the-little-go-book-62ff35a",
   "imported_at": "2026-10-31T04:20:00+0800",
   "note": "fpb52 #113《The Little Go Book 繁體中文翻譯版》(kevingo/the-little-go-book @ 62ff35a)：GitBook 源仓，发布面=SUMMARY 收录 10 篇(about/簡介/入門/ch1-6/結論)；一章一篇 NN- 前缀免归位；00-說明=README 去掉首 H1 + 「# 目錄」段；每篇首 H1==标题剥掉。无子目录无图。11 节点(00-說明+01..10)。六查全绿：TOC 11==本地、错位 0、幽灵 0 docs11==TOC DOC11、word_count 11/11>0(min 112)、回读 0 异常、根序正确。脚本 examples/the-little-go-book-tw/build.py。⚠️ move-stack 57018723 返 200 {} 挂账。"
+ },
+ "https://github.com/AlloyTeam/CodeGuide": {
+  "commit": "2c2864b",
+  "book_id": 85155128,
+  "book_url": "https://www.yuque.com/yehuoshun/codeguide-2c2864b",
+  "imported_at": "2026-10-31T04:28:00+0800",
+  "note": "fpb52 #117《前端代码规范》(AlloyTeam/CodeGuide @ 2c2864b, 默认分支=gh-pages)：队列给的是站点 alloyteam.github.io/CodeGuide/ → 换源吃源仓库(gh-pages)。源=Jekyll 单页站，index.html 拼 _includes/*.html 分片，代码样例再 {% include css/x.css %}。做法：写 Jekyll include 递归展开器 + {% highlight lang %}→<pre data-lang> 围栏 → HTML→md；按大区拆 7 篇(00-说明/01-最佳原则/02-命名规则/03-HTML/04-CSS,SCSS/05-JavaScript/06-检查工具)。剥各大区首行重复的 ## 区域名、其余规则标题降一级。无正文图(images/*.png 只被 CSS 引用)。七节点六查全绿：TOC 7==本地、错位 0、幽灵 0 docs7==TOC DOC7、word_count 7/7>0(min 59)、回读 0 异常、根序正确。脚本 examples/codeguide/build.py。⚠️ move-stack 57018723 返 200 {} 挂账。"
  }
 }
