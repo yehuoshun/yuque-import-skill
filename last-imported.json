@@ -1012,5 +1012,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/cmake-practice-20261030",
   "imported_at": "2026-10-30T10:40:00+0800",
   "note": "网站口径（PDF 书）。《Cmake 实践》Cjacker 著 2007-07，原站 sewm.pku.edu.cn 已死，Wayback 快照经 re-harness fetch-files 出口抓取 47 页 PDF；双轨=解析正文 10 章 11 节点（00-PDF原件+01前言+02~10章）+ PDF 原件附件；无书签无页眉页脚，16pt=章/白名单节标题/mono 20pt 或 14pt 网格=代码块；六查全绿。move-stack 挂账（服务端回归）"
+ },
+ "https://zh-google-styleguide.readthedocs.io/en/latest/google-cpp-styleguide/": {
+  "commit": "",
+  "book_id": 85147043,
+  "book_url": "https://www.yuque.com/yehuoshun/google-cpp-styleguide-20261030",
+  "imported_at": "2026-10-30T11:00:00+0800",
+  "note": "网站口径（Sphinx 站）。Google C++ Style Guide 中文版，readthedocs Sphinx 源 _sources/google-cpp-styleguide/*.rst.txt 直取（12 篇：扉页+1~11章）；docutils html5 中间层转 md；147 代码块零丢失；六查全绿。move-stack 挂账（服务端回归）"
  }
 }

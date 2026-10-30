@@ -334,3 +334,9 @@
 7. **章节页只有子链接** → 不建 `00-导读`，只建 TITLE；无子节的章（前言/致谢/文献）落根级文档。
 8. 极短页（「参见第 17 章。」）是**上游真短**，回读一致即可，别补。
 - **本例实测**：387 节点（20 目录 / 367 文档 = 364 问答 + 前言/感谢/文献），1 张公式图传 CDN；六查全绿（TOC 387==本地 387、路径唯一、对账 0、幽灵 0 docs367==TOC DOC367、367 篇 word_count 全 >0 共 58,152 词、367 篇回读 0 差）；库 **85036448**（slug `c-faq-chn-20261028`）。脚本 `examples/c-faq-latex2html/{fetch,converter,build}.py`。
+
+**坑 80（Sphinx / readthedocs RST 站：`_sources/*.rst.txt` 直取，docutils html5 中间层的三个 `<p>`/span 陷阱，2026-10-30 `zh-google-styleguide` 《Google C++ 风格指南》实战）**：readthedocs 站不爬 HTML —— `GET /en/latest/_sources/<project>/<page>.rst.txt` 直接拿 Sphinx 源（200），页面清单从 index.html 的 href 取。转换走 `scripts/yuque_rst_convert.py`，但该脚本对这类站有 3 个必踩的坑（`examples/sphinx-rst-site/` 里以 monkey-patch 修掉，可直接复用）：
+1. **`BLOCK_RE` 的 `(p)` 会匹配 `<pre` 前缀**（坑 9 变体，本次首害）：`<(h[1-6]|pre|p|li|dt|dd|table|blockquote)([^>]*)>` 里 `p` 先于 `pre` 尝试，`<pre class=...>` 被 `<p` + `re class=...>` 匹配 → 非贪心 `(.*?)</p>` 跨界吞掉中间全部内容（症状：代码块被压成一行行内代码 + 与后续正文粘连，147 块只出 142）。**修法：给 tag 组加 `\b`**（`<p\b` 不匹 `pr`）。同理任何 `<p|ul|ol|pre>` 组合的自写抽块正则都要加 `\b`。
+2. **提示框 admonition**：① 多行引用块若由块间隙的 `inline()` 回填，会被压成一行（`> **Tip**： > 内容`）→ 用占位符把已转好的引用块摘出、扫完回填；② **嵌套提示框**（tip 里套 warning）用非贪心 `(.*?)</aside>` 会在内层闭合处提前截断 → 改用**深度计数**找配对闭合。
+3. **docutils 新版行内字面量是 `<span class="docutils literal">` 而非 `<tt>`**：原 `inline()` 只认 `<(code|tt|cite|kbd)>` → 所有 `` `code` `` **丢反引号**；且可能**拆多段**（`` ``std::shared_ptr<const Foo>`` `` → `<span class="docutils literal"><span class="pre">std::shared_ptr&lt;const</span> Foo&gt;</span>`，内层 span 只包前半）→ ① 深度计数配对 span 整段转反引号；② **不要提前 unescape**（否则 `<`/`>` 被随后「剥标签」正则当 HTML 吞掉，`<<` + 后续 `<span>` 合成假标签丢一大段）。
+- **本例实测**：12 节点（0 目录 / 12 文档全平铺 = 00-扉页 + 01-头文件~11-结束语）；剥首个 H1（= 章标题）；147 个 `.. code-block:: c++` 全数落地、**980 代码行零缺失**、CJK 差 35（= 被剥章标题字数）、六查全绿 + 12 篇逐篇回读 0 差；库 **85147043**（slug `google-cpp-styleguide-20261030`）；脚本 `examples/sphinx-rst-site/build_cpp_styleguide.py`。
