@@ -483,3 +483,11 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
 5. **链接清理**：`/zh-hans/lessons/...`（站内，语雀死链）+ `#锚点` → 纯文字；`//github.com/...`（协议相对）→ 补 `https:`。
 6. **残留 Liquid**：正文里 `{{ site.erlang.OTP }}` 之类是站点模板占位符，**站点自身也没渲染**（原样显示）→ 照抄保留，别自作主张替换。
 - **本例实测**：8 TITLE + 48 DOC = **56 节点**；toc-md 56 行 2262B PUT 1.2s、结构核对 PASS、0 失败；根级 `00-说明` 落 TITLE 之后 → 一发 prependNode 归位；六查全绿（TOC 56==本地 56、全路径唯一、对账 0 错位、幽灵 0 docs48==TOC DOC48、word_count 48/48>0 最小 110、回读 48/48 零异常、7 图 CDN）。库 **85147606**（slug `elixir-school-zh-4e5bea2`）。⚠️ move-stack 开源项目 57018723 返 `200 {}`（服务端回归）→ 挂账。脚本 `examples/elixir-school/build.py`。
+
+**坑 84（老 GitBook 扁平编号章 + 全文 H1 标题 + 缩进 TOC 列表：标题取 H1、标题整体降级、列表块 dedent 保嵌套，2026-10-30 `Ljzn/ElixrGettingStartedChinese`《Elixir Getting Started 中文翻译》实战）**：仓库扁平 22 个 `N_xxx.markdown` + `SUMMARY.md`（英文标题）+ `book.json`/`cool.ex`/`HOW_TO_BUIlD.md`（脚手架）。要点：
+
+1. **标题取各章首个 H1，不取 SUMMARY**：SUMMARY 是英文（`Introduction`/`Basic types`），正文首个 H1 是中文（`#介绍`/`#基本类型`）→ 以 H1 为准（同坑 62）。注意 H1 常写成 `#介绍`（**`#` 后无空格**）→ 正则 `^#\s*(\S.*)$`。
+2. **全文用 H1 当所有标题**（每章 `#x` 多个，个别章还有 `##`）→ 首 H1 换成文档标题后，**其余标题整体降一级**（`#`→`##`、`##`→`###`），否则首 H1 与正文 H1 平级、层级乱。
+3. **章首「本章内容」TOC 是缩进列表**（2 空格起，子项 4 空格）→ 4 空格缩进会被当代码块，且要保留真实嵌套 → **按每个连续列表块的最小缩进 dedent**（16/18/20 有真二层嵌套，`min` 归零后成 `0/2` 正确嵌套），别一刀切去全部缩进。判定「是不是代码块」时先跟围栏 + 排除列表项。
+4. 链接全是外链 http(s)、无图 → 不用改写图/内链。
+- **本例实测**：0 目录 + 23 DOC（22 章 + 00-说明）= **23 节点**；toc-md 23 行 975B PUT 0.7s、结构核对 PASS、0 失败；六查全绿（TOC 23==本地 23、全路径唯一、对账 0 错位、幽灵 0 docs23==TOC DOC23、word_count 23/23>0 最小 91、回读 23/23 零异常）。库 **85147655**（slug `elixir-getting-started-zh-1f517ec`）。⚠️ move-stack 开源项目 57018723 返 `200 {}`（服务端回归）→ 挂账。脚本 `examples/elixir-getting-started-zh/build.py`。

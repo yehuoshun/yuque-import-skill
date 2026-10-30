@@ -1061,5 +1061,12 @@
     "book_url": "https://www.yuque.com/yehuoshun/elixir-school-zh-4e5bea2",
     "imported_at": "2026-10-30T11:42:00+0800",
     "note": "开源项目口径。Elixir School 中文课程（站点 elixirschool.com/zh-hans 由本仓库渲染）→ 吃仓库 md（lessons/zh-hans/*.md）而非站点 HTML。发布面/顺序 = 站点侧栏 8 分区 47 篇（Basics 15/Intermediate 5/Advanced 8/Testing 4/Data Processing 1/Ecto 4/Storage 2/Miscellaneous 8）；仓库里的 misc/distillery.md 站点未发布且页面 500，账号未收。frontmatter %{version,title,excerpt} → title 作文档名、excerpt 作提示块；4 空格缩进代码块 → 围栏（仅当首行非缩进列表项，否则是嵌套列表）；7 图 → CDN（../images 重写后删目录）；/zh-hans/lessons 内链 + #锚点 → 纯文字；//host → https://。56 节点（8 TITLE/48 DOC），toc-md 一次 PUT PASS，根级 00-说明 一发 prependNode 归位。六查全绿（TOC 56==本地 56、全路径唯一、对账 0 错位、幽灵 0 docs48==TOC DOC48、word_count 48/48>0 最小 110、回读 48/48 零异常）。move-stack 开源项目 57018723 返 {}（服务端回归）挂账。"
+  },
+  "https://github.com/Ljzn/ElixrGettingStartedChinese": {
+    "commit": "1f517ec",
+    "book_id": 85147655,
+    "book_url": "https://www.yuque.com/yehuoshun/elixir-getting-started-zh-1f517ec",
+    "imported_at": "2026-10-30T11:45:00+0800",
+    "note": "开源项目口径。Elixir 官网入门教程中译（Ljzn/ElixrGettingStartedChinese，老 GitBook：SUMMARY.md + 扁平 22 章 N_*.markdown + book.json/cool.ex/HOW_TO_BUIlD 脚手架不入库）。作者声明可随意使用。标题取各章首个 H1（中文，SUMMARY 是英文以 H1 为准）；正文其余标题整体降一级（#→##，避免与既有 ## 撞级）；各章顶部「本章内容」缩进列表按列表块最小缩进 dedent（保留 16/18/20 的真实二层嵌套）；链接全为外链 http(s) 无需改写；无图。23 节点（0 目录/23 DOC），toc-md PUT PASS，六查全绿（TOC 23==本地 23、全路径唯一、对账 0 错位、幽灵 0 docs23==TOC DOC23、word_count 23/23>0 最小 91、回读 23/23 零异常）。move-stack 开源项目 57018723 返 {}（服务端回归）挂账。"
   }
 }
