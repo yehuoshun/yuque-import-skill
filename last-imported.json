@@ -1166,5 +1166,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/go-in-action-notes-20261031",
   "imported_at": "2026-10-31T03:03:21+0800",
   "note": "fpb52 #105《Go语言实战笔记》：仓库 README 只是索引（3 系列 41 条外链），正文在作者博客 flysnow.org（新 Astro 主题，div.post-content 容器）。Gin 系列 6 篇 README 给的是微信公众号链（mp.weixin 返回「环境异常」反爬页）→ 换官网同系列同序 6 页（H1 逐条比对一致）。口径：网站口径（文章收集），库名带日期。45 节点（3 TITLE / 42 DOC）。剔页尾「本文为原创文章/欢迎扫码关注公众号」+ 二维码图 + 「精彩文章推荐」导航尾块。六查全绿：TOC 45==本地、路径唯一、reconcile 0 错位、幽灵 0（docs 42==TOC DOC 42）、word_count 42/42>0（min 362）、回读 42/42 零异常（2 图 CDN）。move-stack 36149506 仍返 {}（服务端回归）→ 挂账。"
+ },
+ "https://github.com/Go-zh/tour": {
+  "commit": "4a8e183",
+  "book_id": 85155047,
+  "book_url": "https://www.yuque.com/yehuoshun/tour-go-zh-4a8e183",
+  "imported_at": "2026-10-31T03:08:51+0800",
+  "note": "fpb52 #106《Go 指南》（A Tour of Go 中文版）：书单原链是 tour.go-zh.org/list 的 Wayback 快照，但源站本机 502、web.archive.org 直连 000（被墙）→ 吃源仓库 Go-zh/tour（站点由 gotour 渲染 .article，仓库即唯一真源）。6 模块 98 节 = 105 节点（6 TITLE / 99 DOC）。转换：* 节标题拆篇、.play xxx.go 内联展平成 ```go、`.image` 传 CDN、`#appengine:` 前缀行剔（AppEngine 专用注释，线上非 AppEngine 视图不显示）、`[[url][text]]` Org 链接→Markdown / javascript: 伪协议→纯文本、`// +build OMIT` 构建标记剔。同父重名（练习：等价二叉查找树 ×2）第二个加（续）。六查全绿：TOC 105==本地、reconcile 0 错位、幽灵 0（docs 99==TOC DOC 99）、word_count 99/99>0（min 39）、回读 99/99 零异常（1 图 CDN）。根级 00-说明 prependNode 归位。move-stack 57018723 仍返 {} → 挂账。"
  }
 }
