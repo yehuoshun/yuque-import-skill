@@ -1264,5 +1264,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/bootstrap-zh-71e66c0",
   "imported_at": "2026-10-31T05:13:00+0800",
   "note": "fpb52 #120《Bootstrap 4 繁體中文手冊》(hexschool/bootstrap_zh @ 71e66c0, 分支 zh-tw-dev)：站点 bootstrap.hexschool.com(Jekyll v3.8.5)。默认分支 gh-pages 只有渲染后 HTML；**md 源在 zh-tw-dev 分支的 site/docs/4.2/**。自写极简 Liquid 引擎(liquid.py)展开 include/capture/highlight/for/if：capture+include example.html→```html(丢预览)；include callout.html→> **Note/警告/危險**；callout-*.md 递归；for 读 site/_data/*.yml；icons/placeholder.svg→<img src=... alt=...>。结构按 site/_data/nav.yml 分组成 TITLE(中文组名)，篇名取 front matter title，组内序按 nav。后处理剥 Kramdown {#anchor}/{:[..]}/((url))双括号/bd-example 预览包裹；图 /docs/4.2/assets/*→../assets/*(子目录文档)+本地化传 CDN。**坑**：①子目录文档的图必须写 ../assets/(rewrite 按 md 目录解析)②根级 TITLE 按 Unicode 排→收尾 prependNode/sibling 5 发归位 ③--dry 报的 84 处缺失全是代码样例 <img src=\"...\"> 占位符。79 节点(7目录/72文档)3图CDN(7处)。六查全绿(word_count 72/72>0、错位 0、幽灵 0 docs72==TOC DOC72、回读 0 异常、根序归位)。脚本 examples/bootstrap4-zh/(build.py+liquid.py)。⚠️ move-stack 57018723 返 200 {} 挂账。"
+ },
+ "http://gorevel.cn/docs/manual/": {
+  "commit": null,
+  "book_id": 85155165,
+  "book_url": "https://www.yuque.com/yehuoshun/gorevel-manual-20261031",
+  "imported_at": "2026-10-31T05:36:00+0800",
+  "note": "fpb52 #112《Revel 框架手册》(gorevel.cn/docs/manual)：gorevel.cn DNS 已死**且域名被抢注成停放页**(2025 快照是 AV 广告页)→走 **Wayback 2019-06-10 快照**。页面清单=CDX url=gorevel.cn/docs/manual*(24 页)；用 web/<ts>id_/ 取原始页。**坑**：runner fetch 15 分钟 job 上限→24 页一次抓会被 cancel(archive.org 偶发 90s 超时)→拆 2~3 小批(每批~12 页)。正文容器 div.span10(剥 div.page-header 的 h1)；pre>code(class=lang-* 取语言)；ul；div.alert→引用块。分组取自页面 leftnav：概要/控制器/模块/操作/参考(5 TITLE,NN- 前缀)；00-說明=index(介绍)。收尾 prependNode/sibling 把 00-說明 挪首个 TITLE 前。29 节点(5目录/24文档)无图。六查全绿(word_count 24/24>0 min 89、错位 0、幽灵 0 docs24==TOC DOC24、回读 0 异常、根序归位)。脚本 examples/gorevel-manual/build.py。⚠️ move-stack 文章收集 36149506 返 200 {} 挂账。"
  }
 }
