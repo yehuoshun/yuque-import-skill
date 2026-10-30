@@ -341,7 +341,7 @@
 3. **docutils 新版行内字面量是 `<span class="docutils literal">` 而非 `<tt>`**：原 `inline()` 只认 `<(code|tt|cite|kbd)>` → 所有 `` `code` `` **丢反引号**；且可能**拆多段**（`` ``std::shared_ptr<const Foo>`` `` → `<span class="docutils literal"><span class="pre">std::shared_ptr&lt;const</span> Foo&gt;</span>`，内层 span 只包前半）→ ① 深度计数配对 span 整段转反引号；② **不要提前 unescape**（否则 `<`/`>` 被随后「剥标签」正则当 HTML 吞掉，`<<` + 后续 `<span>` 合成假标签丢一大段）。
 - **本例实测**：12 节点（0 目录 / 12 文档全平铺 = 00-扉页 + 01-头文件~11-结束语）；剥首个 H1（= 章标题）；147 个 `.. code-block:: c++` 全数落地、**980 代码行零缺失**、CJK 差 35（= 被剥章标题字数）、六查全绿 + 12 篇逐篇回读 0 差；库 **85147043**（slug `google-cpp-styleguide-20261030`）；脚本 `examples/sphinx-rst-site/build_cpp_styleguide.py`。
 
-**坑 83（单页整站：「h2 主节 + `b.header` 子节」两层切分；代码块=coffee/js 成对，2026-10-30 `coffee-script.org`《CoffeeScript 中文》实战）**：`coffee-script.org` = coffeescript.org 的中文译本，**整个站就是一张 index 页**（162KB HTML，页脚 2014 / 版本 1.7.1）。要点：
+**坑 85（单页整站：「h2 主节 + `b.header` 子节」两层切分；代码块=coffee/js 成对，2026-10-30 `coffee-script.org`《CoffeeScript 中文》实战）**：`coffee-script.org` = coffeescript.org 的中文译本，**整个站就是一张 index 页**（162KB HTML，页脚 2014 / 版本 1.7.1）。要点：
 
 1. **正文容器 = `div.container`**：`body` 下依次 `div#fadeout` / `div#flybar`（吸顶导航）/ `div.container`；正文从 `div.container` 里**第一个 `<h2>`** 开始，之前的 logo + REPL 编辑器（`textarea#repl_source`）全跳。
 2. **两层切分**：主节 = `<h2><span class="bookmark" id="…"></span> 标题</h2>`（14 节）；「语言手册」一节内部用 `<b class="header">小节名</b>`（在 `<p>` 里，**不是** h3）再拆 19 小节 → 该 TITLE 下 `05.01…05.19` + `00-本章导读`（导读=首个 b.header 之前的段落）。`<span class="bookmark">` 是锚点占位（空元素），渲染时丢弃。
@@ -351,7 +351,7 @@
 6. **`b`/`i`/`tt` 转 markdown**：`<b>`→`**`、`<i>`→`*`、`<tt>`/`<code>`→反引号；`<br>`→换行；`<span class=…>` 只取文字（语法高亮的 span 全剥样式）。
 - **本例实测**：34 文档 + 1 TITLE（05-语言手册）= **35 节点**；toc-md 35 行 1723B PUT 0.8s、结构核对 PASS、0 失败；六查全绿（TOC 35==本地 35、全路径唯一、对账 0 错位、幽灵 0 docs34==TOC DOC34、word_count 34/34>0 最小 38、回读 34/34 零异常）；**部分章节站点未汉化**（Books/Screencasts/Examples/Resources 保留英文原文）。库 **85147459**（slug `coffee-script-org-20261030`）。⚠️ move-stack 文章收集 36149506 返 `200 {}`（服务端回归）→ 挂账。脚本 `examples/coffee-script-org/build.py`。
 
-**坑 84（MediaWiki 单页 wiki + 原站已死走 Wayback：`div.mw-parser-output` 按 h2 拆、`pre.prettyprint lang-x` 取语言，2026-10-30 `dart.lidian.info/wiki/Language_Tour`《Dart 语言导览》实战）**：站点是 **MediaWiki 镜像**（`/w/index.php`、`/wiki/<Page>`、Vector 皮肤），整篇「语言导览」就是**一个 wiki 页面**（111KB HTML / 35KB 正文）。要点：
+**坑 86（MediaWiki 单页 wiki + 原站已死走 Wayback：`div.mw-parser-output` 按 h2 拆、`pre.prettyprint lang-x` 取语言，2026-10-30 `dart.lidian.info/wiki/Language_Tour`《Dart 语言导览》实战）**：站点是 **MediaWiki 镜像**（`/w/index.php`、`/wiki/<Page>`、Vector 皮肤），整篇「语言导览」就是**一个 wiki 页面**（111KB HTML / 35KB 正文）。要点：
 
 1. **入口**：原站 `dart.lidian.info` DNS 已不可解析（死站）→ 走书单给的 Wayback 快照；本机 web.archive.org 被墙 → **re-harness `fetch-files.yml` 出口抓**（Runner 能连 wayback）。拿 `…/web/<ts>id_/<原 URL>` 的 **`id_` 原始版**（无 wayback 工具条）。
 2. **正文容器 = `div.mw-parser-output`**（在 `div#mw-content-text` 内）；**不是** `div#bodyContent`（那是旧 Monobook，同坑 60）。皮肤是 Vector。

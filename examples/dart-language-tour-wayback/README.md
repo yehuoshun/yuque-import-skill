@@ -4,7 +4,7 @@
 - 库：85147555 / slug `dart-language-tour-20261030` / https://www.yuque.com/yehuoshun/dart-language-tour-20261030
 - 结果：15 文档（00-说明 + 14 节），六查全绿。
 
-## 复用要点（详见 references/website-crawl-to-yuque.md 坑 84）
+## 复用要点（详见 references/website-crawl-to-yuque.md 坑 86）
 
 1. 死站 → Wayback `…/web/<ts>id_/<url>`；本机被墙时用 re-harness `fetch-files.yml` 出口抓。
 2. 正文容器 `div.mw-parser-output`（Vector 皮肤；别用 `#bodyContent`）。

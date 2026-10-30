@@ -4,7 +4,7 @@
 - 库：85147459 / slug `coffee-script-org-20261030` / https://www.yuque.com/yehuoshun/coffee-script-org-20261030
 - 结果：34 文档 + 1 TITLE = 35 节点，六查全绿。
 
-## 复用要点（详见 references/website-crawl-to-yuque.md 坑 83）
+## 复用要点（详见 references/website-crawl-to-yuque.md 坑 85）
 
 1. 正文容器 `div.container`，从**第一个 `<h2>`** 起；跳过 flybar 导航 + REPL 编辑器。
 2. 两层拆：主节 `<h2>`；「语言手册」内部 `<b class="header">` 子节（在 `<p>` 里，非 h3）→ `NN.MM` 子文档 + `00-本章导读`。
