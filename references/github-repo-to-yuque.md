@@ -451,3 +451,13 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
 7. **`README.md`（关于本书/授权/CC BY-SA/译者）不单独建节点**，内容并进手写的 `00-说明.md`；`build.py` 是作者产物，不入库。
 8. **根级 DOC 归位要一次捋两个**：本书根级有 `00-说明` + `00-CGDB简介` 两篇，toc-md 后都在 TITLE 之后 → 按目标序**逆序 prependNode 到「当前首位」前**（先 00-CGDB简介、再 00-说明），一发一验 `prev_uuid` 链，别信扁平数组序（坑 75）。
 - **本例实测**：@ `114e1ea`（2015-07-03 最后更）；**32 节点**（7 TITLE / 25 DOC），零图零分片，toc-md 32 行 1519B PUT 0.6s、结构核对 PASS、0 失败；六查全绿（TOC 32==本地 32、对账 0 错位、幽灵 0 docs25==TOC DOC25、25 篇 word_count 全 >0 最小 51、25 篇回读 0 异常）；正文 CJK 7,569 == 输出 7,569（零丢失）；库 **85115568**（slug `cgdb-manual-zh-114e1ea`）。⚠️ move-stack 开源项目 57018723 仍 `200 {}`（服务端回归）→ 挂账。脚本 `tmp/fpb080/build.py`。
+
+**坑 81（扁平多章仓 + 配图写「自己仓库的 GitHub raw 绝对外链」，2026-10-30 `anjuke/zguide-cn`《ZMQ 指南》实战）**：仓库只有 `README.md`（目录）+ `chapter1~5.md`（正文）+ `chapterN.txt`（gitdown 源）+ `images/`（69 张）+ `bin/`（gitdown 工具，脚手架）。要点：
+
+1. **正文里每章文件都含「重复书首」**：`chapter1.md` 开头是整本书的 `# ZMQ 指南` + 作者 + 一大段致谢 + 授权声明（chapter2~5 没有）→ 剥离，改由手写 `00-说明.md` 承载书首，否则第一章会挂一整段致谢、其余章没有，别扭。判据：按「第一个 `## ` 行」切，前面的都是书首。
+2. **⚠️ 配图写的是「本仓库自己的 raw 绝对外链」**：`![1](https://github.com/anjuke/zguide-cn/raw/master/images/chapter1_1.png)`——**`yuque_rewrite_images.py` 对外链（http/https）一律跳过**，不先改写回本地相对路径 `../images/…` 就会**静默留外链**（站点在时能显示、raw 链失效即裂图，还绕过 CDN）。做法：build 时按 raw 前缀 `f"https://github.com/<owner>/<repo>/raw/<branch>/"` 直接 `str.replace` 回导入根相对路径，再交标准 rewrite 脚本传 CDN。**「仓库里明明有图却一条都不传」先查这条**（同族于坑 30/36 的「外链图」）。
+3. **拆节跟踪代码围栏**：章节正文里大量 `#` 注释行（`#   1 worker`），按 `^###\s` 切小节时必须先跟围栏，否则把代码行当标题切碎（同坑 75）。
+4. **章标题取 README 目录**：源 `chapter4.md` 的 H2 漏了「第四章」前缀（只有「可靠的请求-应答模式」）→ 章目录名以 README 列表为准。
+5. **半角 `/` 洗全角**：小节标题 `异步C/S结构` → `异步C／S结构`（文件名/目录树安全）。
+6. **根级 `00-说明.md` 归位**：toc-md 后落 5 个 TITLE 之后 → 一发 `prependNode/action_mode=sibling`。
+- **本例实测**：@ `91d94b7`（master）；**78 节点**（5 TITLE / 73 DOC），69 图全 CDN（0 缺失，抽 3 张 200）；toc-md 目录树 78 行 4311B **PUT 0.9s**、结构核对 PASS、0 失败；六查全绿（TOC 78==本地 78、全路径唯一 True、对账 0 错位、幽灵 0 docs73==TOC DOC73、73 篇 word_count 全 >0、73 篇回读 0 异常、无分片）；库 **85147220**（slug `zguide-cn-91d94b7`）。⚠️ move-stack 开源项目 57018723 返 `200 {}`（服务端回归）→ 挂账。脚本 `examples/zguide-cn/build.py`。
