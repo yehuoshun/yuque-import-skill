@@ -473,3 +473,13 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
 7. **`00-说明.md` 里别重复 H1**：原文首行 `# CoffeeScript 风格指南` 已在说明里手写过一次，再拼 body 会双标题 → 拼 body 前过滤 `^# ` 行。
 - **本例实测**：@ `7b7fd79`（master）；**15 节点**（0 目录 / 15 DOC），零图零分片；toc-md 15 行 567B PUT 0.6s、结构核对 PASS、0 失败；六查全绿（TOC 15==本地 15、全路径唯一 True、对账 0 错位、幽灵 0 docs15==TOC DOC15、15 篇 word_count 全 >0、15 篇回读 0 异常）；库 **85147316**（slug `coffeescript-style-guide-7b7fd79`）。⚠️ move-stack 开源项目 57018723 返 `200 {}`（服务端回归）→ 挂账。脚本 `examples/coffeescript-style-guide/build.py`。
 - **同书第二译本变体**（`geekplux/coffeescript-style-guide` @ `b87e527`，库 85147386，2026-10-30）：该仓把**中文放主 `README.md`**（另一仓 elrrrrrrr 放 `README-ZH.md`）。除译文用词不同，另两点差异：① 首屏多一条 **codesponsor.io 赞助横幅**（`<a target='_blank'>…<img/></a>` 单行）需剔；② **H2 全唯一**（只有一个 `## 注释（Comments）`，annotations 直接叫 `## 注解（Annotations）`）→ **免重名改名**。其余坑同。脚本 `examples/coffeescript-style-guide/build_geekplux.py`。
+
+**坑 83（「站点由源仓库渲染」型课程仓：吃仓库 md、发布面按站点侧栏、frontmatter 取标题，2026-10-30 `elixirschool/elixirschool`《Elixir School 中文》实战）**：站点 https://elixirschool.com/zh-hans 是 Phoenix 应用，**内容全部来自仓库 `lessons/<lang>/<section>/<lesson>.md`** → 直接吃仓库 md，别爬站点 HTML。要点：
+
+1. **发布面 = 站点侧栏，不是仓库全量**：仓库 `lessons/zh-hans/` 有 48 篇，但站点侧栏只列 **47 篇**（`misc/distillery.md` 未发布，且该页 https://elixirschool.com/zh-hans/lessons/misc/distillery 返 **500**）→ 以站点侧栏为准，多余的不收。**顺序也取站点侧栏**（`<a href="/zh-hans/lessons/...">` 的 DOM 序），不是仓库的字典序（仓库 basics 字母序 ≠ 侧栏阅读序）。
+2. **frontmatter 是 Elixir map**：`%{ version, title, excerpt }` 后跟 `---`（**非** YAML）→ 正则抠 `title:` / `excerpt: """..."""`；title 是本地化中文标题（作文件名），excerpt 可作提示块。
+3. **缩进代码块混用**：全书 1296 个围栏 + 少量 `    `（4 空格）缩进块。转围栏时**必须排除缩进列表项**（`^ {4}([-*+]|\d+\.)\s`）——本书 benchee/mnesia 各有一处 4 空格缩进的**嵌套列表**，误当代码会把列表糊进围栏（同坑 76）。
+4. **图**：`![alt](/images/x.png)`（站点根绝对路径）→ 仓库根 `images/x.png` 有原件 → 重写为 `../images/x.png` 拷进导入根，交 rewrite 脚本传 CDN，之后**删图片目录**（硬规则 10）。本书 7 图。
+5. **链接清理**：`/zh-hans/lessons/...`（站内，语雀死链）+ `#锚点` → 纯文字；`//github.com/...`（协议相对）→ 补 `https:`。
+6. **残留 Liquid**：正文里 `{{ site.erlang.OTP }}` 之类是站点模板占位符，**站点自身也没渲染**（原样显示）→ 照抄保留，别自作主张替换。
+- **本例实测**：8 TITLE + 48 DOC = **56 节点**；toc-md 56 行 2262B PUT 1.2s、结构核对 PASS、0 失败；根级 `00-说明` 落 TITLE 之后 → 一发 prependNode 归位；六查全绿（TOC 56==本地 56、全路径唯一、对账 0 错位、幽灵 0 docs48==TOC DOC48、word_count 48/48>0 最小 110、回读 48/48 零异常、7 图 CDN）。库 **85147606**（slug `elixir-school-zh-4e5bea2`）。⚠️ move-stack 开源项目 57018723 返 `200 {}`（服务端回归）→ 挂账。脚本 `examples/elixir-school/build.py`。

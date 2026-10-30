@@ -1054,5 +1054,12 @@
     "book_url": "https://www.yuque.com/yehuoshun/dart-language-tour-20261030",
     "imported_at": "2026-10-30T11:36:00+0800",
     "note": "网站口径（Wayback 快照）。Dart 中文 wiki「Dart 语言导览」（MediaWiki，dartlang.org Language Tour 中文译本）；原站 dart.lidian.info DNS 已不可解析 → 正文取 Wayback 2020-04-15 快照（web.archive.org 本机被墙，经 re-harness fetch-files.yml GitHub Actions 出口抓取）。单页 111KB HTML → div.mw-parser-output 按 h2 拆 14 篇（跳过「目录」节）+ 00-说明 = 15 文档零目录。pre.prettyprint lang-dart → ```dart 围栏；code 内文取纯文本（避免 <i>/<b> 变星号）；站内 /wiki/ 与 #锚点 链（原站已死）转纯文字；剔 mw-editsection/reference。六查全绿（TOC 15==本地 15、全路径唯一、对账 0 错位、幽灵 0 docs15==TOC DOC15、word_count 15/15>0 最小 104、回读 15/15 零异常）。move-stack 文章收集 36149506 返 {}（服务端回归）挂账。"
+  },
+  "https://github.com/elixirschool/elixirschool": {
+    "commit": "4e5bea2",
+    "book_id": 85147606,
+    "book_url": "https://www.yuque.com/yehuoshun/elixir-school-zh-4e5bea2",
+    "imported_at": "2026-10-30T11:42:00+0800",
+    "note": "开源项目口径。Elixir School 中文课程（站点 elixirschool.com/zh-hans 由本仓库渲染）→ 吃仓库 md（lessons/zh-hans/*.md）而非站点 HTML。发布面/顺序 = 站点侧栏 8 分区 47 篇（Basics 15/Intermediate 5/Advanced 8/Testing 4/Data Processing 1/Ecto 4/Storage 2/Miscellaneous 8）；仓库里的 misc/distillery.md 站点未发布且页面 500，账号未收。frontmatter %{version,title,excerpt} → title 作文档名、excerpt 作提示块；4 空格缩进代码块 → 围栏（仅当首行非缩进列表项，否则是嵌套列表）；7 图 → CDN（../images 重写后删目录）；/zh-hans/lessons 内链 + #锚点 → 纯文字；//host → https://。56 节点（8 TITLE/48 DOC），toc-md 一次 PUT PASS，根级 00-说明 一发 prependNode 归位。六查全绿（TOC 56==本地 56、全路径唯一、对账 0 错位、幽灵 0 docs48==TOC DOC48、word_count 48/48>0 最小 110、回读 48/48 零异常）。move-stack 开源项目 57018723 返 {}（服务端回归）挂账。"
   }
 }
