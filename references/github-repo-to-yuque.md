@@ -572,3 +572,15 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
 3. **根级多文档归位要「升序 prepend」**：根级 `00/01/02` 三篇在 toc-md 后会全部排到所有 TITLE 之后。`prependNode` 语义是「插到 target 之前」，**按目标顺序从前往后逐发**才对；倒序发出会把顺序写反（`[02,01,00,TITLE]`）。
 4. **仓库首页/宣传物料不进库**：`README.md`（仓库首页，含公众号二维码 table）、`preface-pdf.md`（PDF 版前言副本）、`examples/` 源码树、`book.ini`/`Makefile`/`docs/` 一律不收；`errata/README.md`（勘误表）是正文，收（根级 `02-勘误…`）。
 - **本例实测**：76 节点（7 TITLE + 69 文档）、74 图 CDN（含根级封面）、toc-md PUT 1.4s；六查全绿（TOC 76==本地、错位 0、幽灵 0 docs69==TOC DOC69、word_count 69/69>0、回读 69/69 零异常）。库 **85150011**（slug `advanced-go-programming-4447d09`）。⚠️ move-stack 57018723 三轮 `{}` → 挂账。脚本 `examples/advanced-go-programming/`。
+
+**坑 97：源仓库里的「标题-only 空壳节」——补占位说明，别落空文档**（2026-10-31 astaxie/go-best-practice《Go实战开发》实战）
+未写完的仓里，有些节文件只有 `# 标题` + 文末 `## links` 导航，**剥完导航正文只剩 1 字节**。
+- **不能直接落库**：`word_count=0` 违反验收六查第 6 条（全库 word_count>0），扫库会当异常。
+- **处置**：给占位正文 `（原书此节尚未撰写正文。）` + 一句出处注记，走 `PUT /repos/{id}/docs/{slug}` **更新已有 doc**（新建会出幽灵）。word_count 变成 >0，节位/编号都保住。判据：转换产物 `len(body.strip()) < 10` 即视为空壳（真·0 字节文件才是「不收」，同坑 94/95）。
+- 同类：本书 `preface.md` 是旧版目录清单（与正文重复）→ 不收；章标题取 `preface.md`（目录 oracle）而不是源文件 H1（H1 常缺号/错号，如 `01.3.md` 的 H1 写「3 Vgrant使用入门」）。
+
+**坑 98：根级文档要排到最后，用 `appendNode + action_mode=sibling + target_uuid=<末节点>`**（2026-10-31《Go Web 编程》实战）
+toc-md 建库后根级 DOC（`00-说明.md`、`90-参考资料.md`）会全排到所有 TITLE 之后。
+- 置**最前**：`prependNode + sibling + target_uuid=<第一个 TITLE>`（多篇按目标顺序**从后往前**逐发，坑 96 是升序语义，注意别搞反）。
+- 置**最后**（如「参考资料」「附录」要落在末尾）：`appendNode + action_mode=sibling + target_uuid=<最后一个节点>` —— **appendNode 语义 = 插到 target 之后**，实测一次到位（同 target 用 prependNode 只会插到它前面）。
+- 验收一律按 `parent_uuid` + `prev_uuid` 链重建根序（`GET /toc` 的数组顺序不代表树序，坑 75）。

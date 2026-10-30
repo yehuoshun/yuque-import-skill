@@ -1180,5 +1180,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/build-web-application-with-golang-c294b08",
   "imported_at": "2026-10-31T03:16:51+0800",
   "note": "fpb52 #107《Go Web 编程》（astaxie 谢孟军）：书单原链是 astaxie.gitbooks.io 老 GitBook 站 → 吃源仓库 zh/（GitBook 3.x 扁平仓：SUMMARY.md 两层 + NN.M.md + images/）。111 节点（14 章 TITLE / 97 DOC = 14 章头导读 + 79 节 + 90-参考资料 + 00-说明）。口径：章 NN.0.md → NN.00 章名.md 落 TITLE 内；preface.md 是旧版目录清单（与 SUMMARY 重复）不收；README 并入 00-说明（删 Donate/Community 段，其 alipay 图是断链）。89 张图 `images/x.png?raw=true` 去 raw 参数本地化 → CDN（2 处「缺失」是模板示例里的绝对路径 `/static/img/logo.png`、`views/{{.Lang}}/images/btn.png`，非本书图，原样保留）。六查全绿：TOC 111==本地、reconcile 0 错位、幽灵 0（docs 97==TOC DOC 97）、word_count 97/97>0（min 117）、回读 97/97 零异常（89 CDN 图）。**新技巧**：根级多 DOC 归位——prependNode 只能放最前，要放「最后」用 `appendNode + action_mode=sibling + target_uuid=<最后一个节点>`（实测生效），本次 00-说明置首、90-参考资料用 appendNode 置尾。move-stack 57018723 仍返 {} → 挂账。"
+ },
+ "https://github.com/astaxie/go-best-practice": {
+  "commit": "67aa405",
+  "book_id": 85155064,
+  "book_url": "https://www.yuque.com/yehuoshun/go-best-practice-67aa405",
+  "imported_at": "2026-10-31T03:20:02+0800",
+  "note": "fpb52 #108《Go实战开发》（astaxie）：仓库 ebook/zh 只有第一部分基础篇（计划 6 章实际 2 章：01 开发环境配置 6 节 / 02 开发工具配置 4 节 + 卷首 0001 + · 2 章头导读），第 3-6 章缺（残缺度写进库描述与 00-说明）。16 节点（2 TITLE / 14 DOC）。口径：标题取 preface.md（目录 oracle，源文件 H1 常缺号/错号，如 01.3 H1 是「3 Vgrant使用入门」）；章 NN.0.md → NN.00 章名.md 落 TITLE；`preface.md`（旧版目录清单）与 `src/`、构建脚本不收；README 剔捐款/交流段并入 00-说明。**新坑 85**：源仓库有「标题-only 空壳节」（02.2/02.3 只有 H1 + ## links 导航，剥完 1 字节）→ 不能直接落库（word_count=0 违反六查第 6 条），补一段「原书此节尚未撰写正文」占位（PUT 更新，非新建）后 word_count=41。六查全绿：TOC 16==本地、reconcile 0 错位、幽灵 0（docs 14==TOC DOC 14）、word_count 14/14>0、回读 14/14 零异常（4 CDN 图）。根级两 DOC 逆序 prepend 归位（00-说明 → 00-第一部分·基础篇 → 01..02）。move-stack 57018723 仍返 {} → 挂账。"
  }
 }
