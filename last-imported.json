@@ -1201,5 +1201,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/npwg-zh-50b2885",
   "imported_at": "2026-10-31T04:15:00+0800",
   "note": "fpb52 #111《Network programming with Go 中文翻译版本》(astaxie/NPWG_zh @ 50b2885)：仓库 zh/ 下是 en/zh 双语 HTML 书(XHTML+sigil sgc-* 样式)。**换源口径**：吃仓库 HTML(非站点)。只保留中文(zh/cn 类)，丢弃 en 类；一章一篇(按 index.html 章序) → 17 节点扁平(00-说明 + 01..15 章 + 90-勘误)，NN- 前缀=字典序即书序，**免归位**(实测根序已对)。**新坑**：①源 XHTML 有 `<p>` 未闭合 → html.parser 会把后续整章内容吞进最后一个 p(html5lib 才对，图表 87KB 只剩 2KB 的假象)；②章标题只在首个 h1 的 zh/cn 类里(chapter-xml/html 的 h1 无类且纯英文，须回退);③每章尾部固定 footer(Copyright/Flattr/PayPal+追踪像素 img+form)要整块剥；④class-less 的「英文标题+中文标题」相邻同级对(如 `<h2>Introduction</h2><h2>介绍</h2>`)要折叠丢英文那条。28 图 CDN(30 处引用)。六查全绿：TOC 17==本地 17、reconcile 0 错位、幽灵 0(docs 17==TOC DOC 17)、word_count 17/17>0(min 113)、回读 17/17 零异常、根序按 prev_uuid 链重建正确。脚本 examples/npwg-zh/build.py。⚠️ move-stack 57018723 返 200 {} → 挂账。"
+ },
+ "https://github.com/kevingo/the-little-go-book": {
+  "commit": "62ff35a",
+  "book_id": 85155117,
+  "book_url": "https://www.yuque.com/yehuoshun/the-little-go-book-62ff35a",
+  "imported_at": "2026-10-31T04:20:00+0800",
+  "note": "fpb52 #113《The Little Go Book 繁體中文翻譯版》(kevingo/the-little-go-book @ 62ff35a)：GitBook 源仓，发布面=SUMMARY 收录 10 篇(about/簡介/入門/ch1-6/結論)；一章一篇 NN- 前缀免归位；00-說明=README 去掉首 H1 + 「# 目錄」段；每篇首 H1==标题剥掉。无子目录无图。11 节点(00-說明+01..10)。六查全绿：TOC 11==本地、错位 0、幽灵 0 docs11==TOC DOC11、word_count 11/11>0(min 112)、回读 0 异常、根序正确。脚本 examples/the-little-go-book-tw/build.py。⚠️ move-stack 57018723 返 200 {} 挂账。"
  }
 }
