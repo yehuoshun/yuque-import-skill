@@ -1124,5 +1124,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/go-command-tutorial-9a76c06",
   "imported_at": "2026-10-30T15:02:00+0800",
   "note": "开源项目口径。源=hyper-carrot/go_command_tutorial @9a76c06（2022-11-25；作者郝林 hyper0x，原为《Go 并发编程实战》被砍掉的一章，单独放出为免费教程）。docsify 单章结构：0.0.md=标准命令详解(章导读) + 0.1~0.14 = go build/install/get/clean/doc/run/test/list/fmt/fix/vet/pprof/cgo/env 共 14 个命令。落库 17 节点=1 TITLE（第0章 标准命令详解）+ 16 文档（00-本章导读 + 14 节 + 00-说明）；4 图（images/0-1..0-4，被 0.5/0.12 引用）传 CDN。两个坑：① 节号必须零填充 0.01~0.14，否则 0.10 按字典序排到 0.9 前面；② 00-本章导读 与根级 00-说明 都会被 toc-md 排到末尾，收尾两发 prependNode 归位；图路径章目录内用 ../images/、根级说明用 images/。不收 catalog.md/_sidebar.md/SUMMARY.md（三种导航页，与语雀 TOC 重复）。toc-md 17 行/723B PUT 1.2s PASS、0 失败；六查全绿：TOC 17==本地、对账 0 错位、幽灵 0（docs 16==TOC DOC 16）、word_count 16/16>0（660~15953）、回读 16/16 零异常（4 CDN 引用==4 重写）。⚠️ move-stack 57018723 返 200 {} → 挂账。脚本 examples/go-command-tutorial/build.py。"
+ },
+ "https://github.com/Unknwon/the-way-to-go_ZH_CN": {
+  "commit": "7a54d34",
+  "book_id": 85149501,
+  "book_url": "https://www.yuque.com/yehuoshun/the-way-to-go-zh-cn-7a54d34",
+  "imported_at": "2026-10-30T15:15:00+0800",
+  "note": "开源项目口径。源=Unknwon/the-way-to-go_ZH_CN @7a54d34（2022-06-25）= Ivo Balbaert《The Way To Go》中文译本《Go 入门指南》。结构取自 eBook/directory.md（4 部分 / 21 章 / 190 节）而非文件名——章 1/2/4 没有 NN.0.md 章导读、章标题只在目录里。落库 236 节点=4 部分 TITLE + 21 章 TITLE + 211 文档（190 节 + 18 章导读 + 前言 + 16.10 讨论附文 + 说明）；35 图 CDN。处理要点：① 节号/章号零填充两位（04.05），否则 4.10 排到 4.2 前；② 部分名按 unicode 会排成 一/三/二/四（三 4E09 < 二 4E8C），导入后 prependNode 把第二部分挪到第三部分前；③ 图有 HTML 写法 <img src=\"images/x.jpg?raw=true\">（10.6 节），要把 ?raw 剥掉并转 markdown；上游缺 2 图（20.8_fig20.1.png、studygolang-qrcode.jpg）→ 正文标注「原书插图缺失」。⚠️ 事故：rm -rf clean/images 因工具层超时未执行 → 35 张图被当占位文档导入（TOC 多出 images TITLE），已逐个 DELETE docs + removeNode 清掉，并清理 progress.json 的 images/* 条目后回读才通过。toc-md 272 行 PUT 2.2s；清理后六查全绿：TOC 236==本地、对账 0 错位、幽灵 0（docs 211==TOC DOC 211）、word_count 211/211>0（31~6338）、回读 211/211 零异常（35 CDN 引用==35 重写）；00-说明/00-前言 prependNode 归位最前。⚠️ move-stack 57018723 返 200 {} → 挂账。脚本 examples/the-way-to-go-zh-cn/build.py。"
  }
 }

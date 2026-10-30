@@ -541,3 +541,11 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
 2. **章导读与根级说明都会被 toc-md 排到末尾**：`00-本章导读.md` 落在 `0.14` 之后（章内最后），`00-说明.md` 落在全库最后。收尾两发 `prependNode(action_mode=sibling)`：章导读挂到第一节前（`target_uuid=0.01`），根级说明挂到第一个 TITLE 前。
 - 图路径同坑 91：章目录内的 md 写 `../images/`，根级 `00-说明.md` 写 `images/`。
 - **本例实测**：17 节点 = 1 TITLE + 16 文档；4 图 CDN；toc-md 17 行 723B PUT 1.2s PASS、0 失败；六查全绿（TOC 17==本地、对账 0、幽灵 0 docs16==TOC DOC16、word_count 16/16>0、回读 16/16 零异常）。库 **85149418**（slug `go-command-tutorial-9a76c06`）。⚠️ move-stack 57018723 返 `200 {}` → 挂账。脚本 `examples/go-command-tutorial/build.py`。
+
+**坑 93：多部分/多章大书（21 章 211 篇）——层级取自目录页、数字零填充、以及「images 目录必须在导入前删掉」的血案**（2026-10-30 Unknwon/the-way-to-go_ZH_CN《Go 入门指南》实战）
+1. **层级别从文件名猜**：本书 `NN.0.md` 章导读只有 18 个（章 1/2/4 没有），章标题只在 `eBook/directory.md` 里；**以目录页为准**（4 部分 / 21 章 / 190 节），文件名只用来定位正文。
+2. **两级编号都要零填充**：`04.05 标题.md`。章号/节号任意一级不补齐，`4.10` 就会排到 `4.2` 前（字典序）。补救办法只能是几百发 prependNode，不划算。
+3. **部分名按 unicode 排序是陷阱**：`三(4E09) < 二(4E8C) < 四(56DB)` → toc-md 出来是「一、三、二、四」。要么目录名加 `第1部分/第2部分` 数字前缀，要么导入后 1 发 prependNode 把「第二部分」挪到「第三部分」前（**挪 TITLE 会带着整棵子树走**，所以只需 1 发）。
+4. **图片有三种写法**：markdown `![]()`、HTML `<img src="images/x.jpg?raw=true" style="...">`（10.6 节）、以及**上游本身就缺文件**的引用（本书 2 处）→ 前者转 markdown 并剥 `?raw=true`，后者在正文原位标「原书插图缺失」，别留裂图。
+5. **血案：`rm -rf <clean>/images` 没执行就去导入了**。本次 `rm && create-book` 那条命令在**工具层超时**（Upstream Service Timeout），rm 实际没跑；随后单独重跑 create-book + import → 35 张图被 tree_import 当成**占位文档**塞进库（TOC 多出一个 `images` TITLE，doc 数 246 vs 预期 211）。清理三步：① 逐篇 `DELETE /repos/{id}/docs/{doc_id}`（35 发）；② `PUT /toc {action:removeNode, node_uuid:<images TITLE>, action_mode:"sibling"}`（**removeNode 少了 `action_mode` 会 HTTP 400**）；③ 删掉 `progress.json` 里 `images/*` 与 `images` 条目，否则回读脚本对每个残留条目报「TOC 无此 uuid」。**教训：`rm -rf images` 要单独一条命令并确认 `ls` 为空，再开始导入。**
+- **本例实测**：236 节点（4 部分 + 21 章 TITLE + 211 文档）、35 图 CDN；toc-md 272 行 PUT 2.2s；清理后六查全绿（TOC 236==本地、对账 0、幽灵 0 docs211==TOC DOC211、word_count 211/211>0、回读 211/211 零异常）。库 **85149501**（slug `the-way-to-go-zh-cn-7a54d34`）。⚠️ move-stack 57018723 返 `200 {}` → 挂账。脚本 `examples/the-way-to-go-zh-cn/build.py`。
