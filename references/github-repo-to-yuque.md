@@ -565,3 +565,10 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
 4. **节名优先取 SUMMARY 文本**：这类老书大量 H1 不带编号（`# testing - 单元测试`、`# sync - 处理同步需求`）、或编号写错（`10.4.md` 的 H1 写「10.3 进程间通信」）→ **SUMMARY 文本更权威**；标题/文件名里半角 `/` 洗成 `／`。
 5. **每篇尾部的 `# 导航` 段要剥**（上一节/下一节相对链接＝语雀死链 + 与 TOC 重复），注意有两种形态：`# 导航 #` 与 `# 导航`（无尾 #）、列表符 `-` 或 `*`。
 - **本例实测**：64 节点（13 章 TITLE + 51 文档）、1 图 CDN、toc-md PUT 0.9s；根级 00-简介.md 补 1 发 prependNode 归位；六查全绿（TOC 64==本地、错位 0、幽灵 0 docs51==TOC DOC51、word_count 51/51>0、回读 51/51 零异常）。库 **85149891**（slug `go-std-lib-by-example-c466fcc`）。⚠️ move-stack 57018723 三轮 `{}` → 挂账。脚本 `examples/go-std-lib-by-example/`。
+
+**坑 96：分层 GitBook 源仓的「按章归集图片」与「章内序号重置」**（2026-10-30 chai2010/advanced-go-programming-book《Go语言高级编程》实战）
+1. **图片按章归集，不要按图名前缀猜章**：正文写 `../images/x.png`（相对章目录一跳）。导入树分层后，**按「哪个章引用了它」把图拷进 `<章目录>/images/`**。⚠️ 本书 `ch5-web` 的正文引用了一大批 `ch6-*` 命名的图（ch5 22 张里多数是 ch6 前缀）——按引用关系归集才对。
+2. **章内序号每章重置**：树序来自 `sorted(listdir)`，节名要两位前缀（`01-…`），且**进入新章必须把计数清零**，否则第二章接着第一章的号继续编、全章顺序错乱。
+3. **根级多文档归位要「升序 prepend」**：根级 `00/01/02` 三篇在 toc-md 后会全部排到所有 TITLE 之后。`prependNode` 语义是「插到 target 之前」，**按目标顺序从前往后逐发**才对；倒序发出会把顺序写反（`[02,01,00,TITLE]`）。
+4. **仓库首页/宣传物料不进库**：`README.md`（仓库首页，含公众号二维码 table）、`preface-pdf.md`（PDF 版前言副本）、`examples/` 源码树、`book.ini`/`Makefile`/`docs/` 一律不收；`errata/README.md`（勘误表）是正文，收（根级 `02-勘误…`）。
+- **本例实测**：76 节点（7 TITLE + 69 文档）、74 图 CDN（含根级封面）、toc-md PUT 1.4s；六查全绿（TOC 76==本地、错位 0、幽灵 0 docs69==TOC DOC69、word_count 69/69>0、回读 69/69 零异常）。库 **85150011**（slug `advanced-go-programming-4447d09`）。⚠️ move-stack 57018723 三轮 `{}` → 挂账。脚本 `examples/advanced-go-programming/`。
