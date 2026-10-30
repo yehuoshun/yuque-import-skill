@@ -1040,5 +1040,12 @@
     "book_url": "https://www.yuque.com/yehuoshun/coffeescript-style-guide-b87e527",
     "imported_at": "2026-10-30T11:22:00+0800",
     "note": "开源项目口径。《CoffeeScript 编码风格指南》——仓库 geekplux/coffeescript-style-guide 的 README.md 即中文正本（社区整理 CoffeeScript Style Guide 的另一译本；与 85147316=elrrrrrrr 版为不同仓库/不同译文，两者并存）。单文件仓（另 coffeelint.json 不入库）。按 `## ` 拆 14 篇（01灵感~14其他）+ 00-说明 = 15 文档零目录，跟代码围栏（围栏内 `# 好`/`# 差` 是注释行，坑 82）；剔 codesponsor.io 赞助横幅、`<a name=.../>` 锚点行、`## 目录`；文末引用式链接定义内联丢弃；剥 00-说明 重复 H1；无图。toc-md 15 行 PUT 0.6s PASS；六查全绿（TOC 15==本地 / 全路径唯一 / 对账 0 错位 / 幽灵 0（docs 15==TOC DOC 15）/ word_count 15/15>0 / 回读 15/15 零异常）。move-stack 开源项目 57018723 返 {}（服务端回归）挂账。"
+  },
+  "http://coffee-script.org": {
+    "commit": "",
+    "book_id": 85147459,
+    "book_url": "https://www.yuque.com/yehuoshun/coffee-script-org-20261030",
+    "imported_at": "2026-10-30T11:28:00+0800",
+    "note": "网站口径（单页整站）。CoffeeScript 中文站 coffee-script.org（coffeescript.org 的中文译本，本站版本 1.7.1，页脚 2014）。单页 HTML（162KB）→ 按站内 `<h2>` 拆 14 主节 +「语言手册」段按 `<b class=\"header\">` 再拆 19 小节，共 34 文档 + 1 TITLE（05-语言手册）= 35 节点。代码块 = `<div class='code'>` 内第 1 个 <pre>=coffeescript 源、第 2 个=javascript 编译输出，双围栏保留；独立 <pre> 无语言；用法选项表无表头 → 造空表头；5 处站内相对链补 http://coffee-script.org/ 绝对前缀；剔 flybar 导航/REPL 编辑器/span.bookmark 锚/div.minibutton/script。六查全绿（TOC 35==本地 35、全路径唯一、对账 0 错位、幽灵 0 docs34==TOC DOC34、word_count 34/34>0 最小 38、回读 34/34 零异常）。部分章节站点未完全汉化（Books/Screencasts 等保留英文）。move-stack 文章收集 36149506 返 {}（服务端回归）挂账。"
   }
 }
