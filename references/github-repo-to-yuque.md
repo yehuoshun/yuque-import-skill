@@ -526,3 +526,11 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
 - 图片另有一坑：这类站点的图是**站点绝对路径**（`/doc/gopher/x.png`），仓库实际在 `doc/zh_CN/gopher/` → `resolve_img` 要按 base_dir → 仓库根 → 各 zh_CN 子目录 → **按文件名唯一命中**逐级回退。
 - 已知假阳性：Go 代码样例里的 `<img src="{{.X}}">` 会被 `yuque_rewrite_images.py` 的 `HTML_RE` 当成待传图（`html/template` 包 2 处）→ `--dry` 报「本地缺失 2」，不影响导入，验收时解释掉即可。
 - **本例实测**：157 节点 = 28 TITLE + 129 文档（官方文档 18 / 标准库包文档 102 / 博客 8）；4 图 CDN；toc-md 157 行 5005B PUT 1.3s PASS、0 失败；六查全绿（TOC 157==本地、对账 0、幽灵 0 docs129==TOC DOC129、word_count 129/129>0、回读 129/129 零异常）；根级 00-说明 + 三个分区 TITLE 用 prependNode 归位。库 **85149174**（slug `go-doc-translations-fe925a2`）。⚠️ move-stack 57018723 返 `200 {}` → 挂账。脚本 `examples/go-doc-translations/build.py`。
+
+**坑 91：中文译本书仓（每章一文件 + 文末导航段 + CRLF）——三个「看起来都该对」的坑**（2026-10-30 songleo/the-little-go-book_ZH_CN《Go 简易教程》实战）
+仓库 `eBook/` 下 48 个 md **已经是中文**（译本仓，不需要任何双语剥离），但仍有三个必踩：
+1. **章标题两种写法**：第 1 章是「第1章 基础知识」，第 2~6 章是「2.0 结构体」→ 建目录时两种前缀都要剥（`^第\d+章\s*` 与 `^\d+\.0\s*`），否则目录名变成「第02章 2.0 结构体」。
+2. **文末导航段有两种形态**：多数篇目是 `## 链接` 小节（目录/上一节/下一节），但 **`4.2 接口.md` 是裸列表、没有标题、还是 CRLF 换行** → 只按 `\n## 链接\n` 切会漏掉它，得再从**尾部逐行剥** `- [目录](directory.md)` / `- 上一节：` / `- 下一节：`，并统一 `\r\n → \n`（否则残留 `\r` 会在语雀里显示成怪字符）。判据：收尾 `grep -rn '](.*\.md)'` 必须为空。
+3. **根级文档的图路径**：`../images/x.jpg` 只对「章目录/前言目录里的 md」成立；放在 clean **根**的 `00-说明.md` 必须写 `images/x.jpg`——写 `../` 会指到**树外**，`yuque_rewrite_images.py` 直接报「本地缺失」，且很容易被误判成图片没下载。
+- 另一条口径约定：**空壳页与导航页不收**（`getting-started.md` 只有标题+导航链；`directory.md` 是与 TOC 重复的目录页），写进 00-说明的「未收录」。
+- **本例实测**：54 节点 = 7 TITLE（前言 + 第01~06章）+ 47 文档；2 图 CDN；toc-md 54 行 2203B PUT 0.9s PASS、0 失败；六查全绿（TOC 54==本地、对账 0、幽灵 0 docs47==TOC DOC47、word_count 47/47>0、回读 47/47 零异常）；00-说明 prependNode 归位最前、结论自然落末。库 **85149264**（slug `little-go-book-zh-cn-4c124a9`）。⚠️ move-stack 57018723 返 `200 {}` → 挂账。脚本 `examples/little-go-book-zh-cn/build.py`。
