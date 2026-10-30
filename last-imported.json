@@ -1096,5 +1096,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/fortran-zjding-20261030",
   "imported_at": "2026-10-30T14:10:00+0800",
   "note": "网站口径。源=中科大天文与应用物理系丁泽军《Fortran77和90/95编程入门》网页版教程（2001-10，Word 2002 导出的 HTML，7 章 20 节）。Word-HTML 结构：层级靠 <p> 的 font-size（22pt 章/节标题、16pt 二级、color:red + ^[a-z]) 三级）；示例源码是 example/*.f|f90 外链（GBK/部分 UTF-8）→ 71 个全部抓回内联为 fortran 代码块；公式/流程图原为 MathType/Visio 图片（GIF/JPG）139 张（149 处引用）传 CDN，12×12 装饰 GIF 剔除；VML 藏在 <!--[if gte vml 1]> 条件注释里（bs4 Comment 要先跳过，否则漏进正文）。落库 28 节点=7 章 TITLE + 20 节文档 + 根级 00-说明；toc-md 28 行 PUT 0.6s PASS、0 失败；六查全绿：TOC 28==本地、对账 0 错位、幽灵 0（docs 21==TOC DOC 21）、word_count 21/21>0（910~14793）、回读 21/21 零异常（149 CDN 引用==149 重写）；根级 00-说明 落末位→prependNode 归位最前。未上传（仅文字说明）：movie/*.mpg 动画 3 个、SPHERE-1/2.doc、Fortran.rar；pages/*.htm 与原站 CourseNotes.pdf 已 404。move-stack 文章收集 36149506 返 200 {}（服务端回归）→ 挂账。脚本 examples/fortran-zjding/build.py，坑见 references/website-crawl-to-yuque.md 坑 87。"
+ },
+ "https://github.com/Unknwon/go-fundamental-programming": {
+  "commit": "3336687",
+  "book_id": 85149002,
+  "book_url": "https://www.yuque.com/yehuoshun/go-fundamental-programming-3336687",
+  "imported_at": "2026-10-30T14:26:00+0800",
+  "note": "开源项目口径。源=无闻（Unknwon）《Go 编程基础》视频课配套仓库 @3336687（最后提交 2022-03-22；CC BY-SA 3.0，代码 BSD-3）。仓库极小：README.md + lectures/lecture1..15.md（课堂笔记，无图）+ lectures/*.go（6 个示例）。落库 23 节点=1 TITLE（示例代码，6 个 .go 按扩展名包 ```go 围栏）+ 15 篇笔记（第NN课 零填充前缀，字典序即课时序）+ 根级 00-说明（README 转换）；无图无需 CDN。处理：① 笔记 Setext H1（第 N 课：xxx + ====）取作文档名、正文剥掉；② ### 课程大纲 的 tab 缩进时间点 → 无序列表；③ 课程链接里 lectureN.md 相对链 → 纯文本（语雀死链），站外视频/资料链保留。toc-md 23 行 PUT 1.6s PASS、0 失败；六查全绿：TOC 23==本地、对账 0 错位、幽灵 0（docs 22==TOC DOC 22）、word_count 22/22>0（22~872，笔记本就短）、回读 22/22 零异常；根级 00-说明 落末位→prependNode 归位最前。move-stack 开源项目 57018723 返 200 {}（服务端回归）→ 挂账。脚本 examples/go-fundamental-programming/build.py。"
  }
 }

@@ -509,3 +509,11 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
 3. **`.. figure::` 的 alt 默认是路径**：docutils 输出 `![_static/images/1.1.png](_static/images/1.1.png)`（alt=路径，难看）→ 重写时把 alt 换成 basename。图引用写的是 `_static/...`（**无前导斜杠**），子目录文档要补 `../`（注意别写成 `../_static/_static/...`）。
 4. **`prependNode` 归位别一次押一串**：同一批节点因为「锚点原本在谁前面」不同，结果会不一样（早前 #91 的「逆序 prepend」这单就翻车：先 04…后 00-前言，最后 `00-前言` 反而落到了 TITLE 之后）。**稳妥姿势 = 选一个「当前不在期望位置的锚点」，按期望顺序**依次 `prependNode(node, target=锚点)`，**每步/末步回读 `prev_uuid` 链验收**（坑 75：`GET /toc` 数组顺序 ≠ 树序，别按数组首元素判断）。当心 `prev_uuid == ROOT`（空串）才是链头。
 - **本例实测**：`00-前言`+`00-说明`+`01-翻译计划`+`02-序言`+`03-致谢`+`04-简介`（根级 6 篇）+ 1 TITLE（`05-第I部分 编程`：第1~9章 + 附录A/C/D/E 共 13 篇）= **20 节点（1 目录 / 19 DOC）**；21 图（含许可图标 cc.png、8 张译者邮箱图）全传 CDN、0 失败；附录B 上游空壳（146B 只有标题）→ 不建节点。toc-md 20 行 925B PUT 22.8s、结构缺失 0、PASS、0 失败；六查全绿（TOC 20==本地 20、对账 0 错位、幽灵 0 docs19==TOC DOC19、word_count 19/19>0、回读 19/19 零异常、21 CDN 引用==21 重写）。修复第9章 `literalinclude` 后单篇 `PUT /docs/{id}` 更新（不新建）。库 **85147901**（slug `cpie-cn-0a550d4`）。⚠️ move-stack 开源项目 57018723 返 `200 {}`、`/api/mine/books` 实测 `stack_id=None`（10-27 起服务端回归）→ 挂账。脚本 `examples/cpie-cn/build.py`。
+
+**坑 89：视频课「课堂笔记」型仓库（Setext 标题 + tab 缩进的时间轴 + 仓库内相对链）**（2026-10-30 Unknwon/go-fundamental-programming《Go 编程基础》实战）
+极小的课程配套仓（README + `lectures/lectureN.md` + 几个 `.go` 示例），三个小坑：
+1. **标题是 Setext 式**（`第 N 课：xxx` 紧跟一行 `====`）→ 取作文档名（`第NN课 标题.md`，零填充保序），正文里把标题块剥掉，别留重复 H1。
+2. **`### 课程大纲` 是 tab 缩进的时间点清单**（`\t[00:00] 内容`）→ markdown 会当**代码块**渲染，转成 `- \`[mm:ss]\` 内容` 无序列表更好读。
+3. **`### 课程链接` 是仓库内相对链**（`[第 2 课](lecture2.md)`）→ 语雀里是死链，**转纯文本**（保留标题词）；只留站外（B站/网易云/资料）链接。README 里指向 `lectures/lectureN.md` 的链接同理。
+- `.go` 示例直接原样拷进 clean 树（`示例代码/`），导入器按扩展名 `FENCE_LANG[".go"]` 自动包 ```go 围栏，标题=文件名带扩展名。
+- **本例实测**：23 节点（1 目录 + 22 文档）、无图；toc-md 23 行 PUT 1.6s 结构 PASS、0 失败；六查全绿（TOC 23==本地、对账 0、幽灵 0 docs22==TOC DOC22、word_count 22/22>0、回读 22/22 零异常）；根级 00-说明 prependNode 归位最前。库 **85149002**（slug `go-fundamental-programming-3336687`）。⚠️ move-stack 57018723 返 `200 {}` → 挂账。脚本 `examples/go-fundamental-programming/build.py`。
