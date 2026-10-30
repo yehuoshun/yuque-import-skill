@@ -1159,5 +1159,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/go-design-and-implementation-20261030",
   "imported_at": "2026-10-30T16:40:00+0800",
   "note": "网站口径。源站 https://draven.co/golang/（原链 draveness.me/golang 已 301；作者 Draven，纸质版已由人邮出版）=《Go 语言设计与实现》在线版，Hugo 站 4 部分/9 章/33 节。原链 301 到新域名 draven.co；直抓每页 article.markdown：剥首部「纸质版上架京东」推广块、尾部上一节/下一节导航、h1（标题由文件名给）；h2-h3 保留层级；代码块 div.highlight→fence（go/text/http 等按 data-lang 标注）；表格转 md；脚注 ref `[N]`、文章尾部 section.footnotes→「### 脚注」列表；内部链接原样保留（/golang/tree/... 源码浏览链）。图片 190 张原托管 img.draven.co，全下载转存语雀 CDN（191 引用/190 唯一）。中文序号排序坑：部分/章用 Unicode 序号（一<三<二<四、七<六会错序）→ 目录名加 ASCII 零填充前缀（01-第一部分..04-第四部分、01-第一章..09-第九章）保证字典序=书序。落库 47 节点=13 TITLE（4 部分+9 章）+34 文档（33 节+00-说明）。六查全绿：TOC 47==本地47、对账 0、幽灵 0（docs 34==TOC DOC 34）、word_count 34/34>0、回读 34/34 零异常、无分片；根级 00-说明.md 收尾后补 1 发 prependNode 归位到最前。⚠️ move-stack 36149506 四轮 `{}` → 挂账。"
+ },
+ "https://github.com/rujews/go-in-action-notes": {
+  "commit": "3da951a",
+  "book_id": 85155035,
+  "book_url": "https://www.yuque.com/yehuoshun/go-in-action-notes-20261031",
+  "imported_at": "2026-10-31T03:03:21+0800",
+  "note": "fpb52 #105《Go语言实战笔记》：仓库 README 只是索引（3 系列 41 条外链），正文在作者博客 flysnow.org（新 Astro 主题，div.post-content 容器）。Gin 系列 6 篇 README 给的是微信公众号链（mp.weixin 返回「环境异常」反爬页）→ 换官网同系列同序 6 页（H1 逐条比对一致）。口径：网站口径（文章收集），库名带日期。45 节点（3 TITLE / 42 DOC）。剔页尾「本文为原创文章/欢迎扫码关注公众号」+ 二维码图 + 「精彩文章推荐」导航尾块。六查全绿：TOC 45==本地、路径唯一、reconcile 0 错位、幽灵 0（docs 42==TOC DOC 42）、word_count 42/42>0（min 362）、回读 42/42 零异常（2 图 CDN）。move-stack 36149506 仍返 {}（服务端回归）→ 挂账。"
  }
 }
