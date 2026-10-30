@@ -350,3 +350,14 @@
 5. **站内相对链补绝对前缀**：`documentation/docs/*.html`、`extras/coffee-script.js` 等 5 处相对 `<a href>` → `http://coffee-script.org/` + href（否则语雀死链）。
 6. **`b`/`i`/`tt` 转 markdown**：`<b>`→`**`、`<i>`→`*`、`<tt>`/`<code>`→反引号；`<br>`→换行；`<span class=…>` 只取文字（语法高亮的 span 全剥样式）。
 - **本例实测**：34 文档 + 1 TITLE（05-语言手册）= **35 节点**；toc-md 35 行 1723B PUT 0.8s、结构核对 PASS、0 失败；六查全绿（TOC 35==本地 35、全路径唯一、对账 0 错位、幽灵 0 docs34==TOC DOC34、word_count 34/34>0 最小 38、回读 34/34 零异常）；**部分章节站点未汉化**（Books/Screencasts/Examples/Resources 保留英文原文）。库 **85147459**（slug `coffee-script-org-20261030`）。⚠️ move-stack 文章收集 36149506 返 `200 {}`（服务端回归）→ 挂账。脚本 `examples/coffee-script-org/build.py`。
+
+**坑 84（MediaWiki 单页 wiki + 原站已死走 Wayback：`div.mw-parser-output` 按 h2 拆、`pre.prettyprint lang-x` 取语言，2026-10-30 `dart.lidian.info/wiki/Language_Tour`《Dart 语言导览》实战）**：站点是 **MediaWiki 镜像**（`/w/index.php`、`/wiki/<Page>`、Vector 皮肤），整篇「语言导览」就是**一个 wiki 页面**（111KB HTML / 35KB 正文）。要点：
+
+1. **入口**：原站 `dart.lidian.info` DNS 已不可解析（死站）→ 走书单给的 Wayback 快照；本机 web.archive.org 被墙 → **re-harness `fetch-files.yml` 出口抓**（Runner 能连 wayback）。拿 `…/web/<ts>id_/<原 URL>` 的 **`id_` 原始版**（无 wayback 工具条）。
+2. **正文容器 = `div.mw-parser-output`**（在 `div#mw-content-text` 内）；**不是** `div#bodyContent`（那是旧 Monobook，同坑 60）。皮肤是 Vector。
+3. **单页拆篇**：按 `<h2>` 拆（本书 15 个 h2，含一个「目录」节 → 跳过，与语雀侧栏重复）；`h3`/`h4` 保留为子小节标题。书名/文件次序 `NN-` 零填充免归位。
+4. **代码块 = `<pre class="prettyprint lang-dart linenums:0">`** → 语言正则取 `lang-(\w+)` → ```dart 围栏（本页 0 图）。
+5. **行内 `<code>` 里可能套 `<b>`/`<i>`**（如 `<code><b>%</b></code>`、`<code><i>表达式</i>++</code>`）→ 行内 code **必须取纯文本**（`ch.get_text()`），否则渲染出 `` `**%**` `` 一堆星号。
+6. **站内链与锚点链**：`/wiki/...`（原站已死）+ `#区段`（页内锚点）一律转纯文字，只留外链。
+7. **剔 MediaWiki 脚手架**：`.mw-editsection`（每个标题后的「编辑」链）、`.reference`（上标引用）。
+- **本例实测**：14 文档 + 00-说明 = **15 文档零目录**；toc-md 15 行 576B PUT 0.4s、结构核对 PASS、0 失败；六查全绿（TOC 15==本地 15、全路径唯一、对账 0 错位、幽灵 0 docs15==TOC DOC15、word_count 15/15>0 最小 104、回读 15/15 零异常）；库 **85147555**（slug `dart-language-tour-20261030`）。⚠️ move-stack 文章收集 36149506 返 `200 {}`（服务端回归）→ 挂账。脚本 `examples/dart-language-tour-wayback/build.py`（依赖 bs4 + html5lib）。

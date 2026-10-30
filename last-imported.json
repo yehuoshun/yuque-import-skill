@@ -1047,5 +1047,12 @@
     "book_url": "https://www.yuque.com/yehuoshun/coffee-script-org-20261030",
     "imported_at": "2026-10-30T11:28:00+0800",
     "note": "网站口径（单页整站）。CoffeeScript 中文站 coffee-script.org（coffeescript.org 的中文译本，本站版本 1.7.1，页脚 2014）。单页 HTML（162KB）→ 按站内 `<h2>` 拆 14 主节 +「语言手册」段按 `<b class=\"header\">` 再拆 19 小节，共 34 文档 + 1 TITLE（05-语言手册）= 35 节点。代码块 = `<div class='code'>` 内第 1 个 <pre>=coffeescript 源、第 2 个=javascript 编译输出，双围栏保留；独立 <pre> 无语言；用法选项表无表头 → 造空表头；5 处站内相对链补 http://coffee-script.org/ 绝对前缀；剔 flybar 导航/REPL 编辑器/span.bookmark 锚/div.minibutton/script。六查全绿（TOC 35==本地 35、全路径唯一、对账 0 错位、幽灵 0 docs34==TOC DOC34、word_count 34/34>0 最小 38、回读 34/34 零异常）。部分章节站点未完全汉化（Books/Screencasts 等保留英文）。move-stack 文章收集 36149506 返 {}（服务端回归）挂账。"
+  },
+  "https://web.archive.org/web/20200415002731/http://dart.lidian.info/wiki/Language_Tour": {
+    "commit": "",
+    "book_id": 85147555,
+    "book_url": "https://www.yuque.com/yehuoshun/dart-language-tour-20261030",
+    "imported_at": "2026-10-30T11:36:00+0800",
+    "note": "网站口径（Wayback 快照）。Dart 中文 wiki「Dart 语言导览」（MediaWiki，dartlang.org Language Tour 中文译本）；原站 dart.lidian.info DNS 已不可解析 → 正文取 Wayback 2020-04-15 快照（web.archive.org 本机被墙，经 re-harness fetch-files.yml GitHub Actions 出口抓取）。单页 111KB HTML → div.mw-parser-output 按 h2 拆 14 篇（跳过「目录」节）+ 00-说明 = 15 文档零目录。pre.prettyprint lang-dart → ```dart 围栏；code 内文取纯文本（避免 <i>/<b> 变星号）；站内 /wiki/ 与 #锚点 链（原站已死）转纯文字；剔 mw-editsection/reference。六查全绿（TOC 15==本地 15、全路径唯一、对账 0 错位、幽灵 0 docs15==TOC DOC15、word_count 15/15>0 最小 104、回读 15/15 零异常）。move-stack 文章收集 36149506 返 {}（服务端回归）挂账。"
   }
 }
