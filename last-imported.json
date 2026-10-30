@@ -1117,5 +1117,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/little-go-book-zh-cn-4c124a9",
   "imported_at": "2026-10-30T14:50:00+0800",
   "note": "开源项目口径。源=songleo/the-little-go-book_ZH_CN @4c124a9（2022-09-05；CC BY-NC-SA 4.0）= Karl Seguin《The Little Go Book》中文译本。仓库 eBook/ 下 48 个已是中文的 md：N.0=章导读、N.M=节、about-this-book/introduction=前言、conclusion=结语、directory=导航页。落库 54 节点=7 TITLE（前言 + 第01~06章）+ 47 文档；2 图（cover.jpg/wechat.jpg）传 CDN。处理：① 每篇首行 `# 标题` 取作文档名，章名两种写法（「第1章 基础知识」与「2.0 结构体」）都要剥前缀；② 末尾 `## 链接` 导航段整段剥——注意 4.2 接口.md 是**裸列表 + CRLF**（没有 `## 链接` 标题），要额外从尾部逐行剥 `- [目录]/上一节/下一节` 并 CRLF→LF；③ 根级 00-说明 的图必须写 `images/` 而不是 `../images/`（否则指到树外报本地缺失）。未收：getting-started.md（空壳，仅标题+导航链）、directory.md（导航页与 TOC 重复）。toc-md 54 行/2203B PUT 0.9s PASS、0 失败；六查全绿：TOC 54==本地、对账 0 错位、幽灵 0（docs 47==TOC DOC 47）、word_count 47/47>0（31~2575）、回读 47/47 零异常（2 CDN 引用==2 重写）；00-说明 prependNode 归位最前、结论自然落末。⚠️ move-stack 57018723 返 200 {} → 挂账。脚本 examples/little-go-book-zh-cn/build.py。"
+ },
+ "https://github.com/hyper-carrot/go_command_tutorial": {
+  "commit": "9a76c06",
+  "book_id": 85149418,
+  "book_url": "https://www.yuque.com/yehuoshun/go-command-tutorial-9a76c06",
+  "imported_at": "2026-10-30T15:02:00+0800",
+  "note": "开源项目口径。源=hyper-carrot/go_command_tutorial @9a76c06（2022-11-25；作者郝林 hyper0x，原为《Go 并发编程实战》被砍掉的一章，单独放出为免费教程）。docsify 单章结构：0.0.md=标准命令详解(章导读) + 0.1~0.14 = go build/install/get/clean/doc/run/test/list/fmt/fix/vet/pprof/cgo/env 共 14 个命令。落库 17 节点=1 TITLE（第0章 标准命令详解）+ 16 文档（00-本章导读 + 14 节 + 00-说明）；4 图（images/0-1..0-4，被 0.5/0.12 引用）传 CDN。两个坑：① 节号必须零填充 0.01~0.14，否则 0.10 按字典序排到 0.9 前面；② 00-本章导读 与根级 00-说明 都会被 toc-md 排到末尾，收尾两发 prependNode 归位；图路径章目录内用 ../images/、根级说明用 images/。不收 catalog.md/_sidebar.md/SUMMARY.md（三种导航页，与语雀 TOC 重复）。toc-md 17 行/723B PUT 1.2s PASS、0 失败；六查全绿：TOC 17==本地、对账 0 错位、幽灵 0（docs 16==TOC DOC 16）、word_count 16/16>0（660~15953）、回读 16/16 零异常（4 CDN 引用==4 重写）。⚠️ move-stack 57018723 返 200 {} → 挂账。脚本 examples/go-command-tutorial/build.py。"
  }
 }

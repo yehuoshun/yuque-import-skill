@@ -534,3 +534,10 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
 3. **根级文档的图路径**：`../images/x.jpg` 只对「章目录/前言目录里的 md」成立；放在 clean **根**的 `00-说明.md` 必须写 `images/x.jpg`——写 `../` 会指到**树外**，`yuque_rewrite_images.py` 直接报「本地缺失」，且很容易被误判成图片没下载。
 - 另一条口径约定：**空壳页与导航页不收**（`getting-started.md` 只有标题+导航链；`directory.md` 是与 TOC 重复的目录页），写进 00-说明的「未收录」。
 - **本例实测**：54 节点 = 7 TITLE（前言 + 第01~06章）+ 47 文档；2 图 CDN；toc-md 54 行 2203B PUT 0.9s PASS、0 失败；六查全绿（TOC 54==本地、对账 0、幽灵 0 docs47==TOC DOC47、word_count 47/47>0、回读 47/47 零异常）；00-说明 prependNode 归位最前、结论自然落末。库 **85149264**（slug `little-go-book-zh-cn-4c124a9`）。⚠️ move-stack 57018723 返 `200 {}` → 挂账。脚本 `examples/little-go-book-zh-cn/build.py`。
+
+**坑 92：docsify 单章教程仓（节号字典序 + 章导读/根级说明都被排到末尾）**（2026-10-30 hyper-carrot/go_command_tutorial《Go 命令教程》实战）
+`0.0.md`（章导读）+ `0.1.md … 0.14.md`（节）+ 三种导航页（`catalog.md` / `_sidebar.md` / `SUMMARY.md`，与语雀 TOC 重复，**都不收**）。两个坑：
+1. **节号必须零填充**：`0.10` 按字典序排在 `0.9` **前面**（1<9），toc-md 生成的目录会变成 0.1→0.10→…→0.14→0.2…。改文件名 `0.01 … 0.14` 即可（标题跟着文件名走，用两位数字读起来也自然）。
+2. **章导读与根级说明都会被 toc-md 排到末尾**：`00-本章导读.md` 落在 `0.14` 之后（章内最后），`00-说明.md` 落在全库最后。收尾两发 `prependNode(action_mode=sibling)`：章导读挂到第一节前（`target_uuid=0.01`），根级说明挂到第一个 TITLE 前。
+- 图路径同坑 91：章目录内的 md 写 `../images/`，根级 `00-说明.md` 写 `images/`。
+- **本例实测**：17 节点 = 1 TITLE + 16 文档；4 图 CDN；toc-md 17 行 723B PUT 1.2s PASS、0 失败；六查全绿（TOC 17==本地、对账 0、幽灵 0 docs16==TOC DOC16、word_count 16/16>0、回读 16/16 零异常）。库 **85149418**（slug `go-command-tutorial-9a76c06`）。⚠️ move-stack 57018723 返 `200 {}` → 挂账。脚本 `examples/go-command-tutorial/build.py`。
