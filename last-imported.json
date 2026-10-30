@@ -1173,5 +1173,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/tour-go-zh-4a8e183",
   "imported_at": "2026-10-31T03:08:51+0800",
   "note": "fpb52 #106《Go 指南》（A Tour of Go 中文版）：书单原链是 tour.go-zh.org/list 的 Wayback 快照，但源站本机 502、web.archive.org 直连 000（被墙）→ 吃源仓库 Go-zh/tour（站点由 gotour 渲染 .article，仓库即唯一真源）。6 模块 98 节 = 105 节点（6 TITLE / 99 DOC）。转换：* 节标题拆篇、.play xxx.go 内联展平成 ```go、`.image` 传 CDN、`#appengine:` 前缀行剔（AppEngine 专用注释，线上非 AppEngine 视图不显示）、`[[url][text]]` Org 链接→Markdown / javascript: 伪协议→纯文本、`// +build OMIT` 构建标记剔。同父重名（练习：等价二叉查找树 ×2）第二个加（续）。六查全绿：TOC 105==本地、reconcile 0 错位、幽灵 0（docs 99==TOC DOC 99）、word_count 99/99>0（min 39）、回读 99/99 零异常（1 图 CDN）。根级 00-说明 prependNode 归位。move-stack 57018723 仍返 {} → 挂账。"
+ },
+ "https://github.com/astaxie/build-web-application-with-golang": {
+  "commit": "c294b08",
+  "book_id": 85155053,
+  "book_url": "https://www.yuque.com/yehuoshun/build-web-application-with-golang-c294b08",
+  "imported_at": "2026-10-31T03:16:51+0800",
+  "note": "fpb52 #107《Go Web 编程》（astaxie 谢孟军）：书单原链是 astaxie.gitbooks.io 老 GitBook 站 → 吃源仓库 zh/（GitBook 3.x 扁平仓：SUMMARY.md 两层 + NN.M.md + images/）。111 节点（14 章 TITLE / 97 DOC = 14 章头导读 + 79 节 + 90-参考资料 + 00-说明）。口径：章 NN.0.md → NN.00 章名.md 落 TITLE 内；preface.md 是旧版目录清单（与 SUMMARY 重复）不收；README 并入 00-说明（删 Donate/Community 段，其 alipay 图是断链）。89 张图 `images/x.png?raw=true` 去 raw 参数本地化 → CDN（2 处「缺失」是模板示例里的绝对路径 `/static/img/logo.png`、`views/{{.Lang}}/images/btn.png`，非本书图，原样保留）。六查全绿：TOC 111==本地、reconcile 0 错位、幽灵 0（docs 97==TOC DOC 97）、word_count 97/97>0（min 117）、回读 97/97 零异常（89 CDN 图）。**新技巧**：根级多 DOC 归位——prependNode 只能放最前，要放「最后」用 `appendNode + action_mode=sibling + target_uuid=<最后一个节点>`（实测生效），本次 00-说明置首、90-参考资料用 appendNode 置尾。move-stack 57018723 仍返 {} → 挂账。"
  }
 }
