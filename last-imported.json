@@ -1075,5 +1075,12 @@
     "book_url": "https://www.yuque.com/yehuoshun/elixir-metaprogramming-dsl-zh-5e24e62",
     "imported_at": "2026-10-30T11:49:00+0800",
     "note": "开源项目口径。Elixir 官网 Metaprogramming in Elixir 中译（Ljzn/MetaProgrammingInElixirChinese，老 GitBook：扁平 3 章 N_*.markdown = 1_Quote_and_unquote/2_Macros/3_Domain_Specific_Languages，无 SUMMARY，按前缀数字定序）。标题取各章 H1（中文）；正文其余标题整体降一级——**fence-aware**（围栏内 `# => 1` / `# 注释` 不当标题，本单起沿用 #89 修复后的写法）；顶部缩进列表按块最小缩进 dedent（含转义 `\\- ` 列表项，坑 84 同族）。无图、链接全外链。4 节点（0 目录/4 DOC = 3 章+00-说明），toc-md 4 行 161B PUT 0.6s PASS，六查全绿（TOC 4==本地 4、全路径唯一、对账 0 错位、幽灵 0 docs4==TOC DOC4、word_count 4/4>0 最小 88、回读 4/4 零异常）。move-stack 开源项目 57018723 返 {}（服务端回归）挂账。"
+  },
+  "https://github.com/mydearxym/phoenix-doc-in-chinese": {
+    "commit": "52f09cb",
+    "book_id": 85147782,
+    "book_url": "https://www.yuque.com/yehuoshun/phoenix-doc-in-chinese-52f09cb",
+    "imported_at": "2026-10-30T12:00:00+0800",
+    "note": "书单原链为老 gitbooks.io 站 https://mydearxym.gitbooks.io/phoenix-doc-in-chinese/content/ —— 站点 index 200 但中文页全 404（仅 ASCII 页 200），GitBook 自带 search_index.json 只有纯文本 body（无围栏/表格/层级）→ 反查源仓库吃 md。口径：开源项目（SUMMARY.md 定目录，父分组页与首个子项同文件→跳过父页）。落库 39 节点 = 4 TITLE（01-基础部分11/02-测试5/03-部署3/04-进阶内容14）+ 35 DOC（含 00-介绍、00-说明）；toc-md 39 行 1537B PUT 0.6s 结构核对 PASS、0 失败。转换：SUMMARY 文件名笔误 I_exrm_release→I_exrm_releases 加 s 兜底；标题层级五国混战→去重层级集合相对归一到 H2/H3/H4（fence-aware）；标题剥离比对 title 与去前缀版（去空格下划线归一）；站内自指+相对 md/html 链转纯文字、http(s) 外链原样。3 张 gyazo 外链图原样未传 CDN。六查全绿：TOC 39==本地、对账 0 错位、幽灵 0（docs 35==TOC DOC 35）、word_count 35/35>0（最小 12 = 测试/H_视图 占位 stub）、回读 35/35 零异常；根级 00-介绍/00-说明 逆序两发 prependNode 归位（prev_uuid 链验收）。残缺度（作者自述）：官方也无的 views 章、国内不可达的 heroku、将被 distillery 取代的 exrm ——stub 照录。move-stack 开源项目 57018723 返 200 {}、/api/mine/books 实测 stack_id=None（10-27 起服务端回归）→ 挂账。"
   }
 }
