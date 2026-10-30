@@ -1138,5 +1138,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/go-ast-book-6bb3a6f",
   "imported_at": "2026-10-30T15:35:00+0800",
   "note": "开源项目口径。源=chai2010/go-ast-book @6bb3a6f（2024-09-26）= 柴树杉/史斌/丁尔男《Go语言定制指南》（原名《Go 语法树入门》）开源版 md 源，GitBook 3.x 结构（chN/readme.md + SUMMARY.md）。SUMMARY 只列章、无子节层级 → 一章一篇共 20 文档：index.md→00-Go语言定制指南、preface.md→01-前言（三篇序言内层 H1 降为 ##）、ch1~ch16、附录A goyacc/附录B ANTLR4；两章号零填充（NN- 前缀）字典序即书序。⚠️ 第12-16章正文因出版社版权未开源（仅存「本章简介」+实体书链接），保留为简介文档、已剥每章重复的封面图，残缺度写进库描述。ch7/x.md 孤儿片段、examples/ 源码树（ch*/examples、appendix/**/examples）、book.ini/Makefile/style.css/README/wechat 二维码不收；index 的「微信公众号」二维码段剥除。13 图传 CDN；扁平零目录。六查全绿：TOC 20==本地20 / 错位0 / 幽灵0（docs 20==TOC DOC 20）/ word_count 20/20>0 / 回读 20/20 零异常 / 无分片。⚠️ move-stack 开源项目 57018723 三轮均返 {}（语雀侧 10-27/28 起静默 no-op 回归）→ 挂账。"
+ },
+ "https://github.com/polaris1119/The-Golang-Standard-Library-by-Example": {
+  "commit": "c466fcc",
+  "book_id": 85149891,
+  "book_url": "https://www.yuque.com/yehuoshun/go-std-lib-by-example-c466fcc",
+  "imported_at": "2026-10-30T15:42:00+0800",
+  "note": "开源项目口径。源=polaris1119/The-Golang-Standard-Library-by-Example @c466fcc（2022-03-06）= polarisxu《Go语言标准库》The Golang Standard Library by Example 开源版 md 源（GitBook 3.x：SUMMARY.md + chapterNN/NN.M.md，CC BY-SA 3.0）。**书未写完**：SUMMARY 列 17 章，仓库实存 chapter01-10/13/15/16；第11/12/14/17章只有章名无正文，3.2、5.2-5.4、7.2-7.4、8.2-8.4、13.2/13.4、15.1 等节无链接文件（13.2/13.4 SUMMARY 挂了链接但文件不存在=断链）→ 一律不建空壳。**补导 2 篇 SUMMARY 未收录但仓库有正文的节**：7.5 encoding/csv、8.5 archive/tar（按文件名编号落位）。落库 64 节点=13 章 TITLE + 51 文档（README→00-简介 + 12 个 00-本章导读 + 38 节；ch5/15/16 无章导读文件）。章号两位零填充（第01..第16），节名用 SUMMARY 文本；剥每篇尾部「# 导航」段 + 首 H1；标题/文件名里 `/` → `／`。图片 1 张（ch06 imgs/fs-class-diagram.png）传 CDN、2.2 有 1 张新浪外链原样留。六查全绿：TOC 64==本地64、对账 0、幽灵 0（docs 51==TOC DOC 51）、word_count 51/51>0、回读 51/51 零异常；根级 00-简介.md 收尾后补 1 发 prependNode 归位到最前。⚠️ move-stack 57018723 三轮 `{}` → 挂账。"
  }
 }
