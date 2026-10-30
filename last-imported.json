@@ -1215,5 +1215,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/codeguide-2c2864b",
   "imported_at": "2026-10-31T04:28:00+0800",
   "note": "fpb52 #117《前端代码规范》(AlloyTeam/CodeGuide @ 2c2864b, 默认分支=gh-pages)：队列给的是站点 alloyteam.github.io/CodeGuide/ → 换源吃源仓库(gh-pages)。源=Jekyll 单页站，index.html 拼 _includes/*.html 分片，代码样例再 {% include css/x.css %}。做法：写 Jekyll include 递归展开器 + {% highlight lang %}→<pre data-lang> 围栏 → HTML→md；按大区拆 7 篇(00-说明/01-最佳原则/02-命名规则/03-HTML/04-CSS,SCSS/05-JavaScript/06-检查工具)。剥各大区首行重复的 ## 区域名、其余规则标题降一级。无正文图(images/*.png 只被 CSS 引用)。七节点六查全绿：TOC 7==本地、错位 0、幽灵 0 docs7==TOC DOC7、word_count 7/7>0(min 59)、回读 0 异常、根序正确。脚本 examples/codeguide/build.py。⚠️ move-stack 57018723 返 200 {} 挂账。"
+ },
+ "https://github.com/chadluo/CSS-Guidelines": {
+  "commit": "eb01cb0",
+  "book_id": 85155130,
+  "book_url": "https://www.yuque.com/yehuoshun/css-guidelines-eb01cb0",
+  "imported_at": "2026-10-31T04:31:00+0800",
+  "note": "fpb52 #118《通用 CSS 笔记、建议与指导》(chadluo/CSS-Guidelines @ eb01cb0)：csswizardry/CSS-Guidelines 的 zh-CN 译本，仓库工作树只有 1 个 README.md。口径=单篇长文型：00-说明=首个 ## 之前前言段+来源，正文按 ## 拆 19 篇(跳过重复的 ## 目录)；文件名洗 /→／、去反引号/星号(15-!important)。20 节点(0 目录/20 文档)无图。六查全绿：TOC 20==本地、错位 0、幽灵 0 docs20==TOC DOC20、word_count 20/20>0(min 53)、回读 0 异常、根序正确。脚本 examples/css-guidelines/build.py。⚠️ move-stack 57018723 返 200 {} 挂账。"
  }
 }
