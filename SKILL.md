@@ -1,6 +1,6 @@
 ---
 name: yuque-import-skill
-description: 语雀知识库全量目录导入与对账修复技能。把本地目录树整棵导入语雀（文件夹=TITLE 目录节点、文件=文档，DFS 先序保持层级，断点续传），导入后对账修复错位节点。当用户要求「把这个目录/代码库/资料树导入语雀」「按目录结构建语雀知识库」「把 GitHub 项目/开源仓库导入语雀」「按开源项目流程到语雀」「把网站/教程站抓取到语雀」「网页抓取导入语雀」「语雀导入遇到挂错层级/重复节点」「把小说/这本 txt/epub 导入语雀」「小说导入语雀」时使用。
+description: 语雀知识库全量目录导入与对账修复技能。把本地目录树整棵导入语雀（文件夹=TITLE 目录节点、文件=文档，DFS 先序保持层级，断点续传），导入后对账修复错位节点。当用户要求「把这个目录/代码库/资料树导入语雀」「按目录结构建语雀知识库」「把 GitHub 项目/开源仓库导入语雀」「按开源项目流程到语雀」「把网站/教程站抓取到语雀」「网页抓取导入语雀」「语雀导入遇到挂错层级/重复节点」「把小说/这本 txt/epub 导入语雀」「小说导入语雀」「把 docx/pptx/excel/csv 目录导入语雀」「办公文档导入语雀」时使用。
 ---
 
 # 语雀全量目录导入 — AI 工作流
@@ -173,6 +173,24 @@ GitBook 3.x 源仓库的书（站点给链接但同名 source repo 在 GitHub，
 **变体：InfoQ 中文站迷你书（只有 PDF，且下载要登录，2026-10-22《硝烟中的Scrum和XP》首例，库 84860629）** —— 老域名 `infoq.com/cn/minibooks/*` 被 AWS WAF 挡（405）→ 用 `infoq.cn`；公开 API **必须 POST + JSON body**（`/public/v1/article/getDetail {"uuid":<slug>}`）；下载接口 `article/book_sign` 要登录（`-2000 未登录`）→ ⭐ **绕法：迷你书列表页有公开免登录合集 `static001.geekbang.org/resource/ebook/100books/book100.zip`（541MB），用 HTTP Range 读中央目录只抽目标条目 + zlib(-15)**。书签漏前言 → 按页码区间列文档映射。复用脚本 + 坑清单：`examples/infoq-minibook-pdf/`（`build.py` + README），SOP 细则见 `references/pdf-book-to-yuque.md` §七。
 
 **变体：仓库 = 书 PDF + 课件 + 代码（双轨，2026-10-21 两本 LLM 书固化）** —— 源是 GitHub 仓库时走**开源项目口径**（库名带 commit、分组「开源项目」），内容拆成 `01-正文/`（PDF 按**书签**抽逐章文档）+ `02-代码/` + `03-课件/`（PDF 走附件 / PPTX 不上传）+ `04-原件（全书 PDF）/`（PDF 附件），脚手架不入库。⚠️ 抽章必须**剥 C0 控制符**（`\x00` 等会整篇被判二进制→占位，坑 50），验收要**全库**扫 `word_count>0`（六查第 6 条）。复用脚本 + 完整坑清单：`examples/llmbooks-dual-track/`（`build_lib.py`，含附件文档「预建+账本注入」手法）。
+
+## 办公文档导入（docx / pptx / xlsx / csv，2026-10-31 新增）
+
+触发模板：「把这个 docx/pptx/excel 目录导入语雀」。前置转换器 `scripts/yuque_office_convert.py`（办公格式 → Markdown，再走常规 `yuque_tree_import.py`）：
+
+```bash
+python3 scripts/yuque_office_convert.py --src <原始目录> --out <clean_dir>
+python3 scripts/yuque_office_convert.py --src in --out out --include .docx,.pptx   # 只挑格式
+python3 scripts/yuque_office_convert.py --src in --out out --dry                   # 只列清单不写盘
+```
+
+- 支持的输入：`.docx` / `.pptx` / `.xlsx` / `.csv`；**`.doc` / `.ppt` / `.xls` 记 unsupported**（旧二进制格式，先另存为新版再来，不静默跳过）
+- 纪律与硬规则对齐：默认**不覆盖**（`--overwrite` 才写）、**输入输出目录必须分离**（同目录或嵌套直接退 2）、**转换产物为空记 failed 不写占位**（硬规则 8 在转换层的延伸）
+- 内嵌图片落到 `clean_dir/_office_assets/<相对路径>/`，正文写相对引用 → 导入前跑 `yuque_rewrite_images.py` 传 CDN，**再把 `_office_assets` 从导入根删掉**（硬规则 10）；正文首行自动写 `> 源文件：\`xxx.docx\` ｜ 由 yuque_office_convert 转换 ｜ 日期`（`--no-provenance` 可关）
+- 产出形态：docx 样式→标题级别（`Heading1` → `#`）；pptx 每页 `## Slide N`（标题 `###`、表格转 Markdown、备注转 `> 备注：`）；xlsx 每个工作表一个 `## 表名` + 表格（空表自动跳过）；csv 单表
+- 依赖：`pip install --user mammoth openpyxl python-pptx`（mammoth 自带 cobble/lxml）。⚠️ **不要装 markitdown 全量**——它硬依赖 `magika` → `onnxruntime`（~24MB 轮子），只为文件类型嗅探；本机还有坏的 onnxruntime 残留（pip 报 `Ignoring invalid distribution ~nnxruntime`）
+- 已知损失：docx 经 mammoth 会把 ASCII 标点转义成 `\.`（语雀渲染正常，源文有噪声）；公式/批注/浮动版式不保真；图片只落盘不传 CDN（交给 rewrite_images）
+- 回归单测：`cd scripts && python3 test_office_convert.py`（4 项，不联网）
 
 ## 网站抓取导入（网页 → 语雀，2026-10-13 固化，2026-10-14 补命名规范）
 
