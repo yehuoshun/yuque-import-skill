@@ -1068,5 +1068,12 @@
     "book_url": "https://www.yuque.com/yehuoshun/elixir-getting-started-zh-1f517ec",
     "imported_at": "2026-10-30T11:45:00+0800",
     "note": "开源项目口径。Elixir 官网入门教程中译（Ljzn/ElixrGettingStartedChinese，老 GitBook：SUMMARY.md + 扁平 22 章 N_*.markdown + book.json/cool.ex/HOW_TO_BUIlD 脚手架不入库）。作者声明可随意使用。标题取各章首个 H1（中文，SUMMARY 是英文以 H1 为准）；正文其余标题整体降一级（#→##，避免与既有 ## 撞级）；各章顶部「本章内容」缩进列表按列表块最小缩进 dedent（保留 16/18/20 的真实二层嵌套）；链接全为外链 http(s) 无需改写；无图。23 节点（0 目录/23 DOC），toc-md PUT PASS，六查全绿（TOC 23==本地 23、全路径唯一、对账 0 错位、幽灵 0 docs23==TOC DOC23、word_count 23/23>0 最小 91、回读 23/23 零异常）。move-stack 开源项目 57018723 返 {}（服务端回归）挂账。 ⚠️修复记录：首版正文标题「整体降一级」未跟代码围栏，把围栏内 #PID<…>/# 注释/# => 误改成 ##（回读/word_count 抓不到）→ 删 23 文档重导（fence-aware shift）后修正，服务端正文已确认 #PID< 保留、## PID< 消失。"
+  },
+  "https://github.com/Ljzn/MetaProgrammingInElixirChinese": {
+    "commit": "5e24e62",
+    "book_id": 85147695,
+    "book_url": "https://www.yuque.com/yehuoshun/elixir-metaprogramming-dsl-zh-5e24e62",
+    "imported_at": "2026-10-30T11:49:00+0800",
+    "note": "开源项目口径。Elixir 官网 Metaprogramming in Elixir 中译（Ljzn/MetaProgrammingInElixirChinese，老 GitBook：扁平 3 章 N_*.markdown = 1_Quote_and_unquote/2_Macros/3_Domain_Specific_Languages，无 SUMMARY，按前缀数字定序）。标题取各章 H1（中文）；正文其余标题整体降一级——**fence-aware**（围栏内 `# => 1` / `# 注释` 不当标题，本单起沿用 #89 修复后的写法）；顶部缩进列表按块最小缩进 dedent（含转义 `\\- ` 列表项，坑 84 同族）。无图、链接全外链。4 节点（0 目录/4 DOC = 3 章+00-说明），toc-md 4 行 161B PUT 0.6s PASS，六查全绿（TOC 4==本地 4、全路径唯一、对账 0 错位、幽灵 0 docs4==TOC DOC4、word_count 4/4>0 最小 88、回读 4/4 零异常）。move-stack 开源项目 57018723 返 {}（服务端回归）挂账。"
   }
 }
