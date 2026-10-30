@@ -1131,5 +1131,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/the-way-to-go-zh-cn-7a54d34",
   "imported_at": "2026-10-30T15:15:00+0800",
   "note": "开源项目口径。源=Unknwon/the-way-to-go_ZH_CN @7a54d34（2022-06-25）= Ivo Balbaert《The Way To Go》中文译本《Go 入门指南》。结构取自 eBook/directory.md（4 部分 / 21 章 / 190 节）而非文件名——章 1/2/4 没有 NN.0.md 章导读、章标题只在目录里。落库 236 节点=4 部分 TITLE + 21 章 TITLE + 211 文档（190 节 + 18 章导读 + 前言 + 16.10 讨论附文 + 说明）；35 图 CDN。处理要点：① 节号/章号零填充两位（04.05），否则 4.10 排到 4.2 前；② 部分名按 unicode 会排成 一/三/二/四（三 4E09 < 二 4E8C），导入后 prependNode 把第二部分挪到第三部分前；③ 图有 HTML 写法 <img src=\"images/x.jpg?raw=true\">（10.6 节），要把 ?raw 剥掉并转 markdown；上游缺 2 图（20.8_fig20.1.png、studygolang-qrcode.jpg）→ 正文标注「原书插图缺失」。⚠️ 事故：rm -rf clean/images 因工具层超时未执行 → 35 张图被当占位文档导入（TOC 多出 images TITLE），已逐个 DELETE docs + removeNode 清掉，并清理 progress.json 的 images/* 条目后回读才通过。toc-md 272 行 PUT 2.2s；清理后六查全绿：TOC 236==本地、对账 0 错位、幽灵 0（docs 211==TOC DOC 211）、word_count 211/211>0（31~6338）、回读 211/211 零异常（35 CDN 引用==35 重写）；00-说明/00-前言 prependNode 归位最前。⚠️ move-stack 57018723 返 200 {} → 挂账。脚本 examples/the-way-to-go-zh-cn/build.py。"
+ },
+ "https://github.com/chai2010/go-ast-book": {
+  "commit": "6bb3a6f",
+  "book_id": 85149817,
+  "book_url": "https://www.yuque.com/yehuoshun/go-ast-book-6bb3a6f",
+  "imported_at": "2026-10-30T15:35:00+0800",
+  "note": "开源项目口径。源=chai2010/go-ast-book @6bb3a6f（2024-09-26）= 柴树杉/史斌/丁尔男《Go语言定制指南》（原名《Go 语法树入门》）开源版 md 源，GitBook 3.x 结构（chN/readme.md + SUMMARY.md）。SUMMARY 只列章、无子节层级 → 一章一篇共 20 文档：index.md→00-Go语言定制指南、preface.md→01-前言（三篇序言内层 H1 降为 ##）、ch1~ch16、附录A goyacc/附录B ANTLR4；两章号零填充（NN- 前缀）字典序即书序。⚠️ 第12-16章正文因出版社版权未开源（仅存「本章简介」+实体书链接），保留为简介文档、已剥每章重复的封面图，残缺度写进库描述。ch7/x.md 孤儿片段、examples/ 源码树（ch*/examples、appendix/**/examples）、book.ini/Makefile/style.css/README/wechat 二维码不收；index 的「微信公众号」二维码段剥除。13 图传 CDN；扁平零目录。六查全绿：TOC 20==本地20 / 错位0 / 幽灵0（docs 20==TOC DOC 20）/ word_count 20/20>0 / 回读 20/20 零异常 / 无分片。⚠️ move-stack 开源项目 57018723 三轮均返 {}（语雀侧 10-27/28 起静默 no-op 回归）→ 挂账。"
  }
 }

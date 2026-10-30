@@ -549,3 +549,11 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
 4. **图片有三种写法**：markdown `![]()`、HTML `<img src="images/x.jpg?raw=true" style="...">`（10.6 节）、以及**上游本身就缺文件**的引用（本书 2 处）→ 前者转 markdown 并剥 `?raw=true`，后者在正文原位标「原书插图缺失」，别留裂图。
 5. **血案：`rm -rf <clean>/images` 没执行就去导入了**。本次 `rm && create-book` 那条命令在**工具层超时**（Upstream Service Timeout），rm 实际没跑；随后单独重跑 create-book + import → 35 张图被 tree_import 当成**占位文档**塞进库（TOC 多出一个 `images` TITLE，doc 数 246 vs 预期 211）。清理三步：① 逐篇 `DELETE /repos/{id}/docs/{doc_id}`（35 发）；② `PUT /toc {action:removeNode, node_uuid:<images TITLE>, action_mode:"sibling"}`（**removeNode 少了 `action_mode` 会 HTTP 400**）；③ 删掉 `progress.json` 里 `images/*` 与 `images` 条目，否则回读脚本对每个残留条目报「TOC 无此 uuid」。**教训：`rm -rf images` 要单独一条命令并确认 `ls` 为空，再开始导入。**
 - **本例实测**：236 节点（4 部分 + 21 章 TITLE + 211 文档）、35 图 CDN；toc-md 272 行 PUT 2.2s；清理后六查全绿（TOC 236==本地、对账 0、幽灵 0 docs211==TOC DOC211、word_count 211/211>0、回读 211/211 零异常）。库 **85149501**（slug `the-way-to-go-zh-cn-7a54d34`）。⚠️ move-stack 57018723 返 `200 {}` → 挂账。脚本 `examples/the-way-to-go-zh-cn/build.py`。
+
+**坑 94：GitBook 3.x 源仓「SUMMARY 只到章」→ 一章一篇；未开源章节按「简介文档」保留**（2026-10-30 chai2010/go-ast-book《Go 语法树入门》/《Go 语言定制指南》实战）
+1. **粒度随 SUMMARY**：本书 `SUMMARY.md` 只列 16 章（每章一个 `chN/readme.md`），**没有子节条目** → 一章一篇共 20 文档（index/preface/16 章/2 附录）。**别按正文 `##` 硬拆**——GitBook 每个 md = 站点一页，章才是原书分页单位（对照：SUMMARY 列到节的库才拆到节，如 ZMQ/cppwasm）。
+2. **未开源章节怎么处理**：ch12–ch16 因出版社版权只剩「本章简介 + 实体书链接」（400~700B）。**保留为简介文档**（保结构 + 让读者知道残缺在哪），剥掉每章重复的那张实体书封面图；残缺度写进 `create-book --desc` 与 00-说明。判据对照：**0 字节纯空壳才「不收」**（坑 58/76），有简介的保留。
+3. **扁平零目录时序号前缀是唯一顺序保障**：`NN-` 两位零填充（00 index / 01 前言 / 02..17 章 / 18–19 附录），`sorted(listdir)` 即书序 → **免收尾 prependNode**。注意 `第10章` 不填充会排到 `第2章` 前。
+4. **孤儿片段要认出来**：`ch7/x.md` 是内容重复的残片（起于 H2「1.2 复合面值」、无章 H1、正文与 ch8 重复）→ 不收。判据 = 起于 H2/H3 + 内容与他章重复。
+5. **一篇 md 里塞多篇正文**（如 `preface.md` 三篇序言各带 H1）→ 内层 H1 全降 `##`，doc 标题给「前言」。
+- **本例实测**：20 文档扁平、13 图 CDN、toc-md PUT 0.6s；六查全绿（TOC 20==本地、错位 0、幽灵 0 docs20==TOC DOC20、word_count 20/20>0、回读 20/20 零异常）。库 **85149817**（slug `go-ast-book-6bb3a6f`）。⚠️ move-stack 57018723 三轮返 `{}` → 挂账。脚本 `examples/go-ast-book/`。
