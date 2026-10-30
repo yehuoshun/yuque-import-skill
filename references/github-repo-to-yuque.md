@@ -517,3 +517,12 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
 3. **`### 课程链接` 是仓库内相对链**（`[第 2 课](lecture2.md)`）→ 语雀里是死链，**转纯文本**（保留标题词）；只留站外（B站/网易云/资料）链接。README 里指向 `lectures/lectureN.md` 的链接同理。
 - `.go` 示例直接原样拷进 clean 树（`示例代码/`），导入器按扩展名 `FENCE_LANG[".go"]` 自动包 ```go 围栏，标题=文件名带扩展名。
 - **本例实测**：23 节点（1 目录 + 22 文档）、无图；toc-md 23 行 PUT 1.6s 结构 PASS、0 失败；六查全绿（TOC 23==本地、对账 0、幽灵 0 docs22==TOC DOC22、word_count 22/22>0、回读 22/22 零异常）；根级 00-说明 prependNode 归位最前。库 **85149002**（slug `go-fundamental-programming-3336687`）。⚠️ move-stack 57018723 返 `200 {}` → 挂账。脚本 `examples/go-fundamental-programming/build.py`。
+
+**坑 90：「半成品翻译工程」型仓库（双语标记 + 大量未译文件）——按「中文字符密度」筛篇，别按「文件含中文」**（2026-10-30 golang-china/golangdoc.translations《Go 官方文档翻译》实战）
+这类仓库是「整站中文化」翻到一半的产物：文件都在 `*/zh_CN/` 下，但**多数篇目根本没翻**。三条铁律：
+1. **判据只能是密度**：`len(CJK)/len(text) >= 0.05`。反例实锤：`tour/zh_CN/content/welcome.article` 里只有「Hello, 世界」→ 含中文但 0.3%（假阳性）；`doc/zh_CN/go_spec.html` 有 910 个汉字但正文 156KB → 0.6%（相当于没译）。按「文件里有没有中文」筛会把 92 篇英文博客、42 篇英文 slide 全塞进库。
+2. **三种双语载体的剥法**：① HTML —— 英文块包在 `<div class="english">`，`decompose()` 掉即可；② `.article` —— `.html _tr/div_begin_zh_CN.html` 到 `.html _tr/div_end.html` 之间是中文，**文件头（标题/中文标题/日期/Tags/作者）在第一个 `_tr` 标记之前，必须单读**，否则标题和 `## Introduction` 会漏进正文；③ Go 文档注释 —— 每个 API「英文注释段 + 空行 + 中文注释段 + 声明」，按注释组找**第一处含中文的段落起点**保留到组尾，再把声明签名（`func Xxx(...)`）作为 ```go 块附上。
+3. **空目录别建**：`tour/`、`talks/` 全站零翻译 → 不建空壳 TITLE，写进 00-说明的「未收录」里。
+- 图片另有一坑：这类站点的图是**站点绝对路径**（`/doc/gopher/x.png`），仓库实际在 `doc/zh_CN/gopher/` → `resolve_img` 要按 base_dir → 仓库根 → 各 zh_CN 子目录 → **按文件名唯一命中**逐级回退。
+- 已知假阳性：Go 代码样例里的 `<img src="{{.X}}">` 会被 `yuque_rewrite_images.py` 的 `HTML_RE` 当成待传图（`html/template` 包 2 处）→ `--dry` 报「本地缺失 2」，不影响导入，验收时解释掉即可。
+- **本例实测**：157 节点 = 28 TITLE + 129 文档（官方文档 18 / 标准库包文档 102 / 博客 8）；4 图 CDN；toc-md 157 行 5005B PUT 1.3s PASS、0 失败；六查全绿（TOC 157==本地、对账 0、幽灵 0 docs129==TOC DOC129、word_count 129/129>0、回读 129/129 零异常）；根级 00-说明 + 三个分区 TITLE 用 prependNode 归位。库 **85149174**（slug `go-doc-translations-fe925a2`）。⚠️ move-stack 57018723 返 `200 {}` → 挂账。脚本 `examples/go-doc-translations/build.py`。
