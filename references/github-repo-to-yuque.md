@@ -461,3 +461,14 @@ token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/cre
 5. **半角 `/` 洗全角**：小节标题 `异步C/S结构` → `异步C／S结构`（文件名/目录树安全）。
 6. **根级 `00-说明.md` 归位**：toc-md 后落 5 个 TITLE 之后 → 一发 `prependNode/action_mode=sibling`。
 - **本例实测**：@ `91d94b7`（master）；**78 节点**（5 TITLE / 73 DOC），69 图全 CDN（0 缺失，抽 3 张 200）；toc-md 目录树 78 行 4311B **PUT 0.9s**、结构核对 PASS、0 失败；六查全绿（TOC 78==本地 78、全路径唯一 True、对账 0 错位、幽灵 0 docs73==TOC DOC73、73 篇 word_count 全 >0、73 篇回读 0 异常、无分片）；库 **85147220**（slug `zguide-cn-91d94b7`）。⚠️ move-stack 开源项目 57018723 返 `200 {}`（服务端回归）→ 挂账。脚本 `examples/zguide-cn/build.py`。
+
+**坑 82（「单文档风格指南」型仓库：`## 拆篇` + 剔 `## 目录` + 引用式链接内联 + 重名节，2026-10-30 `elrrrrrrr/coffeescript-style-guide`《CoffeeScript 风格指南》中文译本实战）**：仓库只有 `README.md`（英）+ `README-ZH.md`（中，12KB / 491 行）+ `coffeelint.json`。要点：
+
+1. **按 `## ` 拆文档时先跟围栏**：正文里大量 `# 正确` / `# 错误` / `# No` / `# Yes` 是 **```coffeescript 围栏内的注释行**，`grep -n '^#{1,3} '` 会把它们当标题（我一开始就被骗了 2 处）。判定只认「围栏外 + 行首 `## `」。
+2. **必剔 `## 目录`**：语雀自带侧边 TOC；原目录全是 `* [x](#anchor)` 站内锚点，导入后 100% 死链，且与语雀 TOC 重复。
+3. **必剔 `<a name="code_layout"/>` 锚点行**：每个小节标题前一行都有，留着就是一行裸 HTML。
+4. **引用式链接必须内联**：文末一整块 `[coffeescript]: http://…` 定义；拆成 15 篇后定义落在别的文档 → 正文 `[CoffeeScript][coffeescript]` 全是死链。做法：先全文收集 `^\[ref\]:\s*<url>` 建表 → `[\1][\2]` 替换成 `[\1](url)` → 最后删定义块（同坑 75 第 3 条，此处是「文末集中定义」变体）。
+5. **重名节要改名**：`## 注释` 出现两次（comments 与 annotations，锚点分别是 `#comments` / `#annotations`）→ 同父同名会让语雀 TOC 两个「注释」不可区分，后者改「注解」。
+6. **全根级 DOC 不需要归位**：`walk()` 同级按名称排序，`00-说明`…`14-其他` 零填充前缀 = 阅读序，toc-md 出来的 TOC 顺序天然正确（与坑 29 的「根级 DOC 落 TITLE 之后」只在有 TITLE 时才成立）。
+7. **`00-说明.md` 里别重复 H1**：原文首行 `# CoffeeScript 风格指南` 已在说明里手写过一次，再拼 body 会双标题 → 拼 body 前过滤 `^# ` 行。
+- **本例实测**：@ `7b7fd79`（master）；**15 节点**（0 目录 / 15 DOC），零图零分片；toc-md 15 行 567B PUT 0.6s、结构核对 PASS、0 失败；六查全绿（TOC 15==本地 15、全路径唯一 True、对账 0 错位、幽灵 0 docs15==TOC DOC15、15 篇 word_count 全 >0、15 篇回读 0 异常）；库 **85147316**（slug `coffeescript-style-guide-7b7fd79`）。⚠️ move-stack 开源项目 57018723 返 `200 {}`（服务端回归）→ 挂账。脚本 `examples/coffeescript-style-guide/build.py`。
