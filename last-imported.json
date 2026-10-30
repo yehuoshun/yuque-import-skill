@@ -1222,5 +1222,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/css-guidelines-eb01cb0",
   "imported_at": "2026-10-31T04:31:00+0800",
   "note": "fpb52 #118《通用 CSS 笔记、建议与指导》(chadluo/CSS-Guidelines @ eb01cb0)：csswizardry/CSS-Guidelines 的 zh-CN 译本，仓库工作树只有 1 个 README.md。口径=单篇长文型：00-说明=首个 ## 之前前言段+来源，正文按 ## 拆 19 篇(跳过重复的 ## 目录)；文件名洗 /→／、去反引号/星号(15-!important)。20 节点(0 目录/20 文档)无图。六查全绿：TOC 20==本地、错位 0、幽灵 0 docs20==TOC DOC20、word_count 20/20>0(min 53)、回读 0 异常、根序正确。脚本 examples/css-guidelines/build.py。⚠️ move-stack 57018723 返 200 {} 挂账。"
+ },
+ "https://zh.learnlayout.com": {
+  "commit": null,
+  "book_id": 85155135,
+  "book_url": "https://www.yuque.com/yehuoshun/learnlayout-zh-20261031",
+  "imported_at": "2026-10-31T04:37:00+0800",
+  "note": "fpb52 #119《学习CSS布局》(zh.learnlayout.com, learnlayout.com 的简体中文版)：静态多页站(无源仓库可见)。网站口径：页面清单/顺序=/toc 的 20 讲，加首页=21 篇 NN- 前缀。正文容器 #container；剥 style/script/.nav-wrapper(上一页下一页)/footer(页码)/#translations(语言切换)。**新坑**：部分页(float 等)把 .nav-wrapper/footer 嵌在 <p class=content> 内(HTML 不闭合) → 块级过滤不够，inline() 也要跳 nav-wrapper/footer。代码块=figure.highlight>pre>code.language-x；demo 盒子 span.label 转行内码。图=frameworks 10 张 logo + float/percent 样例图(含 bob.png/ilta.png)→下载本地化传 CDN 删目录(13 处引用/12 图)。21 节点六查全绿：TOC 21==本地、错位 0、幽灵 0 docs21==TOC DOC21、word_count 21/21>0(min 27)、回读 0 异常、根序正确。脚本 examples/learnlayout-zh/build.py。⚠️ move-stack 文章收集 36149506 返 200 {} 挂账。"
  }
 }
