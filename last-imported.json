@@ -1082,5 +1082,12 @@
     "book_url": "https://www.yuque.com/yehuoshun/phoenix-doc-in-chinese-52f09cb",
     "imported_at": "2026-10-30T12:00:00+0800",
     "note": "书单原链为老 gitbooks.io 站 https://mydearxym.gitbooks.io/phoenix-doc-in-chinese/content/ —— 站点 index 200 但中文页全 404（仅 ASCII 页 200），GitBook 自带 search_index.json 只有纯文本 body（无围栏/表格/层级）→ 反查源仓库吃 md。口径：开源项目（SUMMARY.md 定目录，父分组页与首个子项同文件→跳过父页）。落库 39 节点 = 4 TITLE（01-基础部分11/02-测试5/03-部署3/04-进阶内容14）+ 35 DOC（含 00-介绍、00-说明）；toc-md 39 行 1537B PUT 0.6s 结构核对 PASS、0 失败。转换：SUMMARY 文件名笔误 I_exrm_release→I_exrm_releases 加 s 兜底；标题层级五国混战→去重层级集合相对归一到 H2/H3/H4（fence-aware）；标题剥离比对 title 与去前缀版（去空格下划线归一）；站内自指+相对 md/html 链转纯文字、http(s) 外链原样。3 张 gyazo 外链图原样未传 CDN。六查全绿：TOC 39==本地、对账 0 错位、幽灵 0（docs 35==TOC DOC 35）、word_count 35/35>0（最小 12 = 测试/H_视图 占位 stub）、回读 35/35 零异常；根级 00-介绍/00-说明 逆序两发 prependNode 归位（prev_uuid 链验收）。残缺度（作者自述）：官方也无的 views 章、国内不可达的 heroku、将被 distillery 取代的 exrm ——stub 照录。move-stack 开源项目 57018723 返 200 {}、/api/mine/books 实测 stack_id=None（10-27 起服务端回归）→ 挂账。"
+  },
+  "https://github.com/liancheng/cpie-cn": {
+    "commit": "0a550d4",
+    "book_id": 85147901,
+    "book_url": "https://www.yuque.com/yehuoshun/cpie-cn-0a550d4",
+    "imported_at": "2026-10-30T12:20:00+0800",
+    "note": "Sphinx/reST 工程（conf.py/index.rst/20 rst）。口径：开源项目，吃源仓库 reST（scripts/yuque_rst_convert.py + examples/sphinx-rst-site 的 3 个 monkey-patch）。内容 = Concurrent Programming in Erlang (Part I) 社区中文译本（连城发起，CC BY-NC-ND 2.5）。落库 20 节点 = 根级 6 篇（00-前言/00-说明/01-翻译计划/02-序言/03-致谢/04-简介）+ 1 TITLE（05-第I部分 编程：第1~9章 + 附录A/C/D/E = 13 篇）；附录B 上游空壳（146B 仅标题）→ 不建节点。两处新坑：① .. topic:: 内**缩进**的 literalinclude 被原脚本静默丢弃（LI_RE 只认列 0）→ 已修 yuque_rst_convert.py 支持缩进，第9章程序9.3 C 源码补回（单篇 PUT /docs 更新，不新建）；② conf.py 的 rst_prolog 替换（ε/→/⇒/ő 等）docutils 不读 → 整树复制到 build-work/ 逐文件前置注入 prolog（先读后写）。21 图（含 cc.png+8 张译者邮箱图）全传 CDN。toc-md 20 行 PUT 22.8s PASS、0 失败；六查全绿：TOC 20==本地、对账 0 错位、幽灵 0（docs 19==TOC DOC 19）、word_count 19/19>0、回读 19/19 零异常（21 CDN 引用==21 重写）；根级 6 篇落 TITLE 之后 → prependNode 归位（prev_uuid 链验收；教训：别一次押一串，见 refs 坑 88）。move-stack 开源项目 57018723 返 200 {}、/api/mine/books stack_id=None（服务端回归）→ 挂账。"
   }
 }

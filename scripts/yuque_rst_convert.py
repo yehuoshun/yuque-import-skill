@@ -32,7 +32,9 @@ import re, os, sys, html as h, shutil, argparse
 from docutils.core import publish_parts
 
 # literalinclude → 内联代码块（坑 6）
-LI_RE = re.compile(r'^\.\.\s+literalinclude::\s*(\S+)\s*$')
+# 支持**缩进**的 literalinclude（在 `.. topic::`/admonition 等指令内，2026-10-30 cpie-cn 实踩）：
+# 缩进指令漏剥 → 代码整段静默消失。缩进量 > 0 时生成的 `.. code::` 也要同级缩进。
+LI_RE = re.compile(r'^(\s*)\.\.\s+literalinclude::\s*(\S+)\s*$')
 LI_OPT_RE = re.compile(r'^\s+:([\w-]+):\s*(.*)$')
 EXT_LANG = {'.c': 'c', '.h': 'cpp', '.cpp': 'cpp', '.cc': 'cpp', '.cxx': 'cpp', '.hpp': 'cpp',
             '.py': 'python', '.java': 'java', '.js': 'javascript', '.ts': 'typescript', '.cs': 'csharp',
@@ -52,7 +54,8 @@ def expand_literalinclude(src, srcroot, fdir):
             out.append(ln)
             i += 1
             continue
-        path, opts = m.group(1), {}
+        indent = m.group(1)
+        path, opts = m.group(2), {}
         i += 1
         while i < len(lines):
             om = LI_OPT_RE.match(lines[i])
@@ -72,9 +75,9 @@ def expand_literalinclude(src, srcroot, fdir):
             out.append("")
             out.append(".. note:: 源码文件缺失：%s" % path)
             continue
-        body = "\n".join(("    " + c if c.strip() else "") for c in code.rstrip("\n").split("\n"))
+        body = "\n".join((indent + "    " + c if c.strip() else "") for c in code.rstrip("\n").split("\n"))
         out.append("")
-        out.append(".. code:: %s" % lang)
+        out.append(indent + ".. code:: %s" % lang)
         out.append("")
         out.append(body)
         out.append("")
