@@ -33,9 +33,18 @@ def dedent_lists(body):
     return "\n".join(out)
 
 def shift_headings(body):
-    def rep(m):
-        return "#" * (len(m.group(1)) + 1) + " " + m.group(2).strip()
-    return re.sub(r"(?m)^(#{1,6})\s*(\S.*)$", rep, body)
+    out, fence = [], False
+    for ln in body.split("\n"):
+        if ln.lstrip().startswith("```"):
+            fence = not fence
+            out.append(ln); continue
+        if not fence:
+            m = re.match(r"^(#{1,6})\s*(\S.*)$", ln)
+            if m:
+                out.append("#" * (len(m.group(1)) + 1) + " " + m.group(2).strip())
+                continue
+        out.append(ln)
+    return "\n".join(out)
 
 if os.path.exists(OUT):
     shutil.rmtree(OUT)
