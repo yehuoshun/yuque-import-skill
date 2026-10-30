@@ -1033,5 +1033,12 @@
     "book_url": "https://www.yuque.com/yehuoshun/coffeescript-style-guide-7b7fd79",
     "imported_at": "2026-10-30T11:20:00+0800",
     "note": "开源项目口径。《CoffeeScript 风格指南》中文译本（仓库 elrrrrrrr/coffeescript-style-guide 的 README-ZH.md；原指南为社区整理的 CoffeeScript Style Guide，灵感来自 PEP-8 / Ruby Style Guide / Google JS Style Guide 等）。单文档型仓库（另含英文 README.md + coffeelint.json，均不入库）。按 `## ` 拆 15 篇文档（00-说明 + 01灵感~14其他），跟代码围栏（`# 正确`/`# 错误` 是围栏内注释非标题）；剔 `## 目录`（语雀自带 TOC + 锚点死链）、剔 `<a name=.../>` 锚点行；文末引用式链接定义内联成 [t](url) 并丢弃定义块；重名 `## 注释`(comments/annotations) 后者改「注解」；剥 00-说明 里重复 H1。toc-md 15 行 PUT 0.6s、结构核对 PASS、0 失败；六查全绿：TOC 15==本地 15（全根级 DOC，字典序=阅读序免归位）、全路径唯一 True、对账 0 错位、幽灵 0（docs 15==TOC DOC 15）、word_count 15/15>0、回读 15/15 零异常、无分片零图。⚠️ move-stack 开源项目 57018723 返 {}（服务端回归）→ 挂账。"
+  },
+  "https://github.com/geekplux/coffeescript-style-guide": {
+    "commit": "b87e527",
+    "book_id": 85147386,
+    "book_url": "https://www.yuque.com/yehuoshun/coffeescript-style-guide-b87e527",
+    "imported_at": "2026-10-30T11:22:00+0800",
+    "note": "开源项目口径。《CoffeeScript 编码风格指南》——仓库 geekplux/coffeescript-style-guide 的 README.md 即中文正本（社区整理 CoffeeScript Style Guide 的另一译本；与 85147316=elrrrrrrr 版为不同仓库/不同译文，两者并存）。单文件仓（另 coffeelint.json 不入库）。按 `## ` 拆 14 篇（01灵感~14其他）+ 00-说明 = 15 文档零目录，跟代码围栏（围栏内 `# 好`/`# 差` 是注释行，坑 82）；剔 codesponsor.io 赞助横幅、`<a name=.../>` 锚点行、`## 目录`；文末引用式链接定义内联丢弃；剥 00-说明 重复 H1；无图。toc-md 15 行 PUT 0.6s PASS；六查全绿（TOC 15==本地 / 全路径唯一 / 对账 0 错位 / 幽灵 0（docs 15==TOC DOC 15）/ word_count 15/15>0 / 回读 15/15 零异常）。move-stack 开源项目 57018723 返 {}（服务端回归）挂账。"
   }
 }
