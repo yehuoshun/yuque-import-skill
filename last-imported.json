@@ -1229,5 +1229,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/learnlayout-zh-20261031",
   "imported_at": "2026-10-31T04:37:00+0800",
   "note": "fpb52 #119《学习CSS布局》(zh.learnlayout.com, learnlayout.com 的简体中文版)：静态多页站(无源仓库可见)。网站口径：页面清单/顺序=/toc 的 20 讲，加首页=21 篇 NN- 前缀。正文容器 #container；剥 style/script/.nav-wrapper(上一页下一页)/footer(页码)/#translations(语言切换)。**新坑**：部分页(float 等)把 .nav-wrapper/footer 嵌在 <p class=content> 内(HTML 不闭合) → 块级过滤不够，inline() 也要跳 nav-wrapper/footer。代码块=figure.highlight>pre>code.language-x；demo 盒子 span.label 转行内码。图=frameworks 10 张 logo + float/percent 样例图(含 bob.png/ilta.png)→下载本地化传 CDN 删目录(13 处引用/12 图)。21 节点六查全绿：TOC 21==本地、错位 0、幽灵 0 docs21==TOC DOC21、word_count 21/21>0(min 27)、回读 0 异常、根序正确。脚本 examples/learnlayout-zh/build.py。⚠️ move-stack 文章收集 36149506 返 200 {} 挂账。"
+ },
+ "https://blog.csdn.net/dc_726/article/details/46565241": {
+  "commit": null,
+  "book_id": 85155140,
+  "book_url": "https://www.yuque.com/yehuoshun/java-golang-guide-20261031",
+  "imported_at": "2026-10-31T04:43:00+0800",
+  "note": "fpb52 #110《Java程序员的Golang入门指南》(CSDN dc_726 article 46565241)：(上)篇。**CSDN 现带 JS WAF 安全验证**(HTTP 521+26KB 挑战页)：本机直连/m.blog.csdn.net/cookie jar/phoenix API/r.jina.ai 全失败；re-harness runner 出口同样 521。→ 正文取 Wayback 快照(20250511150824, /web/2id_/ 逐次 gzip 解压)。**(下)篇 46745947 无任何 Wayback 快照(CDX=[])** → 只收(上)。(下)的 id/标题从作者专栏页 category_5598457.html 的 Wayback 快照里挖出(标题 oracle)。口径=网站(文章收集 stack 36149506)；正文 div#content_views 按 h2 拆：00-说明 + 1.序言 + 2.你好世界 + 3.语法基础 = 4 节点无图。六查全绿(word_count 4/4>0 min 98)。脚本 examples/csdn-java-golang/(build.py+fetch.py)。⚠️ move-stack 36149506 返 200 {} 挂账。**残缺度：(下)未收**。"
  }
 }
