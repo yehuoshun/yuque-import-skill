@@ -1187,5 +1187,12 @@
   "book_url": "https://www.yuque.com/yehuoshun/go-best-practice-67aa405",
   "imported_at": "2026-10-31T03:20:02+0800",
   "note": "fpb52 #108《Go实战开发》（astaxie）：仓库 ebook/zh 只有第一部分基础篇（计划 6 章实际 2 章：01 开发环境配置 6 节 / 02 开发工具配置 4 节 + 卷首 0001 + · 2 章头导读），第 3-6 章缺（残缺度写进库描述与 00-说明）。16 节点（2 TITLE / 14 DOC）。口径：标题取 preface.md（目录 oracle，源文件 H1 常缺号/错号，如 01.3 H1 是「3 Vgrant使用入门」）；章 NN.0.md → NN.00 章名.md 落 TITLE；`preface.md`（旧版目录清单）与 `src/`、构建脚本不收；README 剔捐款/交流段并入 00-说明。**新坑 85**：源仓库有「标题-only 空壳节」（02.2/02.3 只有 H1 + ## links 导航，剥完 1 字节）→ 不能直接落库（word_count=0 违反六查第 6 条），补一段「原书此节尚未撰写正文」占位（PUT 更新，非新建）后 word_count=41。六查全绿：TOC 16==本地、reconcile 0 错位、幽灵 0（docs 14==TOC DOC 14）、word_count 14/14>0、回读 14/14 零异常（4 CDN 图）。根级两 DOC 逆序 prepend 归位（00-说明 → 00-第一部分·基础篇 → 01..02）。move-stack 57018723 仍返 {} → 挂账。"
+ },
+ "https://github.com/achun/Go-Blog-In-Action": {
+  "commit": "d8e2120",
+  "book_id": 85155099,
+  "book_url": "https://www.yuque.com/yehuoshun/go-blog-in-action-d8e2120",
+  "imported_at": "2026-10-31T03:56:23+0800",
+  "note": "fpb52 #109《Go语言博客实践》(Go Blog In Action，喻恒春/Martini 版 drinker 分支)：仓库就是 8 个 ChapterNN.md（一章一篇、无图、无子目录）→ 9 节点扁平（00-说明 + 01~08），零填充前缀 = 字典序即书序，**免归位**。口径：按「一文件 = 一章 = 一页」不硬拆节（GitHub 上本书就是章页 + 章内锚点）；章标题取仓库 README 目录（源文件 H1 是节名，如 Chapter01 的 H1 是「为什么是Martini」）；正文 setext/ATX 一级标题统一降为 ##、其余依次降一级（跟围栏走）；引用式链接 [文字][1] / [文字][] 全部内联、定义块删除（**定义行可能带 \"title\"，正则要容**——首版只认 `[x]: url` 导致 20 处没内联）；README 的目录清单（第N章/第N节 + 锚点死链）剔。六查全绿：TOC 9==本地、reconcile 0 错位、幽灵 0（docs 9==TOC DOC 9）、word_count 9/9>0（min 403）、回读 9/9 零异常。CJK 损耗仅 18（ch01 链接 title 文本，定义块删除所致）。move-stack 57018723 仍返 {} → 挂账。"
  }
 }
