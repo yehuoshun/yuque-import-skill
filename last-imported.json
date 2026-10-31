@@ -34,17 +34,17 @@
   "note": "默认分支 main @ bbce89b（2026-10-26 06:03Z，v1.7.4 release manifest 之后）。prep 4009（351 目录 / 3658 文件）→ 删 docs/images（22 张图先传 CDN + **重写 25 处引用 / 0 缺失**）后 3983 节点（347 / 3636）< 5000 不分库；toc-md 目录树 3983 行 / 216127B 一次 PUT **27.6s**、结构核对 PASS、0 失败；根级 TITLE 在前 / DOC 在后（toc-md 常态，未强改）。六查全绿：TOC 3983==本地 3983、全路径唯一 True、对账错位 0、幽灵 0（docs 3636==TOC DOC 3636）、**全库 word_count==0 仅 5 篇且全为非文本**（wechat.jpg / alipay.jpg / app-icon.png / icon.png 4 张 app 图 CDN 占位 + icon.ico 二进制占位）= 预期值、文本误判 0、抽查 12 篇逐字符相等。途中 16:35 撞账号级 429（5000/小时，与并行子会话共享）→ 脚本等 17:01 整点续跑，断点零丢失、最终 0 失败。HTTPS clone 502 → 走 SSH。历史（旧库全保留）：b9bd92f=84926783、a44686d=84777697。"
  },
  "https://github.com/morluto/rea": {
-  "commit": "ddefba83e",
+  "commit": "d48e472fa",
   "book_id": [
-   85108958,
-   85108960
+   85176483,
+   85176484
   ],
   "book_url": [
-   "https://www.yuque.com/yehuoshun/rea-ddefba83e",
-   "https://www.yuque.com/yehuoshun/rea-tests-ddefba83e"
+   "https://www.yuque.com/yehuoshun/rea-d48e472fa",
+   "https://www.yuque.com/yehuoshun/rea-tests-d48e472fa"
   ],
-  "imported_at": "2026-10-29T16:00:00+0800",
-  "note": "默认分支 main @ ddefba83e（10-29 13:45 `test(artifacts): handle blocked open-parent renames (#7904)`）；距上次导入 5ae77656（10-28）**882 文件变动 +55791/−15378**。口径沿用方案 A 拆 2 库（单库超 5000），描述互指对方 URL：主库 85108958 `rea-ddefba83e`（除 tests/，另剔 .github 47 文件+8 目录，4729 节点 = 338 目录/4391 文件，TOC 4753 = 4415 DOC + 338 TITLE，21 个分片文件→45 节点，PUT 42.1s PASS）+ 副库 85108960 `rea-tests-ddefba83e`（仅 tests/，2369 = 129/2240，TOC 2369，无分片；副库以 tests/ 内容为根，少一层 tests 目录）。图片：仓库 12 张，md 真正引用 5 张全部复用旧 imgmap 缓存（0 新上传），补漏 `<source srcset>` 23 处 + 「查看大图」普通链接 23 处；未被引用的 7 张（rea-plugin.png / favicon.svg / social-card.svg / figures 下 4 张）删除，残留本地图引用 0。六查全绿×2：verify PASS（缺失 0 / 分片号连续 / 全路径唯一 True）、幽灵 0、占位 0、reconcile 错位 0、分片 21 文件拼回逐字符相等、回读 34+20 篇零差异（含 CHANGELOG 461KB / docs/installation 107KB）。全程 0 次 429。move-stack 仍为服务端 bug（恒 200 {} 不落库）→ 未挂组，老板 10-28 已确认无需处理。历史：5ae77656=85069701/85069705（10-28）、d87e73f2=84927870/84927871（10-24）、d0067ba=84816207/84816208、3d565fa4=84991739/84991740（旧库全保留）。"
+  "imported_at": "2026-10-31T12:40:00+0800",
+  "note": "默认分支 main @ d48e472fa（10-31 03:13 `fix(mcp): preserve repeated HTTP host allowlists (#8164)`）；距上次导入 ddefba83e（10-29）85 commit / 848 文件变动 +53838/−14001。口径沿用方案 A 拆 2 库，描述互指 URL：主库 85176483 `rea-d48e472fa`（除 tests/，另剔 .github 56 节点，4848 节点 = 343 目录/4505 文件 → TOC 4872 = 4529 DOC + 343 TITLE，21 分片文件→45 节点，PUT 26.5s PASS）+ 副库 85176484 `rea-tests-d48e472fa`（仅 tests/，以 tests 内容为根，2419 = 130/2289，TOC 2419，无分片，PUT 14.8s PASS）。图片：仓库 12 张，md 真正引用 5 张全传 CDN（93 处 md/HTML + `<source srcset>` 23 处 + 「查看大图」普通链接 23 处）；未引用 7 张删除（rea-plugin.png / favicon.svg / social-card.svg / figures 4 张），残留本地引用 0；submodule 5 空目录按 .gitmodules 补回；licenses/dinosaur.txt 保留。六查全绿×2：verify PASS（缺失 0 / 全路径唯一 True）、幽灵 0、占位 0（word_count 0 篇）、reconcile 错位 0、分片 21 文件拼回逐字符相等、回读 62+33 篇零实质差异。撞 1 次 429 整点等待续跑（零丢失）。move-stack 仍服务端 bug（恒 200 {} 不落库）→ 未挂组，老板 10-28 已确认不处理。历史：ddefba83e=85108958/85108960、5ae77656=85069701/85069705、d87e73f2=84927870/84927871、d0067ba=84816207/84816208、3d565fa4=84991739/84991740（旧库全保留）。"
  },
  "https://github.com/howie6879/owllook": {
   "commit": "8ded1ea",
