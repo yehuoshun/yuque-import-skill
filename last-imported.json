@@ -7,10 +7,11 @@
   "note": "默认分支 master @ 308cc8b7（新增食谱《白萝卜丝清汤》#1896，唯一增量 md、无配图）。口径与上版一致（硬规则 10）：358 张配图**全部复用 10-26 CDN 缓存、0 重传**（350 唯一 URL / 重写 353 处引用 / 外链跳过 12 / 缺失 0）+ 连图带目录删净 → 623 节点（216 目录 / 407 文件）= 上版 622+1。toc-md PUT 通过、0 失败；六查全绿：TOC 623==本地、全路径唯一、reconcile 0 错位、幽灵 0（docs 407==TOC DOC 407）、word_count 407/407 全 >0、回读 407/407 零异常（CDN 引用 353==重写数）。move-stack 服务端 bug 期间未挂组——老板 2026-10-28 检查确认无需处理。历史：5fb3140c=84991630、0e106eea=84817850、f6da4528=84776562、743d7f46=84598602、84295491（fkigao 976）、84453956（旧库全保留）。"
  },
  "https://github.com/Alchyr/ModTemplate-StS2": {
-  "commit": "2c900a0",
-  "book_id": 84639583,
-  "book_url": "modtemplate-sts2-2c900a0",
-  "imported_at": "2026-10-16T14:44:00+0800"
+  "commit": "48151e0",
+  "book_id": 85183450,
+  "book_url": "modtemplate-sts2-48151e0",
+  "imported_at": "2026-11-01T02:01:00+0800",
+  "note": "默认分支 master @ 48151e0（10-16 后 16 commit：STS2 模组 dotnet 模板仓库）。口径按硬规则 10/12：25 张模板占位图（card/power/relic/potion/charui/mod_image 等）无任何 md 引用 → 不上传不建占位节点，导入根目录删图+清空目录 → 94 节点（26 目录/68 文件），无超限分片。toc-md PUT 1.0s、结构核对 PASS、0 失败。六查全绿：TOC 94==本地、reconcile 错位 0、幽灵 0（docs 68==TOC DOC 68）、word_count 68/68 全 >0、回读 68/68（55 直接一致 + 13 篇空 JSON 仅代码围栏包裹差异，剥围栏逐字节一致）。move-stack 无 cookie（写侧风控，坑 68/69 同款）→ 分组待补 stack 57018723。历史：2c900a0=84639583（旧库全保留）。"
  },
  "https://github.com/EbookFoundation/free-programming-books": {
   "commit": "3bb4c53f",
