@@ -254,3 +254,4 @@ python3 scripts/yuque_novel_import.py --txt novel.txt --dry-run
 ## 使用方式
 
 一句触发：「把 X 目录整棵导入语雀知识库 Y」「按目录结构建库」「把 X 仓库按开源项目流程到语雀」「把 X 小说导入语雀」。执行：dry → test → 全量（后台+进度心跳）→ 对账 → 验收汇报。开源项目类走 `references/github-repo-to-yuque.md` SOP，小说类走 `references/novel-txt-epub-to-yuque.md` SOP。
+**变体：waylau GitBook 3.x 老译本仓库（空壳扫描先行，2026-11-01 实捶）**：waylau 系列老译本（activiti-5.x-user-guide / apache-mina-2.x-user-guide / RestDemo 等）常**把未翻译的章节以 0 字节 md 提交**（activiti 11~19 章 48 个空文件、mina ch6 Transports 正文空壳，GitHub API tree 的 `size=0` 可直接验）→ **导入前先用 API 树扫一遍 zero-size 文件**（`git/trees/HEAD?recursive=1` 里 blob size==0），空壳不建节点、残缺度写 00-说明+库描述；否则 tree_import 会照导成「源仓库中该文件为空」占位文档（本批 activiti 首版即中，删库重导 85183646→85183664）。另两坑：① 老仓可能混入 **GBK 编码 md**（mina ch13 以 0xb5 开头，gb2312 解出「未完待续」短桩，转 UTF-8 保留）；② 图引用**保持源仓库的相对路径形态**（`../images/` 别「统一」成 `images/`——yuque_rewrite_images.py 按 md 所在目录解析相对路径，子目录文档用 `../images/` 才找得到根 images/）。SUMMARY 定序构建套路见 `examples/mina-2-user-guide/`（2026-11-01 实锤复用）。

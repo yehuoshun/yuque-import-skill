@@ -1300,5 +1300,75 @@
   "book_url": "https://www.yuque.com/yeuhoshun/codeguide-zh-20261031",
   "imported_at": "2026-10-31T20:47:00+0800",
   "note": "网站口径：mdo《Code Guide》中文翻译（bootcss 镜像，原文 github.com/mdo/code-guide，CC BY 3.0）。单页站 main.container 下 h2 分篇：黄金定律 / HTML / CSS（目录区丢弃）+ 00-說明 = 4 文档；div.section 左文字右代码，代码块 language-* 原样转围栏；无图。六查全绿：TOC 4==本地、reconcile 0、幽灵 0（docs 4==TOC DOC 4）、word_count 4/4>0、回读 4/4 异常 0。⚠️ move-stack 36149506 返 {} 挂账。"
+ },
+ "https://www.w3school.com.cn/html5/index.asp": {
+  "commit": "-",
+  "book_id": 85183564,
+  "book_url": "https://www.yuque.com/yeuhoshun/w3school-html5-20261101",
+  "imported_at": "2026-11-01T03:15:00+0800",
+  "note": "网站口径：w3school 中文站「HTML5 教程」（现行并入 HTML 教程栏目，原 /html5/ 页多 404 以现行页为准）。17 篇正文（简介/语义/风格指南/Canvas/SVG/视频/音频/插件/YouTube/Web API/地理定位/拖放/Web存储/Web Workers/SSE + Canvas 参考 + Audio-Video DOM 参考）+ 00-说明 = 18 节点 2 目录；tiy 在线试验与交互演示丢弃；4 图 CDN（含代码围栏内字面 <img> 示例保护不误重写）。六查全绿：TOC 20==本地、reconcile 0、幽灵 0（docs 18==TOC DOC 18）、word_count 18/18>0、回读 18/18 异常 0。⚠️ move-stack 36149506 返 {} 挂账。"
+ },
+ "https://sass-guidelin.es/zh/": {
+  "commit": "-",
+  "book_id": 85183582,
+  "book_url": "https://www.yuque.com/yeuhoshun/sass-guidelines-zh-20261101",
+  "imported_at": "2026-11-01T03:15:00+0800",
+  "note": "网站口径：Sass Guidelines 中文版（Hugo Giraudel 著，sass-guidelin.es/zh/ 单页书）。15 章（关于Sass~总结概要）+ 00-说明 = 16 节点平铺；剔 关于作者/贡献/目录/设置 站点元信息；149 段 SCSS/CSS/HTML 示例按启发式标注语言；1 图 CDN。六查全绿：TOC 16==本地、reconcile 0、幽灵 0（docs 16==TOC DOC 16）、word_count 16/16>0、回读 16/16 异常 0。⚠️ move-stack 挂账。"
+ },
+ "https://nilsun.github.io/apple-watch/": {
+  "commit": "-",
+  "book_id": 85183591,
+  "book_url": "https://www.yuque.com/yeuhoshun/apple-watch-chutan-20261101",
+  "imported_at": "2026-11-01T03:15:00+0800",
+  "note": "网站口径：nilsun 博客《Apple Watch 开发初探》单篇（2014-11-22，iOS8.2/WatchKit 发布之际）。原站页 404、独立仓库已删，正文+7 配图从博客仓库 nilsun/nilsun.github.io 取回（_posts/blog/2014-11-22-apple-watch.md + images/tech/applewatch/）；单篇+00-说明 = 2 节点；7 图 CDN。六查全绿。⚠️ move-stack 挂账。"
+ },
+ "https://zh-google-styleguide.readthedocs.io/en/latest/google-objc-styleguide/": {
+  "commit": "-",
+  "book_id": 85183597,
+  "book_url": "https://www.yuque.com/yeuhoshun/google-objc-styleguide-zh-20261101",
+  "imported_at": "2026-11-01T03:15:00+0800",
+  "note": "网站口径：readthedocs Sphinx 站《Google Objective-C 风格指南中文版》（2.36，ewangke/Yang.Y 译），直取 _sources/*.rst.txt；单页全本+00-说明 = 2 节点；2 段 objc 代码示例；与 #82 C++ 版同源同译者。六查全绿：TOC 2==本地、reconcile 0、幽灵 0、word_count 2/2>0、回读 2/2 异常 0。⚠️ move-stack 挂账。"
+ },
+ "https://github.com/qinjx/30min_guides/blob/master/ios.md": {
+  "commit": "-",
+  "book_id": 85183602,
+  "book_url": "https://www.yuque.com/yeuhoshun/ios-60min-20261101",
+  "imported_at": "2026-11-01T03:15:00+0800",
+  "note": "开源项目口径：qinjx/30min_guides 单篇《iOS 开发 60 分钟入门》按 ## 拆 8 篇（前序并入首篇）+ 00-说明 = 9 节点；原文「阅读应用代码」「从头新建一个应用：Hello World」两节为标题-only 空壳未建；内容基于 iOS 6 时代。六查全绿：TOC 9==本地、reconcile 0、幽灵 0（docs 9==TOC DOC 9）、word_count 9/9>0、回读 9/9 异常 0。⚠️ move-stack 挂账。"
+ },
+ "http://wileam.com/iphone-6-screen-cn/": {
+  "commit": "-",
+  "book_id": 85183606,
+  "book_url": "https://www.yuque.com/yeuhoshun/iphone6-screen-cn-20261101",
+  "imported_at": "2026-11-01T03:15:00+0800",
+  "note": "网站口径：wileam.com《iPhone 6 屏幕揭秘》中文译文（PaintCode 原文，译者小雪-Joanna）。单篇+00-说明 = 2 节点；3 张内联 SVG 大图深度计数抽取原样保留（html5lib 会毁 SVG 命名空间，须先抽再转）；保存页 artifacts 丢弃。六查全绿：TOC 2==本地、reconcile 0、幽灵 0、word_count 2/2>0、回读 2/2 异常 0。⚠️ move-stack 挂账。"
+ },
+ "https://raw.githubusercontent.com/alibaba/p3c/HEAD/Java%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C(%E9%BB%84%E5%B1%B1%E7%89%88": {
+  "commit": "6c59c8c",
+  "book_id": 85183618,
+  "book_url": "https://www.yuque.com/yeuhoshun/alibaba-java-dev-manual-6c59c8c",
+  "imported_at": "2026-11-01T03:15:00+0800",
+  "note": "开源项目口径：alibaba/p3c @ 6c59c8c《阿里巴巴 Java 开发手册（黄山版）》gitbook 源。README 前言+六大部分（编程规约 8 节/异常日志 3/单元测试/安全规约/MySQL 4/工程结构 3）+两附录 = 27 节点（4 目录+23 文档）；数字前缀定序、部级 H1 剥除、README 尾部「gitbook 与最新版不一致」告警保留；2 图 CDN。六查全绿：TOC 27==本地、reconcile 0、幽灵 0（docs 23==TOC DOC 23）、word_count 23/23>0、回读 23/23 异常 0。⚠️ move-stack 挂账。"
+ },
+ "https://github.com/waylau/RestDemo": {
+  "commit": "2d13b4c",
+  "book_id": 85183625,
+  "book_url": "https://www.yuque.com/yeuhoshun/restdemo-2d13b4c",
+  "imported_at": "2026-11-01T03:15:00+0800",
+  "note": "开源项目口径：waylau/RestDemo @ 2d13b4c（REST 案例大全，10 个 Jersey 演示工程）。剔 build 产物(.class)/WEB-INF/lib 依赖 jar/Eclipse 元数据后 195 文件 = 377 节点（181 目录+195 文档）；angular-1.2.3.js 716KB 拆 2 片逐字符零丢失（shards verify PASS）；Maven 深层嵌套目录多属正常。六查全绿：TOC 377==本地、reconcile 0、幽灵 0（docs 196==TOC DOC 196，1 分片文件+1 节点）、word_count 零篇 0、回读 195 篇 1 BAD=分片文件（readback 不认分片注记，已知盲区，shards 兜底）。⚠️ move-stack 挂账。"
+ },
+ "https://github.com/waylau/activiti-5.x-user-guide": {
+  "commit": "c8235cb",
+  "book_id": 85183664,
+  "book_url": "https://www.yuque.com/yeuhoshun/activiti-5x-user-guide-c8235cb",
+  "imported_at": "2026-11-01T03:15:00+0800",
+  "note": "开源项目口径：waylau/activiti-5.x-user-guide @ c8235cb（Activiti 5.18.0 用户指南中文译）。⚠️ 上游 11~19 章共 48 个 0 字节空壳（GitHub API 实锤 size=0）→ 不建空节点，残缺度写 00-说明；实收前言+第 1~10 章 = 79 节点（10 目录+69 文档）；SUMMARY 定序零填充；首版误导 48 占位已删库重导（85183646→85183664）。六查全绿：TOC 79==本地、reconcile 0、幽灵 0（docs 69==TOC DOC 69）、word_count 69/69>0、回读 69/69 异常 0。⚠️ move-stack 挂账。"
+ },
+ "https://github.com/waylau/apache-mina-2.x-user-guide": {
+  "commit": "cb8aa50",
+  "book_id": 85183670,
+  "book_url": "https://www.yuque.com/yeuhoshun/apache-mina-2-user-guide-cb8aa50",
+  "imported_at": "2026-11-01T03:15:00+0800",
+  "note": "开源项目口径：waylau/apache-mina-2.x-user-guide @ cb8aa50（MINA 2.0.15 用户指南中文译）。3 部分（Basics/Core/Advanced）17 章 = 39 节点（3 目录+36 文档）；ch6 Transports 正文 0 字节空壳未收（小节正常）；ch13 GBK 编码已转 UTF-8（「未完待续」短桩保留）；11 图 CDN（图引用相对路径 ../images/ 勿改成 images/，rewrite 按 md 所在目录解析）。六查全绿：TOC 39==本地、reconcile 0、幽灵 0（docs 36==TOC DOC 36）、word_count 36/36>0、回读 36/36 异常 0。⚠️ move-stack 挂账。"
  }
 }
