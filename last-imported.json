@@ -1370,5 +1370,68 @@
   "book_url": "https://www.yuque.com/yeuhoshun/apache-mina-2-user-guide-cb8aa50",
   "imported_at": "2026-11-01T03:15:00+0800",
   "note": "开源项目口径：waylau/apache-mina-2.x-user-guide @ cb8aa50（MINA 2.0.15 用户指南中文译）。3 部分（Basics/Core/Advanced）17 章 = 39 节点（3 目录+36 文档）；ch6 Transports 正文 0 字节空壳未收（小节正常）；ch13 GBK 编码已转 UTF-8（「未完待续」短桩保留）；11 图 CDN（图引用相对路径 ../images/ 勿改成 images/，rewrite 按 md 所在目录解析）。六查全绿：TOC 39==本地、reconcile 0、幽灵 0（docs 36==TOC DOC 36）、word_count 36/36>0、回读 36/36 异常 0。⚠️ move-stack 挂账。"
+ },
+ "https://github.com/waylau/apache-shiro-1.2.x-reference": {
+  "commit": "ad883cb",
+  "book_id": 85183719,
+  "book_url": "https://www.yuque.com/yeuhoshun/apache-shiro-user-guide-ad883cb",
+  "imported_at": "2026-11-01T05:40:00+0800",
+  "note": "开源项目口径：waylau/apache-shiro-1.2.x-reference @ ad883cb（Apache Shiro 1.2.x Reference 官方文档中文译）。按 SUMMARY.md 定序 8 分组（Overview/Core/Web-Applications/Auxiliary-Support/Integration/Tools/Index/Other）+ 30 篇正文 + 8 图 CDN = 40 节点；12. Concurrency 正文仅「待定」2 字（标题-only 空壳）未建节点；六查全绿：TOC 40==本地、reconcile 0、幽灵 0（docs 31==TOC DOC 31）、word_count 31/31>0、回读逐字符相等。⚠️ move-stack 挂账。"
+ },
+ "http://hawstein.com/2014/01/20/google-java-style/": {
+  "commit": "-",
+  "book_id": 85183744,
+  "book_url": "https://www.yuque.com/yeuhoshun/google-java-style-zh-20261101",
+  "imported_at": "2026-11-01T05:40:00+0800",
+  "note": "网站口径：《Google Java 编程风格指南》中文翻译（hawstein 博客 2014-01-20 译文，原文 Google Java Style）。单页全本（前言~后记 8 节）+00-说明 = 2 节点；站内锚点目录已剥；示例代码原样；六查全绿（幽灵 0、word_count 2/2>0、回读逐字符相等）。⚠️ move-stack 挂账。"
+ },
+ "https://github.com/waylau/h2-database-doc": {
+  "commit": "5ec0082",
+  "book_id": 85183720,
+  "book_url": "https://www.yuque.com/yeuhoshun/h2-database-doc-5ec0082",
+  "imported_at": "2026-11-01T05:40:00+0800",
+  "note": "开源项目口径：waylau/h2-database-doc @ 5ec0082（H2 Database 官方文档中文译）。SUMMARY 定序 12 篇正文（Quickstart/Installation/Tutorial 7 节/Features/Performance/Advanced）+ 9 图 CDN = 15 节点；Performance 章 README 0 字节空壳未收；六查全绿（幽灵 0、word_count 14/14>0）。⚠️ move-stack 挂账。"
+ },
+ "http://java.quanke.name": {
+  "commit": "-",
+  "book_id": 85183984,
+  "book_url": "https://www.yuque.com/yeuhoshun/thinking-in-java-quanke-20261101",
+  "imported_at": "2026-11-01T05:40:00+0800",
+  "note": "网站口径：《Java 编程思想》(Thinking in Java 4e) 中文在线阅读站（java.quanke.name，GitBook 1.x 导出）。⚠️ 源站已死，Wayback 快照（2016~2019）仅收录 36 篇章节页（第 2~10 章 + 第 14 章 14.1），残缺译本；按章节分组 10 目录 + 36 正文 + 说明 = 47 节点；代码块语言标注保留；无图；六查全绿（幽灵 0、word_count 37/37>0、回读逐字符相等）。⚠️ move-stack 挂账。"
+ },
+ "https://github.com/waylau/java-code-conventions": {
+  "commit": "6e8e3ee",
+  "book_id": 85183721,
+  "book_url": "https://www.yuque.com/yeuhoshun/java-code-conventions-6e8e3ee",
+  "imported_at": "2026-11-01T05:40:00+0800",
+  "note": "开源项目口径：waylau/java-code-conventions @ 6e8e3ee（Oracle Java Code Conventions 中文译）。扁平 11 篇（介绍/文件名称/文件组织/缩进/注释/声明/语句/空白/命名规范/编程惯例/代码示例）+ 前言 + 说明 = 14 节点；六查全绿（幽灵 0、word_count 13/13>0、回读逐字符相等）。⚠️ move-stack 挂账。"
+ },
+ "https://github.com/waylau/servlet-3.1-specification": {
+  "commit": "00f4434",
+  "book_id": 85183723,
+  "book_url": "https://www.yuque.com/yeuhoshun/servlet-3.1-spec-00f4434",
+  "imported_at": "2026-11-01T05:40:00+0800",
+  "note": "开源项目口径：waylau/servlet-3.1-specification @ 00f4434（Java Servlet 3.1 规范中文译）。按 SUMMARY.md 定序 15 分组 + 112 篇正文 + 24 图 CDN = 129 节点；图文件名含空格（FIGURE 14-N …）已转下划线扁平化（主脚本 split(None,1) 截断带空格路径）；六查全绿（幽灵 0、word_count 114/114>0、reconcile 0）。⚠️ move-stack 挂账。"
+ },
+ "https://github.com/waylau/Jersey-2.x-User-Guide": {
+  "commit": "3fd415e",
+  "book_id": 85183724,
+  "book_url": "https://www.yuque.com/yeuhoshun/jersey-2x-user-guide-3fd415e",
+  "imported_at": "2026-11-01T05:40:00+0800",
+  "note": "开源项目口径：waylau/Jersey-2.x-User-Guide @ 3fd415e（Jersey 2.x User Guide 中文译）。按 SUMMARY.md 定序 17 分组 + 56 篇正文 = 75 节点；⚠️ Chapter 6 整章 + Chapter 20 的 20.4~20.8 共 11 个 0 字节空壳（未翻译）未建节点；六查全绿（幽灵 0、word_count 58/58>0、reconcile 0、回读逐字符相等）。⚠️ move-stack 挂账。"
+ },
+ "https://github.com/waylau/jsse-reference-guide": {
+  "commit": "60cd7b0",
+  "book_id": 85183725,
+  "book_url": "https://www.yuque.com/yeuhoshun/jsse-reference-guide-60cd7b0",
+  "imported_at": "2026-11-01T05:40:00+0800",
+  "note": "开源项目口径：waylau/jsse-reference-guide @ 60cd7b0（JSSE Reference Guide 中文译）。SUMMARY 定序 4 分组 + 16 篇正文 + 2 图 CDN = 20 节点；⚠️ 12 个「标题-only」空壳（仅 # 标题行，未翻译：核心类/支持类/次要支持类接口、自定义 JSSE、TLS 重协商、硬件加速、Kerberos 套件、PKCS12、SNI、Troubleshooting、Code Examples 2 篇）未建节点；六查全绿（幽灵 0、word_count 16/16>0、reconcile 0）。⚠️ move-stack 挂账。"
+ },
+ "http://css.doyoe.com": {
+  "commit": "-",
+  "book_id": 85183985,
+  "book_url": "https://www.yuque.com/yeuhoshun/css-reference-doyoe-20261101",
+  "imported_at": "2026-11-01T05:40:00+0800",
+  "note": "网站口径：《CSS参考手册》（杜瑶 doyoe 著，源站已死，Wayback 快照 2011~2018）。459 篇正文：属性 28 类 ~267 篇、选择器 49、值 96、单位 26、规则 9、简介 7、附录 2、经验 4、hack 4 = 502 节点；兼容性表为快照时代版本（IE8-10/Firefox/Chrome 为主）；2018 改版目录 backgrounds/ 与旧目录重复未收、sample 演示 5 页未收、5 页快照拉取失败；六查全绿（幽灵 0、word_count 460/460>0、reconcile 0）。⚠️ move-stack 挂账。"
  }
 }
