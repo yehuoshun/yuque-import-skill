@@ -27,11 +27,11 @@
     "note": "默认分支 release @ 943a3a7（5c0ee9e 之后又有同步变更）。沿用 10-21「解析单轨」口径（硬规则 12）：build.py 生成 20 个 sources 解析 md + 6 分类索引 + 前言 + README/index.html = 31 节点（2 目录/29 文档），索引「原件」列给上游直链，不上传原件附件。toc-md PUT 0.8s、结构核对 PASS、0 失败；根级 08-解析 TITLE 归位（appendNode/sibling，连续第 5 版同坑）。六查全绿：TOC 31==本地、reconcile 0 错位、幽灵 0（docs 29==TOC DOC 29）、word_count 29/29 全 >0、回读 29/29 零异常。move-stack 服务端 bug 期间未挂组——老板 2026-10-28 检查确认无需处理。历史：5c0ee9e=84991634、8b13d08=84817392、0dde287=84776109、fd0ec7f9=84711589、06b8162=84678623（旧库全保留）。"
   },
   "https://github.com/swjybky/deepwrite": {
-    "commit": "bbce89b",
-    "book_id": 84991695,
-    "book_url": "https://www.yuque.com/yehuoshun/deepwrite-bbce89b",
-    "imported_at": "2026-10-26T18:20:00+0800",
-    "note": "默认分支 main @ bbce89b（2026-10-26 06:03Z，v1.7.4 release manifest 之后）。prep 4009（351 目录 / 3658 文件）→ 删 docs/images（22 张图先传 CDN + **重写 25 处引用 / 0 缺失**）后 3983 节点（347 / 3636）< 5000 不分库；toc-md 目录树 3983 行 / 216127B 一次 PUT **27.6s**、结构核对 PASS、0 失败；根级 TITLE 在前 / DOC 在后（toc-md 常态，未强改）。六查全绿：TOC 3983==本地 3983、全路径唯一 True、对账错位 0、幽灵 0（docs 3636==TOC DOC 3636）、**全库 word_count==0 仅 5 篇且全为非文本**（wechat.jpg / alipay.jpg / app-icon.png / icon.png 4 张 app 图 CDN 占位 + icon.ico 二进制占位）= 预期值、文本误判 0、抽查 12 篇逐字符相等。途中 16:35 撞账号级 429（5000/小时，与并行子会话共享）→ 脚本等 17:01 整点续跑，断点零丢失、最终 0 失败。HTTPS clone 502 → 走 SSH。历史（旧库全保留）：b9bd92f=84926783、a44686d=84777697。"
+    "commit": "2631dd8",
+    "book_id": 85183047,
+    "book_url": "https://www.yuque.com/yeuhoshun/deepwrite-2631dd8",
+    "imported_at": "2026-11-01T01:28:00+0800",
+    "note": "默认分支 main @ 2631dd8（2026-11-01，距上版 bbce89b 9 commit / 204 文件：会话运行控制、任务通知、预设保护等新功能）。prep 4064（352 目录 / 3712 文件）→ 删 docs/images（22 张图先传 CDN + **重写 25 处引用 / 0 缺失**）后 4038 节点（348 / 3690）< 5000 不分库；toc-md 目录树 4038 行 / 219412B 一次 PUT **21.9s**、结构核对 PASS、0 失败；根级 TITLE 在前 / DOC 在后（toc-md 常态，未强改）。六查全绿：TOC 4038==本地 4038、全路径唯一 True、对账错位 0、幽灵 0（docs 3690==TOC DOC 3690）、**全库 word_count==0 仅 5 篇且全为非文本**（wechat.jpg / alipay.jpg / app-icon.png / icon.png 4 张 app 图 CDN 占位 + icon.ico 二进制占位）= 预期值、文本误判 0、抽查 12 篇逐字符相等（含 CDN 图重写后的 README 两版 + 本版新增 task-notification.ts 等）。途中 00:45~01:28 全程 0 失败无 429（凌晨无并行会话）。SSH clone。move-stack 7 轮全 {} 响应（cookie 写侧风控，坑 68/69 同款）→ **分组待补 stack 57018723**。历史（旧库全保留）：bbce89b=84991695、b9bd92f=84926783、a44686d=84777697。"
   },
   "https://github.com/morluto/rea": {
     "commit": "d48e472fa",
