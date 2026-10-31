@@ -1271,5 +1271,33 @@
   "book_url": "https://www.yuque.com/yehuoshun/gorevel-manual-20261031",
   "imported_at": "2026-10-31T05:36:00+0800",
   "note": "fpb52 #112《Revel 框架手册》(gorevel.cn/docs/manual)：gorevel.cn DNS 已死**且域名被抢注成停放页**(2025 快照是 AV 广告页)→走 **Wayback 2019-06-10 快照**。页面清单=CDX url=gorevel.cn/docs/manual*(24 页)；用 web/<ts>id_/ 取原始页。**坑**：runner fetch 15 分钟 job 上限→24 页一次抓会被 cancel(archive.org 偶发 90s 超时)→拆 2~3 小批(每批~12 页)。正文容器 div.span10(剥 div.page-header 的 h1)；pre>code(class=lang-* 取语言)；ul；div.alert→引用块。分组取自页面 leftnav：概要/控制器/模块/操作/参考(5 TITLE,NN- 前缀)；00-說明=index(介绍)。收尾 prependNode/sibling 把 00-說明 挪首个 TITLE 前。29 节点(5目录/24文档)无图。六查全绿(word_count 24/24>0 min 89、错位 0、幽灵 0 docs24==TOC DOC24、回读 0 异常、根序归位)。脚本 examples/gorevel-manual/build.py。⚠️ move-stack 文章收集 36149506 返 200 {} 挂账。"
+ },
+ "https://bootstrap5.hexschool.com/docs/5.1/": {
+  "commit": "-",
+  "book_id": 85181327,
+  "book_url": "https://www.yuque.com/yehuoshun/bootstrap5-zh-20261031",
+  "imported_at": "2026-10-31T20:47:00+0800",
+  "note": "网站口径（无公开 md 源仓库）：Bootstrap 5.1 官方文件繁體中文手冊（六角學院译本，上游 twbs/bootstrap v5.1）。抓站点侧栏 nav#bd-docs-nav 的 10 分区 97 篇 + /docs/5.1/migration/ = 98 文档 / 10 目录 / 109 节点；正文取 div.bd-content（bd-example 预览丢弃、highlight 代码块原文保留、bd-callout 转引用块、table 转 md 表）；3 图（brand logo svg）传 CDN；toc-md 一次 PUT 1.0s PASS；根级 12 节点 Unicode 乱序 → prependNode+appendNode 链式归位成站点顺序；六查全绿：TOC 109==本地、reconcile 0、幽灵 0（docs 99==TOC DOC 99）、word_count 99/99>0、回读 99/99 异常 0、无分片。Examples 演示页（30 个）与 /docs/versions/ 未收。⚠️ move-stack 36149506 返 {}（服务端回归，连续第 N 单）挂账。"
+ },
+ "https://github.com/waylau/css3-tutorial": {
+  "commit": "60d7bc9",
+  "book_id": 85181304,
+  "book_url": "https://www.yuque.com/yeuhoshun/css3-tutorial-60d7bc9",
+  "imported_at": "2026-10-31T20:47:00+0800",
+  "note": "开源项目口径 @ 60d7bc9（waylau 著《CSS3 Tutorial》，2017 最后提交）。SUMMARY.md 定 11 章顺序与中文标题 + README 前言 + 00-說明 = 13 文档平铺（零填充前缀免归位）；4 空格缩进代码块 → ```css 围栏（连续缩进行并块、textwrap.dedent 去公共缩进）；9 图传 CDN；samples/ 示例源码不入库。六查全绿：TOC 13==本地、reconcile 0、幽灵 0（docs 13==TOC DOC 13）、word_count 13/13>0、回读 13/13 异常 0。⚠️ move-stack 57018723 返 {} 挂账。"
+ },
+ "https://github.com/yanxyz/emmet-docs": {
+  "commit": "5ab6d53",
+  "book_id": 85181325,
+  "book_url": "https://www.yuque.com/yeuhoshun/emmet-docs-5ab6d53",
+  "imported_at": "2026-10-31T20:47:00+0800",
+  "note": "开源项目口径 @ 5ab6d53（Emmet 官方文档中文翻译，2013，中英对照）。Jekyll 源码 src/documents/ 全量 32 篇：5 分区（缩写/CSS 缩写/功能/过滤器/配置）目录名带 NN- 前缀 + 区首页 00-<区名>.md + 子页按 front matter menuOrder 编号；根级 00-說明 + 01-Emmet 文档；缩进代码块 → 围栏（dedent）、站内死链转纯文本、无图。toc-md 0.6s PASS；根级 7 节点归位（prependNode + appendNode 链）。六查全绿：TOC 38==本地、reconcile 0、幽灵 0（docs 33==TOC DOC 33）、word_count 33/33>0、回读 33/33 异常 0。⚠️ move-stack 挂账。"
+ },
+ "http://codeguide.bootcss.com": {
+  "commit": "-",
+  "book_id": 85181343,
+  "book_url": "https://www.yuque.com/yeuhoshun/codeguide-zh-20261031",
+  "imported_at": "2026-10-31T20:47:00+0800",
+  "note": "网站口径：mdo《Code Guide》中文翻译（bootcss 镜像，原文 github.com/mdo/code-guide，CC BY 3.0）。单页站 main.container 下 h2 分篇：黄金定律 / HTML / CSS（目录区丢弃）+ 00-說明 = 4 文档；div.section 左文字右代码，代码块 language-* 原样转围栏；无图。六查全绿：TOC 4==本地、reconcile 0、幽灵 0（docs 4==TOC DOC 4）、word_count 4/4>0、回读 4/4 异常 0。⚠️ move-stack 36149506 返 {} 挂账。"
  }
 }
