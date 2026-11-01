@@ -1515,5 +1515,47 @@
   "book_url": "https://www.yuque.com/yehuoshun/python-book-bfca014",
   "imported_at": "2026-11-01T14:57:00+0800",
   "note": "py.qizhen.xyz Python 教程：Docusaurus sidebars 定序 6 分区 58 篇"
+ },
+ "https://github.com/getify/You-Dont-Know-JS/tree/1ed-zh-CN": {
+  "commit": "2c03109",
+  "book_id": 85209461,
+  "book_url": "https://www.yuque.com/yeuhoshun/ydkjs-1ed-zh-cn-2c03109",
+  "imported_at": "2026-11-01T16:20:00+0800",
+  "note": "fpb52 #156《你不知道的JavaScript》开源项目口径：仓库 getify/You-Dont-Know-JS @2c03109（2023-01 最后一次提交）的 1ed-zh-CN 分支 = 第一版中文译本全量（6 本书：入门与进阶/作用域与闭包/this与对象原型/类型与文法/异步与性能/ES6与未来）。剔脚手架（CONTRIBUTING/ISSUE_TEMPLATE/PULL_REQUEST_TEMPLATE/kickstarter-survey-site），中文书目录 + 章节标题重建树（toc.md 定序，foreword 落 00-序），根 README 剥广告段改 00-说明 + preface 00-前言 + LICENSE 保留；22 图（封面/fig）全传 CDN 重写 24 处/0 缺失，删图后 60 节点（6 目录/54 文档）toc-md PUT 0.8s。六查全绿：TOC 60==本地、对账错位 0、幽灵 0（docs 54==TOC DOC 54）、word_count 54/54>0、回读 6 篇 0 差。CC BY-NC-ND 4.0。move-stack 10 轮恒 {} （cookie 写侧风控服务端回归）→ 分组待补 stack 57018723。"
+ },
+ "https://zh.javascript.info": {
+  "commit": "4ae31163",
+  "book_id": 85209967,
+  "book_url": "https://www.yuque.com/yeuhoshun/js-tutorial-zh-4ae31163",
+  "imported_at": "2026-11-01T16:19:00+0800",
+  "note": "fpb52 #157《现代 JavaScript 教程》开源项目口径：源仓库 javascript-tutorial/zh.javascript.info @4ae31163（2026-03，站点 zh.javascript.info 的官方中文镜像内容源）。私有格式全量转换：围栏属性剥（1787 处 run/height/no-beautify）、*!* 高亮剥（822）、````warn/smart header 块去壳转粗体+围栏、孤立 4 反引号噪声剥、smart/warn/online/offline/quote/compare 3 反引号块转提示引用块、iframe/codetabs/demo/edit 宏转注记、html/js/css src 宏本地文件内联（内容零丢失）、站内链接/<info:> 转纯文本、task/solution importance front matter 剥；任务合并进文章文末（## 任务 → 题干 + **解答**）。树 = 00-说明 + 01-第一部分 语言（14 章）+ 02-第二部分 浏览器（6 章）+ 03-第三部分 其他文章（7 章）：174 篇正文 + 29 章导读 + 说明 = 204 文档/234 节点（31 目录）；225 图（含 task 沙箱内引用）全传 CDN 重写 107 处/外链 124/缺失 0，围栏内 8 处引用保护后还原，删图后导入。toc-md PUT 1.7s 0 失败。六查全绿：TOC 234==本地、错位 0、幽灵 0（docs 204==204）、word_count 204/204>0、回读 8 篇 0 差。move-stack 恒 {} → 分组待补 stack 57018723。"
+ },
+ "http://www.oschina.net/translate/learning-javascript-design-patterns": {
+  "commit": "wayback-20130722",
+  "book_id": 85210167,
+  "book_url": "https://www.yuque.com/yeuhoshun/oschina-ljdp-20261101",
+  "imported_at": "2026-11-01T16:37:00+0800",
+  "note": "fpb52 #158《学用 JavaScript 设计模式》网站口径（文章收集 36149506）：oschina 技术翻译频道 2013 多人协作译《Learning JavaScript Design Patterns》（Addy Osmani）。原链 oschina 现全站反爬 403 + 原文 2013-10 后下架（壳页 21KB）→ 用 GitHub Actions 出口抓 Wayback 2013-07-22 快照（688KB 原页）。⚠️ **残缺译本**：多人协作翻译进度仅前 6 章中文（前言/什么是模式/结构/编写/种类/分类表，分类表含 GOF 23 模式中文表），第 7 章起（JS 设计模式/享元/MV*/Modular/jQuery 等）仍是英文原文 → 英文未收（中文书单口径）；残缺度写库描述 + 00-说明 + 账本。正文 = translate_chs 整块（265 div.TextContent + 65 table.paragraph_chs，td1=译文 td2=译者信息剥）；h1 拆 7 篇（含 00-说明）平铺，bs4 递归转 md，brush:js 代码围栏带语言。toc-md PUT 0.6s 0 失败。六查全绿：TOC 7==7、错位 0、幽灵 0、word_count 7/7>0、回读 3 篇 0 差。move-stack 恒 {} → 分组待补。"
+ },
+ "https://github.com/adamlu/javascript-style-guide": {
+  "commit": "3d67486",
+  "book_id": 85210187,
+  "book_url": "https://www.yuque.com/yeuhoshun/airbnb-jsstyle-adamlu-3d67486",
+  "imported_at": "2026-11-01T16:39:00+0800",
+  "note": "fpb52 #159《Airbnb JavaScript 规范》开源项目口径：源仓库 adamlu/javascript-style-guide @3d67486（master，2014-05 停更；API pushed 2017 但 HEAD 未变）。仓库仅 2 md：README.md（Airbnb JS 规范中译改编，29 个 ##）+ CSS Style Guide.md（CSS 规范 19 个 ##）。按 ## 拆篇：JS 规范 26 篇（剥内容列表 TOC/翻译/贡献者节，保留许可与 JavaScript风格指南外链节）+ CSS 规范 18 篇（剥目录节）= 44 文档 + 00-说明 = 45 节点平铺零目录；译者自述按个人习惯删改过部分条目（口径写进说明）。toc-md PUT 0.6s 0 失败。六查全绿：TOC 45==45、错位 0、幽灵 0（docs 45==45）、word_count 45/45>0、回读 4 篇 0 差。move-stack 恒 {} → 分组待补 stack 57018723。"
+ },
+ "http://es6.ruanyifeng.com": {
+  "commit": "d27a751",
+  "book_id": 85210078,
+  "book_url": "https://www.yuque.com/yeuhoshun/es6-ruanyifeng-d27a751",
+  "imported_at": "2026-11-01T16:28:00+0800",
+  "note": "fpb52 #160《ECMAScript 6 入门》开源项目口径：源仓库 ruanyf/es6tutorial @d27a751（gh-pages 分支 = 站点 es6.ruanyifeng.com 内容源，2026-09 新增 ES2026 一节）。SUMMARY.md 定序 29 篇：README→00-前言（剥电商广告段）+ docs/ 28 章（NN- 前缀平铺，标题取章 H1）；9 篇 docs 未发布草稿孤儿（acknowledgment/async-iterator/fp/mixin/object-methods/operator/simd/string-methods/temporal）未收，说明标注；封面 2 张（cover_thumbnail_3rd.jpg/cover-3rd.jpg）传 CDN，普通链接形态的大图链接手动改 CDN URL。toc-md PUT 0.6s 0 失败。六查全绿：TOC 29==29、错位 0、幽灵 0（docs 29==29）、word_count 29/29>0、回读 5 篇 0 差。move-stack 恒 {} → 分组待补 stack 57018723。"
+ },
+ "https://web.archive.org/web/20200415002735/bq69.com/blog/articles/script/868/google-javascript-style-guide.html": {
+  "commit": "rev2.9",
+  "book_id": 85210391,
+  "book_url": "https://www.yuque.com/yeuhoshun/google-jsstyle-zh-20261101",
+  "imported_at": "2026-11-01T16:56:00+0800",
+  "note": "fpb52 #161《Google JavaScript 风格指南（中文版）》网站口径（文章收集 36149506）：bq69.com「最前端」博客镜像的《Google JavaScript Style Guide》修订版 2.9 中文翻译，页面 2020-04-15 Wayback 快照。⚠️ 博客 JS 折叠交互（34 个 showone 片段）但正文全在 DOM（div.stylepoint_body 等）→ bs4 全量提取零丢失；折叠按钮/目录表/导航剥，stylepoint_section/subsection 转粗体，锚点链接转纯文本，pre 代码围栏，行内 code 转反引号，p/li 空白折叠。正文区间 = 重要注意事项→Parting Words/address；h2 拆 4 篇（背景/语言规范/编码风格/Parting Words）+ 00-说明 = 5 节点平铺；编码风格 33KB 为主体积（规则中文 + 大量英文代码示例，ratio 低属正常）。toc-md PUT 0.7s 0 失败。六查全绿：TOC 5==5、错位 0、幽灵 0、word_count 5/5>0、回读 5/5 剥 \\r 后逐字符相等（代码块 CRLF 差异，坑 34 口吻合，无实质丢失）。move-stack 恒 {} → 分组待补。"
  }
 }
