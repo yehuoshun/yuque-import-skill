@@ -1557,5 +1557,40 @@
   "book_url": "https://www.yuque.com/yeuhoshun/google-jsstyle-zh-20261101",
   "imported_at": "2026-11-01T16:56:00+0800",
   "note": "fpb52 #161《Google JavaScript 风格指南（中文版）》网站口径（文章收集 36149506）：bq69.com「最前端」博客镜像的《Google JavaScript Style Guide》修订版 2.9 中文翻译，页面 2020-04-15 Wayback 快照。⚠️ 博客 JS 折叠交互（34 个 showone 片段）但正文全在 DOM（div.stylepoint_body 等）→ bs4 全量提取零丢失；折叠按钮/目录表/导航剥，stylepoint_section/subsection 转粗体，锚点链接转纯文本，pre 代码围栏，行内 code 转反引号，p/li 空白折叠。正文区间 = 重要注意事项→Parting Words/address；h2 拆 4 篇（背景/语言规范/编码风格/Parting Words）+ 00-说明 = 5 节点平铺；编码风格 33KB 为主体积（规则中文 + 大量英文代码示例，ratio 低属正常）。toc-md PUT 0.7s 0 失败。六查全绿：TOC 5==5、错位 0、幽灵 0、word_count 5/5>0、回读 5/5 剥 \\r 后逐字符相等（代码块 CRLF 差异，坑 34 口吻合，无实质丢失）。move-stack 恒 {} → 分组待补。"
+ },
+ "https://github.com/justjavac/12-javascript-quirks": {
+  "commit": "a0236ac",
+  "book_id": 85211365,
+  "book_url": "https://www.yuque.com/yehuoshun/12-javascript-quirks-a0236ac",
+  "imported_at": "2026-11-01T19:20:00+0800",
+  "note": "fpb52 #162《javascript 的 12 个怪癖》开源项目口径：源仓库 justjavac/12-javascript-quirks @ a0236ac（2019-06 最后提交）。cn/ 中译实收 8 篇（原文共 12 篇，第 9-12 篇未译；en/ 仅 4-8 英文原文，不收）；cn/content.md → 00-目录，其余 8 篇按 H1 题名 `0N-*.md` 平铺；4 空格/2 空格缩进代码 → ```js 围栏；原文/译文/译者头块与分隔线剥；站内 .md 链接转纯文本。9 节点平铺（0 目录），无图；toc-md PUT 0.5s。六查全绿：TOC 9==9、错位 0、幽灵 0（docs 9==9）、word_count 9/9>0、回读 3 篇逐字符相等。move-stack 恒 {} → 分组待补 stack 57018723。"
+ },
+ "https://www.liaoxuefeng.com/wiki/1022910821149312": {
+  "commit": "gitsite",
+  "book_id": 85211414,
+  "book_url": "https://www.yuque.com/yehuoshun/liaoxuefeng-javascript-20261101",
+  "imported_at": "2026-11-01T19:20:00+0800",
+  "note": "fpb52 #163《JavaScript 教程 - 廖雪峰的官方网站》网站口径（文章收集 36149506）：原 wiki 链 302 → liaoxuefeng.com/books/javascript gitsite 静态站。复用 #142 抓取器（正文 = 同目录 content.html，目录树在任一页 div#gsi-index）；12 章 84 节 → 84 文档 + 18 目录 = 102 节点；33 图传 CDN。alert 提示块转引用块；`map/reduce` 标题半角 / → 全角 ／（首导误建 `4.4.1 map/` 子目录 → 改名 + 删库内幽灵 doc 290338013）；toc-md 按 Unicode 排序 → prependNode 逐父节点归位（46 次修复）。六查全绿：TOC 102==102、错位 0、幽灵 0（docs 84==84）、word_count 84/84>0、回读 4 篇逐字符相等。move-stack 恒 {} → 分组待补。"
+ },
+ "https://github.com/jayli/javascript-patterns": {
+  "commit": "8f3e516",
+  "book_id": 85211467,
+  "book_url": "https://www.yuque.com/yehuoshun/javascript-patterns-8f3e516",
+  "imported_at": "2026-11-01T19:20:00+0800",
+  "note": "fpb52 #164《JavaScript 模式》中译本 开源项目口径：源仓库 jayli/javascript-patterns @ 8f3e516（2019-12）。README.markdown（前言+目录）→ 00-说明与目录；chapter1~8.markdown → 8 章（章名取 README 目录）；tab/4 空格缩进代码 → ```js 围栏；目录里 javascript.patterns/blob/... 链接转纯文本。图：11 张本地（Figure/，md 里大小写混用 figure/Figure）按 basename 反查后 11 处传 CDN；ch5/ch7/ch8 共 10 张上游仓库缺失 → 原位标注「原图缺失」；3 张 taobaocdn 外链原样保留。9 节点平铺；toc-md PUT 0.4s。六查全绿：TOC 9==9、错位 0、幽灵 0、word_count 9/9>0、回读 3 篇逐字符相等。move-stack 恒 {} → 分组待补。"
+ },
+ "https://web.archive.org/web/20170112164945/http://typeof.net/s/jsmech/": {
+  "commit": "2013-2017 wayback",
+  "book_id": 85211509,
+  "book_url": "https://www.yuque.com/yehuoshun/jsmech-20261101",
+  "imported_at": "2026-11-01T19:20:00+0800",
+  "note": "fpb52 #165《JavaScript 原理》网站口径（文章收集 36149506）：typeof.net/s/jsmech 原站已死（GitHub Pages 404）；本机 archive.org 被墙 → GitHub Actions 出口（re-harness fetch-files）先拉 CDX 清单（仅 7 个 html 快照，缩图未收录）再抓首页 2017-01-12 + 01~05 + 03-a；Belleve Invis 系列 6 篇。正文 = <article>；div.figure → 「原图缺失」标注（12 张 Wayback 未收录）；数学排版 i.eqp 嵌套用 itertext 近似；mghl 高亮代码块按 b[indent] 重建围栏（lisp/js）。6 文档平铺；toc-md PUT 0.6s。六查全绿：TOC 6==6、错位 0、幽灵 0、word_count 6/6>0、回读 3 篇逐字符相等。move-stack 恒 {} → 分组待补。"
+ },
+ "http://liubin.github.io/promises-book/": {
+  "commit": "930f798",
+  "book_id": 85211548,
+  "book_url": "https://www.yuque.com/yehuoshun/promises-book-zh-930f798",
+  "imported_at": "2026-11-01T19:20:00+0800",
+  "note": "fpb52 #166《JavaScript Promise迷你书（中文版）》开源项目口径：源仓库 liubin/promises-book @ 930f798（AsciiDoc 书稿，index.adoc 主控 + include:: 拼装）。复用 examples/puppet-cookbook/adoc-build.py 转换器；新增处理：标题整体降一级、定义列表 Term:: + 缩进 → `- **Term**` 多行、[role=\"executable\"] 与 ifeval::/endif:: 行剥、行内 image:path[alt]/image:url[alt,link=] → markdown 图。结构 = 00-说明 + 00-前言（Ch0）+ 4 章目录（章内逐节一篇）+ 05-Promises API Reference + 06-用語集 + 07-参考网站 + 08-关于作者与译者 = 30 文档/4 目录；Appendix-Note 未进 index.adoc 发布面不收。14 图传 CDN；toc-md PUT 0.5s。六查全绿：TOC 34==34、错位 0、幽灵 0（docs 30==30）、word_count 30/30>0、回读 3 篇逐字符相等。move-stack 恒 {} → 分组待补。"
  }
 }

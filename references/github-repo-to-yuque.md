@@ -584,3 +584,13 @@ toc-md 建库后根级 DOC（`00-说明.md`、`90-参考资料.md`）会全排�
 - 置**最前**：`prependNode + sibling + target_uuid=<第一个 TITLE>`（多篇按目标顺序**从后往前**逐发，坑 96 是升序语义，注意别搞反）。
 - 置**最后**（如「参考资料」「附录」要落在末尾）：`appendNode + action_mode=sibling + target_uuid=<最后一个节点>` —— **appendNode 语义 = 插到 target 之后**，实测一次到位（同 target 用 prependNode 只会插到它前面）。
 - 验收一律按 `parent_uuid` + `prev_uuid` 链重建根序（`GET /toc` 的数组顺序不代表树序，坑 75）。
+
+**坑 99：AsciiDoc 书稿的第二形态——`index.adoc` 主控 + `include::`（无 book.txt/entries.txt）**（2026-11-01 liubin/promises-book《JavaScript Promise迷你书（中文版）》实战）
+puppet-cookbook（坑 40）是「book.txt + entries.txt + include::」的老 gitbook 形态；本书是**直接可编译的 Asciidoctor 书稿**：`index.adoc` 顶层 `include::Ch0..Ch4 / Appendix-*`，每章 `readme.adoc` = `= Chapter.N - 标题` + `:imagesdir:` + `include::各节.adoc`，各节文件 = `== 节标题`。
+1. **标题层级要整体降一级再交 Conv**：puppet 版 `Conv` 把 `=` 和 `==` 都映射成 `#`（靠显式 re.sub 改章标题）→ 本形态直接 `re.sub(r"^(=+)\s+(.*)$", 加一个 `=`)` 后再转，`=`→`#`、`==`→`##`，每篇再**剥首个 H1**（标题由文件名给）。
+2. **定义列表 `Term::` + 缩进定义行**（术语集/参考网站通篇）：转 `- **Term**` + **定义另起一行**。⚠️ 定义并回同一行会让 Conv 的 `+x+` 行内规则**跨行配对**——`Promises/A+` 的 `+` 会和下句的 `+` 配对，把中间整段咬成反引号。
+3. **非白名单块属性/条件编译**：`[role="executable"]`（49 处）与 `ifeval::["{backend}"=="html5"] … endif::[]` 整行剥（剥壳留内容）。
+4. **行内 `image:`（单冒号）要与 `image::` 区分**：正则必须 `(?<!:)image:(?!:)`——少了 `(?!:)` 会把 `image::img/a.png` 捕成 `:img/a.png`，**图片复制静默失败**（md 里引用 `_imgs/` 但文件不在，CDN 重写全跳「本地缺失」）。外链形态 `image:https://…[alt, link=…]` → `[![alt](url)](link)`。
+5. **发布面以 `index.adoc` 为准**：本书 `Appendix-Note/`（日语「おまけ」）不在 include 清单里 → 不收；渲染站 `liubin.org/promises-book/`（Asciidoctor 单页 363KB）的 h1~h4 层级 = 书序，可当结构 oracle（6 用語集 / 7 参考网站 / 8 关于作者 / 9 关于译者）。
+6. **文件名洗全角用 `：`/`？`，别拿 `／` 顶替**：`专栏: xxx？` → `专栏：xxx？`（`?`→`／` 会得到 `then or catch／`）。
+- **本例实测**：34 节点（4 章目录 + 30 文档）、14 图 CDN、toc-md PUT 0.5s；六查全绿（TOC 34==本地、错位 0、幽灵 0 docs30==TOC DOC30、word_count 30/30>0、回读 3 篇逐字符相等）。库 **85211548**（slug `promises-book-zh-930f798`）。⚠️ move-stack 57018723 返 `{}` → 挂账。脚本 + 说明：`examples/promise-book-adoc/`。
