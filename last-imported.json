@@ -1725,5 +1725,75 @@
     "book_url": "https://www.yuque.com/yeuhoshun/node-lessons-5e0e72e",
     "imported_at": "2026-11-02T00:20:00+0800",
     "note": "默认分支 master @ 5e0e72e（2022-02-15，MIT）《Node.js 包教不包会》。口径：19 课 lessonN/README.md（根 README 目录定序，课名取《书名号》标题）+lesson14 附《解密设计模式（王垠）》+00-说明=21 节点；课内截图 GitHub 外链全部 basename 反查本地化后 23 处引用传 CDN（0 外链残留 0 缺失）。六查全绿：TOC 21==本地、错位 0、幽灵 0（21==21）、word_count 21/21>0。move-stack 服务端回归挂账。"
+  },
+  "https://github.com/jollen/nodejs-fullstack-lessons": {
+    "commit": "e5d4fc8",
+    "book_id": 85214314,
+    "book_url": "https://www.yuque.com/yeuhoshun/nodejs-fullstack-e5d4fc8",
+    "imported_at": "2026-11-02T02:46:00+0800",
+    "note": "《Node.js Fullstack 原理與實務》第四版繁中教材（jollen）。13 章 83 md + 4 個練習專案範例代码（01-weather-app/02-phonegap/03-messenger/04-websocket-server）；剔 bower_components/vendor（第三方依赖 1700+ 文件）、03-messenger-biolerplate 重复模板、.gitignore；8 图 CDN（7 figure + 封面，raw 旧仓库链本地化）；PREFACE wotcity 原图链接已失效标注；169 节点（32 目录/137 文件）toc-md PUT 1.2s；六查全绿。move-stack 挂账（服务端回归）。"
+  },
+  "https://www.nodebeginner.org/index-zh-cn.html": {
+    "commit": null,
+    "book_id": 85214351,
+    "book_url": "https://www.yuque.com/yeuhoshun/nodebeginner-zh-20261102",
+    "imported_at": "2026-11-02T02:46:00+0800",
+    "note": "《Node入门》The Node Beginner Book 中文版（Manuel Kiessling；goddyzhao/GrayZhang/MondayChen 译）。网站口径 2026-11-02；单页整书按 h2 拆 5 章目录 + h3 拆 22 节 + 00-说明；页首国旗导航/购买广告/praise 壳剔除；54 代码块转围栏；正文窗口 0 图（封面在广告区未收）；28 节点；六查全绿。move-stack 挂账。"
+  },
+  "https://github.com/nodejs-tw/nodejs-wiki-book": {
+    "commit": "834d92d",
+    "book_id": 85214384,
+    "book_url": "https://www.yuque.com/yeuhoshun/nodejs-wiki-book-834d92d",
+    "imported_at": "2026-11-02T02:46:00+0800",
+    "note": "《Node.js 台灣社群協作電子書》（nodejs.tw，CC BY-NC 3.0）。Sphinx/ContPub 书稿：contents.rst.inc toctree 14 项发布面 + 有正文孤儿 4 篇捞回（Socket.io/mac/ubuntu 安装/CodeGenParty10 OAuth）+ 範例程式碼 src 20 文件；18 处 literalinclude 展开为 javascript 围栏（node_express_middle_simple 上游笔误按真实文件修正）；剔除 _static/social_nature(主题)/slides(dzslides)/cover.tex/草稿 js-*/outline/convention/TODO_list；13 图 CDN；42 节点；六查全绿。move-stack 挂账。"
+  },
+  "https://www.gitbook.com/book/0532/nodejs/details": {
+    "commit": null,
+    "book_id": 85214397,
+    "book_url": "https://www.yuque.com/yeuhoshun/nodejs-zh-doc-20261102",
+    "imported_at": "2026-11-02T02:46:00+0800",
+    "note": "《The NodeJS》Node.js v0.8 API 中文文档（0532 译）。gitbook.com 平台关停 → 改吃老 gitbooks.io 渲染站 0532.gitbooks.io/nodejs/content（源仓库 github.com/0532/nodejs）；GitBook 2.x 32 页全收（index 欢迎 + 31 模块）；2 页站侧栏断链（CSS-Fonts-Images/Deployment-strategies）不补建；编号空洞即断链位；wizardforcel build.py 复用（404 跳过补丁）；零图；33 节点；六查全绿。move-stack 挂账。"
+  },
+  "https://www.gitbook.com/book/0532/nodejs": {
+    "commit": null,
+    "book_id": 85214397,
+    "book_url": "https://www.yuque.com/yeuhoshun/nodejs-zh-doc-20261102",
+    "imported_at": "2026-11-02T02:46:00+0800",
+    "note": "与 seq193 同书同源（URL 变体），并入 85214397。"
+  },
+  "https://github.com/theJian/build-a-hn-front-page": {
+    "commit": "bdb0298",
+    "book_id": 85214409,
+    "book_url": "https://www.yuque.com/yeuhoshun/build-a-hn-front-page-bdb0298",
+    "imported_at": "2026-11-02T02:46:00+0800",
+    "note": "《Learn React & Webpack by building the Hacker News front page》中文译稿。单 README 22.7KB 全书按 ## 拆 8 节（跟围栏防代码 # 误伤）；原书自述 webpack 1.x 已过时照录；2 个下载素材 gif 改图语法一并 CDN（7 图全传，PATH_TO_IMAGE JSX 占位假阳性忽略）；9 节点；六查全绿。move-stack 挂账。"
+  },
+  "https://github.com/hateonion/react-bits-CN": {
+    "commit": "72aea1e",
+    "book_id": 85214419,
+    "book_url": "https://www.yuque.com/yeuhoshun/react-bits-cn-72aea1e",
+    "imported_at": "2026-11-02T02:46:00+0800",
+    "note": "《React Bits》中文译本（vasanthk/react-bits 译）。GitBook 3.x 源：SUMMARY.md 6 大组（patterns/anti-patterns/ux-variations/perf-tips/styling/gotchas）+ Introduction/READINGS/CONTRIBUTING/LICENSE；patterns 30-34 五篇 SUMMARY 未收录孤儿有正文捞回；coding-style 仅免责声明空组不建；docs/ 为 gitbook build 渲染产物剔除；组 README→00-简介；59 节点（6 TITLE/53 DOC）；六查全绿。move-stack 挂账。"
+  },
+  "https://fakefish.github.io/react-webpack-cookbook/": {
+    "commit": null,
+    "book_id": 85214437,
+    "book_url": "https://www.yuque.com/yeuhoshun/react-webpack-cookbook-zh-20261102",
+    "imported_at": "2026-11-02T02:46:00+0800",
+    "note": "《React Webpack 小书》中文站（christianalfoni/react-webpack-cookbook 中文译本 Fakefish 译）。gh-pages 渲染站 30 页侧栏抓 28 页（CSS-Fonts-Images/Deployment-strategies 站内断链 404 不补建，编号空洞即断链位）；wizardforcel build.py 复用（404 跳过补丁）；译文照录（含「优化重合并」误译、TODO 起稿页、中英混杂页）；零图；29 节点；六查全绿。move-stack 挂账。"
+  },
+  "https://fraserxu.me/intro-to-react/": {
+    "commit": null,
+    "book_id": 85214452,
+    "book_url": "https://www.yuque.com/yeuhoshun/intro-to-react-05e0e0ca",
+    "imported_at": "2026-11-02T02:46:00+0800",
+    "note": "《React.js 入门教程》（Fraser Xu 中文入门教程）。原站 fraserxu.me/intro-to-react 2026 SvelteKit 改版后 404 → 反查源仓库 fraserxu/intro-to-react @ 05e0e0ca（Jekyll 教程站源）；剥 front matter（title=章名 oracle）→ 概览 + 5 课 + 2 示例 html；Jekyll Liquid highlight→围栏、站内导航按钮剥、demo 壳 div 剥、include 标签→示例注记；主题脚手架/README 不入库；11 节点；六查全绿。move-stack 挂账。"
+  },
+  "https://github.com/discountry/react": {
+    "commit": "b4fbfac",
+    "book_id": 85214479,
+    "book_url": "https://www.yuque.com/yeuhoshun/react-docs-zh-b4fbfac",
+    "imported_at": "2026-11-02T02:46:00+0800",
+    "note": "《React 中文文档翻译计划》= reactjs.org 官方文档中文版（React 16 时代 docs 区）。原链 discountry.github.io/react → 301 react.yubolun.com 已死 → 吃源仓库；发布面 = nav.yml 官方目录 oracle × 中文判定（正文首 300 字 CJK≥30）= 59 篇 7 分区（01 安装 3/02 主要概念 12/03 高级指引 22/04 API 参考 10/05 Hooks 5/07 FAQ 7）；nav 外中文孤儿 12 篇归位（installation/reference-*/legacy-context/addons-shallow）；英文未译 22 篇 + redirect stub 不进发布面；front matter 剥、站内 /docs/ 链转纯文本；9 图 CDN（HTML img 形态收集坑：漏 devtools 系，修 build 图收集）；66 节点；六查全绿。move-stack 挂账。"
   }
 }
