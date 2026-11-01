@@ -1669,5 +1669,61 @@
     "book_url": "https://www.yuque.com/yeuhoshun/7-days-nodejs-20261101",
     "imported_at": "2026-11-01T22:06:00+0800",
     "note": "fpb52 #182 网站口径 nqdeng《七天学会NodeJS》GitBook 单页书按 H2 拆 7 章+00-说明=8 节点平铺；无图；129 代码块完整（Node 早期 API 形态历史读物）。六查全绿：TOC 8==8、幽灵 0、word_count 0 篇、回读 3 篇相等。move-stack 挂账。"
+  },
+  "https://github.com/extjs-doc-cn/ext4api": {
+    "commit": "d7288dd",
+    "book_id": 85213682,
+    "book_url": "https://www.yuque.com/yeuhoshun/ext4api-zh-d7288dd",
+    "imported_at": "2026-11-02T00:20:00+0800",
+    "note": "分支 gh-pages @ d7288dd（2014-01-01 V1.0.0 beta，脚本娃娃译 ExtJS 4.1 API 中文文档）。口径：Sencha Docs 在线文档数据（output/ 每类一个 JSONP .js，正文全在 html 字段）转 md —— 自写转换器（JSONP 剥壳→bs4+html5lib→md）；439 类按命名空间 57 目录（Ext 根级集中 00-Ext 核心），站内 #!/api 锚点转纯文本、view-source 剥、字面 script 标签转义（不闭合会吞后续）、围栏外 HTML 标签转义。9 图 CDN。497 节点 toc-md PUT 3.0s PASS、0 失败；六查全绿：TOC 497==本地、错位 0、幽灵 0（440==440）、word_count 440/440>0、回读 6 篇 94-100%。move-stack 服务端回归挂账。"
+  },
+  "https://github.com/nswbmw/N-blog": {
+    "commit": "c842ec4",
+    "book_id": 85213895,
+    "book_url": "https://www.yuque.com/yeuhoshun/nblog-c842ec4",
+    "imported_at": "2026-11-02T00:20:00+0800",
+    "note": "默认分支 master @ c842ec4（2018-09-20，MIT）《使用 Express + MongoDB 搭建多人博客》（N-blog）。口径：GitBook 3.x 源 book/ 27 篇按 README 目录定序分 4 章（开发环境搭建/Node.js 知识点讲解/Hello, Express/一个简单的博客），编号 N.N 保持原书序；45 图 CDN（子目录改 ../img/ 引用，EJS 模板变量 /img/<%= %> 保留原文）。32 节点（4 目录/28 文档）toc-md PUT 0.5s PASS、0 失败；六查全绿：TOC 32==本地、错位 0、幽灵 0（28==28）、word_count 28/28>0、回读中文 85/85 全命中。move-stack 服务端回归挂账。"
+  },
+  "http://expressjs.jser.us/": {
+    "commit": null,
+    "book_id": 85213923,
+    "book_url": "https://www.yuque.com/yeuhoshun/expressjs-jser-zh-20261101",
+    "imported_at": "2026-11-02T00:20:00+0800",
+    "note": "网站口径（2012 草依山译，Express 3.x 时代 jser.us 系列）。收 4 页：首页简介/新手指南/问答/Jade 文档；**API 参考两页（3x/4x）纯英文未翻译未收**（残缺标注）；无图。5 节点 toc-md PUT 0.5s PASS、0 失败；六查全绿：TOC 5==本地、错位 0、幽灵 0（5==5）、word_count 5/5>0。move-stack 服务端回归挂账。"
+  },
+  "http://javascript.ruanyifeng.com/nodejs/express.html": {
+    "commit": null,
+    "book_id": 85213944,
+    "book_url": "https://www.yuque.com/yeuhoshun/ruanyifeng-express-20261101",
+    "imported_at": "2026-11-02T00:20:00+0800",
+    "note": "网站口径：阮一峰《JavaScript 标准参考教程》Express 框架章节，单页长文按 H2 拆 8 篇+00-说明=9 节点；64 个代码示例无图。六查全绿：TOC 9==本地、错位 0、幽灵 0（9==9）、word_count 9/9>0。move-stack 服务端回归挂账。"
+  },
+  "https://github.com/guo-yu/koa-guide": {
+    "commit": "9ab9b61",
+    "book_id": 85213970,
+    "book_url": "https://www.yuque.com/yeuhoshun/koajs-koa-guide-20261101",
+    "imported_at": "2026-11-02T00:20:00+0800",
+    "note": "默认分支 master @ 9ab9b61（2018-06-05，MIT）。仓库仅一个 README.md（26KB，koa 官方文档社区中译、Koa 1.x 时代）→ 按 H3 拆 15 节+00-说明=16 节点；onion.png 洋葱模型 1 图 CDN；页眉 badge 图与 docor 尾注剥。六查全绿：TOC 16==本地、错位 0、幽灵 0（16==16）、word_count 16/16>0。move-stack 服务端回归挂账。"
+  },
+  "https://github.com/lisposter/learnyounode": {
+    "commit": "4f0b8888",
+    "book_id": 85214000,
+    "book_url": "https://www.yuque.com/yeuhoshun/learnyounode-zh-20261101",
+    "imported_at": "2026-11-02T00:20:00+0800",
+    "note": "默认分支 master @ 4f0b8888（2015-01-19，MIT；npm learnyounode-zh-cn 的真仓库，nodeschool 工作坊简体中文版）。口径：13 个练习的 problem.zh-cn.md（menu.json 定序，全有内容无空壳）+00-说明=14 节点；无图。六查全绿：TOC 14==本地、错位 0、幽灵 0（14==14）、word_count 14/14>0。move-stack 服务端回归挂账。"
+  },
+  "http://i5ting.github.io/node-debug-tutorial/": {
+    "commit": null,
+    "book_id": 85214061,
+    "book_url": "https://www.yuque.com/yeuhoshun/node-debug-tutorial-20261101",
+    "imported_at": "2026-11-02T00:20:00+0800",
+    "note": "网站口径：i5ting 狼叔《node-debug 三法三例》单页教程站，按 H2 拆 15 篇+00-说明=16 节点；13 图 CDN（含 GIF 动图）；页面同图两种引用形态（img/ 前缀真图 vs 裸路径 404）只收前者。六查全绿：TOC 16==本地、错位 0、幽灵 0（16==16）、word_count 16/16>0。move-stack 服务端回归挂账。"
+  },
+  "https://github.com/alsotang/node-lessons": {
+    "commit": "5e0e72e",
+    "book_id": 85214141,
+    "book_url": "https://www.yuque.com/yeuhoshun/node-lessons-5e0e72e",
+    "imported_at": "2026-11-02T00:20:00+0800",
+    "note": "默认分支 master @ 5e0e72e（2022-02-15，MIT）《Node.js 包教不包会》。口径：19 课 lessonN/README.md（根 README 目录定序，课名取《书名号》标题）+lesson14 附《解密设计模式（王垠）》+00-说明=21 节点；课内截图 GitHub 外链全部 basename 反查本地化后 23 处引用传 CDN（0 外链残留 0 缺失）。六查全绿：TOC 21==本地、错位 0、幽灵 0（21==21）、word_count 21/21>0。move-stack 服务端回归挂账。"
   }
 }
