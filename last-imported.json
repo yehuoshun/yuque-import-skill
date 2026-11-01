@@ -1641,5 +1641,33 @@
     "book_url": "https://www.yuque.com/yeuhoshun/d3-wiki-zh-cecbbd1e",
     "imported_at": "2026-11-01T20:57:00+0800",
     "note": "D3 v3 官方 wiki 中文翻译集合（VisualCrew 小组译，对齐 3.5.17）。发布面 46 中文页 = 3 根文档（00-说明/01-D3.js 简介=CN-Home/02-API 中文手册）+ 37 专篇挂 7 分组 TITLE（核心函数/地理/几何/布局/比例尺/SVG函数/行为）；时间分区（d3.time）无中文页不建；剔 6B 垃圾页 捆布局.md；英文/日文/俄文/繁中/印尼页不收。wiki 语法转换：面包屑剥、[[a|b]]→外链或纯文本、站内相对/锚点链→纯文本、<a name>#</a> 签名行→行内反引号（剥 **/* 斜体标记）、[[label](url)] 译者签名→[label](url)、正文标题整体降一级；<a href><img></a> 缩略图→[![例图](url)](href)。图：65 张本地（含 6 张 github.com/wiki/*.png 本地化）传 CDN、bl.ocks.org 外链 49 保留、f.cloud.github.com 2 张死链标注缺失、wikimedia 2 张外链。六查全绿：TOC 47==47（40 DOC/7 TITLE）、路径唯一、错位 0、幽灵 0、word_count 0 篇、回读 4 篇逐字符相等、无分片。move-stack 服务端回归挂账（开源项目 57018723 待补）。"
+  },
+  "https://wizardforcel.gitbooks.io/electron-doc/content/": {
+    "commit": null,
+    "book_id": 85212898,
+    "book_url": "https://www.yuque.com/yeuhoshun/electron-doc-20261101",
+    "imported_at": "2026-11-01T21:26:00+0800",
+    "note": "fpb52 #177 网站口径 wizardforcel GitBook 2.x《Electron 中文文档》静态站（io.js 时代中译，与 #178 w3cschool 镜像同译本）。侧栏嵌套树 → 5 组 TITLE + 零填充文档；组页空壳不建导读；54 文档（含介绍）+ 00-说明 = 64 节点（9 目录/55 文档）；全站无图。六查全绿：TOC 64==64、错位 0、幽灵 0（55==55）、word_count 0 篇、回读 3 篇逐字符相等。⚠️ test 6 后删 progress 全量重导 → test 4 doc 变幽灵，已 DELETE+404 复查（教训：test 后别删 progress）。move-stack 服务端回归挂账（文章收集 36149506）。"
+  },
+  "https://www.w3cschool.cn/electronmanual/": {
+    "commit": null,
+    "book_id": 85213131,
+    "book_url": "https://www.yuque.com/yeuhoshun/electron-doc-w3cschool-20261101",
+    "imported_at": "2026-11-01T21:51:00+0800",
+    "note": "fpb52 #178 网站口径 w3cschool 收录《Electron 中文文档》手册镜像（与 #177 同译本但条目更全：62 篇 vs wizardforcel 53 正文，多版本管理/REPL/离屏渲染/风格指南等增补页）→ 独立建库。⚠️ www 站 WAF 挑战随机（cookie 解算带 cookie 反而 404 认证失败）→ 改抓 m.w3cschool.cn 移动版免挑战，正文容器 .content-intro 同款。62 篇平铺+00-说明=63 节点；图 11 张全外链：cloud 5+atts 2 存活保留、camo 4 张代理原 URL 已死（MSDN/Ubuntu 503/404）标注缺失。六查全绿：TOC 63==63、幽灵 0、word_count 0 篇、回读 3 篇相等。⚠️ test 6 后删 progress 重导同样产生 6 幽灵，已清。move-stack 挂账。"
+  },
+  "http://i5ting.github.io/How-to-write-jQuery-plugin/build/jquery.plugin.html": {
+    "commit": null,
+    "book_id": 85213246,
+    "book_url": "https://www.yuque.com/yeuhoshun/how-to-write-jquery-plugin-20261101",
+    "imported_at": "2026-11-01T22:04:00+0800",
+    "note": "fpb52 #181 网站口径 i5ting（狼叔）《How to write jQuery plugin?》GitBook 1.x 单页书按 H2 拆 9 篇+00-说明=10 节点平铺；2 图本地（tab.gif/debug_with_callback.png）传语雀 CDN。⚠️ 构建器双坑：① render() 遍历 children 不会处理元素自身 → h3 标题丢前缀（入口加自身标题判断）；② 自闭合 <img> 无 children，inline() 遍历拿不到 → 抽 img_md() 独立处理（render/inline 两处共用）。六查全绿：TOC 10==10、幽灵 0、word_count 0 篇、回读 3 篇相等。move-stack 挂账（文章收集 36149506）。"
+  },
+  "http://nqdeng.github.io/7-days-nodejs/": {
+    "commit": null,
+    "book_id": 85213255,
+    "book_url": "https://www.yuque.com/yeuhoshun/7-days-nodejs-20261101",
+    "imported_at": "2026-11-01T22:06:00+0800",
+    "note": "fpb52 #182 网站口径 nqdeng《七天学会NodeJS》GitBook 单页书按 H2 拆 7 章+00-说明=8 节点平铺；无图；129 代码块完整（Node 早期 API 形态历史读物）。六查全绿：TOC 8==8、幽灵 0、word_count 0 篇、回读 3 篇相等。move-stack 挂账。"
   }
 }
