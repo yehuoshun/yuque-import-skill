@@ -1433,5 +1433,47 @@
   "book_url": "https://www.yuque.com/yeuhoshun/css-reference-doyoe-20261101",
   "imported_at": "2026-11-01T05:40:00+0800",
   "note": "网站口径：《CSS参考手册》（杜瑶 doyoe 著，源站已死，Wayback 快照 2011~2018）。459 篇正文：属性 28 类 ~267 篇、选择器 49、值 96、单位 26、规则 9、简介 7、附录 2、经验 4、hack 4 = 502 节点；兼容性表为快照时代版本（IE8-10/Firefox/Chrome 为主）；2018 改版目录 backgrounds/ 与旧目录重复未收、sample 演示 5 页未收、5 页快照拉取失败；六查全绿（幽灵 0、word_count 460/460>0、reconcile 0）。⚠️ move-stack 挂账。"
+ },
+ "https://github.com/waylau/netty-4-user-guide": {
+  "commit": "320fc71",
+  "book_id": 85205520,
+  "book_url": "https://www.yuque.com/yeuhoshun/netty-4-user-guide-320fc71",
+  "imported_at": "2026-11-01T09:30:00+0800",
+  "note": "Netty 4.x 官方指南中文译本（waylau），SUMMARY 19 篇+00-说明/前言；外链 15 条未收；8 图 CDN"
+ },
+ "https://github.com/waylau/essential-netty-in-action": {
+  "commit": "8923a29",
+  "book_id": 85205521,
+  "book_url": "https://www.yuque.com/yeuhoshun/essential-netty-in-action-8923a29",
+  "imported_at": "2026-11-01T09:30:00+0800",
+  "note": "《Netty 实战(精髓)》中文译本；100 文档；2 篇 0 字节空壳未收；64 图 CDN"
+ },
+ "https://github.com/waylau/rest-in-action": {
+  "commit": "7cc9dac",
+  "book_id": 85205522,
+  "book_url": "https://www.yuque.com/yeuhoshun/rest-in-action-7cc9dac",
+  "imported_at": "2026-11-01T09:30:00+0800",
+  "note": "《REST 实战》中文译本；15 文档；34 图 CDN（samples 不入库）"
+ },
+ "https://github.com/qibaoguang/Spring-Boot-Reference-Guide": {
+  "commit": "551191a",
+  "book_id": 85205523,
+  "book_url": "https://www.yuque.com/yeuhoshun/spring-boot-reference-guide-551191a",
+  "imported_at": "2026-11-01T09:30:00+0800",
+  "note": "Spring Boot 参考指南中文译本；537 文档平铺；8 缺失/空壳未收"
+ },
+ "https://github.com/waylau/spring-framework-4-reference": {
+  "commit": "936bdc5",
+  "book_id": 85205524,
+  "book_url": "https://www.yuque.com/yeuhoshun/spring-framework-4-reference-936bdc5",
+  "imported_at": "2026-11-01T09:30:00+0800",
+  "note": "Spring Framework 4.x 参考文档中文译本（未译完）；110 文档（8 目录含说明）；224 个 0 字节空壳未收；13 图 CDN"
+ },
+ "https://liaoxuefeng.com/books/java": {
+  "commit": "-",
+  "book_id": 85205987,
+  "book_url": "https://www.yuque.com/yeuhoshun/liaoxuefeng-java-20261101",
+  "imported_at": "2026-11-01T09:30:00+0800",
+  "note": "廖雪峰 Java 教程全本 24 章 315 页（gitsite 静态站 content.html 抓取）；128 图 CDN；网站口径"
  }
 }
