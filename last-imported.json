@@ -2083,5 +2083,166 @@
   "book_url": "https://www.yuque.com/yeuhoshun/concise-excel-vba-a99cf1b",
   "imported_at": "2026-11-02T23:18:00+0800",
   "note": "开源项目口径（原链 302 到 bluetata/concise-excel-vba）：《简明 Excel VBA》README 139KB 全书按 ## 0xNN 拆 18 节+疑难排查附录 5 篇=27 节点；跳转桩章节拼接 CreateAMacro/type-conversion-functions/ShortcutKey/Debug/SampleCode.bas；48 图 CDN；`/doc/` 绝对引用需剥前导斜杠、rewrite 后确认 0 缺失再删目录（避免打地鼠）。六查全绿。move-stack 挂账。"
+ },
+ "https://learnku.com/docs/laravel/6.x": {
+  "commit": "-",
+  "book_id": 85247734,
+  "book_url": "https://www.yuque.com/yeuhoshun/laravel6-zh-20261103",
+  "imported_at": "2026-11-03T05:00:00+0800",
+  "note": "网站口径 L6：learnku Laravel 6 中文文档 74 篇平铺（侧栏书序 74；剥页内锚点目录+裸HTML教学占位符保护）。六查全绿"
+ },
+ "https://learnku.com/docs/laravel/7.x": {
+  "commit": "-",
+  "book_id": 85247748,
+  "book_url": "https://www.yuque.com/yeuhoshun/laravel7-zh-20261103",
+  "imported_at": "2026-11-03T05:00:00+0800",
+  "note": "网站口径 L7：learnku Laravel 7 中文文档 75 篇平铺。六查全绿"
+ },
+ "https://learnku.com/docs/laravel/8.x": {
+  "commit": "-",
+  "book_id": 85247769,
+  "book_url": "https://www.yuque.com/yeuhoshun/laravel8-zh-20261103",
+  "imported_at": "2026-11-03T05:00:00+0800",
+  "note": "网站口径 L8：learnku Laravel 8 中文文档 75 篇平铺。六查全绿"
+ },
+ "https://learnku.com/docs/laravel/9.x": {
+  "commit": "-",
+  "book_id": 85247843,
+  "book_url": "https://www.yuque.com/yeuhoshun/laravel9-zh-20261103",
+  "imported_at": "2026-11-03T05:00:00+0800",
+  "note": "网站口径 L9：learnku Laravel 9 中文文档 81 篇平铺。六查全绿"
+ },
+ "https://www.osgeo.cn/cpython/": {
+  "commit": "-",
+  "book_id": 85247892,
+  "book_url": "https://www.yuque.com/yeuhoshun/cpython3-zh-20261103",
+  "imported_at": "2026-11-03T05:00:00+0800",
+  "note": "网站口径：osgeo.cn/cpython 镜像实为 Python 3.10.0a4 官方文档中文版 480 页平铺（书单写 3.8.0a3）。六查全绿；清 5 幽灵"
+ },
+ "https://www.liaoxuefeng.com/wiki/1016959663602400": {
+  "commit": "-",
+  "book_id": 85247925,
+  "book_url": "https://www.yuque.com/yeuhoshun/liaoxuefeng-python-20261103",
+  "imported_at": "2026-11-03T05:00:00+0800",
+  "note": "网站口径：廖雪峰《Python教程》gitsite 静态站 23 组目录 112 节点（113 文档），63 图 CDN。六查全绿；清 1 幽灵+61 图占位"
+ },
+ "https://www.osgeo.cn/tornado/": {
+  "commit": "-",
+  "book_id": 85247756,
+  "book_url": "https://www.yuque.com/yeuhoshun/tornado6-zh-20261103",
+  "imported_at": "2026-11-03T05:00:00+0800",
+  "note": "网站口径：osgeo.cn/tornado 实为 Tornado 6.2.dev1 中文文档 90 页（书单写 6.1）。六查全绿"
+ },
+ "https://www.osgeo.cn/django/": {
+  "commit": "-",
+  "book_id": 85247860,
+  "book_url": "https://www.yuque.com/yeuhoshun/django-zh-20261103",
+  "imported_at": "2026-11-03T05:00:00+0800",
+  "note": "网站口径：osgeo.cn/django 实为 Django 6.0.dev 中文文档 153 页（书单写 2.2.1）。六查全绿；清 1 幽灵"
+ },
+ "http://djangobook.py3k.cn/2.0/": {
+  "commit": "-",
+  "book_id": 85248009,
+  "book_url": "https://www.yuque.com/yeuhoshun/djangobook-zh-20261103",
+  "imported_at": "2026-11-03T05:00:00+0800",
+  "note": "网站口径：《The Django Book 2.0》繁体中文译本 20 章；21 张原书截屏图床 new-media.djangobook.com 已死→原位标注。六查全绿"
+ },
+ "https://tutorial.djangogirls.org/zh/": {
+  "commit": "-",
+  "book_id": 85248049,
+  "book_url": "https://www.yuque.com/yeuhoshun/djangogirls-zh-20261103",
+  "imported_at": "2026-11-03T05:00:00+0800",
+  "note": "开源项目口径：DjangoGirls/tutorial zh 目录 SUMMARY 24 章（GitBook 源）。六查全绿"
+ },
+ "http://cran.r-project.org/doc/contrib/Liu-FAQ.pdf": {
+  "commit": "-",
+  "book_id": 85248078,
+  "book_url": "https://www.yuque.com/yeuhoshun/r-153min-zh-20261103",
+  "imported_at": "2026-11-03T05:00:00+0800",
+  "note": "PDF 口径：《153分钟学会 R》cran contrib 48 页书签抽 11 章。六查全绿"
+ },
+ "http://cran.r-project.org/doc/contrib/Ding-R-intro_cn.pdf": {
+  "commit": "-",
+  "book_id": 85248076,
+  "book_url": "https://www.yuque.com/yeuhoshun/r-intro-zh-20261103",
+  "imported_at": "2026-11-03T05:00:00+0800",
+  "note": "PDF 口径：《R 导论》中文版 cran contrib 134 页书签抽 20 章。六查全绿"
+ },
+ "https://ihower.tw/rails4/": {
+  "commit": "-",
+  "book_id": 85248015,
+  "book_url": "https://www.yuque.com/yeuhoshun/ihower-rails-zh-20261103",
+  "imported_at": "2026-11-03T05:00:00+0800",
+  "note": "网站口径：ihower《Rails 實戰聖經》just-the-docs 侧栏 139 页平铺（含 Git/CS 附录；Part 目录页自带 TOC）；面包屑剥除+正文更新。六查全绿；清 1 幽灵"
+ },
+ "https://ruby-china.github.io/rails-guides/": {
+  "commit": "-",
+  "book_id": 85248023,
+  "book_url": "https://www.yuque.com/yeuhoshun/rails-guides-zh-20261103",
+  "imported_at": "2026-11-03T05:00:00+0800",
+  "note": "网站口径：Rails Guides 中文版（Rails 5.0 时代全集）50 页。六查全绿"
+ },
+ "https://github.com/rustcc/rust-by-example": {
+  "commit": "94ef6ea",
+  "book_id": 85248029,
+  "book_url": "https://www.yuque.com/yeuhoshun/rust-by-example-cn-94ef6ea",
+  "imported_at": "2026-11-03T05:00:00+0800",
+  "note": "换源：书单链 rustcc 为英文原仓库(2018)，改导 rust-lang-cn/rust-by-example-cn@94ef6ea 官方中文译本（rustwiki 系 100% 翻译）；src 内容树 44 目录+197 文档 + 00-说明。六查全绿；清 1 幽灵"
+ },
+ "https://zjp-cn.github.io/tlborm/": {
+  "commit": "HEAD",
+  "book_id": 85248033,
+  "book_url": "https://www.yuque.com/yeuhoshun/tlborm-zh",
+  "imported_at": "2026-11-03T05:00:00+0800",
+  "note": "换源：zjp-CN/tlborm 续写版《Rust 宏小册》mdBook 源（SUMMARY 树）；41 节点。六查全绿"
+ },
+ "https://course.rs": {
+  "commit": "a4a7eea",
+  "book_id": 85248044,
+  "book_url": "https://www.yuque.com/yeuhoshun/rust-course-zh-a4a7eea",
+  "imported_at": "2026-11-03T05:00:00+0800",
+  "note": "换源：course.rs 404→sunface/rust-course@a4a7eea《Rust 语言圣经》mdBook 书稿；SUMMARY 定层级 52 目录+297 文档+00-说明=350 节点。六查全绿"
+ },
+ "https://www.gitbook.com/book/numbbbbb/-the-swift-programming-language-/details": {
+  "commit": "cfc700e",
+  "book_id": 85248058,
+  "book_url": "https://www.yuque.com/yeuhoshun/swift-book-zh-cfc700e",
+  "imported_at": "2026-11-03T05:00:00+0800",
+  "note": "换源：原链 gitbook.com 关停→SwiftGGTeam/the-swift-programming-language-in-chinese@cfc700e（TSPL.docc 6.2.3 中文版）；4 分区 43 篇+00-说明。六查全绿"
+ },
+ "https://www.tslang.cn": {
+  "commit": "-",
+  "book_id": 85247990,
+  "book_url": "https://www.yuque.com/yeuhoshun/tslang-zh-20261103",
+  "imported_at": "2026-11-03T05:00:00+0800",
+  "note": "网站口径：tslang.cn TypeScript 手册中文站 117 页（SSR markdown 容器）。六查全绿；清 1 幽灵"
+ },
+ "https://github.com/jkchao/typescript-book-chinese": {
+  "commit": "f1e40c1",
+  "book_id": 85248061,
+  "book_url": "https://www.yuque.com/yeuhoshun/typescript-deep-dive-zh-f1e40c1",
+  "imported_at": "2026-11-03T05:00:00+0800",
+  "note": "开源项目：《深入理解 TypeScript》jkchao 中文译本 docs 树 8 分区 84 篇+00-说明（剔 .vuepress）。六查全绿"
+ },
+ "https://deno-tutorial.js.org": {
+  "commit": "07c1f37",
+  "book_id": 85248063,
+  "book_url": "https://www.yuque.com/yeuhoshun/deno-tutorial-zh-07c1f37",
+  "imported_at": "2026-11-03T05:00:00+0800",
+  "note": "换源：pagic 站→上游 esmadrider/deno-tutorial@07c1f37（hylerrix 原作转手）；articles 14 分区 43 篇+00-说明。六查全绿"
+ },
+ "http://wiki.visual-prolog.com/index.php?title=Visual_Prolog_for_Tyros_in_Chinese": {
+  "commit": "-",
+  "book_id": 85248053,
+  "book_url": "https://www.yuque.com/yeuhoshun/vp-tyros-zh-20261103",
+  "imported_at": "2026-11-03T05:00:00+0800",
+  "note": "PDF 口径：《Visual Prolog 7边练边学》中文 PDF（visual-prolog.com 官方 193 页）书签抽 19 章 + wiki 落地页。六查全绿"
+ },
+ "http://wiki.visual-prolog.com/index.php?title=A_Beginners_Guide_to_Visual_Prolog_in_Chinese": {
+  "commit": "-",
+  "book_id": 85248056,
+  "book_url": "https://www.yuque.com/yeuhoshun/vp-beginners-zh-20261103",
+  "imported_at": "2026-11-03T05:00:00+0800",
+  "note": "PDF 口径：《A Beginners Guide to Visual Prolog》中文版 PDF（207 页）目录解析 13 章 + wiki 落地页。六查全绿"
  }
 }
