@@ -1872,5 +1872,82 @@
   "book_url": "https://www.yuque.com/yeuhoshun/little-redis-book-cn-796297b",
   "imported_at": "2026-11-02T16:38:00+0800",
   "note": "《The Little Redis Book 中文版》开源项目口径（@796297b，cn/redis.md 拆 10 篇，封面 CDN）"
+ },
+ "https://github.com/huangz1990/annotated_redis_source": {
+  "commit": "67758fd",
+  "book_id": 85243027,
+  "book_url": "https://www.yuque.com/yehuoshun/annotated-redis-source-67758fd",
+  "imported_at": "2026-11-02T18:20:00+0800",
+  "note": "《Redis 源码日志》开源项目口径（huangz1990/annotated_redis_source @67758fd unstable 分支，Redis 2.6 源码带中文注释，395 文档；3 个 latin-1 字节被误判二进制的文本文件已修复）"
+ },
+ "https://github.com/huangz1990/redis-3.0-annotated": {
+  "commit": "8e60a758",
+  "book_id": 85243050,
+  "book_url": "https://www.yuque.com/yehuoshun/redis-3-0-annotated-8e60a758",
+  "imported_at": "2026-11-02T18:20:00+0800",
+  "note": "《Redis 3.0 源码注解》开源项目口径（huangz1990/redis-3.0-annotated @8e60a758，426 文档；2 个误判二进制已修复）"
+ },
+ "https://github.com/fayland/chinese-perl-book": {
+  "commit": "ad9f8d4",
+  "book_id": 85243371,
+  "book_url": "https://www.yuque.com/yehuoshun/chinese-perl-book-ad9f8d4",
+  "imported_at": "2026-11-02T18:20:00+0800",
+  "note": "《Master Perl Today 中文版》开源项目口径（fayland/chinese-perl-book @ad9f8d4，POD 书稿 8 篇转 md 44 文档）"
+ },
+ "http://docs.phpcomposer.com": {
+  "commit": "4b68e3ff",
+  "book_id": 85243455,
+  "book_url": "https://www.yuque.com/yehuoshun/composer-doc-cn-4b68e3ff",
+  "imported_at": "2026-11-02T18:20:00+0800",
+  "note": "《Composer 中文文档》开源项目口径（原站 docs.phpcomposer.com 空壳，换源 5-say/composer-doc-cn @4b68e3ff cn-introduction，20 文档）"
+ },
+ "http://wulijun.github.io/php-the-right-way/": {
+  "commit": "feb44da",
+  "book_id": 85243457,
+  "book_url": "https://www.yuque.com/yehuoshun/php-the-right-way-feb44da",
+  "imported_at": "2026-11-02T18:20:00+0800",
+  "note": "《PHP 之道》开源项目口径（wulijun/php-the-right-way @feb44da gh-pages Jekyll 源，14 部分 54 文档）"
+ },
+ "http://www.yiichina.com/doc/guide/2.0": {
+  "commit": null,
+  "book_id": 85243767,
+  "book_url": "https://www.yuque.com/yehuoshun/yii2-guide-zh-20261102",
+  "imported_at": "2026-11-02T18:20:00+0800",
+  "note": "《Yii 2.0 权威指南》网站口径（yiichina.com/doc/guide/2.0 中文版，16 分区 98 章；#236 的官方 PDF 同书不重复导）"
+ },
+ "https://wusuopu.gitbooks.io/symfony2_tutorial/content": {
+  "commit": null,
+  "book_id": 85243700,
+  "book_url": "https://www.yuque.com/yehuoshun/symfony2-tutorial-20261102",
+  "imported_at": "2026-11-02T18:20:00+0800",
+  "note": "《Symfony2 实例教程》网站口径（wusuopu.gitbooks.io GitBook 2.x 老站，桌面 UA 401→iPhone UA 抓取，15 章 16 文档；第14章站上空壳未收）"
+ },
+ "https://www.cnblogs.com/derek1184405959/p/8579428.html": {
+  "commit": null,
+  "book_id": 85243832,
+  "book_url": "https://www.yuque.com/yehuoshun/cnblogs-python-20261102",
+  "imported_at": "2026-11-02T18:20:00+0800",
+  "note": "《人生苦短，我用python》网站口径（博客园系列目录页，9 组 125 篇外链索引；全系列未批量爬取，如需全量另开一轮）"
+ },
+ "https://github.com/JuanitoFatas/rails-style-guide/blob/master/README-zhCN.md": {
+  "commit": "f7ec234",
+  "book_id": 85243820,
+  "book_url": "https://www.yuque.com/yehuoshun/rails-style-guide-f7ec234",
+  "imported_at": "2026-11-02T18:20:00+0800",
+  "note": "《Rails 风格指南》开源项目口径（JuanitoFatas/rails-style-guide @f7ec234，中文 README 按 ## 拆 14 篇）"
+ },
+ "https://github.com/JuanitoFatas/ruby-style-guide/blob/master/README-zhCN.md": {
+  "commit": "6d362e0",
+  "book_id": 85243822,
+  "book_url": "https://www.yuque.com/yehuoshun/ruby-style-guide-6d362e0",
+  "imported_at": "2026-11-02T18:20:00+0800",
+  "note": "《Ruby 风格指南》开源项目口径（JuanitoFatas/ruby-style-guide @6d362e0，中文 README 按 ## 拆 16 篇）"
+ },
+ "http://redisbook.com": {
+  "commit": "5fe4cc8",
+  "book_id": 85244191,
+  "book_url": "https://www.yuque.com/yehuoshun/redisbook-5fe4cc8",
+  "imported_at": "2026-11-02T18:35:00+0800",
+  "note": "《Redis 设计与实现（原始版）》开源项目口径（原链 redisbook.com 死，换源 huangz1990/redisbook @5fe4cc8 Sphinx 书稿 6 部分 21 章；graphviz 图原文只有指令，取 huangz.works/redisbook 站点渲染 png 81 张传 CDN）"
  }
 }
