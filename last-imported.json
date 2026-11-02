@@ -1816,5 +1816,61 @@
   "book_url": "https://www.yuque.com/yeuhoshun/acl-zh-20261102",
   "imported_at": "2026-11-02T15:45:00+0800",
   "note": "《ANSI Common Lisp 中文翻译版》网站口径（acl.readthedocs.org/en/latest + 源仓库 acl-translation/acl-chinese @ 54586be），简体 zhCN 发布面 24 篇（说明+前言+17章+附录A/B/C+备注），29 图 CDN"
+ },
+ "http://www.ituring.com.cn/minibook/862": {
+  "commit": null,
+  "book_id": 85242253,
+  "book_url": "https://www.yuque.com/yeuhoshun/onlisp-zh-20261102",
+  "imported_at": "2026-11-02T16:12:00+0800",
+  "note": "《On Lisp 中文版（Common Lisp 高级编程技术）》网站口径（图灵迷你书 miniBookId 862=图书1979，Paul Graham 著 田春 译；剥封面/目录，28 篇，2 图 CDN）"
+ },
+ "https://www.runoob.com/manual/lua53doc/": {
+  "commit": null,
+  "book_id": 85242662,
+  "book_url": "https://www.yuque.com/yeuhoshun/lua53-manual-zh-20261102",
+  "imported_at": "2026-11-02T16:35:00+0800",
+  "note": "《Lua 5.3 参考手册》网站口径（runoob 镜像=官方中文版 云风译，manual.html 按 9 节拆 10 篇）"
+ },
+ "https://www.jianshu.com/p/q81RER": {
+  "commit": null,
+  "book_id": 85242427,
+  "book_url": "https://www.yuque.com/yeuhoshun/jianshu-markdown-guide-20261102",
+  "imported_at": "2026-11-02T16:20:00+0800",
+  "note": "《献给写作者的 Markdown 新手指南》网站口径（简书官方教程，单篇拆 8 节，8 截图 CDN）"
+ },
+ "https://markdown.tw": {
+  "commit": null,
+  "book_id": 85242361,
+  "book_url": "https://www.yuque.com/yeuhoshun/markdown-tw-20261102",
+  "imported_at": "2026-11-02T16:15:00+0800",
+  "note": "《Markdown 語法說明》网站口径（markdown.tw 正體中文版，单页按 h2 拆 5 篇）"
+ },
+ "http://www.cnblogs.com/mr-wid/archive/2013/05/09/3068229.html": {
+  "commit": null,
+  "book_id": 85242461,
+  "book_url": "https://www.yuque.com/yeuhoshun/mysql-21min-guide-20261102",
+  "imported_at": "2026-11-02T16:22:00+0800",
+  "note": "《21分钟 MySQL 入门教程》网站口径（博客园 wid，单篇按 h2 拆 8 节，1 图 CDN）"
+ },
+ "http://blog.codinglabs.org/articles/theory-of-mysql-index.html": {
+  "commit": null,
+  "book_id": 85242777,
+  "book_url": "https://www.yuque.com/yeuhoshun/mysql-index-theory-20261102",
+  "imported_at": "2026-11-02T16:41:00+0800",
+  "note": "《MySQL索引背后的数据结构及算法原理》网站口径（原站死，换源 GitHub 镜像 lihuagang03/tech-study，单篇拆 6 节，14 图 CDN）"
+ },
+ "https://github.com/justinyhuang/the-little-mongodb-book-cn/blob/master/mongodb.md": {
+  "commit": "8f04d27",
+  "book_id": 85242722,
+  "book_url": "https://www.yuque.com/yeuhoshun/little-mongodb-book-cn-8f04d27",
+  "imported_at": "2026-11-02T16:37:00+0800",
+  "note": "《The Little MongoDB Book 中文版》开源项目口径（@8f04d27，单文件拆 11 篇，封面 CDN）"
+ },
+ "https://github.com/JasonLai256/the-little-redis-book/blob/master/cn/redis.md": {
+  "commit": "796297b",
+  "book_id": 85242723,
+  "book_url": "https://www.yuque.com/yeuhoshun/little-redis-book-cn-796297b",
+  "imported_at": "2026-11-02T16:38:00+0800",
+  "note": "《The Little Redis Book 中文版》开源项目口径（@796297b，cn/redis.md 拆 10 篇，封面 CDN）"
  }
 }
