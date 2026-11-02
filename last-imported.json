@@ -1795,5 +1795,19 @@
     "book_url": "https://www.yuque.com/yeuhoshun/react-docs-zh-b4fbfac",
     "imported_at": "2026-11-02T02:46:00+0800",
     "note": "《React 中文文档翻译计划》= reactjs.org 官方文档中文版（React 16 时代 docs 区）。原链 discountry.github.io/react → 301 react.yubolun.com 已死 → 吃源仓库；发布面 = nav.yml 官方目录 oracle × 中文判定（正文首 300 字 CJK≥30）= 59 篇 7 分区（01 安装 3/02 主要概念 12/03 高级指引 22/04 API 参考 10/05 Hooks 5/07 FAQ 7）；nav 外中文孤儿 12 篇归位（installation/reference-*/legacy-context/addons-shallow）；英文未译 22 篇 + redirect stub 不进发布面；front matter 剥、站内 /docs/ 链转纯文本；9 图 CDN（HTML img 形态收集坑：漏 devtools 系，修 build 图收集）；66 节点；六查全绿。move-stack 挂账。"
+  },
+  "https://vue3.chengpeiquan.com": {
+    "commit": "78faf34",
+    "book_id": 85238781,
+    "book_url": "https://www.yuque.com/yeuhoshun/learning-vue3-78faf34",
+    "imported_at": "2026-11-02T12:20:00+0800",
+    "note": "《Vue3入门指南与实战案例》（learning-vue3）开源项目口径，VitePress 站 4 分区 116 节点 26 图 CDN"
+  },
+  "https://web.archive.org/web/20210303025214/https://www.css88.com/doc/zeptojs_api/": {
+    "commit": null,
+    "book_id": 85238954,
+    "book_url": "https://www.yuque.com/yeuhoshun/zeptojs-api-zh-20261102",
+    "imported_at": "2026-11-02T12:35:00+0800",
+    "note": "《Zepto.js API 中文文档（1.2.0）》网站口径（css88 译），archive.org 快照，单页拆 136 节点"
   }
 }
