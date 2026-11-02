@@ -1949,5 +1949,48 @@
   "book_url": "https://www.yuque.com/yehuoshun/redisbook-5fe4cc8",
   "imported_at": "2026-11-02T18:35:00+0800",
   "note": "《Redis 设计与实现（原始版）》开源项目口径（原链 redisbook.com 死，换源 huangz1990/redisbook @5fe4cc8 Sphinx 书稿 6 部分 21 章；graphviz 图原文只有指令，取 huangz.works/redisbook 站点渲染 png 81 张传 CDN）"
+ },
+ "https://github.com/KaiserY/rust-book-chinese": {
+  "commit": "72182f4",
+  "book_id": 85246267,
+  "book_url": "https://www.yuque.com/yeuhoshun/rust-book-chinese-72182f4",
+  "imported_at": "2026-11-02T21:36:00+0800",
+  "note": "默认分支 master @ 72182f4（2023-07 停更，TRPL 第一版中文翻译 GitBook 3.x 源）。口径：SUMMARY.md 收录 = 发布面——章=目录 TITLE（1~9+附录）、章页=00-本章导读、节=N.MM 标题（零填充免归位），根级 00-前言/01-贡献者 + 00-说明；content/ 下 3 个孤儿（Dining Philosophers/Learn Rust/Rust Inside Other Languages，SUMMARY 未收录）不收；剥 GitBook 源标记头（> [file](github)/> <br>/ > commit）+ 首个 H1，正文 H2/H3 原样。83 节点（10 目录/73 文件）。toc-md PUT 0.9s、结构核对 PASS、0 失败。六查全绿：TOC 83==本地、全路径唯一 True、reconcile 错位 0、幽灵 0（docs 73==TOC DOC 73）、word_count 73/73 全 >0（占位 0）、回读 5.07 错误处理 67KB 正常。move-stack 2 轮全 {}（服务端回归）→ 分组待补 stack 57018723。"
+ },
+ "https://github.com/photino/rust-notes": {
+  "commit": "a516acc",
+  "book_id": 85246330,
+  "book_url": "https://www.yuque.com/yeuhoshun/rust-notes-a516acc",
+  "imported_at": "2026-11-02T21:39:00+0800",
+  "note": "默认分支 @ a516acc（2016-12 停更，《Rust 语言学习笔记》photino GitBook 2.x 源）。口径：SUMMARY 9 章平铺 NN-中文名（零填充字典序=书序），每章首个 ## 章名剥（文件名承担），README 弃（内容=目录+参考资料，资料并入 00-说明）；无图。10 节点（0 目录/10 文档）。toc-md PUT 0.4s、结构核对 PASS、0 失败。六查全绿：TOC 10==本地、reconcile 错位 0、幽灵 0（docs 10==TOC DOC 10）、word_count 10/10 全 >0、回读 09-推荐阅读 950B 正常。move-stack 挂账（服务端回归）。"
+ },
+ "https://github.com/rustcc/RustPrimer": {
+  "commit": "8671493",
+  "book_id": 85246385,
+  "book_url": "https://www.yuque.com/yeuhoshun/rustprimer-8671493",
+  "imported_at": "2026-11-02T21:45:00+0800",
+  "note": "默认分支 master @ 8671493（2020-03 停更，rustcc 社区《RustPrimer》中文 primer GitBook 3.x 源）。口径：SUMMARY.md 121 引用 = 发布面（0 缺失）；章 = NN-目录 TITLE（37 章序号零填充 + 00-说明 根级），章页→00-本章导读 / 独立章→01-正文，节 = NN-节名；SUMMARY 标题尾部「译者署名」注记剥、半角 / 与 * 洗全角；preface 短导读（75-186B）非空壳照收；孤儿 generic/exercise/README.md（28B，SUMMARY 未收录）未收。30 张图传 29 张 CDN（0 缺失/0 外链），重写后 site/images 删除。159 节点（37 目录/122 文档）。toc-md PUT 1.5s、结构核对 PASS、0 失败。六查全绿：TOC 159==本地、全路径唯一 True、reconcile 错位 0、幽灵 0（docs 122==TOC DOC 122）、word_count 122/122 全 >0（占位 0）、回读 02-vim 2428B 含 2 张 CDN 图正常。move-stack 挂账（服务端回归）。"
+ },
+ "https://pythonguidecn.readthedocs.io/zh/latest/": {
+  "commit": null,
+  "book_id": 85246721,
+  "book_url": "https://www.yuque.com/yeuhoshun/pythonguidecn-20261102",
+  "imported_at": "2026-11-02T22:17:00+0800",
+  "note": "网站口径 Sphinx 站（《Python 最佳实践指南》中文版 Prodesire/Python-Guide-CN）。_sources rst 直取 48 页 0 失败；docutils 标题层级按字符首次出现顺序动态映射（非固定字符表）；简单表按三段式分隔跨段收集；overline 标题容空行；角色 Text<label> 剥 label 留文本（防 HTML 标签）。分区 7 组（入门/开发环境/编码/应用场景/打包分发/介绍/贡献备注）55 节点=7 目录+48 文档；11 张 /_static 图传 CDN、37 flickr 外链保留。toc-md PUT 0.8s、0 失败。六查全绿：TOC 55==本地、reconcile 错位 0、幽灵 0（docs 48==TOC DOC 48）、word_count 48/48 全 >0、回读 06-数据库/14-XML 解析（CDN 图 1）正常。move-stack 挂账（服务端回归）。"
+ },
+ "https://python3-cookbook.readthedocs.io/zh-cn/latest/": {
+  "book_id": 85246926,
+  "imported_at": "2026-11-02T22:42:00+0800",
+  "note": "《Python Cookbook 第三版》中文版 Sphinx 站 rst 直取 281 页 295 节点（15 章目录+章首页导读+279 文档+附录A）。searchindex.js 提页清单须 json.loads 解 \\u 转义；code-block 指令捕获 1258 个代码块。六查全绿（TOC 295、reconcile 0、ghost 0、word_count 279/279、路径唯一、回读 1.03）。move-stack 挂账。"
+ },
+ "https://www.runoob.com/typescript/ts-tutorial.html": {
+  "book_id": 85247132,
+  "imported_at": "2026-11-02T23:08:00+0800",
+  "note": "runoob TypeScript 教程 73 页。左栏目录逐页抓 article-body；runoob 旧页坑五连：① h 开闭错配 <h3>..</h1>→按开标签层级重闭 ② 孤儿空 <h2>（<hr><h2>\\n<h2>真标题）→删 ③ 未闭合 <p> 吞块级→p 内容后跟块级开标签补 </p> ④ article-intro 本身=内容容器（勿按名字早切）⑤ meta description=全文扁平文本（搜索定位时勿混淆）。七查全绿。"
+ },
+ "https://www.runoob.com/w3cnote/getting-started-with-typescript.html": {
+  "book_id": 85247144,
+  "imported_at": "2026-11-02T23:14:00+0800",
+  "note": "runoob w3cnote 单篇文章「TypeScript 简明入门教程」HTML→md（复用 fpb289 转换器），2 文档（说明+正文）。六查全绿。"
  }
 }
