@@ -122,6 +122,10 @@ python3 scripts/yuque_toc_reconcile.py --root /path/to/dir --book <book_id> --pr
 
 ## 已知坑（全踩过）
 
+- **老式 HTML 自闭合锚 `<a id=\"x\" />` 吞正文本体（坑 82，2026-11-02 #279 实捶）**：2009-2012 老站（twitter.github.io/effectivescala 等）用 `<p><a id=\"序言\" /></p>` 做锚点，html5lib 把它当**未闭合 `<a>`** → 后续全部正文（含后续所有 h2）被吸进该 a 元素 → 按 h2 拆篇全空 / 兄弟遍历全空。修法：解析前先 `re.sub(r'<a id=\"([^\"]*)\"\s*/>', r'<a id=\"\\1\"></a>', raw)`；症状排查先看 `h.parent.name` 是不是 a。
+- **列表 li 整体 inline 拍平丢块级内容（坑 83，2026-11-02 #244 实捶）**：`<ol class=i>` 步骤列表 li 里嵌 `<p class=ss><img>` 截图页，转换器 `ul/ol` 分支若用 `inline(li)` 整体拍平（get_text），**li 内 p/img/blockquote 全丢**（dip3 installing 章 31 张安装截图一张不剩）。修法：li 必须 `render(li)` 递归产出后再重组为 `- ` 前缀 + 续行缩进；与坑 17/19 同族（inline 只配处理纯行内内容）。
+- 同族：**md 文件带 BOM 时 `startswith('# ')` 判 H1 必失败**（#242/#286 实捶）→ 解析前 `raw[1:] if raw.startswith('\ufeff')`；**中文书稿第N章排序要用 sort -V/自然序**（`第10章` 字典序排 `第1章` 前）。
+
 - `prependNode` 创建时（传 doc_ids）不支持，必须先 appendNode 再 prependNode
 - `removeNode`+`appendNode` 会产生新 uuid，旧 uuid 不可复用
 - `editNode` 改 prev_uuid/sibling_uuid 不生效，排序只能用 prependNode

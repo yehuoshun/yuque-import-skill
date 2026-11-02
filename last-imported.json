@@ -1992,5 +1992,96 @@
   "book_id": 85247144,
   "imported_at": "2026-11-02T23:14:00+0800",
   "note": "runoob w3cnote 单篇文章「TypeScript 简明入门教程」HTML→md（复用 fpb289 转换器），2 文档（说明+正文）。六查全绿。"
+ },
+ "https://web.archive.org/web/20200822010330/https://bop.mol.uno/": {
+  "commit": "c47e00e",
+  "book_id": 85247521,
+  "book_url": "https://www.yuque.com/yeuhoshun/byte-of-python-cn-c47e00e",
+  "imported_at": "2026-11-02T23:40:00+0800",
+  "note": "开源项目口径·换源 onion7878/A-Byte-of-Python-CN（原链 Wayback 被墙）：《简明 Python 教程》A Byte of Python 唯一指定简体中文译本（Swaroop C H 著/沈洁元 译 v1.20），前言+16章+附录A/B/C=21 节点；chapters 无 H1 原样；sort -V 自然序零填充。六查全绿：TOC21/错位0/幽灵0/word_count 21/21>0/回读0异常。move-stack 挂账。"
+ },
+ "https://github.com/jiechic/diveintopython3": {
+  "commit": "31d9410",
+  "book_id": 85247456,
+  "book_url": "https://www.yuque.com/yeuhoshun/diveintopython3-zh-31d9410",
+  "imported_at": "2026-11-02T23:55:00+0800",
+  "note": "开源项目口径：《深入 Python 3》中文译本（woodpecker.org.cn 镜像仓 @31d9410），站内 TOC 序 21 章+关于本书/后记=24 节点；34 图 CDN（alt 带方括号会破 rewrite 正则已剥；li 含图必须 render 递归不能 inline 拍平——坑 83）；examples/ 27 文件未收（站内链接转纯文本）；iterators 章实为中文译版（判据：剥代码后 CJK≥30%）。六查全绿。move-stack 挂账。"
+ },
+ "https://interpy.eastlakeside.com": {
+  "commit": "b056825",
+  "book_id": 85247478,
+  "book_url": "https://www.yuque.com/yeuhoshun/interpy-zh-b056825",
+  "imported_at": "2026-11-02T23:59:00+0800",
+  "note": "开源项目口径·换源 eastlakeside/interpy-zh（原站 502）：《Python 进阶》Intermediate Python 中文译本，book/ 内容树 Jekyll front-matter（parent/nav_order）定层级：2 序言+7 章（导读+27 节）+译者/作者/推荐/捐赠附录=42 文档/49 节点；标题反引号/半角星号洗净。六查全绿。move-stack 挂账。"
+ },
+ "http://www.pythondoc.com/sphinx/rest.html": {
+  "commit": null,
+  "book_id": 85247371,
+  "book_url": "https://www.yuque.com/yeuhoshun/restructuredtext-intro-20261102",
+  "imported_at": "2026-11-02T23:45:00+0800",
+  "note": "网站口径·换源 sphinx-doc-zh.readthedocs.io（原链 www.pythondoc.com 域名被劫持为视频站）：Sphinx 1.3.1 中文文档《reStructuredText 入门》单页按 h2 拆 16 节=17 节点；html5lib 渲染 dl/dt/table/pre。六查全绿。move-stack 挂账。"
+ },
+ "http://twitter.github.io/effectivescala/index-cn.html": {
+  "commit": null,
+  "book_id": 85247387,
+  "book_url": "https://www.yuque.com/yeuhoshun/effective-scala-20261102",
+  "imported_at": "2026-11-02T23:48:00+0800",
+  "note": "网站口径：《Effective Scala》中文版（Twitter/Marius Eriksen，hongjiang 等译）单页按 h2 拆 12 节=13 节点，106 代码示例转 scala 围栏；剥 TOC/其他语言导航两节。坑 82：老式 `<a id=\"x\" />` 自闭合锚被 html5lib 当未闭合吞掉后续全部正文——解析前须先转 `<a id=\"x\"></a>`。六查全绿。move-stack 挂账。"
+ },
+ "http://twitter.github.io/scala_school/zh_cn/index.html": {
+  "commit": null,
+  "book_id": 85247396,
+  "book_url": "https://www.yuque.com/yeuhoshun/scala-school-zh-20261102",
+  "imported_at": "2026-11-02T23:51:00+0800",
+  "note": "网站口径：Twitter《Scala School》中文版 13 课收 12 课（coll2 More collections 英文未译未收；concurrency/finagle/searchbird 标题未译但正文中文已收），13 节点；pre→scala 围栏、剥 topbar/课程内容锚点目录。中文判定：剥代码块后 CJK≥30%。六查全绿。move-stack 挂账。"
+ },
+ "http://deathking.github.io/yast-cn/": {
+  "commit": "4aab89f",
+  "book_id": 85247420,
+  "book_url": "https://www.yuque.com/yeuhoshun/yast-cn-4aab89f",
+  "imported_at": "2026-11-02T23:56:00+0800",
+  "note": "开源项目口径·换源 DeathKing/yast-cn（gh-pages 默认分支 GitBook 3.2.3 成品站）：《Scheme 入门教程》Yet Another Scheme Tutorial 中译，中文版序+18章=20 节点，5 图 CDN（1 未引用图不传）；章节标题含 / 洗全角。六查全绿。move-stack 挂账。"
+ },
+ "https://tinylab.gitbooks.io/shellbook/content": {
+  "commit": null,
+  "book_id": 85247520,
+  "book_url": "https://www.yuque.com/yeuhoshun/shellbook-tinylab-20261102",
+  "imported_at": "2026-11-02T23:20:00+0800",
+  "note": "网站口径：tinylab.gitbooks.io 302 到现代 GitBook tinylab-1.gitbook.io/shellbook，走官方 llms.txt md 出口：《Shell 编程范例》（泰晓科技 v0.3）14 页=15 节点；剥 GitBook 样板 callout/公众号二维码块/页首重复子目录；站内 /shellbook/ 链接转纯文本。六查全绿。move-stack 挂账。"
+ },
+ "https://github.com/qinjx/30min_guides/blob/master/shell.md": {
+  "commit": "a0024e7",
+  "book_id": 85247316,
+  "book_url": "https://www.yuque.com/yeuhoshun/shell-30min-a0024e7",
+  "imported_at": "2026-11-02T23:36:00+0800",
+  "note": "开源项目口径：qinjx/30min_guides 单篇《Shell 脚本编程30分钟入门》按 ## 拆 11 节+说明=12 节点；7 个标题-only 空壳节未建（数组/管道/条件判断/函数/用户输入/stdin和stdout/综合案例）；Tab 缩进代码转 ```sh 围栏。六查全绿。move-stack 挂账。"
+ },
+ "http://me.52fhy.com/shell-book/": {
+  "commit": "bd0bc82",
+  "book_id": 85247348,
+  "book_url": "https://www.yuque.com/yeuhoshun/shell-book-bd0bc82",
+  "imported_at": "2026-11-02T23:44:00+0800",
+  "note": "开源项目口径·换源 52fhy/shell-book（原链站 DNS 死）：《Shell 脚本学习》6 章=7 节点；BOM 需剥否则 H1 匹配失败；章名取首个真 H1（排除 `# ----` 误用 hr 行）。wechat 打赏码仅 README 引用未收。六查全绿。move-stack 挂账。"
+ },
+ "http://billie66.github.io/TLCL/book/": {
+  "commit": "f4d81b3",
+  "book_id": 85247411,
+  "book_url": "https://www.yuque.com/yeuhoshun/the-linux-command-line-zh-f4d81b3",
+  "imported_at": "2026-11-02T23:54:00+0800",
+  "note": "开源项目口径：《The Linux Command Line 中文版》（快乐的 Linux 命令行，William Shotts 著）billie66/TLCL gh-pages，book/chap01-37.md Jekyll front-matter title 作文档名=38 节点，5 图 CDN；中英双语对照排版；标题半角 / 洗全角（第30章 while/until）。六查全绿。move-stack 挂账。"
+ },
+ "https://chenshenhai.com/deno_note": {
+  "commit": "6658e27",
+  "book_id": 85247545,
+  "book_url": "https://www.yuque.com/yeuhoshun/deno-note-6658e27",
+  "imported_at": "2026-11-02T00:29:00+0800",
+  "note": "开源项目口径·换源 chenshenhai/deno_note（原链 404）：《Deno进阶开发笔记》SUMMARY 定层级 9 章 37 文档=46 节点，28 图 CDN；节号零填充（04.01/08.10 字典序安全）；charter_00 草稿 122B 未收。六查全绿。move-stack 挂账。"
+ },
+ "https://github.com/Youchien/concise-excel-vba": {
+  "commit": "a99cf1b",
+  "book_id": 85247507,
+  "book_url": "https://www.yuque.com/yeuhoshun/concise-excel-vba-a99cf1b",
+  "imported_at": "2026-11-02T23:18:00+0800",
+  "note": "开源项目口径（原链 302 到 bluetata/concise-excel-vba）：《简明 Excel VBA》README 139KB 全书按 ## 0xNN 拆 18 节+疑难排查附录 5 篇=27 节点；跳转桩章节拼接 CreateAMacro/type-conversion-functions/ShortcutKey/Debug/SampleCode.bas；48 图 CDN；`/doc/` 绝对引用需剥前导斜杠、rewrite 后确认 0 缺失再删目录（避免打地鼠）。六查全绿。move-stack 挂账。"
  }
 }
