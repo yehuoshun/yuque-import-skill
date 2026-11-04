@@ -35,17 +35,17 @@
   "note": "默认分支 main @ ba8f91c（2026-11-01 11:15 UTC Merge PR #72 fix Linux model key storage on niri，距上版 2631dd8 仅 1 merge commit）。prep 后 4041 节点（348 目录/3693 文件），docs/images 22 图 CDN 口径同前；toc-md 目录树 4041 行一次 PUT PASS、结构核对 PASS、0 失败；回读 3693 篇：3688 逐字符相等 + 4 图占位 + 1 ico 二进制占位（均预期），0 bad；六查全绿。move-stack 状态未确认（执行子代理超时未留记录），同批次并列挂账待补。历史：2631dd8=85183047、bbce89b=84991695（旧库全保留）。"
  },
  "https://github.com/morluto/rea": {
-  "commit": "9ebbe67",
+  "commit": "d7df9df33",
   "book_id": [
-   85278938,
-   85278940
+   85318784,
+   85318788
   ],
   "book_url": [
-   "https://www.yuque.com/yeuhoshun/rea-9ebbe67",
-   "https://www.yuque.com/yeuhoshun/rea-tests-9ebbe67"
+   "https://www.yuque.com/yeuhoshun/rea-d7df9df33",
+   "https://www.yuque.com/yeuhoshun/rea-tests-d7df9df33"
   ],
-  "imported_at": "2026-11-03T20:01:58+0800",
-  "note": "默认分支 main @ 9ebbe67（2026-11-03 04:04 UTC fix(ci): await website worker tests；导入后上游继续前进至 8c857ce5（11-03 16:49 本地 docs(readme) Discord 按钮微调），已领先，下次重导跟进）。口径沿用方案 A 拆 2 库、描述互指 URL：主库 85278938 rea-9ebbe67（除 tests/，另剔 .github）= 4962 节点（335 目录/4621 文档，toc PUT PASS、0 失败）+ 副库 85278940 rea-tests-9ebbe67（仅 tests/，以 tests 为根）= 2516 节点（128 目录/2382 文档，0 失败）。回读逐字符相等：A 4601 篇（21 分片由 verify_shards 覆盖）+ B 2386 篇，0 bad；六查全绿。move-stack 服务端风控挂账（同上版）。历史：d48e472fa=85176483/85176484（旧库全保留）。"
+  "imported_at": "2026-11-04T16:08:56+0800",
+  "note": "默认分支 main @ d7df9df33（2026-11-04 11:58 fix(ghidra): mark empty xrefs results as unresolved, not unreferenced #8831；距上版 9ebbe67 +27 commit，导入结束时 origin/main 未再前进）。口径沿用方案 A 拆 2 库、描述互指 URL：主库 85318784 rea-d7df9df33（除 tests/ 外全部，另剔 .github/.husky/.claude-plugin/.codex-plugin 工具脚手架）= 4997 节点（340 目录 / 4633 文档含 24 分片=4657 doc，toc PUT 28.2s、0 失败）+ 副库 85318788 rea-tests-d7df9df33（仅 tests/，以 tests 为根）= 2524 节点（130 目录 / 2394 文档，0 失败）。图片：4 张被引用图 → 语雀 CDN（93 处 md 引用重写，0 缺失），余 8 张未引用随图文件+空目录删除（5 个 submodule 空目录按 .gitmodules 还原）。回读逐字符相等：A 4633 + B 2394 = 7027 篇 0 bad（21 个分片文件 45 节点由 verify_shards 逐字符覆盖 PASS）；六查全绿（import_verify 全路径唯一 True / 对账 0 错位 / 幽灵 0 / word_count 全 >0 / 深层路径 177 个 0 缺失）。⚠️ 主库含分片 TOC 4997 贴 5000 上限（剔 3 个工具点目录 .husky/.claude-plugin/.codex-plugin 后压线过），下版再涨需先剔更多脚手架或挪目录。move-stack 服务端风控挂账（10-30 起），2 库待补 stack 57018723。历史：9ebbe67=85278938/85278940、d48e472fa=85176483/85176484。"
  },
  "https://github.com/howie6879/owllook": {
   "commit": "b536578",
