@@ -21,11 +21,11 @@
   "note": "第 6 版重导（HEAD 3bb4c53f → b4c4cc4，4 个 md 修改：Web Audio API 死链修复 #13579、subjects +PyLLM/Pebble/PyDB/PyNet/PyOS 5 条、free-courses-en 拼写修复、free-courses-vi 删 26 行；无增删文件、节点数不变；free-programming-books-zh.md 未在改动之列）。口径与上版一致：11 目录 / 235 文件 = 246 节点，无图需处理。toc-md PUT PASS、0 失败；六查全绿（TOC 246==本地、错位 0、幽灵 0、word_count 235 全>0——hy.md/cs-cp.md 为上游 0 字节空文件占位、回读 235/235 仅 2 篇非 md 代码围栏差异属预期）。move-stack 4 轮全 {} 响应挂账。历史：3bb4c53f=85069576、52e40c13=84897155（旧库全保留）。"
  },
  "https://github.com/aoaostar/legado": {
-  "commit": "d32e745",
-  "book_id": 85280919,
-  "book_url": "https://www.yuque.com/yeuhoshun/legado-d32e745",
-  "imported_at": "2026-11-03T20:01:58+0800",
-  "note": "默认分支 release @ d32e745（2026-11-03 12:42 +0800「Add sync changes」例行书源同步；距上版 09b11ac8 为同步线）。沿用「解析单轨」口径（硬规则 12）：build.py 生成 20 个 sources 解析 md + 6 分类索引 + 前言 + README/index.html = 31 节点（2 目录/29 文档），原件给上游直链。toc-md PUT PASS、0 失败；根级 08-解析 TITLE 归位（连续第 7 版同坑）；六查全绿（回读 29/29 零异常）。move-stack 10 轮全 {} 响应挂账。历史：09b11ac8=85183389、943a3a7=85069986（旧库全保留）。"
+  "commit": "1d383e2b",
+  "book_id": 85318687,
+  "book_url": "https://www.yuque.com/yeuhoshun/legado-1d383e2b",
+  "imported_at": "2026-11-04T12:36:20+0800",
+  "note": "默认分支 release @ 1d383e2b（2026-11-04 12:03 +0800「Add sync changes」例行书源同步线；距上版 d32e745 同线）。沿用「解析单轨」口径（硬规则 12）：build.py 生成 20 个 sources 解析 md + 6 分类索引 + 前言 + README/index.html = 31 节点（2 目录/29 文档），原件给上游直链 legado.aoaostar.com。六查全绿：TOC 31==本地 31、全路径唯一 True、缺失 0、对账错位 0、幽灵 0（docs 29==TOC DOC 29）、29 篇回读 0 异常、word_count/占位 0；toc-md PUT 0.5s、0 失败；根级 08-解析 TITLE 归位（连续第 8 版同坑）。move-stack 7 轮全 {} 挂账（cookie 写侧风控自 10-30 未恢复）。历史：d32e745=85280919、09b11ac8=85183389、943a3a7=85069986（旧库全保留）。"
  },
  "https://github.com/swjybky/deepwrite": {
   "commit": "ba8f91c",
