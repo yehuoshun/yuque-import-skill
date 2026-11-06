@@ -28,24 +28,18 @@
   "note": "默认分支 release @ 55fe8bcc（2026-11-06 12:22 +0800「Add sync changes」例行书源同步线；diff vs 上版 1d383e2b 仅 README.md/index.html 各 46 行 + sources/cache.lock + e99a592f.zip 重打包，源清单 20 文件结构不变）。沿用「解析单轨」口径（硬规则 12）：build.py 生成 20 个 sources 解析 md + 6 分类索引 + 前言 + README/index.html = 31 节点（2 目录/29 文档），原件给上游直链 legado.aoaostar.com。六查全绿：TOC 31==本地 31、全路径唯一 True、缺失 0、对账错位 0、幽灵 0（docs 29==TOC DOC 29）、29 篇回读 0 异常、word_count/占位 0；toc-md PUT 0.7s、0 失败；根级 TITLE 08-解析 归位（appendNode/action_mode=sibling → 根级 DOC 在前、TITLE 末尾，连续第 9 版同坑）。move-stack 10 轮全 {} 挂账（cookie 写侧风控自 10-30 未恢复，隔日 --no-wait 重试）。历史：1d383e2b=85318687、d32e745=85280919、09b11ac8=85183389、943a3a7=85069986（旧库全保留）。"
  },
  "https://github.com/swjybky/deepwrite": {
-  "commit": "ce2b65a",
-  "book_id": 85356958,
-  "book_url": "deepwrite-ce2b65a",
-  "imported_at": "2026-11-05T13:48:59+0800",
-  "note": "默认分支 main @ ce2b65a（距上版 ba8f91c +6 commit / 293 文件，含 v1.8.0：external agent control、book team bindings、feedback）。prep 4183 → tree 4157 节点（358 目录/3799 文件，<5000 单库）。非 md 代码文件按既有口径包 code fence；二进制 5 件（4 图传 CDN + 1 ico 占位）。toc-md PUT 通过。六查全绿：TOC 4157==账本、错位 0、幽灵 0（清理中断残留 2 篇）、全路径唯一、抽查可达、回读 3799 篇 0 真实异常（md 逐字符相等；代码文件仅多 code fence，预期）。⚠️ 本次沙箱 11:11、11:23 两次异常重启掐断导入与子代理，靠断点续传续跑完成；move-stack 10 轮 {} 风控挂账待补。历史库 ba8f91c=85278832 保留。"
+  "commit": "39e2745",
+  "book_id": 85404431,
+  "book_url": "https://www.yuque.com/yeuhoshun/deepwrite-39e2745",
+  "imported_at": "2026-11-07T04:21:00+0800",
+  "note": "默认分支 main @ 39e2745（距上版 ce2b65a +2 commit / 100 文件：JEV 模型设置 + 绘图评测打分、团队提示词审核管理）。prep 4199 节点（362 目录/3837 文件，<5000 单库）。toc-md 全量 PUT 19.3s、0 失败 0 跳过、结构核对 PASS。六查全绿：TOC 4199==账本、全路径唯一 True、缺失 0、对账错位 0、幽灵 0（docs 3837==TOC DOC 3837）、3837 篇逐篇回读 0 异常（md 逐字符相等、代码文件仅多 code fence、6 图传 CDN + 1 ico 占位）、word_count 0 篇为 0。⚠️ 口径差异：本次整棵导入含 docs/images/（png 传 CDN 成图片文档、svg 文本成 code-fence 文档），docs/*.md 内对图仍是相对引用 images/… → 4 篇设计文档配图在语雀端为相对死链；与上版 ce2b65a「改 CDN + 删 images 目录」口径不同，待老板拍板是否按老口径重导。move-stack 3 次全 {} 挂账（cookie 写侧风控）。用时 4h34m（含整点配额退避）。历史库 ce2b65a=85356958 保留。"
  },
  "https://github.com/morluto/rea": {
-  "commit": "d7df9df33",
-  "book_id": [
-   85318784,
-   85318788
-  ],
-  "book_url": [
-   "https://www.yuque.com/yeuhoshun/rea-d7df9df33",
-   "https://www.yuque.com/yeuhoshun/rea-tests-d7df9df33"
-  ],
-  "imported_at": "2026-11-04T16:08:56+0800",
-  "note": "默认分支 main @ d7df9df33（2026-11-04 11:58 fix(ghidra): mark empty xrefs results as unresolved, not unreferenced #8831；距上版 9ebbe67 +27 commit，导入结束时 origin/main 未再前进）。口径沿用方案 A 拆 2 库、描述互指 URL：主库 85318784 rea-d7df9df33（除 tests/ 外全部，另剔 .github/.husky/.claude-plugin/.codex-plugin 工具脚手架）= 4997 节点（340 目录 / 4633 文档含 24 分片=4657 doc，toc PUT 28.2s、0 失败）+ 副库 85318788 rea-tests-d7df9df33（仅 tests/，以 tests 为根）= 2524 节点（130 目录 / 2394 文档，0 失败）。图片：4 张被引用图 → 语雀 CDN（93 处 md 引用重写，0 缺失），余 8 张未引用随图文件+空目录删除（5 个 submodule 空目录按 .gitmodules 还原）。回读逐字符相等：A 4633 + B 2394 = 7027 篇 0 bad（21 个分片文件 45 节点由 verify_shards 逐字符覆盖 PASS）；六查全绿（import_verify 全路径唯一 True / 对账 0 错位 / 幽灵 0 / word_count 全 >0 / 深层路径 177 个 0 缺失）。⚠️ 主库含分片 TOC 4997 贴 5000 上限（剔 3 个工具点目录 .husky/.claude-plugin/.codex-plugin 后压线过），下版再涨需先剔更多脚手架或挪目录。move-stack 服务端风控挂账（10-30 起），2 库待补 stack 57018723。历史：9ebbe67=85278938/85278940、d48e472fa=85176483/85176484。"
+  "commit": "bacc1e384",
+  "book_id": 85404488,
+  "book_url": "https://www.yuque.com/yeuhoshun/rea-bacc1e384",
+  "imported_at": "2026-11-07T04:50:00+0800",
+  "note": "默认分支 main @ bacc1e384。节点数涨到 7937 → 按硬规则 9/坑 47「方案 A」**拆 3 库**（描述互指完整 URL）：主库 rea（bacc1e384）=85404488，除 tests/、scripts/ 外全部 4724 节点（331 目录/4393 文件，含 21 文件超 512KB 切分 45 片）；副库 rea-tests（bacc1e384）=85404489，仅 tests/ 2644 节点；副库 rea-scripts（bacc1e384）=85404490，仅 scripts/ 569 节点。三库 toc-md PUT 分别 19.3s/13.3s/3.3s、0 失败、结构核对 PASS。图片：只传被引用图 5 张（新增 docs/assets/rea-showcases-dark.svg）→ CDN，A 库 139 处引用；两类引用（![]() + 「查看大图」普通链接）都改；删图目录但**保留目录内被引用的文本件** website/public/assets/licenses/dinosaur.txt（坑 29）。六查全绿（三库）：TOC==账本、全路径唯一 True、缺失 0、对账错位 0、幽灵 0、回读 4393+2497+541=7431 篇 0 异常、word_count 0 篇为 0；根级顺序与上版一致（TITLE 在前，无需归位）。move-stack 挂账（cookie 写侧风控）。历史：d7df9df33=85318784/85318788、9ebbe67、d48e472fa 等旧库全保留。"
  },
  "https://github.com/howie6879/owllook": {
   "commit": "b536578",
