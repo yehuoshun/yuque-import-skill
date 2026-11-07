@@ -77,22 +77,22 @@ def check_cookie():
 
 
 def check_novel_path():
+    """MCP 通道可用性（不可用也没关系：写操作会自动回退 token 直连）"""
     exe = shutil.which("mcporter")
+    workdir = os.path.expanduser("~/.openclaw/workspace")
     if not exe:
-        print("⚠️  小说链路: 没装 mcporter（小说导入 yuque_novel_import.py 依赖它 + yuque-mcp）")
-        print("   补法: npm i -g mcporter，并在 OpenClaw 里配好 yuque-mcp（token 在 MCP 配置里，不读 TOKEN_L91）")
+        print("ℹ️  MCP 通道: 没装 mcporter（无所谓，写操作走 token 直连）")
         return
     try:
-        r = subprocess.run([exe, "list"], capture_output=True, text=True, timeout=60)
+        r = subprocess.run([exe, "list"], capture_output=True, text=True, timeout=60, cwd=workdir)
         out = ((r.stdout or "") + (r.stderr or "")).lower()
         has = "yuque" in out
     except Exception:  # noqa: BLE001
-        out, has = "", False
+        has = False
     if has:
-        print(f"✅ 小说链路: mcporter 已装（{exe}），能看到 yuque 相关的 MCP server")
+        print(f"✅ MCP 通道: mcporter 已装（{exe}）且能解析到 yuque-mcp")
     else:
-        print(f"⚠️  小说链路: mcporter 已装（{exe}），但没解析到 yuque-mcp")
-        print("   补法: 在 OpenClaw 里配好 yuque-mcp（token 写在 MCP server 配置里，不读 TOKEN_L91）")
+        print(f"ℹ️  MCP 通道: mcporter 已装（{exe}）但无 yuque-mcp → 写操作自动走 token 直连")
 
 
 def check_transport():
