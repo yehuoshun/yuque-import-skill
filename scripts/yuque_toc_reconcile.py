@@ -22,16 +22,8 @@
 """
 import argparse, json, os, time, urllib.request, urllib.error, sys
 
-def load_token(env):
-    t = os.environ.get(env)
-    if t:
-        return t
-    p = os.path.expanduser("~/.openclaw/secrets/credentials.env")
-    if os.path.exists(p):
-        for line in open(p):
-            if line.startswith(f"export {env}="):
-                return line.strip().split("=", 1)[1].strip().strip('"').strip("'")
-    raise SystemExit(f"找不到 token: {env}")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from yuque_tree_import import load_token  # noqa: E402  token 解析统一走主脚本（跨平台）
 
 def api(token, base, method, path, payload=None, retries=4):
     data = json.dumps(payload).encode() if payload is not None else None

@@ -19,7 +19,7 @@
 
 ## 二、流程（七步）
 
-前置：`source ~/.openclaw/secrets/credentials.env`（TOKEN_L91）；`cd code/yuque-import-skill`。
+前置：`source ~/.openclaw/secrets/credentials.env`（`TOKEN_L91`）；也可用 `YUQUE_TOKEN`（推荐）/ `--token-env`；新机器先跑 `python3 scripts/yuque_doctor.py`；`cd code/yuque-import-skill`。
 
 1. **prep（克隆/更新 + 干净副本 + 节点数）**
    ```bash
@@ -168,7 +168,7 @@ yuque_repo_import.py create-book  --name <项目名（commit）> --slug <项目�
 yuque_repo_import.py move-stack   --book-id <id> --stack-id 57018723 [--wait 30] [--no-wait]  # v1.2.2: 重发+验证循环
 ```
 
-token 来源同主脚本：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/credentials.env`；cookie 默认读
+token 来源同主脚本：`--token-env`（默认 `TOKEN_L91`）/ 环境变量 `YUQUE_TOKEN`、`YUQUE_API_TOKEN` / `YUQUE_TOKEN_FILE` / 常见凭据文件（见 README「首次配置」）；cookie 默认读
 `skills/yuque-ai-mcp/config/config.json`（可用 `--cookie-config` 覆盖）。
 
 **rst 转换器已踩坑补充（2026-10-15 HgInit 实战，v1.3.12；2026-10-17 linuxtools_rst 补）**：

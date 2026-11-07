@@ -48,8 +48,37 @@ python3 scripts/yuque_novel_import.py --file /path/to/novel.epub --create       
 python3 scripts/yuque_novel_import.py --txt novel.txt --book-id <book_id> --dry-run             # 只预览章节
 ```
 
-Token：环境变量 `TOKEN_L91`（或 `~/.openclaw/secrets/credentials.env`），脚本不硬编码。
-小说模块（`yuque_novel_*`）例外：走 mcporter + yuque-mcp 链路，不需要 token。
+## 首次配置（新机器 / 新使用者，先跑这两行）
+
+```bash
+python3 scripts/yuque_doctor.py        # 逐项自检: token / cookie / 小说链路
+python3 scripts/yuque_doctor.py --net  # 再加一步联网验证 token 是否有效
+```
+
+**语雀 token（必须）**：语雀 → 个人设置 → Token（https://www.yuque.com/settings/tokens）。
+脚本按下面顺序找，找到即用，**不硬编码、不绑定某个人的变量名**：
+
+| 顺序 | 来源 | 示例 |
+|---|---|---|
+| 1 | `--token-env` 指定的环境变量（默认 `TOKEN_L91`，兼容旧用法） | `--token-env MY_TOKEN` |
+| 2 | 环境变量 `YUQUE_TOKEN` / `YUQUE_API_TOKEN` | `export YUQUE_TOKEN="..."` |
+| 3 | `YUQUE_TOKEN_FILE` 指向的文件 | 一行纯 token，或 `KEY=VALUE` |
+| 4 | 常见凭据文件（同名键） | `~/.openclaw/secrets/credentials.env`、`~/.yuque/credentials.env`、`~/.config/yuque/credentials.env`、当前目录 `.env` |
+
+Windows PowerShell：
+
+```powershell
+$env:YUQUE_TOKEN="你的token"        # 仅当前窗口有效
+# 永久：写进用户目录的 credentials.env
+mkdir -Force "$env:USERPROFILE\.openclaw\secrets" | Out-Null
+'YUQUE_TOKEN="你的token"' | Add-Content "$env:USERPROFILE\.openclaw\secrets\credentials.env"
+```
+
+文件格式容错：`export` 前缀可有可无、引号可有可无、CRLF 可读、`#` 注释行忽略。
+
+**cookie/ctoken（可选）**：只有「图片上传 CDN」和「batch 模式的 TOC 归位」需要，纯 `--toc-md` 导入不需要。默认读 `~/.openclaw/workspace/skills/yuque-ai-mcp/config/config.json`，换机器用 `--cookie-config` 指。
+
+**小说模块（`yuque_novel_*`）例外**：不读 `TOKEN_L91`，走 `mcporter` + `yuque-mcp` 链路——但**不是「不需要 token」**，token 得配在 yuque-mcp 的 MCP server 配置里，且 mcporter 要能解析到 `yuque-mcp`（`yuque_doctor.py` 会检查这两项）。
 
 ## 结构
 
@@ -60,6 +89,7 @@ scripts/
   yuque_tree_import.py      导入（DFS 先序、断点续传、每节点落盘）
   yuque_toc_reconcile.py    对账修复（路径重建、错位移动）
   yuque_repo_import.py      GitHub 开源项目 wrapper（prep/create-book/move-stack）
+  yuque_doctor.py           环境自检（token 来源 / cookie / 小说链路，新机器先跑它）
   yuque_repair_placeholders.py  占位文档回填修复（二进制误判事故善后）
   yuque_website_crawl.py    网站抓取通用模板（正文窗口定位 + 图片传 CDN）
   yuque_toc_organize.py     TOC 目录整理（平铺 → 分组, plan.json 驱动）

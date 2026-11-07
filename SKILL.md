@@ -57,7 +57,7 @@ python3 scripts/yuque_tree_import.py --root /path/to/dir --book <book_id> --prog
 python3 scripts/yuque_tree_import.py --root /path/to/dir --book <book_id> --progress ./progress.json --pend-sleep 300 --pend-retries 5
 ```
 
-- token 来源：环境变量 `TOKEN_L91` 或 `~/.openclaw/secrets/credentials.env` 的 `export TOKEN_L91="..."`，**脚本不硬编码 token**
+- token 来源（2026-11-07 跨平台通用化，脚本不硬编码）：① `--token-env <变量名>`（默认 `TOKEN_L91`，兼容旧用法）；② 环境变量 `YUQUE_TOKEN` / `YUQUE_API_TOKEN`（新用户推荐）；③ `YUQUE_TOKEN_FILE=<任意文件>`；④ 常见凭据文件里的同名键 `~/.openclaw/secrets/credentials.env`、`~/.yuque/credentials.env`、`~/.config/yuque/credentials.env`、当前目录 `.env`（`export` 前缀/引号/CRLF 都能读）。新机器先跑 `python3 scripts/yuque_doctor.py`（`--net` 可联网验证）
 - 失败静置重试：单个节点挂载失败（如 `TITLE 节点未在返回目录中找到`）→ 静置 `--pend-sleep` 秒（默认 600）→ 清理残留同名节点 → 重试，最多 `--pend-retries` 轮（默认 3）；仍失败才记 fail。**背景（2026-10-07 实验证实）**：高频连续创建（几百节点不间断）会让语雀 TOC 写路径积压，新建空目录挂子静默失败（响应乐观回显但实际挂根）；静置 ~10 分钟自愈，节流（每请求间隔 1.5s + 每百节点休息）可完全规避。故默认保持高频 + 失败静置重试，不主动降速，除非想稳到底（用 `--pend-sleep` 调小）+ 外部节流。
 - **batch 模式（2026-10-16 新增，防积压终极方案）**：`--batch-mode [--batch-size N] [--x-login 用户名]`
   - 原理：doc 层（create_doc）不受 TOC 队列限制可连续造；**TOC 挂载改两段式**——节点统一 appendNode 挂根（根层追加实测稳定）→ 攒批 → Web API `PUT /api/catalog_nodes/batch`（batchMove，一次请求 N 个节点）批量归位。把「N 次高风险子树插入」变成「N 次低风险挂根 + N/B 次服务端批量移动」
@@ -278,7 +278,7 @@ python3 scripts/yuque_novel_import.py --txt novel.txt --book-id <book_id>
 python3 scripts/yuque_novel_import.py --txt novel.txt --dry-run
 ```
 
-- 链路：mcporter + yuque-mcp（非 HTTP 直连，无需 TOKEN_L91）；依赖 OpenClaw 环境已配 yuque-mcp
+- 链路：mcporter + yuque-mcp（非 HTTP 直连，不读 TOKEN_L91）——但**不是「不需要 token」**：token 要配在 yuque-mcp 的 MCP server 配置里，且 mcporter 需能解析到 `yuque-mcp`（`scripts/yuque_doctor.py` 会检查这两项）
 - 导入前先 `--dry-run` 看章节预览，再正式导；导入后自动校验内容（乱码/HTML 残留）并修 TOC
 - 大文件分批：`--start 1 --end 200` 续导；中途断网重跑同命令即续传
 - 回归单测：`cd scripts && python3 test_novel_toc_fix_retry.py`（5 项，不联网）

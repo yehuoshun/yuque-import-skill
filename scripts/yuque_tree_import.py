@@ -187,17 +187,86 @@ def log(*args, **kw):
     print(f"[{time.strftime('%H:%M:%S')}]", *args, **kw)
 
 
-def load_token(env):
-    t = os.environ.get(env)
-    if t:
-        return t
-    # 兜底: 从 ~/.openclaw/secrets/credentials.env 读 export <env>="..."
-    p = os.path.expanduser("~/.openclaw/secrets/credentials.env")
-    if os.path.exists(p):
-        for line in open(p):
-            if line.startswith(f"export {env}="):
-                return line.strip().split("=", 1)[1].strip().strip('"').strip("'")
-    raise SystemExit(f"找不到 token: 设置环境变量 {env} 或写入 credentials.env")
+# ---- 语雀 token 解析（2026-11-07 跨平台通用化）----------------------------------
+# 背景: 原实现只认 TOKEN_L91 + ~/.openclaw/secrets/credentials.env（且必须带 export 前缀），
+#       换个使用者/换台 Windows 机器就卡在「没有 token」。现在按下面顺序找，找到即用:
+#         1) 显式 --token-env 指定的变量（默认 TOKEN_L91，保留旧用法）
+#         2) YUQUE_TOKEN / YUQUE_API_TOKEN（通用名，推荐新用户用这个）
+#         3) YUQUE_TOKEN_FILE 指向的文件（纯 token 或 KEY=VALUE 均可）
+#         4) 常见凭据文件里的同名键: ~/.openclaw/secrets/credentials.env、
+#            ~/.yuque/credentials.env、~/.config/yuque/credentials.env、当前目录 .env
+#       文件格式容错: 带不带 export、带不带引号、CRLF、行首空格、# 注释 都能读。
+TOKEN_ENV_FALLBACKS = ("YUQUE_TOKEN", "YUQUE_API_TOKEN", "TOKEN_L91")
+TOKEN_FILE_CANDIDATES = (
+    "~/.openclaw/secrets/credentials.env",
+    "~/.yuque/credentials.env",
+    "~/.config/yuque/credentials.env",
+    "./.env",
+)
+
+
+def _parse_token_file(path, keys):
+    """从 env 风格文件里取 keys 中任一键的值; 只有一行裸 token 的文件也认。"""
+    try:
+        with open(path, encoding="utf-8-sig", errors="replace") as f:
+            lines = [ln.strip() for ln in f]
+    except OSError:
+        return None
+    plain = []
+    for line in lines:
+        if not line or line.startswith("#"):
+            continue
+        if line.lower().startswith("export "):
+            line = line[7:].strip()
+        if "=" in line:
+            k, v = line.split("=", 1)
+            if k.strip() in keys:
+                v = v.strip().strip('"').strip("'").strip()
+                if v:
+                    return v
+        else:
+            plain.append(line)
+    if len(plain) == 1 and plain[0]:
+        return plain[0].strip('"').strip("'")
+    return None
+
+
+def token_help(env="TOKEN_L91"):
+    return (
+        f"找不到语雀 token。已查: 环境变量 {env} / " + " / ".join(TOKEN_ENV_FALLBACKS)
+        + "，以及文件 " + "、".join(TOKEN_FILE_CANDIDATES) + "\n"
+        "任选一种补上（token 申请: 语雀 → 个人设置 → Token）:\n"
+        '  Linux/macOS  : export YUQUE_TOKEN="你的token"\n'
+        '                  或 echo \'export YUQUE_TOKEN="你的token"\' >> ~/.openclaw/secrets/credentials.env\n'
+        '  Windows PS   : $env:YUQUE_TOKEN="你的token"   # 仅当前窗口\n'
+        '                  永久: mkdir -Force "$env:USERPROFILE\\.openclaw\\secrets" | Out-Null; '
+        "'YUQUE_TOKEN=\"你的token\"' | Add-Content \"$env:USERPROFILE\\.openclaw\\secrets\\credentials.env\"\n"
+        f"  也可以用 --token-env <变量名> 指定自己的变量名，或用 YUQUE_TOKEN_FILE=<文件路径>"
+    )
+
+
+def resolve_token(env="TOKEN_L91"):
+    """返回 (token, 来源说明)；找不到返回 (None, None)。"""
+    keys = [env] + [k for k in TOKEN_ENV_FALLBACKS if k != env]
+    for k in keys:
+        v = (os.environ.get(k) or "").strip()
+        if v:
+            return v, f"环境变量 {k}"
+    tf = (os.environ.get("YUQUE_TOKEN_FILE") or "").strip()
+    paths = ([os.path.expanduser(tf)] if tf else []) + [os.path.expanduser(p) for p in TOKEN_FILE_CANDIDATES]
+    for p in paths:
+        if p and os.path.isfile(p):
+            v = _parse_token_file(p, keys)
+            if v:
+                return v, f"文件 {p}"
+    return None, None
+
+
+def load_token(env="TOKEN_L91"):
+    v, _ = resolve_token(env)
+    if v:
+        return v
+    raise SystemExit(token_help(env))
 
 # 账号级小时配额（5000 次/小时，整点刷新；同账号所有 Token 共享）。
 # 旧实现用「进程内只等一次」布尔：二次 429 直接掉进短退避并 raise，节点被静置 10/20/30 分钟
