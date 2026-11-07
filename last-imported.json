@@ -21,11 +21,11 @@
   "note": "第 6 版重导（HEAD 3bb4c53f → b4c4cc4，4 个 md 修改：Web Audio API 死链修复 #13579、subjects +PyLLM/Pebble/PyDB/PyNet/PyOS 5 条、free-courses-en 拼写修复、free-courses-vi 删 26 行；无增删文件、节点数不变；free-programming-books-zh.md 未在改动之列）。口径与上版一致：11 目录 / 235 文件 = 246 节点，无图需处理。toc-md PUT PASS、0 失败；六查全绿（TOC 246==本地、错位 0、幽灵 0、word_count 235 全>0——hy.md/cs-cp.md 为上游 0 字节空文件占位、回读 235/235 仅 2 篇非 md 代码围栏差异属预期）。move-stack 4 轮全 {} 响应挂账。历史：3bb4c53f=85069576、52e40c13=84897155（旧库全保留）。"
  },
  "https://github.com/aoaostar/legado": {
-  "commit": "55fe8bcc",
-  "book_id": 85404234,
-  "book_url": "https://www.yuque.com/yeuhoshun/legado-55fe8bcc",
-  "imported_at": "2026-11-06T23:45:00+0800",
-  "note": "默认分支 release @ 55fe8bcc（2026-11-06 12:22 +0800「Add sync changes」例行书源同步线；diff vs 上版 1d383e2b 仅 README.md/index.html 各 46 行 + sources/cache.lock + e99a592f.zip 重打包，源清单 20 文件结构不变）。沿用「解析单轨」口径（硬规则 12）：build.py 生成 20 个 sources 解析 md + 6 分类索引 + 前言 + README/index.html = 31 节点（2 目录/29 文档），原件给上游直链 legado.aoaostar.com。六查全绿：TOC 31==本地 31、全路径唯一 True、缺失 0、对账错位 0、幽灵 0（docs 29==TOC DOC 29）、29 篇回读 0 异常、word_count/占位 0；toc-md PUT 0.7s、0 失败；根级 TITLE 08-解析 归位（appendNode/action_mode=sibling → 根级 DOC 在前、TITLE 末尾，连续第 9 版同坑）。move-stack 10 轮全 {} 挂账（cookie 写侧风控自 10-30 未恢复，隔日 --no-wait 重试）。历史：1d383e2b=85318687、d32e745=85280919、09b11ac8=85183389、943a3a7=85069986（旧库全保留）。"
+  "commit": "be28711",
+  "book_id": 85428962,
+  "book_url": "https://www.yuque.com/yehuoshun/legado-be28711",
+  "imported_at": "2026-11-07T16:45:00+0800",
+  "note": "默认分支 release @ be28711（github-actions[bot] 2026-11-07 11:51:39 +0800「Add sync changes」例行书源同步线；与上版 55fe8bcc 同为 daily 重写式 commit——merge_base 仍是 281de694、ahead/behind 各 1，实质 diff 仅 README.md/index.html 同步时间戳 + sources 重打包，源清单 20 文件/6 分类/21 条目结构不变）。沿用「解析单轨」口径（硬规则 12）：build.py 生成 20 个 sources 解析 md + 6 分类索引 + 前言 + README/index.html = 31 节点（2 目录/29 文档），原件给上游直链 legado.aoaostar.com。六查全绿：TOC 31==本地 31、全路径唯一 True、缺失 0、对账错位 0、幽灵 0、word_count 29/29 全 >0、回读抽查 5 篇 MATCH（remote 多出几十字节均为 CRLF，归一后逐字一致）；toc-md PUT 1.0s、0 失败；根级 TITLE 08-解析 天然有序（TITLE 在根级 DOC 前，无需归位 PUT）。坑：save_prog（yuque_tree_import.py:619-625）json.dump 缺 encoding 在 GBK locale 写坏 progress.json → 已修 + 旧文件按 gbk 解码重存 utf-8；Windows test 阶段账本反斜杠键与正斜杠 rel 不匹配 → 已统一；test+全量双写幽灵 22 个已删净；4 条 test 阶段 stale doc_id（08-解析/README.md、index.html、3f067eb2、856adf0e）已从服务端反查真身 doc_id/slug 写回账本。move-stack 需 cookie/ctoken（C:\\Users\\yehuoshun\\.openclaw\\workspace\\skills\\yuque-ai-mcp\\config\\config.json 缺失）→ 分组待补 stack 57018723。历史：55fe8bcc=85404234、1d383e2b=85318687、d32e745=85280919、09b11ac8=85183389、943a3a7=85069986（旧库全保留）。"
  },
  "https://github.com/swjybky/deepwrite": {
   "commit": "39e2745",
