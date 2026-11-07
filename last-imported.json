@@ -35,11 +35,11 @@
   "note": "默认分支 main @ 39e2745（距上版 ce2b65a +2 commit / 100 文件：JEV 模型设置 + 绘图评测打分、团队提示词审核管理）。prep 4199 节点（362 目录/3837 文件，<5000 单库）。toc-md 全量 PUT 19.3s、0 失败 0 跳过、结构核对 PASS。六查全绿：TOC 4199==账本、全路径唯一 True、缺失 0、对账错位 0、幽灵 0（docs 3837==TOC DOC 3837）、3837 篇逐篇回读 0 异常、word_count 0 篇为 0。图片：初导按整树入库（png 3 张传 CDN、svg 19 张成 code-fence 文档）；老板 11-07 拍板「修 CDN、不删 images」→ 22 张全部上传 CDN（png 复用初导已传的 3 个 URL，svg 19 张新传，throttle 2s），6 篇引用文档（README/README.zh-CN + 4 篇 docs 设计文档）本地改写 25 处引用后 PUT 回写，回读 6/6 字节一致、残留相对引用 0；images 目录节点保留不动。move-stack 3 次全 {} 挂账（cookie 写侧风控）。用时 4h34m（含整点配额退避）。历史库 ce2b65a=85356958 保留。"
  },
  "https://github.com/morluto/rea": {
-  "commit": "bacc1e384",
-  "book_id": 85404488,
-  "book_url": "https://www.yuque.com/yeuhoshun/rea-bacc1e384",
-  "imported_at": "2026-11-07T04:50:00+0800",
-  "note": "默认分支 main @ bacc1e384。节点数涨到 7937 → 按硬规则 9/坑 47「方案 A」**拆 3 库**（描述互指完整 URL）：主库 rea（bacc1e384）=85404488，除 tests/、scripts/ 外全部 4724 节点（331 目录/4393 文件，含 21 文件超 512KB 切分 45 片）；副库 rea-tests（bacc1e384）=85404489，仅 tests/ 2644 节点；副库 rea-scripts（bacc1e384）=85404490，仅 scripts/ 569 节点。三库 toc-md PUT 分别 19.3s/13.3s/3.3s、0 失败、结构核对 PASS。图片：只传被引用图 5 张（新增 docs/assets/rea-showcases-dark.svg）→ CDN，A 库 139 处引用；两类引用（![]() + 「查看大图」普通链接）都改；删图目录但**保留目录内被引用的文本件** website/public/assets/licenses/dinosaur.txt（坑 29）。六查全绿（三库）：TOC==账本、全路径唯一 True、缺失 0、对账错位 0、幽灵 0、回读 4393+2497+541=7431 篇 0 异常、word_count 0 篇为 0；根级顺序与上版一致（TITLE 在前，无需归位）。move-stack 挂账（cookie 写侧风控）。历史：d7df9df33=85318784/85318788、9ebbe67、d48e472fa 等旧库全保留。"
+  "commit": "c5301e61",
+  "book_id": 85430146,
+  "book_url": "https://www.yuque.com/yehuoshun/rea-c5301e61",
+  "imported_at": "2026-11-07T20:11:47+0800",
+  "note": "默认分支 main @ c5301e61（2026-11-07 17:54:59 +0800「feat(desktop): capture, draft, export and witness a task inside a build computer #9045」，较上版 bacc1e384 ahead 29 commits/276 files）。沿用硬规则 9/坑 47「方案 A」**拆 3 库**（描述互指完整 URL，slug 带 commit）：主库 rea（c5301e61）=85430146，除 tests/、scripts/ 外全部 4773 节点（330 目录/4438 文件，21 文件超 512KB 切 45 片，docs/releases/6.8.0.contributions.json 单文件 5 片）；副库 rea-tests=85430147 仅 tests/ 2674 节点（153 目录/2521 文件）；副库 rea-scripts=85430148 仅 scripts/ 571 节点（28 目录/543 文件）。取源：git 数据面持续超时（clone/ls-remote 均 443 不通）→ codeload.github.com tarball HTTP 通道成功（21.3MB，可靠替代，建议入 skill 备选）。三库 --toc-md 全量（主库 4773 节点 79 分钟）0 失败，PUT 分别 24.1s/15.6s/3.3s，结构核对三库 PASS。图片（本轮无 cookie/ctoken，自动上传未启用）：12 张图全按「二进制占位说明」落文档（word_count=0 属预期，非占位异常），md 内相对引用原样保留（远程 README img src 仍指 docs/assets/ 相对路径，与本地逐字一致）；与上版「5 张传 CDN + 引用重写」口径不同，因本轮 cookie 缺席——如需 CDN 化可后补跑 yuque_rewrite_images。六查全绿（三库）：TOC 4797/2674/571==账本+分片、全路径唯一 True、缺失 0、分片号连续、对账错位 0、幽灵 0（4462/2521/543 ==TOC DOC）、word_count 零值仅 2 张图片占位（预期）、回读抽查 12 篇 11 MATCH + 1 分片首段 PREFIX-DIFF（口径误报，逐段 fmt==remote 5/5 全等）；根级 TITLE 天然有序（TITLE 全在 DOC 前）。历史：bacc1e384=85404488/85404489/85404490（2026-11-07 晨）、d7df9df33=85318784/85318788、9ebbe67、d48e472fa 等旧库全保留。move-stack 挂账（cookie 写侧风控）。"
  },
  "https://github.com/howie6879/owllook": {
   "commit": "b536578",
