@@ -96,14 +96,21 @@ def main():
         if not os.path.exists(local_path):
             bad.append((rel, '本地缺失'))
             continue
-        local = open(local_path, encoding='utf-8').read()
+        try:
+            local = open(local_path, encoding='utf-8').read()
+        except UnicodeDecodeError:
+            # 二进制文件（占位文档）：跳过正文对比，仅上方 word_count 检查生效
+            local = None
         rd = api(token, f'/repos/{args.book}/docs/{doc_id}')
         remote = rd.get('data', {})
         body = remote.get('body') or remote.get('body_draft') or ''
         stats['checked'] += 1
-        stats['cdn'] += len(cdn_re.findall(local))
+        if local is not None:
+            stats['cdn'] += len(cdn_re.findall(local))
         if (remote.get('word_count') or 0) <= 0:
             bad.append((rel, '回读 word_count<=0'))
+        if local is None:
+            continue
         l_norm = local.strip().replace('\r\n', '\n').replace('\r', '\n')
         b_norm = body.strip().replace('\r\n', '\n').replace('\r', '\n')
         if l_norm == b_norm:

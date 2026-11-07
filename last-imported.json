@@ -1,4 +1,11 @@
 {
+ "https://github.com/microsoft/Generative-AI-for-beginners-dotnet": {
+  "commit": "d74deb214",
+  "book_id": 85431208,
+  "book_url": "https://www.yuque.com/yehuoshun/genai-dotnet-d74deb214",
+  "imported_at": "2026-11-07T23:22:26+0800",
+  "note": "默认分支 main @ d74deb214（2026-11-05 dependabot nuget merge #559）。微软官方 .NET 生成式 AI 课程仓（5 课 + 10-WhatsNew + samples 完整源码 + 8 语言 translations + translated_images），全树直导：translations（de/es/fr/ja/ko/pt/tw/zh 各 22 文件，zh 目录用旧课名 01-IntroToGenAI/02-SetupDevEnvironment/03-CoreGenerativeAITechniques/04-PracticalSamples/05-ResponsibleGenAI 系仓库自身陈旧，原样保留）、samples 840 文件、translated_images 440 翻译图全导。剔脚手架 4 项（.github/.vscode/.devcontainer/.copilot）→ clean 1548 文件/391 目录=1939 节点（单库 5000 内无需分库，硬规则 9）。建库 85431208 slug=genai-dotnet-d74deb214；test 6 后全量 --toc-md 103 分钟（20:54-22:37，速率受 552 个二进制占位拖慢）→ 目录树 1966 行/120134 字节 PUT 10.0s → TOC 1966（TITLE 391 + DOC 1575）结构缺失 0 PASS。14 文件切 41 片。六查全绿：import verify PASS（本地 1548 == DOC 1575、单文档 1534、分片 14→41、缺失 0、分片号连续、全路径唯一）；ghosts 0；word_count 518 个零值全定性（tmp\\genai_zero_wc_check.py：516 二进制占位 + 2 个真实零字节文件的空占位——samples\\CoreSamples\\AgentLabs-03-PythonParksInformationServer\\.gitignore 与 samples\\AppsWithGenAI\\HFMCP.GenImage\\HFMCP.GenImage.Web\\Services\\IConfigurationService.cs，占位正确非异常）；分片 14 文件拼回逐字符相等（pdf.worker.min.mjs 4 片 1.37M 字符、SampleResponse.json 5 片 2.1M 等）；reconcile 错位 0；根级 TITLE 13 个天然有序（01-05/10-WhatsNew/docs/images/infra/samples/scripts/translated_images/translations）无需归位。回读：官方 yuque_verify_readback.py 全量 1548 篇异常 528=518 占位零 wc + 10 条非 md 栅栏形态差（fmt_content 预期行为：远程 body='```lang\\n'+local.rstrip()+'\\n\\n```'，尾有空行、BOM 保留）；自写 tmp\\genai_readback_check.py v2（md 原样/非 md 栅栏重包/零字节比对占位）17 picks 全 MATCH/WRAP-MATCH/PLACEHOLDER-OK（含 README/AGENTS/课文/zh-ja-tw 翻译/setup.ps1/azure.yaml/.gitattributes/.gitignore/docs\\ 三篇）。图片：无 cookie 全占位（本地引用 202 处 unique 161 + 外链 shields/youtube ~203 处保留原样）；官方 readback 脚本已补丁支持二进制树（try/except UnicodeDecodeError 跳过 + cdn findall 判 None）。账本键为 '/' 分隔。"
+ },
  "https://github.com/Anduin2017/HowToCook": {
   "commit": "308cc8b7",
   "book_id": 85069575,
