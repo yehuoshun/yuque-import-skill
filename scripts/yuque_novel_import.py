@@ -21,23 +21,26 @@ yuque_novel_import.py — 小说 TXT/EPUB → 语雀 导入工具（本地文件
   # 只解析不导入（预览章节列表）
   python3 yuque_novel_import.py --txt novel.txt --dry-run
 
-依赖: 无第三方库，走 mcporter 调 yuque-mcp（需 OpenClaw 环境已配置 yuque-mcp）
+依赖: 无第三方库。两条链路二选一（自动选）：
+  · 直连 v2 HTTP（只需语雀 token，**推荐，不用装 MCP**）
+  · mcporter + yuque-mcp（装了 MCP 就自动用）
+  强制指定：--transport http|mcp，或环境变量 YUQUE_TRANSPORT
 """
 import argparse
 import json
 import os
 import re
-import subprocess
 import sys
 import time
 import zipfile
 
 import yuque_novel_content_check
+import yuque_backend as yq
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 CONFIG_PATH = os.path.join(PROJECT_DIR, 'config.json')
-# mcporter 工作目录：默认 workspace，可用环境变量 MCP_WORKDIR 覆盖（换环境不用改代码）
-MCP_WORKDIR = os.environ.get('MCP_WORKDIR', '/home/admin/.openclaw/workspace')
+# mcporter 工作目录：默认 ~/.openclaw/workspace，可用环境变量 MCP_WORKDIR 覆盖（换环境不用改代码）
+MCP_WORKDIR = os.environ.get('MCP_WORKDIR') or os.path.expanduser('~/.openclaw/workspace')
 
 # 修正章节标题缺"章"字（如"第518 那个怪物"→"第518章 那个怪物"）
 _ZHANG_FIX_RE = re.compile(
@@ -192,39 +195,17 @@ def load_config():
 
 
 def mcporter_call(tool, args_dict, timeout=60, retries=1):
-    """统一调 yuque-mcp，返回解析后的 JSON。stdio 间歇启动失败时按 retries 重试（默认 1=不重试）"""
-    args = json.dumps(args_dict, ensure_ascii=False)
-    for attempt in range(retries):
-        result = subprocess.run(
-            ['mcporter', 'call', f'yuque-mcp.{tool}', '--args', args],
-            capture_output=True, text=True, timeout=timeout,
-            cwd=MCP_WORKDIR
-        )
-        output = result.stdout.strip() or result.stderr.strip()
-        if os.environ.get('MC_DEBUG'):
-            print(f'[MC_DEBUG] {tool} args={args[:200]}', flush=True)
-            print(f'[MC_DEBUG] rc={result.returncode} out={output[:400]}', flush=True)
-        try:
-            return json.loads(output)
-        except json.JSONDecodeError:
-            m = re.search(r'(\{.*\}|\[.*\])', output, re.S)
-            if m:
-                try:
-                    return json.loads(m.group(1))
-                except json.JSONDecodeError:
-                    pass
-        if attempt < retries - 1:
-            print(f"⚠️ {tool} 调用失败，重试 ({attempt + 1}/{retries - 1})", flush=True)
-            time.sleep(2)
-    if output:
-        print(f"❌ {tool} 重试耗尽，原始输出: {output[:300]}", flush=True)
-    return None
+    """统一调语雀操作后端（MCP 或 v2 HTTP 直连，由 yuque_backend 选）。默认不重试。"""
+    if os.environ.get('MC_DEBUG'):
+        print(f'[CALL] {tool} mode={yq.mode()} args={json.dumps(args_dict, ensure_ascii=False)[:200]}', flush=True)
+    return yq.call(tool, args_dict, timeout=timeout, retries=retries)
 
 
 def create_repo(name, description):
-    """创建语雀知识库，放入小说分组（stack_id 固定）。stdio 间歇失败时重试 4 次。description 超长会 400，截断到 200 字"""
+    """创建语雀知识库，放入小说分组（stack_id 固定）。失败重试 4 次。description 超长会 400，截断到 200 字"""
     cfg = load_config()
-    login = cfg.get('yuque_config', {}).get('user_login', 'yehuoshun')
+    # 只在用户显式配了 config.json 时才用它的 login；否则 HTTP 模式从 token 反查（不写死某人用户名）
+    login = cfg.get('yuque_config', {}).get('user_login') or None
     if description:
         description = re.sub(r'\s+', ' ', description).strip()[:200]
     data = mcporter_call('yuque_create_repo', {
@@ -249,6 +230,11 @@ def create_repo(name, description):
         }, timeout=90)
         if isinstance(stack_data, dict) and stack_data.get('success'):
             print("✅ 已移动到小说分组 (stack_id=26774009)")
+            moved = True
+            break
+        if isinstance(stack_data, dict) and stack_data.get('skipped'):
+            # HTTP 直连模式没有 cookie，移分组不是 token 的能力 —— 不阻断导入
+            print(f"ℹ️ 跳过分组移动: {stack_data.get('reason')}（不影响导入，可稍后到语雀里手动拖）")
             moved = True
             break
         print(f"⚠️ 第 {attempt + 1} 次移动失败: {str(stack_data)[:150]}")
@@ -340,7 +326,14 @@ def main():
     ap.add_argument('--dry-run', action='store_true', help='只解析预览，不导入')
     ap.add_argument('--interval', type=float, default=0, help='章节间隔秒数（默认 0，不等待；限流自动重试）')
     ap.add_argument('--no-toc-fix', action='store_true', help='导入完不修 TOC 顺序')
+    ap.add_argument('--transport', choices=['auto', 'mcp', 'http'], default='',
+                    help='语雀操作通道：auto(默认)/mcp(token 不装 MCP 就别用)/http(仅 token 直连)')
     args = ap.parse_args()
+
+    if args.transport:
+        os.environ['YUQUE_TRANSPORT'] = args.transport
+    _m, _why = yq.describe()
+    print(f"🔌 通道: {_m}（{_why}）")
 
     # 1. 解析章节（按扩展名分发：.epub 走 epub_reader，其余按 txt 处理）
     if args.txt.lower().endswith('.epub'):
@@ -419,6 +412,7 @@ def main():
             sys.exit(1)
 
     # 写章节列表（兼容 reorder_toc，按 book_id 隔离路径，不再写死 /tmp）
+    os.makedirs(os.path.dirname(_chapter_list_path(str(book_id))), exist_ok=True)
     with open(_chapter_list_path(str(book_id)), 'w', encoding='utf-8') as f:
         json.dump([[t, ''] for t, _ in chapters], f, ensure_ascii=False)
 

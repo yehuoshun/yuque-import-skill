@@ -278,10 +278,10 @@ python3 scripts/yuque_novel_import.py --txt novel.txt --book-id <book_id>
 python3 scripts/yuque_novel_import.py --txt novel.txt --dry-run
 ```
 
-- 链路：mcporter + yuque-mcp（非 HTTP 直连，不读 TOKEN_L91）——但**不是「不需要 token」**：token 要配在 yuque-mcp 的 MCP server 配置里，且 mcporter 需能解析到 `yuque-mcp`（`scripts/yuque_doctor.py` 会检查这两项）
+- 链路（2026-11-07 起**双通道自动选**）：**直连 v2 HTTP（只要 token，不装 MCP 也能跑）** 或 mcporter + yuque-mcp（装了优先用）；`--transport http|mcp` / `YUQUE_TRANSPORT` 强制；接口定义统一在 `scripts/yuque_backend.py`
 - 导入前先 `--dry-run` 看章节预览，再正式导；导入后自动校验内容（乱码/HTML 残留）并修 TOC
 - 大文件分批：`--start 1 --end 200` 续导；中途断网重跑同命令即续传
-- 回归单测：`cd scripts && python3 test_novel_toc_fix_retry.py`（5 项，不联网）
+- 回归单测：`cd scripts && python3 test_novel_toc_fix_retry.py`（7 项，不联网）
 
 ## 使用方式
 

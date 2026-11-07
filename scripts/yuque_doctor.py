@@ -95,6 +95,24 @@ def check_novel_path():
         print("   补法: 在 OpenClaw 里配好 yuque-mcp（token 写在 MCP server 配置里，不读 TOKEN_L91）")
 
 
+def check_transport():
+    """报告小说/直连链路会走哪个通道（部署到新机器时最常卡这里）"""
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    try:
+        import yuque_backend as yq
+        m, why = yq.describe()
+    except Exception as e:  # noqa: BLE001
+        print(f"⚠️  通道自检失败: {e}")
+        return
+    if m == "mcp":
+        print(f"✅ 写操作通道: MCP（{why}）")
+    elif m == "http":
+        print(f"✅ 写操作通道: HTTP 直连（{why}）—— 不装 MCP 也能跑")
+    else:
+        print(f"❌ 写操作通道: 两条路都不通（{why.splitlines()[0]}）")
+        print("   不装 MCP 就只补 token，然后用 --transport http 强制直连")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--token-env", default="TOKEN_L91", help="自定义 token 环境变量名（默认 TOKEN_L91）")
@@ -108,6 +126,7 @@ def main():
         check_net(tok)
     check_cookie()
     check_novel_path()
+    check_transport()
     print("-" * 60)
     if tok:
         print("token 就绪，可直接跑: python3 scripts/yuque_tree_import.py --root <目录> --book <id> --dry")

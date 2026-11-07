@@ -7,13 +7,15 @@
 
 - 本模块管**本地小说文件**（txt/epub）导入，数据源是文件，零网络抓取。
 - 与目录树导入（`yuque_tree_import.py`）的区别：小说按「章节」而非「文件树」组织，解析层完全独立（章节标题正则 + epub spine）。
-- 调用链路：走 **mcporter + yuque-mcp**（OpenClaw 环境已配置），与 skill 其它脚本的 HTTP 直连（TOKEN_L91）链路并存，互不干扰。
+- 调用链路（2026-11-07 起**双通道**，自动选）：“**直连 v2 HTTP**（只需语雀 token，**无需装 MCP**）”或“**mcporter + yuque-mcp**”（装了 MCP 就优先用）；与 skill 其它脚本的 HTTP 链路同源。可用 `--transport http|mcp` 或环境变量 `YUQUE_TRANSPORT` 强制。
 
 ## 依赖
 
-- **mcporter** + **yuque-mcp**（OpenClaw 管理，已配好）
+- **二选一**：
+  - 直连 v2 HTTP：只要 `YUQUE_TOKEN`（或 `TOKEN_L91`，见 README「首次配置」）+ 标准库
+  - mcporter + yuque-mcp：多了 MCP 这一层（token 写在 MCP server 配置里）
 - 纯 Python 标准库，无第三方包（含 epub 解析）
-- token：不需要（yuque-mcp 自带认证）
+- 建库后「移入小说分组」仅 Web API（cookie/ctoken）能做：HTTP 模式下没 cookie 会**跳过并提示**，不影响导入（库先落默认分组，之后手动拖）
 
 ## 使用
 

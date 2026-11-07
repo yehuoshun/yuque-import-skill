@@ -46,6 +46,7 @@ python3 scripts/yuque_import_all.py --repos repos.json --ledger last-imported.js
 python3 scripts/yuque_novel_import.py --txt /path/to/novel.txt --title "书名" --author "作者"   # 自动建库+导入+修TOC
 python3 scripts/yuque_novel_import.py --file /path/to/novel.epub --create                     # epub 元数据自动带书名
 python3 scripts/yuque_novel_import.py --txt novel.txt --book-id <book_id> --dry-run             # 只预览章节
+python3 scripts/yuque_novel_import.py --txt novel.txt --create --title "书名" --transport http  # 不装 MCP，token 直连
 ```
 
 ## 首次配置（新机器 / 新使用者，先跑这两行）
@@ -78,7 +79,8 @@ mkdir -Force "$env:USERPROFILE\.openclaw\secrets" | Out-Null
 
 **cookie/ctoken（可选）**：只有「图片上传 CDN」和「batch 模式的 TOC 归位」需要，纯 `--toc-md` 导入不需要。默认读 `~/.openclaw/workspace/skills/yuque-ai-mcp/config/config.json`，换机器用 `--cookie-config` 指。
 
-**小说模块（`yuque_novel_*`）例外**：不读 `TOKEN_L91`，走 `mcporter` + `yuque-mcp` 链路——但**不是「不需要 token」**，token 得配在 yuque-mcp 的 MCP server 配置里，且 mcporter 要能解析到 `yuque-mcp`（`yuque_doctor.py` 会检查这两项）。
+**小说模块（`yuque_novel_*`）也能只靠 token**（2026-11-07 起）：默认 `--transport auto` —— 装了 mcporter + yuque-mcp 就走 MCP，否则自动直连 v2 HTTP（只要 token，**不需要装 MCP**）。想强制：`--transport http|mcp` 或环境变量 `YUQUE_TRANSPORT`。两条通道共用 `scripts/yuque_backend.py` 里的工具映射；`yuque_doctor.py` 会告诉你当前会走哪条。
+⚠️ 一个边界：建库后「移入分组」只有 Web API（cookie/ctoken）能做，HTTP 模式下没 cookie 会跳过并提示（不影响导入，事后手动拖一下）。
 
 ## 结构
 
@@ -89,7 +91,8 @@ scripts/
   yuque_tree_import.py      导入（DFS 先序、断点续传、每节点落盘）
   yuque_toc_reconcile.py    对账修复（路径重建、错位移动）
   yuque_repo_import.py      GitHub 开源项目 wrapper（prep/create-book/move-stack）
-  yuque_doctor.py           环境自检（token 来源 / cookie / 小说链路，新机器先跑它）
+  yuque_backend.py          语雀操作后端（MCP / v2 HTTP 双通道，小说与其它脚本共用）
+  yuque_doctor.py           环境自检（token 来源 / cookie / 通道，新机器先跑它）
   yuque_repair_placeholders.py  占位文档回填修复（二进制误判事故善后）
   yuque_website_crawl.py    网站抓取通用模板（正文窗口定位 + 图片传 CDN）
   yuque_toc_organize.py     TOC 目录整理（平铺 → 分组, plan.json 驱动）

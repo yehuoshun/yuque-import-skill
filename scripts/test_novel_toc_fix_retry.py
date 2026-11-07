@@ -4,14 +4,19 @@
 test_novel_toc_fix_retry.py — yuque_novel_toc_fix.py 重试逻辑回归单测
 ========================================================
 不联网：monkeypatch 网络层（subprocess.run / get_toc_docs / mcporter_call），
-验证「stdio 抽风重试」「MCP error 不重试」「移动失败重试 3 轮」行为。
+验证「stdio 抽风重试」「MCP error 不重试」「移动失败重试 3 轮」「HTTP 分支分发」「复验重算轮」行为。
 
 用法:
     python3 test_novel_toc_fix_retry.py
 """
 import json
 import os
+
+import yuque_backend as yb
 import yuque_novel_toc_fix
+
+os.environ['YUQUE_TRANSPORT'] = 'mcp'   # 强制走 MCP 分支，测试不联网
+yb._MODE = 'mcp'
 
 # ---------- 测试 1：输出解析失败 → 重试 retries 次后放弃 ----------
 calls = {'n': 0}
@@ -27,11 +32,12 @@ def fake_run_bad(cmd, **kw):
     return R()
 
 
-orig_run = yuque_novel_toc_fix.subprocess.run
-yuque_novel_toc_fix.subprocess.run = fake_run_bad
-r = yuque_novel_toc_fix.mcporter_call('yuque_get_toc', {'book_id': '1'}, retries=2)
-assert r is None and calls['n'] == 3, f"应重试3次后放弃，实际 {calls['n']} 次"
-print("✅ 坏输出：重试 3 次后放弃")
+orig_run = yb.subprocess.run
+yb.subprocess.run = fake_run_bad
+r = yb._mcporter_call('yuque_get_toc', {'book_id': '1'}, retries=2)
+assert isinstance(r, dict) and r.get('error') and calls['n'] == 2, \
+    f"应重试 2 次后返回 error，实际 {calls['n']} 次 / {r}"
+print("✅ 坏输出：重试 2 次后返回 error")
 
 # ---------- 测试 2：MCP error（参数/权限错误）不重试 ----------
 calls['n'] = 0
@@ -47,9 +53,10 @@ def fake_run_mcperr(cmd, **kw):
     return R()
 
 
-yuque_novel_toc_fix.subprocess.run = fake_run_mcperr
-r = yuque_novel_toc_fix.mcporter_call('yuque_get_toc', {'book_id': '1'}, retries=2)
-assert r is None and calls['n'] == 1, f"MCP error 不应重试，实际 {calls['n']} 次"
+yb.subprocess.run = fake_run_mcperr
+r = yb._mcporter_call('yuque_get_toc', {'book_id': '1'}, retries=2)
+assert isinstance(r, dict) and r.get('error') and calls['n'] == 1, \
+    f"MCP error 不应重试，实际 {calls['n']} 次 / {r}"
 print("✅ MCP error：不重试，直接失败")
 
 # ---------- 测试 3：坏输出后第 2 次成功 ----------
@@ -66,12 +73,12 @@ def fake_run_then_ok(cmd, **kw):
     return R()
 
 
-yuque_novel_toc_fix.subprocess.run = fake_run_then_ok
-r = yuque_novel_toc_fix.mcporter_call('yuque_get_toc', {'book_id': '1'}, retries=2)
-assert r == {'ok': True} and calls['n'] == 2, f"应第2次成功，实际 {calls['n']} 次"
+yb.subprocess.run = fake_run_then_ok
+r = yb._mcporter_call('yuque_get_toc', {'book_id': '1'}, retries=3)
+assert r == {'ok': True} and calls['n'] == 2, f"应第 2 次成功，实际 {calls['n']} 次 / {r}"
 print("✅ 坏输出后第 2 次成功：正常返回")
 
-yuque_novel_toc_fix.subprocess.run = orig_run
+yb.subprocess.run = orig_run
 
 # ---------- 测试 4：单节点移动失败重试 3 轮后成功 ----------
 seq = {'get': 0, 'move': 0}
@@ -138,4 +145,84 @@ assert seq['move'] == 3, f"应恰好 3 轮，实际 {seq['move']}"
 os.remove(tmp)
 print("✅ 3 轮全失败：中止返回 False，不无限重试")
 
-print("\n🎉 全部 5 项测试通过")
+# ---------- 测试 6：HTTP 直连分支的工具分发（mock 掉 _api，不联网） ----------
+seen = {}
+
+
+def fake_api(method, path, payload=None, retries=4, base=None, auth=True):
+    seen['method'], seen['path'], seen['payload'] = method, path, payload
+    if path == '/user':
+        return {'data': {'login': 'u'}}
+    if path.endswith('/docs') and method == 'POST':
+        return {'data': {'id': 999, 'title': payload.get('title')}}
+    if path.endswith('/toc') and method == 'GET':
+        return {'data': [{'type': 'DOC', 'title': 'A', 'uuid': 'a'}]}
+    if path.endswith('/toc') and method == 'PUT':
+        return {'data': [{'type': 'DOC', 'title': 'A', 'uuid': 'a'}]}
+    if path.endswith('/repos') and method == 'POST':
+        return {'data': {'id': 888, 'name': payload.get('name'), 'slug': payload.get('slug'), 'login': 'u'}}
+    return {'error': 'unexpected'}
+
+
+orig_api = yb._api
+yb._api = fake_api
+yb._MODE = 'http'
+yb._LOGIN = None
+
+d = yb.call('yuque_create_repo', {'name': 'zz-test-book', 'description': 'x'})
+assert d.get('id') == 888 and seen['path'].endswith('/repos'), d
+assert seen['payload'].get('slug') == 'zz-test-book', f"应生成 slug: {seen['payload']}"
+
+d = yb.call('yuque_create_doc', {'book_id': '1', 'title': '第一章', 'body': 'b', 'format': 'markdown'})
+assert d.get('id') == 999 and seen['path'] == '/repos/1/docs', d
+
+toc = yb.call('yuque_get_toc', {'book_id': '1'})
+assert isinstance(toc, list) and seen['path'] == '/repos/1/toc', toc
+
+r = yb.call('yuque_update_toc', {'book_id': '1', 'action': 'prependNode',
+                                 'action_mode': 'sibling', 'node_uuid': 'a', 'target_uuid': 'b'})
+assert isinstance(r, dict) and 'data' in r, r
+assert seen['payload'] == {'action': 'prependNode', 'action_mode': 'sibling',
+                           'node_uuid': 'a', 'target_uuid': 'b'}, seen['payload']
+byb_err = yb.call('yuque_unknown_tool', {'book_id': '1'})
+assert byb_err.get('error'), byb_err
+yb._api = orig_api
+yb._MODE = 'mcp'
+print("✅ HTTP 分支：建库/建文档/读TOC/改TOC 分发正确")
+
+# ---------- 测试 7：复验不达目标 → 重算下一轮（副本延迟收敛） ----------
+seq = {'get': 0, 'move': 0}
+
+
+def fake_get_toc3(book_id):
+    seq['get'] += 1
+    # 第 1 次读：乱序；第 2 次读（第 1 轮复验）：仍未生效；第 3 次读（第 2 轮）：正确
+    if seq['get'] >= 3:
+        return [{'type': 'DOC', 'title': 'A', 'uuid': 'a'},
+                {'type': 'DOC', 'title': 'B', 'uuid': 'b'}]
+    return [{'type': 'DOC', 'title': 'B', 'uuid': 'b'},
+            {'type': 'DOC', 'title': 'A', 'uuid': 'a'}]
+
+
+def fake_call3(tool, args_dict, timeout=60, retries=2):
+    if tool == 'yuque_update_toc':
+        seq['move'] += 1
+        return {'data': 'ok'}
+    return None
+
+
+yuque_novel_toc_fix.get_toc_docs = fake_get_toc3
+yuque_novel_toc_fix.mcporter_call = fake_call3
+with open(tmp, 'w', encoding='utf-8') as f:
+    json.dump([['A', ''], ['B', '']], f, ensure_ascii=False)
+import time as _t  # noqa: F401
+_orig_sleep = yuque_novel_toc_fix.time.sleep
+yuque_novel_toc_fix.time.sleep = lambda *a, **k: None   # 跳过轮间等待，测试跑快
+ok = yuque_novel_toc_fix.reorder('1', tmp, verbose=False)
+yuque_novel_toc_fix.time.sleep = _orig_sleep
+assert ok, "第 2 轮应收敛为 True"
+assert seq['move'] == 1, f"只需一轮移动，第二轮重读已是正确顺序，实际 {seq['move']}"
+os.remove(tmp)
+print("✅ 复验未生效：自动重算下一轮并收敛")
+
+print("\n🎉 全部 7 项测试通过")

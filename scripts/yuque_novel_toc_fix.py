@@ -15,16 +15,20 @@ yuque_novel_toc_fix.py — 修复语雀知识库 TOC 章节顺序（yuque-import
     BOOK_ID=<book_id> python3 yuque_novel_toc_fix.py               # 环境变量指定
 
 可被 yuque_novel_import.py 导入调用：from yuque_novel_toc_fix import reorder
+
+通道：与主脚本一致——MCP(mcporter+yuque-mcp) 或 直连 v2 HTTP（只要 token，不用装 MCP），
+      由 yuque_backend 自动选，可用 --transport http|mcp 强制。
 """
 import argparse
 import json
 import os
 import re
-import subprocess
 import sys
 import time
 
-MCP_WORKDIR = os.environ.get('MCP_WORKDIR', '/home/admin/.openclaw/workspace')
+import yuque_backend as yq
+
+MCP_WORKDIR = os.environ.get('MCP_WORKDIR') or os.path.expanduser('~/.openclaw/workspace')
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 CONFIG_PATH = os.path.join(PROJECT_DIR, 'config.json')
 
@@ -41,37 +45,8 @@ def load_config():
 
 
 def mcporter_call(tool, args_dict, timeout=60, retries=2):
-    """调 yuque-mcp 工具，返回解析后的 JSON（容忍 mcporter 输出前缀文本）。
-    stdio 启动偶发失败（空输出/解析失败）按 retries 重试；
-    参数/权限类错误（MCP error）不重试，直接失败。"""
-    args = json.dumps(args_dict, ensure_ascii=False)
-    for attempt in range(retries + 1):
-        result = subprocess.run(
-            ['mcporter', 'call', f'yuque-mcp.{tool}', '--args', args],
-            capture_output=True, text=True, timeout=timeout,
-            cwd=MCP_WORKDIR
-        )
-        output = result.stdout.strip() or result.stderr.strip()
-        if 'MCP error' in output:
-            # MCP 参数校验失败时，错误信息里含参数 schema 的 JSON 数组，
-            # 正则兜底会误把它当成功结果解析（如 book_id 传 int → 0 个文档）
-            print(f"⚠️ mcporter 调用失败: {output[:200]}")
-            return None
-        try:
-            return json.loads(output)
-        except json.JSONDecodeError:
-            m = re.search(r'(\{.*\}|\[.*\])', output, re.S)
-            if m:
-                try:
-                    return json.loads(m.group(1))
-                except json.JSONDecodeError:
-                    pass
-        if attempt < retries:
-            print(f"⚠️ mcporter 输出解析失败，重试 ({attempt + 1}/{retries}): {output[:150]}")
-            time.sleep(2)
-            continue
-        print(f"⚠️ mcporter 输出解析失败: {output[:200]}")
-        return None
+    """调语雀操作后端（MCP 或 HTTP 直连），失败重试 retries 次。返回解析后的 JSON。"""
+    return yq.call(tool, args_dict, timeout=timeout, retries=retries)
 
 
 def get_toc_docs(book_id):
@@ -98,39 +73,15 @@ def load_chapter_titles(chapter_list_path):
     return titles
 
 
-def reorder(book_id, chapter_list_path, dry_run=False, verbose=True):
-    """
-    校验并修复 TOC 顺序。幂等：顺序正确时零修改。
-    返回 True=最终顺序一致；False=存在未修复问题。
-    """
-    target = load_chapter_titles(chapter_list_path)
-    cur_nodes = get_toc_docs(book_id)
-    if cur_nodes is None:
-        return False
-
-    cur_titles = [n['title'] for n in cur_nodes]
-
-    if verbose:
-        print(f"📖 本地章节: {len(target)} | 语雀文档: {len(cur_titles)}")
-
-    if len(cur_titles) > len(target):
-        extra = [t for t in cur_titles if t not in set(target)]
-        print(f"⚠️ 语雀多出 {len(cur_titles) - len(target)} 个文档（不在本地列表）: {extra[:5]}")
-        return False
-    if len(cur_titles) < len(target):
-        missing = [t for t in target if t not in set(cur_titles)]
-        print(f"⚠️ 语雀缺少 {len(target) - len(cur_titles)} 个文档: {missing[:5]}")
-        return False
-
-    # title -> node（标题唯一；重复标题取第一个并警告）
+def _plan_moves(cur_nodes, target, verbose=True):
+    """纯函数：算出把 cur_nodes 顺序改成 target 需要的移动列表（本地模拟）"""
     by_title = {}
     for n in cur_nodes:
         if n['title'] in by_title:
-            print(f"⚠️ 重复标题: {n['title']}")
+            if verbose:
+                print(f"⚠️ 重复标题: {n['title']}")
         else:
             by_title[n['title']] = n
-
-    # 从后往前扫描，找错位节点并本地模拟移动
     moves = []
     sim = list(cur_nodes)
     for i in range(len(target) - 1, -1, -1):
@@ -139,7 +90,8 @@ def reorder(book_id, chapter_list_path, dry_run=False, verbose=True):
             continue
         node = by_title.get(want)
         if node is None:
-            print(f"⚠️ 本地章节在语雀中不存在: {want}")
+            if verbose:
+                print(f"⚠️ 本地章节在语雀中不存在: {want}")
             continue
         j = next((k for k, n in enumerate(sim) if n['uuid'] == node['uuid']), None)
         if j is None or j <= i:
@@ -150,66 +102,102 @@ def reorder(book_id, chapter_list_path, dry_run=False, verbose=True):
         else:
             anchor_uuid = sim[i - 1]['uuid']
             pos = 'after'
-        moves.append({
-            'action': 'moveNode',
-            'node_uuid': node['uuid'],
-            'target_uuid': anchor_uuid,
-            'position': pos,
-            '_title': want,
-        })
+        moves.append({'action': 'moveNode', 'node_uuid': node['uuid'],
+                      'target_uuid': anchor_uuid, 'position': pos, '_title': want})
         sim.pop(j)
         sim.insert(i, node)
+    return moves
 
-    if not moves:
-        if verbose:
-            print("✅ TOC 顺序正确，无需修复")
-        return True
 
-    print(f"🔧 发现 {len(moves)} 个错位文档:")
-    for mv in moves:
-        print(f"   - {mv['_title']} -> {mv['position']} {mv['target_uuid']}")
+def reorder(book_id, chapter_list_path, dry_run=False, verbose=True, rounds=3):
+    """
+    校验并修复 TOC 顺序。幂等：顺序正确时零修改。
+    返回 True=最终顺序一致；False=存在未修复问题。
 
-    if dry_run:
-        print("(dry-run，未修改)")
-        return False
+    rounds：最多算多少轮。语雀 TOC 写队列有副本延迟，一发移动后立即回读可能读到旧快照
+    → 单轮算出的迁移计划会偏；所以每轮回读不达目标就重新拉 TOC、重新算、再发一轮。
+    """
+    target = load_chapter_titles(chapter_list_path)
 
-    # 逐个提交移动（节点移动有依赖，不批量）。
-    # 单个节点失败重试 3 轮（每轮调用自身 retries=1 防 stdio 抽风），耗尽才中止。
-    for mv in moves:
-        action = 'prependNode' if mv['position'] == 'before' else 'appendNode'
-        ok = False
-        for attempt in range(3):
-            resp = mcporter_call('yuque_update_toc', {
-                'book_id': book_id,
-                'action': action,
-                'action_mode': 'sibling',
-                'node_uuid': mv['node_uuid'],
-                'target_uuid': mv['target_uuid'],
-            }, retries=1)
-            ok = isinstance(resp, dict) and 'data' in resp
-            if ok:
-                break
-            print(f"   ⚠️ 移动失败，重试 ({attempt + 1}/3): {str(resp)[:150]}")
-            time.sleep(2)
-        print(f"   {'✅' if ok else '❌'} 移动: {mv['_title']}")
-        if not ok:
-            print(f"     响应: {str(resp)[:200]}")
-            print("⛔ 移动失败，中止（剩余错位需人工处理）")
+    for rnd in range(1, rounds + 1):
+        cur_nodes = get_toc_docs(book_id)
+        if cur_nodes is None:
             return False
-        time.sleep(0.5)
+        cur_titles = [n['title'] for n in cur_nodes]
 
-    # 全量复验
-    final = get_toc_docs(book_id)
-    if final is None:
+        if verbose:
+            print(f"📖 本地章节: {len(target)} | 语雀文档: {len(cur_titles)}" + (f"（第 {rnd} 轮）" if rnd > 1 else ""))
+
+        if len(cur_titles) > len(target):
+            extra = [t for t in cur_titles if t not in set(target)]
+            print(f"⚠️ 语雀多出 {len(cur_titles) - len(target)} 个文档（不在本地列表）: {extra[:5]}")
+            return False
+        if len(cur_titles) < len(target):
+            missing = [t for t in target if t not in set(cur_titles)]
+            print(f"⚠️ 语雀缺少 {len(target) - len(cur_titles)} 个文档: {missing[:5]}")
+            return False
+
+        moves = _plan_moves(cur_nodes, target, verbose=verbose)
+        if not moves:
+            if verbose:
+                print("✅ TOC 顺序正确，无需修复")
+            return True
+
+        print(f"🔧 发现 {len(moves)} 个错位文档:")
+        for mv in moves:
+            print(f"   - {mv['_title']} -> {mv['position']} {mv['target_uuid']}")
+
+        if dry_run:
+            print("(dry-run，未修改)")
+            return False
+
+        # 逐个提交移动（节点移动有依赖，不批量）。
+        # 单个节点失败重试 3 轮（每轮调用自身 retries=1 防 stdio 抽风），耗尽才中止。
+        aborted = False
+        for mv in moves:
+            action = 'prependNode' if mv['position'] == 'before' else 'appendNode'
+            ok = False
+            for attempt in range(3):
+                resp = mcporter_call('yuque_update_toc', {
+                    'book_id': book_id,
+                    'action': action,
+                    'action_mode': 'sibling',
+                    'node_uuid': mv['node_uuid'],
+                    'target_uuid': mv['target_uuid'],
+                }, retries=1)
+                ok = isinstance(resp, dict) and 'data' in resp
+                if ok:
+                    break
+                print(f"   ⚠️ 移动失败，重试 ({attempt + 1}/3): {str(resp)[:150]}")
+                time.sleep(2)
+            print(f"   {'✅' if ok else '❌'} 移动: {mv['_title']}")
+            if not ok:
+                print(f"     响应: {str(resp)[:200]}")
+                print("⛔ 移动失败，中止（剩余错位需人工处理）")
+                aborted = True
+                break
+            time.sleep(0.5)
+        if aborted:
+            return False
+
+        # 全量复验；该轮未收敛（写队列副本延迟）则重拉 TOC 再算一轮
+        final = get_toc_docs(book_id)
+        if final is None:
+            return False
+        final_titles = [n['title'] for n in final]
+        if final_titles == target:
+            print("✅ 修复完成，TOC 顺序与本地列表完全一致")
+            return True
+        diff = [(i + 1, t, final_titles[i]) for i, t in enumerate(target)
+                if i >= len(final_titles) or final_titles[i] != t]
+        print(f"⚠️ 第 {rnd} 轮复验仍有 {len(diff)} 处不一致" + ("，重算一轮" if rnd < rounds else "（首次前 10 处）"))
+        if rnd < rounds:
+            time.sleep(3)
+            continue
+        for pos, t, c in diff[:10]:
+            print(f"   [{pos}] 期望: {t} | 实际: {c}")
         return False
-    final_titles = [n['title'] for n in final]
-    if final_titles == target:
-        print("✅ 修复完成，TOC 顺序与本地列表完全一致")
-        return True
-    diff = [(i + 1, t, final_titles[i]) for i, t in enumerate(target) if i >= len(final_titles) or final_titles[i] != t]
-    print(f"⚠️ 复验仍有 {len(diff)} 处不一致（首次前 10 处）:")
-    for pos, t, c in diff[:10]:
-        print(f"   [{pos}] 期望: {t} | 实际: {c}")
+
     return False
 
 
@@ -218,7 +206,13 @@ def main():
     parser.add_argument('--book-id', default=None, help='语雀知识库 ID（或环境变量 BOOK_ID）')
     parser.add_argument('--chapter-list', default=None, help='本地章节列表 JSON')
     parser.add_argument('--dry-run', action='store_true', help='只检查不修改')
+    parser.add_argument('--rounds', type=int, default=3, help='最多重算轮数（默认 3，TOC 写队列有副本延迟）')
+    parser.add_argument('--transport', choices=['auto', 'mcp', 'http'], default='',
+                        help='语雀操作通道：auto(默认)/mcp/http(token 直连)')
     args = parser.parse_args()
+
+    if args.transport:
+        os.environ['YUQUE_TRANSPORT'] = args.transport
 
     cfg = load_config()
     book_id = args.book_id or cfg.get('yuque_repo_id', '')
@@ -233,7 +227,7 @@ def main():
         print(f"❌ 章节列表不存在: {chapter_list}")
         sys.exit(1)
 
-    ok = reorder(book_id, chapter_list, dry_run=args.dry_run)
+    ok = reorder(book_id, chapter_list, dry_run=args.dry_run, rounds=args.rounds)
     sys.exit(0 if ok else 1)
 
 
