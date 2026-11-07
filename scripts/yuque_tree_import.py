@@ -884,7 +884,10 @@ def main():
         excludes.add(prog_abs)
         excludes.add(prog_abs + ".tmp")
         log(f"已排除自身账本: {args.progress} (位于导入树内, 防止被当文档导入)", flush=True)
-    rels = [(os.path.relpath(p, args.root), d) for p, d in walk(args.root, excludes)]
+    # 键统一 '/'：Windows 下 os.path.relpath 产生 '\' 键，而 build_toc_md/
+    # expected_paths/backfill_and_verify 拼 rel 用 '/' → toc-md 收尾查账本
+    # KeyError「缺少文档记录」（2026-11-07 kairisei 9036583 实捶）。
+    rels = [(os.path.relpath(p, args.root).replace(os.sep, '/'), d) for p, d in walk(args.root, excludes)]
     log(f"节点总数: {len(rels)} (目录 {sum(1 for _, d in rels if d)} / 文件 {sum(1 for _, d in rels if not d)})", flush=True)
 
     if args.dry:

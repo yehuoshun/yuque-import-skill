@@ -66,10 +66,11 @@
   "imported_at": "2026-10-15T23:59:00+0800"
  },
  "https://github.com/kuuhaku1314/kairisei-ma-ch": {
-  "commit": "1b2aa00",
-  "book_id": 84635422,
-  "book_url": "kairisei-ma-ch-1b2aa00",
-  "imported_at": "2026-10-16T07:35:00+0800"
+  "commit": "9036583",
+  "book_id": 85429425,
+  "book_url": "https://www.yuque.com/yehuoshun/kairisei-ma-ch-9036583",
+  "imported_at": "2026-11-07T18:08:51+0800",
+  "note": "默认分支 main @ 9036583（2026-11-07 13:53:27 +0800「Update server and deployment tooling for 2.0.0」）。开源项目口径（源码树直导，非书稿非资源索引）：Go 私服服务端「乖离性MA」，clean 树 957 节点（44 目录/913 文件）全部直导，docs/BUILD.md、OPERATIONS.md、resources/CDN.md、tools/portable/README.txt、server/battlecore/README.md 等说明文档随树带全。建库 toc-md 单轨：--test 6 试水 → 全量 910 docs/41 dirs 0 失败 → 收尾 PUT toc 960 行/46183 字节 5.0s → 回读 TOC 960（TITLE 44+DOC 916，913 文件+3 分片）结构缺失 0。六查全绿：本地 913==语雀 DOC 916（3 分片）单文档映射 912、缺失 0、分片号连续、全路径唯一 True、幽灵 0（docs 916==TOC DOC 916）、word_count 916/916 全 >0、reconcile 错位 0、回读 913/913（readback 报 3 BAD 均为脚本未剥 wrapper 的假阳性：.rgignore/cdn.json 是 fmt_content 代码栅栏包裹（fmt==remote 逐字符 True），cn602-save-template.json 2MB 分片是 readback 只比对第一片——4 片逐段 fmt==remote 4/4 全等，内容零丢失）。根级 TITLE cmd/docs/server/tools 天然有序在根级 DOC 前，无需归位 PUT。两大坑（Windows 首例大库实捶，已修 skill）：① yuque_tree_import.py 主循环 rels 用 os.path.relpath 在 Windows 产生反斜杠账本键，与 build_toc_md/expected_paths/backfill 的 '/' 键不匹配 → toc-md 收尾 KeyError「缺少文档记录」——已 patch 887 行 rel.replace(os.sep, '/')（账本键统一 '/'，与 legado 账本格式对齐），旧账本键手工归一后 skip 957 补跑成功；② save_prog json.dump 缺 encoding 在 GBK locale 写坏中文键（d1413b3 已修）。账本备份 kairisei-progress.json.bak-before-normalize。历史：1b2aa00=84635422（2026-10-16 旧库全保留）。"
  },
  "https://github.com/tobegit3hub/understand_linux_process": {
   "commit": "5791bcd",
