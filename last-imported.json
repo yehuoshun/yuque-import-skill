@@ -32,7 +32,7 @@
   "book_id": 85404431,
   "book_url": "https://www.yuque.com/yeuhoshun/deepwrite-39e2745",
   "imported_at": "2026-11-07T04:21:00+0800",
-  "note": "默认分支 main @ 39e2745（距上版 ce2b65a +2 commit / 100 文件：JEV 模型设置 + 绘图评测打分、团队提示词审核管理）。prep 4199 节点（362 目录/3837 文件，<5000 单库）。toc-md 全量 PUT 19.3s、0 失败 0 跳过、结构核对 PASS。六查全绿：TOC 4199==账本、全路径唯一 True、缺失 0、对账错位 0、幽灵 0（docs 3837==TOC DOC 3837）、3837 篇逐篇回读 0 异常（md 逐字符相等、代码文件仅多 code fence、6 图传 CDN + 1 ico 占位）、word_count 0 篇为 0。⚠️ 口径差异：本次整棵导入含 docs/images/（png 传 CDN 成图片文档、svg 文本成 code-fence 文档），docs/*.md 内对图仍是相对引用 images/… → 4 篇设计文档配图在语雀端为相对死链；与上版 ce2b65a「改 CDN + 删 images 目录」口径不同，待老板拍板是否按老口径重导。move-stack 3 次全 {} 挂账（cookie 写侧风控）。用时 4h34m（含整点配额退避）。历史库 ce2b65a=85356958 保留。"
+  "note": "默认分支 main @ 39e2745（距上版 ce2b65a +2 commit / 100 文件：JEV 模型设置 + 绘图评测打分、团队提示词审核管理）。prep 4199 节点（362 目录/3837 文件，<5000 单库）。toc-md 全量 PUT 19.3s、0 失败 0 跳过、结构核对 PASS。六查全绿：TOC 4199==账本、全路径唯一 True、缺失 0、对账错位 0、幽灵 0（docs 3837==TOC DOC 3837）、3837 篇逐篇回读 0 异常、word_count 0 篇为 0。图片：初导按整树入库（png 3 张传 CDN、svg 19 张成 code-fence 文档）；老板 11-07 拍板「修 CDN、不删 images」→ 22 张全部上传 CDN（png 复用初导已传的 3 个 URL，svg 19 张新传，throttle 2s），6 篇引用文档（README/README.zh-CN + 4 篇 docs 设计文档）本地改写 25 处引用后 PUT 回写，回读 6/6 字节一致、残留相对引用 0；images 目录节点保留不动。move-stack 3 次全 {} 挂账（cookie 写侧风控）。用时 4h34m（含整点配额退避）。历史库 ce2b65a=85356958 保留。"
  },
  "https://github.com/morluto/rea": {
   "commit": "bacc1e384",
