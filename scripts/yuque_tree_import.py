@@ -621,7 +621,9 @@ def save_prog(prog, path):
     if d:  # 2026-10-21 aibydoing 实捶：--progress 传裸文件名时 dirname=''，makedirs('') 直接崩
         os.makedirs(d, exist_ok=True)
     tmp = path + ".tmp"
-    json.dump(prog, open(tmp, "w"), ensure_ascii=False)
+    # encoding="utf-8"：Windows 默认 locale 是 GBK，ensure_ascii=False 的中文键会写坏，
+    # 下次 load_prog 按 utf-8 读直接 UnicodeDecodeError（2026-11-07 be28711 实捶）
+    json.dump(prog, open(tmp, "w", encoding="utf-8"), ensure_ascii=False)
     os.replace(tmp, path)
 
 def flush_group(cfg, login, token, base, book, items, parent_uuid, batch_size, parent_label=""):

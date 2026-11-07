@@ -19,7 +19,8 @@ import json, os, re, sys
 from collections import defaultdict
 
 toc_file, root = sys.argv[1], sys.argv[2]
-t = json.load(open(toc_file))['data']
+# encoding="utf-8"：Windows 默认 GBK locale 读中文 TOC 直接 UnicodeDecodeError（2026-11-07）
+t = json.load(open(toc_file, encoding='utf-8'))['data']
 by = {n['uuid']: n for n in t}
 
 
