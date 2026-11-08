@@ -132,10 +132,11 @@ def convert(text, rm_headings, prefix, stats):
             if info.startswith("{.python"):
                 mk = None
                 if body and body[0].strip().startswith("#@tab"):
-                    mk = re.match(r'\s*#@tab\s+(\w+)', body[0]).group(1)
-                if mk in ("pytorch", "all"):
+                    mk = re.match(r'\s*#@tab\s+([\w,\s]+)', body[0]).group(1).strip()
+                frames = [f.strip().lower() for f in (mk or "").split(",") if f.strip()]
+                if "pytorch" in frames or "all" in frames:
                     stats["code_keep"] += 1
-                    bl = [l for l in body if not re.match(r'^\s*#@tab\s+\w+\s*$', l)]
+                    bl = [l for l in body if not re.match(r'^\s*#@tab\s+', l)]
                     while bl and not bl[0].strip():
                         bl.pop(0)
                     while bl and not bl[-1].strip():

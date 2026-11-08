@@ -49,7 +49,7 @@ def src_cells(fp):
 
 
 def main():
-    nav = json.load(open("/home/admin/.openclaw/workspace/tmp/d2l/d2l_nav.json"))
+    nav = json.load(open(os.environ.get("NAV_JSON", os.path.join(HERE, "d2l_nav.json")), encoding="utf-8"))
     stat = collections.Counter()
     ex = collections.defaultdict(list)
     for path, title in nav:

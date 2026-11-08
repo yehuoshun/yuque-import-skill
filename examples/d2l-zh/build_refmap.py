@@ -76,7 +76,7 @@ def main():
     entries = re.findall(r'@\w+\{\s*([^,\s]+)\s*,(.*?)\n\}', bib, re.S)
     key2zid = {}
     key2ref = {}
-    used = set(l.strip() for l in open('/tmp/keys.txt') if l.strip())
+    used = set(l.strip() for l in open(os.environ.get("KEYS_FILE", os.path.join(HERE, "keys.txt")), encoding="utf-8") if l.strip())
 
     def norm(s):
         return re.sub(r'[^0-9a-z\u4e00-\u9fff]', '', s.lower())

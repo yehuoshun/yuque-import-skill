@@ -114,7 +114,7 @@ def main():
     for rel, src_md, site_html in plan:
         dest = os.path.join(CLEAN, rel)
         os.makedirs(os.path.dirname(dest), exist_ok=True)
-        depth = rel.count("/")
+        depth = rel.replace("\\", "/").count("/")
         prefix = "../" * depth
         if src_md is None:
             md, n = zref_md()

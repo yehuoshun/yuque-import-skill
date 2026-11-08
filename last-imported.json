@@ -1,4 +1,17 @@
 {
+ "https://developers.google.com/machine-learning/crash-course/prereqs-and-prework?hl=zh-cn": {
+  "book_id": 85432962,
+  "book_url": "https://www.yuque.com/yehuoshun/mlcc-zh-20261108",
+  "imported_at": "2026-11-08T02:40:00+0800",
+  "note": "网站口径（Google Devsite 静态站，正文站点唯一载体——github.com google/machine-learning-crash-course、tensorflow/crash-course 全 404 无源仓库）。流程：probe 页 leftnav 抽 112 条有序 [path,中文标题]（含 24 条 #whats_next 锚点条目）→ 88 distinct 页抓取（0 失败，UA+1.2s 间隔）；HTMLParser 全手写栈式解析器转 md（tmp/mlcc_convert.py）：DROP 全套 devsite chrome（banner/article-meta/breadcrumb/thumb-rating/actions/feature-tooltip/feedback/panel/concierge/snackbar/tooltip/steps-* 等 + <style> 内嵌 ml.css）、h1/h2 渲染只取非 drop 子树 inline（书签 UI「使用集合让一切井井有条」藏在 h1>devsite-actions>feature-tooltip 里）、smartling 占位符 </ph> 字面残留 handle_data 剥除、帮助中心/发送反馈 chrome 锚 inline 跳过、JUNK_TEXT 行过滤只放纯 UI 词（上一页/下一页/帮助中心塞进过滤会把 quiz 页清空——踩坑回滚）。正文形态：math 0（zh 站无 LaTeX）、pre 21（多为句例非代码）、表 30→md 表格、iframe 13（devsite 交互播放器静态抓不到→「> 🖱 交互组件：请在原页面操作」引用块）、colab 外链保留、quiz 页=引导句+后续步骤。图：130 unique 下载 10.4MB（0 失败），引用 121 全 CDN（rewrite_images throttle 3 --cookie-config ~/.yuque/config.json）；本次新坑：转换器写引用全根级 _img/ 不带 ../ 前缀 → 40 个子目录 md 解析失败 → 深度补前缀 pass 修（d2l 反向同款）。树：88 md（12 根级章 DOC + 13 目录 TITLE + 62 子页）+4 子章 DOC = 100 节点；_img 移出导入根（坑③）→ test 6 → 全量 --toc-md 100 行 PUT 1.0s TOC 100 结构 PASS 0 失败。六查全绿：结构 PASS 88==88 单文档映射 88、ghosts 0、word_count 88 全>0、reconcile 错位 0、回读 12 picks 全 MATCH（CRLF 归一——remote 带 CRLF 111 个；embeddings/motivation 是幻名，正确为 obtaining-embeddings/embedding-space 等 4 子页）。根级 TITLE 12 章目录天然有序在根 DOC 之前（d2l/kairisei/genai 同款先例，无需归位）。分组未挂（move-stack 用户已示意不用管，书留分组外）。cookie 记忆点：C:\\Users\\yehuoshun\\.yuque\\config.json（用户 m01470 提供，rewrite_images/move-stack 都要 --cookie-config 显式指）。"
+ },
+ "https://zh.d2l.ai": {
+  "commit": "e6b18cce",
+  "book_id": 85432793,
+  "book_url": "https://www.yuque.com/yehuoshun/d2l-zh-e6b18cce",
+  "imported_at": "2026-11-08T01:30:00+0800",
+  "note": "网站口径 + 源仓库 md（同 2026-10-21 首导，例程 examples/d2l-zh/ 全流程复跑）：站上公式 MathJax SVG 无 TeX 源 → 吃 d2l-ai/d2l-zh master @ e6b18cce 的 .md 真 LaTeX，站点 HTML 只当标题编号/numref oracle。nav 重建：python urllib 抓 index.html（PS5 Invoke-WebRequest Latin-1 mojibake 坑）→ extract_nav.py 抽 sidebar 140 条 [path,中文标题]；fetch_pages.py 抓 140 页；gen_keys.py 生成 keys.txt（build_refmap 的 /tmp/keys.txt 硬编码已改 KEYS_FILE env）；refmap 同口径 numref 339/defs 778/key2ref 159。只留 PyTorch（analyze_tabs2 证据 457 mxnet-only + 134 空面板）。build clean 140 文件/16 目录=156 节点（00-前言/01-安装/02-符号/16 章目录/19-参考文献）。本次新坑：① build.py depth=rel.count(\"/\") 在 Windows 反斜杠下恒 0 → 章内图片引用写成裸 _img/ 全断，修为 rel.replace(chr(92), \"/\").count(\"/\")；② convert code-cell 多框架 #@tab pytorch, paddle 48 处残留 → 按 [,\\s]+ 拆判修复，rebuild 清零。184 张图 CDN（rewrite_images throttle 3，--dry 复验 本地缺失 0）→ _img 移出导入根（坑③）→ test 6 → 全量 --toc-md 3 分钟（TOC 156=140 DOC+16 TITLE 结构 PASS）。六查全绿：结构 PASS 140==140、ghosts 0、word_count 140 全>0、reconcile 错位 0、根级 TITLE 16 章目录天然有序（在 4 根 DOC 之前）、回读 6 picks 全 MATCH。move-stack 挂文章收集 36149506：cookie 由用户提供，首轮 10 次 PUT 返回空对象未过，传播窗后重试中。cookie 敏感：不入台账。 历史：2026-10-21 首导=84822487（d2l-zh-20261021，156 节点，保留）。"
+ },
  "https://github.com/microsoft/Generative-AI-for-beginners-dotnet": {
   "commit": "d74deb214",
   "book_id": 85431208,
@@ -366,13 +379,6 @@
   "book_url": "hrl-boyuai-20261021",
   "imported_at": "2026-10-21T17:19:00+0800",
   "note": "张伟楠、沈键、俞勇《动手学强化学习》在线版（dumi/umi SSR 站）。网站口径：27 节点（21 章正文 + 前言 + 总结展望 + 课件页 + 3 TITLE）；⚠️ 公式 1737 处全是 MathJax SVG、站上无 LaTeX 源/无 MathML/无 alttext → 抽 <svg> 传 CDN 当图（795 唯一，嵌套 svg 需贪婪匹配、ex→px）；课件 17 个 PDF 只留官方 OSS 直链不上传。"
- },
- "https://zh.d2l.ai": {
-  "commit": "e6b18cce",
-  "book_id": 84822487,
-  "book_url": "d2l-zh-20261021",
-  "imported_at": "2026-10-21T19:10:00+0800",
-  "note": "网站口径 + 源仓库 md（来源标注按硬规则 11）：站上公式是 MathJax SVG 无 TeX 源 → 改吃 d2l-ai/d2l-zh master @ e6b18cce 的 .md 真 LaTeX，站点 HTML 只当标题编号/numref 渲染文本 oracle；只留 PyTorch（4 框架选项卡，未标 #@tab = mxnet）→ 140 文档 + 16 章目录 = 156 节点；184 张图全传 CDN；标题编号 923 / 公式编号 76（=源 eqlabel 全覆盖）/ 表 7 / 参考文献 159 条（从站上 zreferences 页倒推）；六查全绿（幽灵 0 / 占位 0 / fail 0）。中途停手一次（图片目录误留导入根 → 节点 341≠156，移出后续跑）+ 清 1 篇未落账孤儿 doc。转换器 examples/d2l-zh/"
  },
  "https://datawhalechina.github.io/pumpkin-book/": {
   "commit": "58add39",
