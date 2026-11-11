@@ -114,7 +114,7 @@ python3 scripts/yuque_toc_reconcile.py --root /path/to/dir --book <book_id> --pr
 | 创建文档 | POST `/repos/{book}/docs` | title, format=markdown, body（≤4MB，超 512KB 自动分段，`--max-body` 可调） |
 | 挂载/移动/删除节点 | PUT `/repos/{book}/toc` | action: appendNode/prependNode/editNode/removeNode; action_mode: sibling/child; type: DOC/TITLE/LINK |
 | 建分组 | PUT toc | action=appendNode, action_mode=child, type=TITLE, title=分组名 |
-| 知识库分组（书架 stack）移动 | PUT `/api/mine/book_stack/move`（Web API，cookie/ctoken）body `{"targetStackId": 数字, "targetBookIds": [book_id]}`；**旧 `PUT /api/books/{id}` + `{"stack_id": N}` 返回成功但不生效（2026-08-31 修，2026-10-12 实踩复现）** | stack_id 是语雀分组（书架）ID，非 TOC 分组；需 cookie/ctoken 认证（v2 token 不支持）；移动后必须回查 book_stacks 验证 |
+| 知识库分组（书架 stack）移动 | PUT `/api/mine/book_stack/move`（Web API，cookie/ctoken）body `{"targetStackId": 数字, "targetBookIds": [book_id]}`；**旧 `PUT /api/books/{id}` + `{"stack_id": N}` 返回成功但不生效（2026-08-31 修，2026-10-12 实踩复现）** | stack_id 是语雀分组（书架）ID，非 TOC 分组；需 cookie/ctoken 认证（v2 token 不支持）；移动后必须回查 book_stacks 验证。**只对"已有分组映射"的库生效**：未分组库 move 恒返 `200 {}` 且不落位（2026-11-12 实锤，映射只在建库时建立 → 新库务必 `create-book --stack-id` 建库即带分组；已孤儿化的库任何 API 都补不上，只能界面手动拖） |
 | 查全部分组 | `yuque_get_book_stacks`（yuque-mcp 工具） | 返回所有 stack：id/name/books；MCP 全组工具：create/rename/delete/sort/update_book_stack |
 | 建文档节点 | PUT toc | action=appendNode, action_mode=child, type=DOC, doc_ids=[doc_id] |
 | 移动 | PUT toc | action=appendNode, action_mode=child, target_uuid=新父, node_uuid=当前 |
@@ -136,7 +136,7 @@ python3 scripts/yuque_toc_reconcile.py --root /path/to/dir --book <book_id> --pr
 - **removeNode 删子树乐观回显陷阱（2026-10-12 实捶）**：`PUT /toc {action: removeNode}` 删带子节点的 TITLE 时，响应会**乐观回显残留节点（看似正常），实际执行却把整库 TOC 连带清掉**，甚至文档本体被删（抽查 /docs 404）。铁律：**任何删除/移动后，必须立刻重新 GET /toc + GET /docs/{id} 双重复查**，不能信删除响应；如整树重导，逐个 `DELETE /repos/{book}/docs/{id}`（200）比 removeNode 干净——删除后同样复查。教训来源：2026-10-12 gitref 误导移除时 gitref 8 篇被连带删除
 - **网页抓取必须滤导航**：抓整站 HTML→md 时，页面左侧/顶部导航栏（品牌、菜单、章节列表）会混进正文，每篇重复。抓取器应只提取正文容器（如 gitref 的 `id="content_box"` 包裹区），导航区块整体丢弃。gitref 初版 nav 混入 8 篇、重抓修复（2026-10-12）
 - 限流：429/5xx 指数退避重试（脚本已内置 4 次）
-- **知识库分组 ≠ TOC 分组**：TOC 分组是文档树目录；知识库分组（stack）是把整个知识库归类到个人空间书架（如「开源项目」）。v2 token 拿不到 stack 接口，必须 cookie/ctoken（yuque-mcp 已内置，用 `yuque_update_book_stack(book_id, stack_id)`；手动版 `PUT /api/books/{id}` + `{"stack_id": N}`）。2026-10-12 踩坑：误把 stack 36149506（文章收集）当开源项目，靠 MCP `get_book_stacks` 才发现真分组是 57018723。**移动后必须用 get_book_stacks 验证分组名而非只看 stack_id 数值**
+- **知识库分组 ≠ TOC 分组**：TOC 分组是文档树目录；知识库分组（stack）是把整个知识库归类到个人空间书架（如「开源项目」）。v2 token 拿不到 stack 接口，必须 cookie/ctoken（yuque-mcp 已内置，用 `yuque_update_book_stack(book_id, stack_id)`；**注意 `PUT /api/books/{id}` + `{"stack_id": N}` 是假成功，2026-11-12 实锤它只改冗余列、界面不认**）。2026-10-12 踩坑：误把 stack 36149506（文章收集）当开源项目，靠 MCP `get_book_stacks` 才发现真分组是 57018723。**移动后必须用 get_book_stacks 验证分组名而非只看 stack_id 数值**
 - **二进制检测 hi-byte>0.9 启发式是雷（2026-10-12 实捶，v1.1.3 已删）**：中文 UTF-8 三字节全 >127，中文密集文本（.md/.cs 注释/.txt）比例轻易超 0.9 → 被误判二进制 → 正文丢成占位注释，HowToCook 46 篇/deepwrite 63 篇/Nulab 12 篇等 21 库 169 篇中招。判定文本只用「UTF-8 解码成功 + 无 NUL 字节」；真二进制由 NUL/解码失败捕获。已受损库用 `yuque_repair_placeholders.py`（TOC 路径映射回填）修复
 - **docs 列表分页用 `offset` 不用 `page`（2026-11-01 实捶）**：`GET /repos/{book}/docs?limit=100&offset=N` 才是正确滚动（offset=0/100/200/… 全覆盖 440 docs）；`page` 参数被忽略（每页总返同一批 100 条）、limit>100 返 0、不传 offset 永远第一页。幽灵/占位扫描类脚本一律 offset 滚动 + meta.total 兜底
 - **slug/文件名正则字符类别把字母 s 匹配进去（坑 20，2026-11-01 实捶）**：raw string 写 `r"[\\...\\s]"`（双反斜杠）时正则把 `\\s` 解析成「字面反斜杠 + 字母 s」→ 文件名所有 s 被替换成 `-`（#188 node inspector → node in-pector）；要空白字符类必须单反斜杠 `\s`
@@ -154,13 +154,15 @@ python3 scripts/yuque_toc_reconcile.py --root /path/to/dir --book <book_id> --pr
 
 ```bash
 # 1. 克隆/更新 + 干净副本 + 节点数
-python3 scripts/yuque_repo_import.py prep --url <git-url> --dir /home/admin/.openclaw/workspace/tmp
-# 2. dry-run 核数 → 3. 建库 → 4. 移分组（内置等待+验证）
-python3 scripts/yuque_repo_import.py create-book --name "<项目名>（<commit>）" --slug <项目名>-<commit> --desc "<url> @ <commit>"
-python3 scripts/yuque_repo_import.py move-stack --book-id <book_id> --stack-id 57018723
+python3 scripts/yuque_repo_import.py prep --url <git-url> --dir <tmp目录>
+# 2. dry-run 核数 → 3. 建库（带 --stack-id，建库即入分组，一步到位）
+python3 scripts/yuque_repo_import.py create-book --name "<项目名>（<commit>）" --slug <项目名>-<commit> --desc "<url> @ <commit>" --stack-id 57018723
+# 4. （仅在老库缺分组时）move-stack --book-id <id> --stack-id <sid>；对未分组库会立刻报错，别指望它
 # 5. test 6 → 全量（后台+心跳 25/50/75/完成）→ 对账 → 验收六查
 python3 scripts/yuque_tree_import.py --root <clean_dir> --book <book_id> --progress <账本> --test 6
 ```
+
+> ⚠️ 2026-11-12 起：**建库必须带 `--stack-id`**。语雀的分组映射只在建库那一刻建立，库一旦落在"未分组"，事后任何 API 都补不上（move 恒返 `200 {}`），只能到界面手动拖。`create-book` 会读 cookie 走 Web API 建库并回查分组名，没读到 cookie 会明确警告。
 
 完整 SOP + 坑清单：`references/github-repo-to-yuque.md`（必读，含 7 条踩过的坑）。
 

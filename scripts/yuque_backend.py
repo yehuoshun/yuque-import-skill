@@ -14,8 +14,12 @@
 
 HTTP 模式的边界:
   - 建库 / 建文档 / 读 TOC / 改 TOC：只要 token（X-Auth-Token）
-  - 把库移进分组（stack）：语雀只有 Web API（cookie + ctoken），token 干不了；
-    cookie 缺失时跳过并提示，不阻断导入（库先落在默认分组，回头手动拖一下即可）
+  - 分组（stack）只有 Web API（cookie + ctoken）能干，token 不行；
+  - 重要（2026-11-12 实测）：语雀的分组映射**只在建库那一刻建立**。
+    库一旦建在"未分组"状态，事后没有任何接口能补（PUT /api/mine/book_stack/move
+    对这类库返回 200 但不生效，PUT /api/books/{id} 的 stack_id 只是冗余列，界面不认）。
+    所以要进分组，必须在建库时就带 stack_id：`yuque_create_repo(..., stack_id=xxx)`
+    会走 Web API（POST /api/books 带 stack_id）。cookie 缺失时退化成 v2 建库（进默认/未分组）。
 """
 import json
 import os
@@ -32,7 +36,20 @@ from yuque_tree_import import load_token, resolve_token  # noqa: E402
 
 API = "https://www.yuque.com/api/v2"
 WEB = "https://www.yuque.com/api"
-DEFAULT_COOKIE_CONFIG = "~/.openclaw/workspace/skills/yuque-ai-mcp/config/config.json"
+
+# ---- cookie 配置自动发现 ----
+# 历史包袱：默认值曾写死 ~/.openclaw/... 这个 Linux 路径，本机（Windows）不存在，
+# 于是 _cookie_cfg() 永远返回 None、移动分组被静默跳过，库全落在未分组。
+# 现在按 "环境变量 → 工作区 config/ → 仓库内 config/ → 旧 openclaw 路径" 顺序找。
+SKILL_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))      # code/yuque-import-skill
+WORKSPACE_DIR = os.path.dirname(os.path.dirname(SKILL_DIR))                  # DeepSeekWorkSpace
+DEFAULT_COOKIE_CONFIG = os.path.join(WORKSPACE_DIR, "config", "yuque_cookies.txt")
+COOKIE_CONFIG_CANDIDATES = [
+    DEFAULT_COOKIE_CONFIG,
+    os.path.join(WORKSPACE_DIR, "config", "yuque_cookie.json"),
+    os.path.join(SKILL_DIR, "config", "config.json"),
+    "~/.openclaw/workspace/skills/yuque-ai-mcp/config/config.json",
+]
 MCP_WORKDIR = os.environ.get("MCP_WORKDIR") or os.path.expanduser("~/.openclaw/workspace")
 
 _MODE = None          # 解析后的 'mcp' | 'http'
@@ -193,27 +210,76 @@ def _slugify(name):
 
 
 def _cookie_cfg(path=None):
-    p = os.path.expanduser(path or os.environ.get("YUQUE_COOKIE_CONFIG") or DEFAULT_COOKIE_CONFIG)
-    if not os.path.isfile(p):
-        return None
-    try:
-        cfg = json.load(open(p, encoding="utf-8"))
-    except Exception:  # noqa: BLE001
-        return None
-    return cfg if cfg.get("cookie") else None
+    """读 cookie/ctoken。两种格式都认：
+    1) JSON：{"cookie": "...", "ctoken": "..."}（CI 里 workdir/cookie.json 就是这种）
+    2) 纯文本：一行或多行 Cookie 串（本机 config/yuque_cookies.txt 这种，ctoken 从中提取）
+    查找顺序：显式参数 → YUQUE_COOKIE_CONFIG → COOKIE_CONFIG_CANDIDATES。
+    """
+    explicit = path or os.environ.get("YUQUE_COOKIE_CONFIG")
+    for p in ([explicit] if explicit else []) + COOKIE_CONFIG_CANDIDATES:
+        if not p:
+            continue
+        p = os.path.expanduser(p)
+        if not os.path.isfile(p):
+            continue
+        try:
+            raw = open(p, encoding="utf-8").read()
+        except Exception:  # noqa: BLE001
+            continue
+        if p.lower().endswith(".json"):
+            try:
+                cfg = json.loads(raw)
+            except Exception:  # noqa: BLE001
+                continue
+            if isinstance(cfg, dict) and cfg.get("cookie"):
+                return cfg
+            continue
+        cookie = " ".join(x.strip() for x in raw.splitlines() if x.strip())
+        if cookie.lower().startswith("cookie:"):
+            cookie = cookie.split(":", 1)[1].strip()
+        if "yuque_ctoken" not in cookie and "_yuque_session" not in cookie:
+            continue
+        m = re.search(r"yuque_ctoken=([^;\s]+)", cookie)
+        return {"cookie": cookie, "ctoken": m.group(1) if m else None}
+    return None
 
 
 # ---------------------------------------------------------------- HTTP 版各操作
-def _http_create_repo(name, description, slug=None, public=0, login_name=None):
+def _http_create_repo(name, description, slug=None, public=0, login_name=None, stack_id=None):
+    """建库。给了 stack_id 且能读到 cookie 时走 Web API（POST /api/books 带 stack_id）——
+    语雀的分组映射只在建库那一刻建立，事后再也补不上（见模块头注释）。"""
+    slug = slug or _slugify(name)
+    if stack_id:
+        cfg = _cookie_cfg()
+        if cfg:
+            body = {"name": name, "type": "Book", "public": int(public),
+                    "description": description or "", "stack_id": int(stack_id)}
+            if slug:
+                body["slug"] = slug
+            d = _web_api(cfg, "POST", f"{WEB}/books", body)
+            if isinstance(d, dict) and d.get("data"):
+                return d["data"]
+            return d
     body = {"name": name, "description": description or "", "public": int(public),
             "type": "Book"}
-    slug = slug or _slugify(name)
     if slug:
         body["slug"] = slug
     d = _api("POST", f"/users/{login_name or login()}/repos", body)
     if isinstance(d, dict) and d.get("data"):
         return d["data"]
     return d
+
+
+def _stack_of(stacks, book_id):
+    """在 book_stacks 返回里找某库当前所在的分组；找不到（未分组/读取失败）返回 None"""
+    data = stacks.get("data") if isinstance(stacks, dict) else stacks
+    for s in data or []:
+        if not isinstance(s, dict):
+            continue
+        for b in s.get("books") or []:
+            if str(b.get("id")) == str(book_id):
+                return s
+    return None
 
 
 def _http_update_stack(book_id, stack_id, cookie_config=None):
@@ -226,28 +292,19 @@ def _http_update_stack(book_id, stack_id, cookie_config=None):
             time.sleep(20)
         _web_api(cfg, "PUT", f"{WEB}/mine/book_stack/move",
                  {"targetStackId": int(stack_id), "targetBookIds": [int(book_id)]})
-        time.sleep(3)
+        time.sleep(1.3)                      # web API 限 1 QPS，别刷进风控
         stacks = _web_api(cfg, "GET", f"{WEB}/mine/book_stacks")
-
-        def find(o):
-            if isinstance(o, dict):
-                if o.get("id") == int(stack_id):
-                    return o
-                for v in o.values():
-                    r = find(v)
-                    if r:
-                        return r
-            elif isinstance(o, list):
-                for v in o:
-                    r = find(v)
-                    if r:
-                        return r
-            return None
-
-        s = find(stacks)
-        books = s.get("books", []) if isinstance(s, dict) else []
-        if any(str(b.get("id")) == str(book_id) for b in books):
+        if not isinstance(stacks, dict) or "error" in stacks:
+            continue                         # 读失败别误判，下一轮重试
+        s = _stack_of(stacks, book_id)
+        if s and str(s.get("id")) == str(stack_id):
             return {"success": True, "stack": s.get("name")}
+        if attempt == 0 and not s:
+            # 库还在"未分组"且 move 没反应 → 语雀不会给已建好的库补映射，重试 10 轮纯属白等
+            return {"success": False, "reason": (
+                "语雀接口无法给已建好的未分组库补分组：分组映射只在建库时建立，"
+                "move 对这类库返回 200 但不生效。请改用建库时带 stack_id"
+                "（yuque_create_repo 的 stack_id 参数），或到语雀界面手动拖拽")}
     return {"success": False, "reason": "验证失败：库尚未落到目标分组（稍后重试或手动拖）"}
 
 
@@ -268,7 +325,7 @@ def call(tool, args_dict, timeout=60, retries=1):
     if tool == "yuque_create_repo":
         d = _http_create_repo(a.get("name", ""), a.get("description", ""),
                               slug=a.get("slug"), public=a.get("public", 0),
-                              login_name=a.get("login"))
+                              login_name=a.get("login"), stack_id=a.get("stack_id"))
         return d if isinstance(d, dict) else {"error": str(d)[:300]}
     if tool == "yuque_update_book_stack":
         return _http_update_stack(a.get("book_id"), a.get("stack_id"), a.get("cookie_config"))

@@ -110,8 +110,37 @@ def cmd_prep(args):
     return 0
 
 
-# ---------- 建库（v2 token） ----------
+# ---------- 建库（默认走 Web API 带 stack_id） ----------
 def cmd_create_book(args):
+    """建库。语雀的分组映射**只在建库那一刻建立**，事后再也补不上
+    （PUT /api/mine/book_stack/move 对未分组库恒返 200 但不生效），
+    所以有 cookie 时直接走 Web API `POST /api/books` 带 stack_id，一步到位。
+    """
+    import yuque_backend as yb
+    cfg = yb._cookie_cfg() if args.stack_id else None
+    if cfg:
+        body = {"name": args.name, "type": "Book", "public": int(args.public),
+                "description": args.desc or "", "stack_id": int(args.stack_id)}
+        if args.slug:
+            body["slug"] = args.slug
+        d = {}
+        for attempt in range(1, 6):
+            d = yb._web_api(cfg, "POST", f"{yb.WEB}/books", body)
+            if isinstance(d, dict) and d.get("data"):
+                break
+            if "slug" in str(d) and attempt < 5 and args.slug:
+                print(f"[create-book] slug {body.get('slug')} 冲突, 追加 -{attempt + 1} 重试", flush=True)
+                body["slug"] = f"{args.slug}-{attempt + 1}"
+                continue
+            raise RuntimeError(f"建库失败: {str(d)[:300]}")
+        data = d["data"]
+        time.sleep(1.3)                      # web API 限 1 QPS
+        s = yb._stack_of(yb._web_api(cfg, "GET", f"{yb.WEB}/mine/book_stacks"), data.get("id"))
+        print(f"[create-book] id={data.get('id')} name={data.get('name')} slug={data.get('slug')} "
+              f"分组={s.get('name') if s else '未分组（异常！）'}")
+        print("[create-book] 分组映射已在建库时建立，不用再跑 move-stack。下一步: yuque_tree_import.py")
+        return 0
+    # 没读到 cookie → 只能用 v2 建库，库会落在未分组，事后无法补（界面手动拖是唯一出路）
     token = load_token("TOKEN_L91")
     payload = {"name": args.name, "slug": args.slug or None, "description": args.desc or "",
                "public": int(args.public)}
@@ -129,15 +158,18 @@ def cmd_create_book(args):
             payload["slug"] = f"{args.slug}-{attempt + 1}"
     data = d.get("data", d)
     print(f"[create-book] id={data.get('id')} name={data.get('name')} slug={data.get('slug')}")
-    print(f"[create-book] 下一步: move-stack --book-id {data.get('id')} --stack-id {args.stack_id}")
+    print("[create-book] ⚠️ 没读到 cookie 配置（config/yuque_cookies.txt 或 YUQUE_COOKIE_CONFIG），"
+          "库会落在『未分组』，而语雀没有事后补分组的接口 —— 只能到界面手动拖。")
     return 0
 
 
 # ---------- 移入分组（cookie/ctoken Web API） ----------
 def load_cookie_cfg(cookie_config):
-    c = json.load(open(os.path.expanduser(cookie_config), encoding="utf-8"))
-    if not c.get("cookie"):
-        raise RuntimeError("config.json 里没有 cookie")
+    """cookie 配置：JSON 或纯文本 Cookie 串都认（复用 yuque_backend 的自动发现逻辑）"""
+    import yuque_backend as yb
+    c = yb._cookie_cfg(cookie_config)
+    if not c:
+        raise RuntimeError(f"没找到 cookie 配置（{cookie_config or '自动发现全部失败'}）")
     return c
 
 
@@ -185,30 +217,25 @@ def cmd_move_stack(args):
         # 验证：move 接口成功/失败都返回 200+{}，必须回查 book_stacks 确认落在目标分组
         time.sleep(3)
         stacks = web_api(cfg, "GET", "https://www.yuque.com/api/mine/book_stacks")
-
-        def find_stack(o):
-            if isinstance(o, dict):
-                if o.get("id") == int(args.stack_id):
-                    return o
-                for v in o.values():
-                    r = find_stack(v)
-                    if r:
-                        return r
-            elif isinstance(o, list):
-                for v in o:
-                    r = find_stack(v)
-                    if r:
-                        return r
-            return None
-
-        s = find_stack(stacks)
-        books = s.get("books", []) if isinstance(s, dict) else []
-        if any(str(b.get("id")) == str(args.book_id) for b in books):
-            print(f"[move-stack] 验证通过: {args.book_id} ∈ {s.get('name')} (stack {args.stack_id}) ✅")
-            return 0
-        print(f"[move-stack] 验证第 {attempt + 1} 次未通过，重试...", flush=True)
-    raise RuntimeError(f"验证失败: 库 {args.book_id} 不在分组 {args.stack_id}({s and s.get('name')}); "
-                       f"稍等几分钟重跑 move-stack --no-wait 通常可归位")
+        cur = None
+        for st in (stacks if isinstance(stacks, list) else (stacks.get("data") or [])):
+            if not isinstance(st, dict):
+                continue
+            if any(str(b.get("id")) == str(args.book_id) for b in (st.get("books") or [])):
+                cur = st
+                if str(st.get("id")) == str(args.stack_id):
+                    print(f"[move-stack] 验证通过: {args.book_id} ∈ {st.get('name')} (stack {args.stack_id}) ✅")
+                    return 0
+        # 2026-11-12 实锤：库压根不在任何分组 → 语雀不会给已建好的库补映射，重试纯属白等
+        if attempt == 0 and cur is None:
+            raise RuntimeError(
+                f"库 {args.book_id} 当前不在任何分组，move 返回 {{}} 是正常的无效响应。"
+                "语雀的分组映射只在建库那一刻建立，事后没有接口能补 —— "
+                "正确做法是 create-book --stack-id 建库即带分组，剩下的只能到界面手动拖。")
+        print(f"[move-stack] 验证第 {attempt + 1} 次未通过（当前: "
+              f"{cur.get('name') if cur else '未分组'}），重试...", flush=True)
+    raise RuntimeError(f"验证失败: 库 {args.book_id} 不在分组 {args.stack_id}（当前: "
+                       f"{cur.get('name') if cur else '未分组'}）")
 
 
 def main():
@@ -220,7 +247,7 @@ def main():
     p.add_argument("--dir", required=True, help="工作目录（建议 workspace/tmp/ 下）")
     p.set_defaults(fn=cmd_prep)
 
-    p = sub.add_parser("create-book", help="建知识库（v2 token）")
+    p = sub.add_parser("create-book", help="建知识库（默认 Web API 带 stack_id，建库即入分组）")
     p.add_argument("--name", required=True, help="库名，按规范: 项目名（commit id）")
     p.add_argument("--slug", default=None)
     p.add_argument("--desc", default="")
@@ -233,7 +260,7 @@ def main():
     p.add_argument("--book-id", required=True)
     p.add_argument("--stack-id", type=int, default=DEFAULT_STACK)
     p.add_argument("--cookie-config",
-                   default=os.path.expanduser("~/.openclaw/workspace/skills/yuque-ai-mcp/config/config.json"))
+                   default=None, help="cookie 配置（JSON 或纯文本 Cookie 串）；默认自动发现")
     p.add_argument("--wait", type=int, default=30,
                   help="建库后等待秒数(默认 30; 2026-10-13 两次实踩需 ~45s+ 才可移, 旧默认 10 不够)")
     p.add_argument("--no-wait", action="store_true", help="跳过移动前等待（重复移动用）")

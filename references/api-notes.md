@@ -2,7 +2,16 @@
 
 > 基地址：`https://www.yuque.com/api/v2`，认证头：`X-Auth-Token: <token>`
 
-⚠️ **cookie Web API 写侧账号级风控（2026-10-27 fpb52 #56/#57 系统性实证，20+ 次重试未愈）**：`PUT /api/mine/book_stack/move` **恒返 200 + `{}` 静默不落位**（非 429、无限流头、config ctoken==cookie 内 ctoken 排查过 CSRF）——move-stack 验证全败，22 个库待归位。同刻附件上传 429、**GET book_stacks 正常、v2 写（改描述/toc-md 导入）完全正常** → 只有 cookie Web API 写侧被控。**系统性佐证**：并发 3 库（85028586/85028477/测试库 85029508）同刻同病；但历史库分组正常（10-12 前都能移）→ 当日故障，非长期行为。**判别三件套**：① PUT 恒 200{} + 回查 book_stacks 不落位；② 多库并发同病；③ v2 GET/PUT 正常作对照组。**处置**：内容链路（导入 toc-md）走 v2 不受影响 → **先导内容、move-stack 后补**（move 幂等，后补无副作用）；窗口未观测到自愈（**10-27 16:2x 隔日再测 10 次仍恒 200{}，故障持续 ≥1 天**）→ 挂账库累计 4 个（85028586 / 85028477 / 85031439 / **85034630（10-27 21:2x 再测 10 次仍恒 200{}）**），继续隔日重试 `move-stack --book-id <id> --stack-id <sid> --no-wait`；多次重试无意义（每次 ~4min 全败），**隔日一次即可**，别在单日里死磕。
+✅ **2026-11-12 更正：「move 恒返 200 + {}」不是风控，是这些库压根没有分组映射行**（下文 10-27 的"账号级风控"结论作废）。
+
+- 真相：语雀的库↔分组关系放在 `book_stack_maps` 映射表里，**映射只在建库那一刻建立**（`POST /api/books` 带 `stack_id`）。之后无论 `PUT /api/mine/book_stack/move`、`PUT/PATCH /api/books/{id}` 传 `stack_id`，都**永远不建映射**，move 恒返 `200 {}`。
+- 对照实验：把**已分组**的库用 move 移到别的分组 → 立刻生效（分组书数 20→21），移回也成功 → **cookie 写路径是好的**；同一个请求打**未分组**库 → 恒 `200 {}`。
+- `book.stack_id` 是不可信的冗余列：`PUT /api/books/{id}` 改它返回 200、`/api/mine/books` 也显示新值，但 `GET /api/mine/book_stacks` 里没有这个库、界面仍显示未分组（置回 `null` 还会 `400`）。
+- 建库带分组实测可用：`POST /api/books` body `{"name":..,"slug":..,"type":"Book","public":0,"stack_id":57659612}` → 建出来的库直接挂在目标分组下（**但响应体里的 stack_id 仍是 null，别拿它判断**，要 `GET /api/mine/book_stacks` 回查）。
+- 因此：**要进分组就在建库时带 stack_id**。`scripts/yuque_repo_import.py create-book` 已改成默认走 Web API 带 `--stack-id`；`move-stack` 对未分组库会立刻报错退出，不再白重试 10 轮（~4min）。批量查孤儿库：`GET /api/mine/book_stacks` 里所有 books 的 id 集合与 `GET /api/books?user_id=<uid>` 求差集。
+- 顺带：本机（Windows）唯一可用的 cookie 配置是工作区 `config/yuque_cookies.txt`（纯文本 Cookie 串），而 `yuque_backend._cookie_cfg()` 的默认值曾写死 Linux 的 `~/.openclaw/...` → 永远读不到 cookie、move 被静默跳过。现已改为自动发现（env → 工作区 `config/` → 仓库内 `config/` → 旧 openclaw 路径），JSON 与纯文本两种格式都认。
+
+⚠️ （历史，结论已被上文更正）**cookie Web API 写侧账号级风控（2026-10-27 fpb52 #56/#57 系统性实证，20+ 次重试未愈）**：`PUT /api/mine/book_stack/move` **恒返 200 + `{}` 静默不落位**（非 429、无限流头、config ctoken==cookie 内 ctoken 排查过 CSRF）——move-stack 验证全败，22 个库待归位。同刻附件上传 429、**GET book_stacks 正常、v2 写（改描述/toc-md 导入）完全正常** → 只有 cookie Web API 写侧被控。**系统性佐证**：并发 3 库（85028586/85028477/测试库 85029508）同刻同病；但历史库分组正常（10-12 前都能移）→ 当日故障，非长期行为。**判别三件套**：① PUT 恒 200{} + 回查 book_stacks 不落位；② 多库并发同病；③ v2 GET/PUT 正常作对照组。**处置**：内容链路（导入 toc-md）走 v2 不受影响 → **先导内容、move-stack 后补**（move 幂等，后补无副作用）；窗口未观测到自愈（**10-27 16:2x 隔日再测 10 次仍恒 200{}，故障持续 ≥1 天**）→ 挂账库累计 4 个（85028586 / 85028477 / 85031439 / **85034630（10-27 21:2x 再测 10 次仍恒 200{}）**），继续隔日重试 `move-stack --book-id <id> --stack-id <sid> --no-wait`；多次重试无意义（每次 ~4min 全败），**隔日一次即可**，别在单日里死磕。
 
 ⚠️ **cookie 类登录态会无声过期（2026-10-24 实捶）**：文件在 ≠ 登录在——`config.json` 里的 cookie/ctoken 可能已失效（响应 401/跳登录），文件时间戳还是旧的。脚本不会主动告诉你过期。**每小时轮次是发现它的唯一探针**（跑库时 v2 API 正常但 Web API（上传/batchMove）全 401 就该警觉）；连续多轮同一错误 = 该换凭据了，别再等。
 
