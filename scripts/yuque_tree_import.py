@@ -623,8 +623,20 @@ def save_prog(prog, path):
     tmp = path + ".tmp"
     # encoding="utf-8"：Windows 默认 locale 是 GBK，ensure_ascii=False 的中文键会写坏，
     # 下次 load_prog 按 utf-8 读直接 UnicodeDecodeError（2026-11-07 be28711 实捶）
-    json.dump(prog, open(tmp, "w", encoding="utf-8"), ensure_ascii=False)
-    os.replace(tmp, path)
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(prog, f, ensure_ascii=False)
+    # os.replace 在 Windows 上会被「另一个进程正开着 path」拦住：Python 的 open() 只共享
+    # 读写、不共享 delete，替换目标文件被读就会报 PermissionError: [WinError 5]。
+    # 2026-11-19 实捶：85176483 导入到 3963 篇时，外部只读探针刚好打开 progress.json，
+    # 整轮导入直接崩（import_failed）。这里退让重试，读方通常几十毫秒内就关掉。
+    for i in range(40):
+        try:
+            os.replace(tmp, path)
+            return
+        except PermissionError:
+            if i == 39:
+                raise
+            time.sleep(0.25)
 
 def flush_group(cfg, login, token, base, book, items, parent_uuid, batch_size, parent_label=""):
     """items: [(rel, [uuids...])]; 把全部 uuid 移动到 parent_uuid 下, 保持 DFS 正序.
