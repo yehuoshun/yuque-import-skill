@@ -88,6 +88,24 @@ def create_book_parse(out):
     return int(m.group(1))
 
 
+def actual_book_slug(book_id, fallback):
+    """回读语雀真实 slug 当账本 book_url。
+
+    语雀会把请求的 slug 归一化(实测: 大写字母转小写、撞名追加 -2/-3),
+    直接记 `f"{repo}-{commit}"` 会与线上地址不符(2026-11-20 AutoAnthony 实捶:
+    建库请求 AutoAnthony-705dd61 → 线上 slug 实为 autoanthony-705dd61, 账本记错)。
+    回读失败(网络/权限)才退回 fallback, 不因记账失败拖垮整轮导入。"""
+    try:
+        sys.path.insert(0, HERE)
+        from yuque_tree_import import api, load_token  # noqa: E402
+
+        d = api(load_token("TOKEN_L91"), BASE, "GET", f"/repos/{book_id}")["data"]
+        return book_slug(d.get("slug")) or fallback
+    except Exception as e:  # noqa: BLE001 - 记账用, 失败只告警
+        print(f"[warn] 回读 slug 失败, 账本记请求值 {fallback}: {e}", flush=True)
+        return fallback
+
+
 # ---------- 验收四查（复用 reconcile 的路径重建, 不重复造轮子） ----------
 def verify(book, progress_path):
     sys.path.insert(0, HERE)
@@ -233,7 +251,9 @@ def import_one(url, workdir, ledger, args):
 
     errors += verify(book_id, progress)
 
-    book_url = slug  # 2026-10-13 老板隐私要求: 只存 slug, username 不落盘不展示
+    # 2026-10-13 老板隐私要求: 只存 slug, username 不落盘不展示
+    # 2026-11-20: 必须回读线上真实 slug, 语雀会归一化请求值(大写→小写等), 直接记请求值会记错
+    book_url = actual_book_slug(book_id, slug)
     return "ok", repo, commit, book_id, book_url, errors
 
 
