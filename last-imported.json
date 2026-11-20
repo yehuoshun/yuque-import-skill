@@ -512,11 +512,11 @@
     "note": "《多文件项目和 GNU Make 工具》（GNU make 指南，C-Scene 项目#2，George Foot 著 / 哈少译）。网站口径，库 84896556（slug gmake-guide-20261023，分组「文章收集」36149506）。GB2312 编码单页长文（24K 字符，无 HTML 标题/无分页/无图）→ 新转换器 examples/huihoo-gmake/build.py 按纯文本编号标题拆章（0) 介绍 / 1.2 节标题 / 3 总结）。坑：GB2312 decode；代码块是文本标记 === makefile 开始/结束 === 非 <pre>（区间识别+连续行攒围栏）；正文伪标签 <target>:<dependency> 剥标签前先保护；标题无空格 1.1为什么使用它们? 正则允许零空格；正文引用 2.4 节） 误当标题需排除；站点 522 间歇 → curl 本地快照。树 = 00-译者说明（根）+ 4 章目录 + 15 篇 = 20 节点（4 目录/16 文件）。toc-md 20 行/916B PUT 0.7s、结构核对 PASS、0 失败；六查全绿：TOC 20==本地 20、全路径唯一 True、对账 0、幽灵 0（docs 16==TOC DOC 16）、word_count 16/16>0（min 152=介绍）、逐篇回读 16/16 逐字符相等 0 差。"
   },
   "https://github.com/mewcodex/AutoAnthony": {
-    "commit": "78e6c9d",
-    "book_id": 84896736,
-    "book_url": "autoanthony-78e6c9d",
-    "imported_at": "2026-10-23T10:35:00+0800",
-    "note": "默认分支 main @ 78e6c9d（杀戮尖塔2 卡牌生成/改造模组，C#；距上版 1dde250 有更新）。全仓库口径：247 节点（27 目录 / 220 文件）< 5000 单库。硬规则 10：唯一图片 ChaosMode/assets/mod_image.png 传 CDN + 重写 README.md/README.zh-CN.md 各 1 处 + 删文件本体（ChaosMode/assets/localization/ 为正文 json，保留）。3 个 >512KB 大文件自动分片（catalog_runtime_specs.json 2 片 / native_reference_cards.json 5 片 / native_reference_components.json 2 片）→ TOC 253 节点 / DOC 226。toc-md 目录树 253 行/11.8KB 一次 PUT 1.9s、结构核对 PASS、0 失败；根级顺序天然正确（TITLE 在前 / DOC 在后）。六查全绿：TOC 253 == 本地 247+6 分片、全路径唯一 True、单文档映射 217+3 分片文件 0 缺失、分片号连续、对账错位 0、幽灵 0（docs 226 == TOC DOC 226）、226 篇 word_count 仅 1 篇为 0（audits/.../0.3.5_pre_component_api.json.gz 二进制占位，预期）、3 个分片文件逐片回拉内容零丢失。旧库 84486855 AutoAnthony（1dde250，2026-10-12）按老板口径保留。"
+    "commit": "705dd61",
+    "book_id": 85882860,
+    "book_url": "autoanthony-705dd61",
+    "imported_at": "2026-11-20T22:02:25+0800",
+    "note": "默认分支 main @ 705dd61（杀戮尖塔2 卡牌生成/改造模组，C#；距上版 78e6c9d 有新提交 Release 0.3.165：支持 STS2 v113 / Fool）。全仓库口径：317 节点（39 目录 / 278 文件）< 5000 单库。分组「开源项目」57018723。图片仅 ChaosMode/assets/mod_image.png（178.9 KB）。4 个 >512KB 大文件自动分片：catalog_runtime_specs.json 2 片 / native_reference_cards.json 6 片 / native_reference_components.json 2 片 / catalog_recipes.json 1 片（566 条目按 JSON 条目边界切，正文 json.dumps 重排 → 与本地字节不等但语义等价，已逐条比对相等）→ TOC 324 节点 / DOC 285（本地 278 = 单文档 275 + 3 个分片文件 10 节点）。坑与修补：① Windows 下 yuque_import_all 子进程输出按 locale(gbk) 解码崩成 stdout=None（prep_parse AttributeError），已修脚本（分支 fix/subprocess-utf8-decode：encoding=utf-8 + errors=replace）；② 该编排脚本没有图片重写步骤（硬规则 10 未落地到 yuque_import_all），README.md / README.zh-CN.md 里 ![](ChaosMode/assets/mod_image.png) 是本地相对路径死链 → 手工 PUT 换成旧库同 hash 图的 CDN URL（SHA256 一致 B7CB4F32…），mod_image.png 文档正文也从占位注释改成 CDN 图 + 说明（wc 0→24）；③ audits/.../0.3.5_pre_component_api.json.gz（gzip 快照 443.3 KB）正文改可见说明（wc 0→48）；④ 账本 book_url 记建库请求值会记错（语雀把 AutoAnthony-705dd61 归一化成 autoanthony-705dd61），已修脚本改为回读线上 slug（分支 fix/ledger-book-slug）。六查全绿：TOC 324 == 本地 278+10 分片、全路径唯一 True、单文档映射 275 + 3 分片文件 0 缺失、分片号连续、对账错位 0、幽灵 0（docs 285 == TOC DOC 285）、285 篇 word_count 全 >0（占位正文 0）、深层路径抽查 4 篇正文非空（ComponentAssemblyGenerator.cs wc 40366 等）。旧库 84896736 AutoAnthony（78e6c9d，2026-10-23）按老板口径保留。"
   },
   "https://github.com/lf201014/STS2_MarisaMod": {
     "commit": "000c33f",

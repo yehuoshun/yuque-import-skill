@@ -29,6 +29,11 @@
       "url": "https://github.com/Alchyr/ModTemplate-StS2",
       "enabled": true,
       "watch": false
+    },
+    {
+      "url": "https://github.com/mewcodex/AutoAnthony",
+      "enabled": true,
+      "watch": true
     }
   ]
 }
