@@ -46,8 +46,12 @@ def run_script(name, args, env=None):
     e.setdefault("PYTHONIOENCODING", "utf-8")
     if env:
         e.update(env)
+    # 显式指定 utf-8: Windows 上 text=True 会按 locale(gbk) 解码子进程输出,
+    # 而子进程经 PYTHONIOENCODING=utf-8 写的是 UTF-8 中文 → 读取线程 UnicodeDecodeError,
+    # stdout 变成 None, prep_parse 直接 AttributeError 崩掉(2026-11-20 AutoAnthony 踩坑)。
     return subprocess.run([sys.executable, os.path.join(HERE, name)] + args,
-                          capture_output=True, text=True, env=e)
+                          capture_output=True, text=True, encoding="utf-8",
+                          errors="replace", env=e)
 
 
 def cookie_config_path(workdir):
