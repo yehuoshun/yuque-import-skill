@@ -37,6 +37,8 @@ description: 语雀知识库全量目录导入与对账修复技能。把本地�
 - **build 脚本禁止把 OUT 目录建在自己旁边并 rmtree 父目录（坑 80，2026-11-02 #227 事故）**：脚本开头 `shutil.rmtree(os.path.dirname(OUT))` 会**删掉脚本自己**——首跑进程靠已打开的 fd 勉强跑完，但 build.out 重定向目标被 unlink 丢失、二跑直接 "can't open file"。规矩：脚本、raw、out 各自分目录（`fpb-XXX/{build.py,raw,site}`），清理只删 raw/site 本身。
 - **yuque_rst_convert --out 会 rmtree 目标目录（坑 81，2026-11-02 #215 实捶）**：先拷图进 out 再跑转换器 = 图全灭。顺序必须是：转换 → 再拷图（工作目录留底 copy 而非 move，双向保险）。
 18. **test 6 后禁止删 progress 再全量（2026-11-01 #177/#178 两次实捶）**：test 建的 4-6 个 doc 用旧 id 落库，删 progress 全量重导会**新建新 id**，旧 doc 变幽灵（#177 清 4 个、#178 清 6 个）。test 后直接全量（保留 progress 让 test 节点 skip）即可避免；已删则必须逐个 DELETE + 回查 404。
+19. **`subprocess` 收子进程输出必须显式 `encoding="utf-8"`（2026-11-20 AutoAnthony 实捶）**：Windows 下 `text=True` 按 locale(=gbk) 解码，而子进程被设了 `PYTHONIOENCODING=utf-8`，中文输出会让读取线程 `UnicodeDecodeError` → `r.stdout` 变 `None` → 上层 `prep_parse` 报 `AttributeError: 'NoneType' object has no attribute 'splitlines'`，整轮导入秒崩（`yuque_import_all.py` 的 `run_script` 已修为 `encoding="utf-8", errors="replace"`）。同族：任何 `run_script`/`check_output` 封装都要显式指定编码，别依赖 locale。
+20. **`yuque_import_all.py` 全自动轮不做图片上传/重写（硬规则 10 未落地，2026-11-20 实捶）**：编排器只跑 prep/create-book/tree_import，**没有 rewrite_images 步骤** → 仓库 md 里的 `![](assets/x.png)` 会原样落成语雀正文里的本地相对路径死链（旧库当年是手工传的 CDN，所以上版没暴露）。走 `--repos` 批量前必须：① 先对 clean_dir 跑 `scripts/yuque_rewrite_images.py` 传 CDN 并重写引用（`--cookie-config` 指向 `config/yuque_cookies.txt`）；② 图片目录从导入根删掉（否则每张图生成一个占位文档）；③ 账本 `book_url` 现在回读线上真实 slug 再记（语雀会把 `AutoAnthony-705dd61` 归一化成 `autoanthony-705dd61`，记请求值就是错地址）。已导入的库发现死链时用 `PUT /api/v2/repos/{book}/docs/{id}` 直接改正文，别删库重导。
 
 ---
 
