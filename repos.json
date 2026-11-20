@@ -34,6 +34,11 @@
       "url": "https://github.com/mewcodex/AutoAnthony",
       "enabled": true,
       "watch": true
+    },
+    {
+      "url": "https://github.com/kuuhaku1314/kairisei-ma-ch",
+      "enabled": true,
+      "watch": true
     }
   ]
 }
