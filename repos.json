@@ -39,6 +39,11 @@
       "url": "https://github.com/kuuhaku1314/kairisei-ma-ch",
       "enabled": true,
       "watch": true
+    },
+    {
+      "url": "https://github.com/lf201014/STS2_MarisaMod",
+      "enabled": true,
+      "watch": false
     }
   ]
 }
