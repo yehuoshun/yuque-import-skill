@@ -70,11 +70,11 @@
     "note": "默认分支 master @ 48151e0（10-16 后 16 commit：STS2 模组 dotnet 模板仓库）。口径按硬规则 10/12：25 张模板占位图（card/power/relic/potion/charui/mod_image 等）无任何 md 引用 → 不上传不建占位节点，导入根目录删图+清空目录 → 94 节点（26 目录/68 文件），无超限分片。toc-md PUT 1.0s、结构核对 PASS、0 失败。六查全绿：TOC 94==本地、reconcile 错位 0、幽灵 0（docs 68==TOC DOC 68）、word_count 68/68 全 >0、回读 68/68（55 直接一致 + 13 篇空 JSON 仅代码围栏包裹差异，剥围栏逐字节一致）。move-stack 无 cookie（写侧风控，坑 68/69 同款）→ 分组待补 stack 57018723。历史：2c900a0=84639583（旧库全保留）。"
   },
   "https://github.com/swjybky/deepwrite": {
-    "commit": "39e2745",
-    "book_id": 85404431,
-    "book_url": "https://www.yuque.com/yeuhoshun/deepwrite-39e2745",
-    "imported_at": "2026-11-07T04:21:00+0800",
-    "note": "默认分支 main @ 39e2745（距上版 ce2b65a +2 commit / 100 文件：JEV 模型设置 + 绘图评测打分、团队提示词审核管理）。prep 4199 节点（362 目录/3837 文件，<5000 单库）。toc-md 全量 PUT 19.3s、0 失败 0 跳过、结构核对 PASS。六查全绿：TOC 4199==账本、全路径唯一 True、缺失 0、对账错位 0、幽灵 0（docs 3837==TOC DOC 3837）、3837 篇逐篇回读 0 异常、word_count 0 篇为 0。图片：初导按整树入库（png 3 张传 CDN、svg 19 张成 code-fence 文档）；老板 11-07 拍板「修 CDN、不删 images」→ 22 张全部上传 CDN（png 复用初导已传的 3 个 URL，svg 19 张新传，throttle 2s），6 篇引用文档（README/README.zh-CN + 4 篇 docs 设计文档）本地改写 25 处引用后 PUT 回写，回读 6/6 字节一致、残留相对引用 0；images 目录节点保留不动。move-stack 3 次全 {} 挂账（cookie 写侧风控）。用时 4h34m（含整点配额退避）。历史库 ce2b65a=85356958 保留。"
+    "commit": "5b77f277",
+    "book_id": 85942268,
+    "book_url": "https://www.yuque.com/yeuhoshun/deepwrite-5b77f277",
+    "imported_at": "2026-11-23T02:43:00+0800",
+    "note": "默认分支 main @ 5b77f277（距上版 39e2745 +31 commit / 300 文件：agent skills 三套镜像、release/sync-r2 工作流等）。prep 5390 节点（438 目录/4952 文件）超单库 5000 —— 老板 2026-11-23 拍板口径：test/ 下 654 张验证截图与其余 29 张图一律走 CDN 引用、不单独建节点 → 删图+清 37 个空目录后 4670 节点（401 目录/4269 文件），单库一次串行导入。图片：主树 22 张 + test 树 227 张共 249 张全传 CDN（throttle 2s，0 失败），改写 263 处引用 / 34 个 md；注意 test/*.md 的截图是普通 markdown 链接 [文字](x.png) 而非 ![]()，yuque_rewrite_images.py 会全漏，本条改用自写三写法传图器；另有 macOS 绝对路径 /Users/wenjia/project/deepwrite/... 30 处按仓库根解析后修复。建库带 --stack-id 57939054（开源项目/文档移植，建库即入组，未跑 move-stack）。toc-md 全量 PUT 4670 行 21.4s、0 失败 0 跳过、结构核对 PASS。六查全绿：TOC 4670==账本（DOC 4269 + TITLE 401）、全路径唯一 4269/4269 重复 0、缺失 0、对账错位 0、幽灵 0（docs total 4269==TOC DOC 4269）、4269 篇逐篇回读 0 异常（代码文件 body 被 ```lang 围栏包裹属正常，比对时先剥围栏）、word_count<=0 仅 1 篇（apps/desktop/build/icon.ico 二进制占位，body 只有 HTML 注释）；分片检查无需分片 0 项；本地 CDN 图引用 263 处、249 个唯一 URL 抽样 8 个全 HTTP 200。导入用时约 62 分钟（01:41–02:43）。历史库 39e2745=85404431 与 ce2b65a=85356958 保留。"
   },
   "https://github.com/howie6879/owllook": {
     "commit": "b536578",
