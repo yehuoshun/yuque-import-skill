@@ -28,10 +28,10 @@ python3 scripts/yuque_toc_reconcile.py --root <本地目录> --book <知识库ID
 python3 scripts/yuque_toc_reconcile.py --root <本地目录> --book <知识库ID> --progress ./progress.json --fix
 
 # 3.（可选）GitHub 开源项目 → 语雀 固化流程
-#    库名 = 项目名（commit id），分组 = 开源项目（stack 57018723）
+#    库名 = 项目名（commit id），分组 = 开源项目/文档移植（stack 随分组整理会变：2026-11-23 实测 57939054，旧值 57018723 已变成「AI / 大模型」→ 建库前先查 book_stacks 按名反查）
 python3 scripts/yuque_repo_import.py prep        --url git@github.com:xxx/yyy.git --dir /path/to/work
-python3 scripts/yuque_repo_import.py create-book --name "yyy（abc12345）" --slug yyy-abc12345 --desc "https://github.com/xxx/yyy @ abc12345"
-python3 scripts/yuque_repo_import.py move-stack  --book-id <知识库ID> --stack-id 57018723
+python3 scripts/yuque_repo_import.py create-book --name "yyy（abc12345）" --slug yyy-abc12345 --desc "https://github.com/xxx/yyy @ abc12345" --stack-id <当前开源项目分组 id>
+#    （move-stack 对未分组老库会报错；新库建库时带 --stack-id 即可一步入组）
 
 # 4. 占位文档修复（二进制误判事故善后，2026-10-12）
 #    旧版 hi-byte>0.9 启发式曾把中文密集文本误判为二进制 → 正文丢失；v1.1.3 已删启发式

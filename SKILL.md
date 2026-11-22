@@ -139,6 +139,7 @@ python3 scripts/yuque_toc_reconcile.py --root /path/to/dir --book <book_id> --pr
 - **网页抓取必须滤导航**：抓整站 HTML→md 时，页面左侧/顶部导航栏（品牌、菜单、章节列表）会混进正文，每篇重复。抓取器应只提取正文容器（如 gitref 的 `id="content_box"` 包裹区），导航区块整体丢弃。gitref 初版 nav 混入 8 篇、重抓修复（2026-10-12）
 - 限流：429/5xx 指数退避重试（脚本已内置 4 次）
 - **知识库分组 ≠ TOC 分组**：TOC 分组是文档树目录；知识库分组（stack）是把整个知识库归类到个人空间书架（如「开源项目」）。v2 token 拿不到 stack 接口，必须 cookie/ctoken（yuque-mcp 已内置，用 `yuque_update_book_stack(book_id, stack_id)`；**注意 `PUT /api/books/{id}` + `{"stack_id": N}` 是假成功，2026-11-12 实锤它只改冗余列、界面不认**）。2026-10-12 踩坑：误把 stack 36149506（文章收集）当开源项目，靠 MCP `get_book_stacks` 才发现真分组是 57018723。**移动后必须用 get_book_stacks 验证分组名而非只看 stack_id 数值**
+  - ⚠️ **stack id 会随老板整理分组漂移（2026-11-23 legado 第 9 版重导实测）**：旧文档里的「开源项目 57018723」现已变成「AI / 大模型」，照抄建库直接 `HTTP 400 找不到对应的知识库分组`；当天「开源项目/文档移植」= **57939054**。**建库前先 GET `https://www.yuque.com/api/mine/book_stacks`（Cookie 头）按分组名反查当前 id**，别信文档里的数字；详表见 `references/api-notes.md`「知识库分组（stack）：id 会漂移」。
 - **二进制检测 hi-byte>0.9 启发式是雷（2026-10-12 实捶，v1.1.3 已删）**：中文 UTF-8 三字节全 >127，中文密集文本（.md/.cs 注释/.txt）比例轻易超 0.9 → 被误判二进制 → 正文丢成占位注释，HowToCook 46 篇/deepwrite 63 篇/Nulab 12 篇等 21 库 169 篇中招。判定文本只用「UTF-8 解码成功 + 无 NUL 字节」；真二进制由 NUL/解码失败捕获。已受损库用 `yuque_repair_placeholders.py`（TOC 路径映射回填）修复
 - **docs 列表分页用 `offset` 不用 `page`（2026-11-01 实捶）**：`GET /repos/{book}/docs?limit=100&offset=N` 才是正确滚动（offset=0/100/200/… 全覆盖 440 docs）；`page` 参数被忽略（每页总返同一批 100 条）、limit>100 返 0、不传 offset 永远第一页。幽灵/占位扫描类脚本一律 offset 滚动 + meta.total 兜底
 - **slug/文件名正则字符类别把字母 s 匹配进去（坑 20，2026-11-01 实捶）**：raw string 写 `r"[\\...\\s]"`（双反斜杠）时正则把 `\\s` 解析成「字面反斜杠 + 字母 s」→ 文件名所有 s 被替换成 `-`（#188 node inspector → node in-pector）；要空白字符类必须单反斜杠 `\s`
@@ -152,13 +153,13 @@ python3 scripts/yuque_toc_reconcile.py --root /path/to/dir --book <book_id> --pr
 
 ## 开源项目导入（GitHub repo → 语雀，2026-10-12 老板固化）
 
-触发模板：「把 `<repo>` 按开源项目流程到语雀」。规范：库名 `项目名（commit id）`、分组「开源项目」（stack 57018723）、描述 `来源：<url> @ <commit> ｜ <口径说明> ｜ 导入 <日期>`（硬规则 11，2026-10-18 老板拍板：描述必须标注来源）。
+触发模板：「把 `<repo>` 按开源项目流程到语雀」。规范：库名 `项目名（commit id）`、分组「开源项目/文档移植」（**2026-11-23 起 stack 57939054；旧的 57018723 已被老板改成「AI / 大模型」，id 会漂移 → 建库前按分组名反查，见 `references/api-notes.md`**）、描述 `来源：<url> @ <commit> ｜ <口径说明> ｜ 导入 <日期>`（硬规则 11，2026-10-18 老板拍板：描述必须标注来源）。
 
 ```bash
 # 1. 克隆/更新 + 干净副本 + 节点数
 python3 scripts/yuque_repo_import.py prep --url <git-url> --dir <tmp目录>
 # 2. dry-run 核数 → 3. 建库（带 --stack-id，建库即入分组，一步到位）
-python3 scripts/yuque_repo_import.py create-book --name "<项目名>（<commit>）" --slug <项目名>-<commit> --desc "<url> @ <commit>" --stack-id 57018723
+python3 scripts/yuque_repo_import.py create-book --name "<项目名>（<commit>）" --slug <项目名>-<commit> --desc "<url> @ <commit>" --stack-id <先查 book_stacks 得到的开源项目分组 id，2026-11-23 实测为 57939054>
 # 4. （仅在老库缺分组时）move-stack --book-id <id> --stack-id <sid>；对未分组库会立刻报错，别指望它
 # 5. test 6 → 全量（后台+心跳 25/50/75/完成）→ 对账 → 验收六查
 python3 scripts/yuque_tree_import.py --root <clean_dir> --book <book_id> --progress <账本> --test 6
