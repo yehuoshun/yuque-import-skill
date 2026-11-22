@@ -15,11 +15,11 @@
     }
   },
   "https://github.com/aoaostar/legado": {
-    "commit": "ff5b1704",
-    "book_id": 85495180,
-    "book_url": "https://www.yuque.com/yehuoshun/legado-ff5b1704",
-    "imported_at": "2026-11-10T00:00:30+0800",
-    "note": "第 8 版重导（e28dfcd9 → ff5b1704，2026-11-09 11:48「Add sync changes」，release 分支）。沿用「解析单轨」口径（硬规则 12）：build.py 生成 20 个 sources 解析 md + 6 分类索引 + 08-解析/README+index.html = 31 节点（2 目录/29 文档），原件给上游直链 legado.aoaostar.com/sources/<file>。Windows 跑 build.py 需环境变量 LEGADO_ROOT/LEGADO_SRC/LEGADO_OUT/LEGADO_COMMIT（本轮 tmp\\legado-ff5b1704，源 legado-release，codeload tarball 7.1MB）。树：00-前言.md + 02-书源/03-订阅源/04-净化规则/05-阅读排版/06-主题/07-在线朗读引擎 + 08-解析/(README/index.html/sources/*.json.md ×20)。新建库 85495180 slug=legado-ff5b1704（描述含来源+21 条资源说明）。test 6（dir3/doc3）→ 全量 --toc-md 23:58:27~23:59:10 → 目录树 31 行/1232B PUT 0.7s → TOC 31 节点 结构缺失 0 PASS ✅，{\"dir\":0,\"doc\":25,\"skip\":6,\"fail\":[]}。根级 TITLE 08-解析 又排到根级 DOC 之前（第 4 次复现）→ 一发 PUT /toc {action:appendNode, action_mode:sibling, node_uuid: 08-解析, target_uuid: 07-在线朗读引擎.md} 归位成功。六查全绿：TOC 31==本地 31、docs 29==TOC DOC 29 幽灵 0、word_count 29/29 全>0、零分片（最大 08-解析/sources/b778fe6b.json.md 307KB）、29 篇逐篇回读 28 OK + 1 WRAP（index.html 包 ```html 围栏）0 DIFF、结构 PASS。move-stack 未做（已知服务端回归，用户明确不用管）。历史库全保留：e28dfcd9=85462005、be28711=85428962、55fe8bcc=85404234、1d383e2b=85318687、d32e745=85280919、09b11ac8=85183389、943a3a7=85069986。"
+    "commit": "87483d9",
+    "book_id": 85942195,
+    "book_url": "https://www.yuque.com/yehuoshun/legado-87483d9",
+    "imported_at": "2026-11-23T01:00:08+0800",
+    "note": "第 9 版重导（ff5b1704 → 87483d9，2026-11-22 04:13「Add sync changes」，release 分支；GitHub compare 对旧账本 commit 返回 diverged（ahead 1/behind 1）→ 只能整库重导，旧库 85495180 保留对账）。口径不变：解析单轨（硬规则 12），build.py 生成 6 分类索引 + 08-解析/README+index.html + 20 份 sources 解析 md = 31 节点（2 目录/29 文档）；原件列给上游直链 https://legado.aoaostar.com/sources/<file>。源取 codeload tarball 6.8MB → tmp/legado-87483d9/legado-release；sources 21 个文件 46.5MB（最大 b778fe6b.json 20.9MB）。跑 build.py 用环境变量 LEGADO_ROOT/LEGADO_SRC/LEGADO_OUT/LEGADO_COMMIT=87483d9；输出 29 文件 805,614 字节，无分片（最大 b778fe6b.json.md 307KB）。建库：create-book --name legado（87483d9） --slug legado-87483d9 --stack-id 57939054 → 库 85942195（分组「开源项目/文档移植」）。⚠️ 旧 SOP 写的分组 id 57018723 现已变成「AI / 大模型」（老板整理过分组），照抄会报 HTTP 400「找不到对应的知识库分组」；建库前必须先 GET /api/mine/book_stacks 查当前 id（开源项目/文档移植 = 57939054）。toc-md 全量 00:59:33~01:00:08（35s，进度 目录2/文档23/失败0）→ 目录树 31 行 1232B PUT 0.7s → TOC 31 节点、结构缺失 0、结构核对 PASS。根级 TITLE 08-解析 又排到根级 DOC 之前（第 5 次复现）→ 一发 PUT /toc {action:appendNode, action_mode:sibling, node_uuid:08-解析, target_uuid:07-在线朗读引擎.md} 归位成功（回读根级序 00/02/03/04/05/06/07 然后 08-解析）。六查全绿：TOC 31==本地 31、全路径唯一 True、对账错位 0、幽灵 0（docs 29==TOC DOC 29）、29 篇逐篇回读 28 ✅ + index.html 1 处 `html 围栏差异（已知）、异常 0；本地 CDN 图引用 0（4 处图全是 img.shields.io 外链徽章，无需上传）。库 85942195。历史库全保留：ff5b1704=85495180、e28dfcd9=85462005、be28711=85428962、55fe8bcc=85404234、1d383e2b=85318687、d32e745=85280919、09b11ac8=85183389、943a3a7=85069986。"
   },
   "https://github.com/kuuhaku1314/kairisei-ma-ch": {
     "commit": "d1a202e",
