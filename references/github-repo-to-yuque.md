@@ -595,3 +595,13 @@ puppet-cookbook（坑 40）是「book.txt + entries.txt + include::」的老 git
 5. **发布面以 `index.adoc` 为准**：本书 `Appendix-Note/`（日语「おまけ」）不在 include 清单里 → 不收；渲染站 `liubin.org/promises-book/`（Asciidoctor 单页 363KB）的 h1~h4 层级 = 书序，可当结构 oracle（6 用語集 / 7 参考网站 / 8 关于作者 / 9 关于译者）。
 6. **文件名洗全角用 `：`/`？`，别拿 `／` 顶替**：`专栏: xxx？` → `专栏：xxx？`（`?`→`／` 会得到 `then or catch／`）。
 - **本例实测**：34 节点（4 章目录 + 30 文档）、14 图 CDN、toc-md PUT 0.5s；六查全绿（TOC 34==本地、错位 0、幽灵 0 docs30==TOC DOC30、word_count 30/30>0、回读 3 篇逐字符相等）。库 **85211548**（slug `promises-book-zh-930f798`）。⚠️ move-stack 57018723 返 `{}` → 挂账。脚本 + 说明：`examples/promise-book-adoc/`。
+
+**坑 100：验证报告里的截图常写成「普通 markdown 链接」而不是图片语法——`yuque_rewrite_images.py` 会全漏，且路径可能是 macOS 绝对路径**（2026-11-23 swjybky/deepwrite 实战，4670 节点）
+1. **`[前](2026-11-14-announcement-history/before-light-1200x900-14.png)` 这类是链接不是图**：脚本只吃 `![]()` 与 `<img src>`，一整棵 `test/` 报告树（56 md / 238 处 / 227 张图）会**一条都不改写**——图全留着相对路径，随后删图目录 → 满库死链；不删图则每张变占位文档。自写传图器同时吃三种写法：`MD_RE = (!?\[[^\]\n]*\]\()\s*([^()\s]+?\.(?:png|jpe?g|gif|webp|svg|bmp))`、`HTML_RE = (<img\b[^>]*?\bsrc=)(["'])([^"']+)`，`--area main|test` 分区跑 + `img_map` 断点续传。
+2. **绝对路径变体不止 Windows**：报告里写 `/Users/wenjia/project/deepwrite/test/<dir>/<x>.png`（macOS 盘符前无盘符可剥，坑 51 的姊妹形态）——文件其实就在仓库内，用 `re.search(r"/deepwrite/(.+)$")` 剥前缀再按**仓库根**解析，30 处「本地缺失」当场归零。
+3. **验收**：传图后全树扫「非 CDN 的图片行」必须逐条看过——本例 183 行图片相关里 121 行 CDN、62 行全是正文示例文本（`TEST.md` 的命名约定、skill 文档里的 `![description](images/filename.png)` 示例、设计文档目录树里的 `cover.png`/`<imageId>.png`），**这类不能改**，别为了「残留为 0」把示例文本改坏。
+
+**坑 101：代码仓库的源文件入语雀后 body 被 ```lang 围栏整体包裹——逐篇回读比对必须先剥围栏**（同上，4269 篇）
+1. 每个 `.ts/.vue/.json/.css` 文档的 body 都是 `` ```ts\n<原文>\n``` ``（`fmt_content` 按扩展名给围栏语言），**行尾还是 `\r\n`**。官方 `yuque_verify_readback.py` 不剥围栏 → 本例 4269 篇里约 **523 篇被标成「小差异」假失败**（看着像内容丢失）。自写比对：先剥首行 `` ```lang ``、末尾 `` ``` ``，再 `\r\n → \n`，然后才比字符串；**别用长度差判定**。
+2. 全库 `word_count<=0` 允许的唯一例外是**二进制占位文档**（本例只有 `apps/desktop/build/icon.ico`：body = `<!-- 二进制文件 34.3 KB, 跳过内容导入(语雀 body 上限 4MB), 原文件见 GitHub -->`）。判据：body 只有 HTML 注释 → 属预期，记账本里写清楚；除此之外任何 0 篇都按事故查（同坑 36/坑 80 的 GBK 误判、坑 94/95 的空壳）。
+3. **本例口径**：prep 5390 节点超单库 5000（`test/` 654 张验证截图 + 其余 29 张）→ 老板拍板「**图走 CDN 引用、不单独建节点**」→ 删 683 图 + 37 个空目录 = 4670 节点（401 目录/4269 文件）单库一次串行导入；34 个 md 改写 263 处引用 / 249 个唯一 URL；toc-md PUT 4670 行 21.4s；六查全绿（TOC 4670==DOC 4269+TITLE 401、全路径唯一 4269/4269、错位 0、幽灵 0、回读 0 异常）。用时 62 分钟、无 429。库 **85942268**（slug `deepwrite-5b77f277`，建库带 `--stack-id 57939054` 即入组）。
