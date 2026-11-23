@@ -94,7 +94,8 @@ for fname, text in [("big.po", "".join("line %d \u4e2d\u6587\n" % i for i in ran
                     ("big.md", "".join("\u6bb5 %d\n" % i for i in range(5000)))]:
     with tempfile.TemporaryDirectory() as td:
         fp = os.path.join(td, fname)
-        open(fp, "w", encoding="utf-8").write(text)
+        with open(fp, "w", encoding="utf-8", newline="") as f:
+            f.write(text)
         segs = Y.fmt_content(fp, None, LIMIT)
     assert len(segs) > 1, "%s 应被分片（%d 片）" % (fname, len(segs))
     joined = "".join(V.strip_shard(b) for _s, b in segs)
