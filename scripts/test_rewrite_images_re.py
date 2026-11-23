@@ -14,6 +14,10 @@
 """
 import os
 import sys
+import unittest
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(errors="replace")
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from yuque_rewrite_images import HTML_RE, MD_RE  # noqa: E402
@@ -60,4 +64,10 @@ eq("md negative (plain link)", MD_RE.search("[text](page.md)"), None)
 
 n = len(html_cases) + 1 + len(md_cases) + 1
 print("\n%s" % (("ALL PASS (%d)" % n) if not fails else "FAILED %d" % len(fails)))
-sys.exit(1 if fails else 0)
+class TestRewriteImagesRegression(unittest.TestCase):
+    def test_script_assertions_passed(self):
+        self.assertEqual(fails, [])
+
+
+if __name__ == "__main__":
+    sys.exit(1 if fails else 0)

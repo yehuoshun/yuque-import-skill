@@ -11,7 +11,12 @@ test_novel_toc_fix_retry.py — yuque_novel_toc_fix.py 重试逻辑回归单测
 """
 import json
 import os
+import sys
 import tempfile
+import unittest
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(errors="replace")
 
 import yuque_backend as yb
 import yuque_novel_toc_fix
@@ -228,3 +233,13 @@ os.remove(tmp)
 print("✅ 复验未生效：自动重算下一轮并收敛")
 
 print("\n🎉 全部 7 项测试通过")
+
+
+class TestNovelTocRetryRegression(unittest.TestCase):
+    def test_script_completed(self):
+        self.assertTrue(ok)
+
+
+if __name__ == "__main__":
+    pass
+

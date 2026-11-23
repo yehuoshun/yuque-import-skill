@@ -17,6 +17,10 @@ import json
 import os
 import sys
 import tempfile
+import unittest
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(errors="replace")
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import yuque_tree_import as Y  # noqa: E402
@@ -113,4 +117,12 @@ for _s, b in segs:
 assert got == items, "JSON 分片剥壳后逐条回拼不等"
 print("✅ 测试 6：JSON 条目分片剥壳后逐条回拼相等（%d 条 / %d 片）" % (len(got), len(segs)))
 
-print("\n🎉 全部 6 项测试通过")
+
+
+class TestSplitJsonShardsRegression(unittest.TestCase):
+    def test_script_completed(self):
+        self.assertEqual(got, items)
+
+
+if __name__ == "__main__":
+    pass
