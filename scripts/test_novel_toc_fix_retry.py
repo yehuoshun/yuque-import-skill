@@ -11,6 +11,7 @@ test_novel_toc_fix_retry.py — yuque_novel_toc_fix.py 重试逻辑回归单测
 """
 import json
 import os
+import tempfile
 
 import yuque_backend as yb
 import yuque_novel_toc_fix
@@ -105,7 +106,8 @@ def fake_call(tool, args_dict, timeout=60, retries=2):
 yuque_novel_toc_fix.get_toc_docs = fake_get_toc
 yuque_novel_toc_fix.mcporter_call = fake_call
 
-tmp = '/tmp/reorder_test_chapters.json'
+fd, tmp = tempfile.mkstemp(prefix='reorder_test_chapters_', suffix='.json')
+os.close(fd)
 with open(tmp, 'w', encoding='utf-8') as f:
     json.dump([['A', ''], ['B', '']], f, ensure_ascii=False)
 ok = yuque_novel_toc_fix.reorder('1', tmp, verbose=False)
