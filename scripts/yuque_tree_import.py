@@ -22,6 +22,9 @@ import argparse, json, os, random, sys, time, urllib.request, urllib.error, uuid
 
 IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg", ".bmp"}
 
+# 分片正文还要预留围栏、标题和范围注记；低于该值无法安全切分。
+MIN_MAX_BODY = 2048
+
 
 def human_size(size: int) -> str:
     """人类可读体积（修：15KB 曾被整除成「0 MB」写进占位注释）。"""
@@ -481,8 +484,14 @@ def _split_lines(text, limit):
     return out
 
 
+def _validate_split_limit(limit):
+    if not isinstance(limit, int) or limit <= 0:
+        raise ValueError("切分上限必须是正整数")
+
+
 def split_semantic(text, limit, ext):
     """按语义边界切分（2026-10-14 老板：硬拆影响观感）。返回 ([(段文本, 范围描述)], 切分方式)。"""
+    _validate_split_limit(limit)
     if ext == ".json":
         try:
             d = json.loads(text)
@@ -495,6 +504,8 @@ def split_semantic(text, limit, ext):
 
 def fmt_content(path, up=None, max_body=524_288):
     """返回 [(标题后缀, body), ...]: 超限文本自动多段拆分, 二进制→占位说明."""
+    if not isinstance(max_body, int) or max_body < MIN_MAX_BODY:
+        raise ValueError("--max-body 必须至少为 %d 字节" % MIN_MAX_BODY)
     ext = os.path.splitext(path)[1].lower()
     raw = open(path, "rb").read()
     size = len(raw)
@@ -874,6 +885,9 @@ def main():
     ap.add_argument("--batch-size", type=int, default=50, help="batch 模式每批节点数(默认 50)")
     ap.add_argument("--x-login", default="yehuoshun", help="Web API x-login 用户名(batch 模式用)")
     args = ap.parse_args()
+
+    if args.max_body < MIN_MAX_BODY:
+        ap.error("--max-body 必须至少为 %d 字节" % MIN_MAX_BODY)
 
     global _QUOTA_MAX_WAITS
     _QUOTA_MAX_WAITS = args.quota_max_waits
