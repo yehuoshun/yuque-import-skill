@@ -44,6 +44,11 @@
       "url": "https://github.com/lf201014/STS2_MarisaMod",
       "enabled": true,
       "watch": false
+    },
+    {
+      "url": "https://github.com/YuWan886/Sts2-YuWanCard",
+      "enabled": true,
+      "watch": false
     }
   ]
 }

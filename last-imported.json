@@ -2267,5 +2267,12 @@
     "book_url": "https://www.yuque.com/yehuoshun/baselib-sts2-6fc4adb",
     "imported_at": "2026-11-23T14:49:00+0800",
     "note": "开源项目口径（默认分支 master @ 6fc4adb，杀戮尖塔2 基础库 Mod，Godot 4 + C#，MIT 类社区库）：全仓库镜像 381 节点（50 目录 / 331 文件），toc-md 一次 PUT 4.4s。剥 10 张 png（BaseLib/images/** 全部未被 3 个 md 引用，且无 cookie 传图 → 按硬规则 10 整棵删除，381 = 剥图后口径；原始 397）。create-book 带 stack_id 一步入组「开源项目/文档移植」57939054（回查 stack_id 字段已落、组内 152→153）。六查全绿：TOC 381==本地 381（50 TITLE/331 DOC）、全路径唯一 381/381、reconcile 错位 0、幽灵 0（docs 331==TOC DOC 331）、word_count 0 篇 <=0（5 篇 <10 均为本地 50-75B 小文件）、回读 331/331 无正文丢失（全部 2-4 行小差异=代码围栏包裹，坑 101；抽查 4 篇首尾逐字为 ```csharp 包裹）。回读按 1.35s 节流跑（硬规则 15 WAF）。耗时：prep+建库+导入 6 分 40 秒，六查约 12 分钟。"
+  },
+  "https://github.com/YuWan886/Sts2-YuWanCard": {
+    "commit": "26cac1b",
+    "book_id": 85971409,
+    "book_url": "https://www.yuque.com/yehuoshun/sts2-yuwancard-26cac1b",
+    "imported_at": "2026-11-23T17:39:00+0800",
+    "note": "开源项目口径（默认分支 main @ 26cac1b，杀戮尖塔2「猪牌 pig card」模组，Godot 4 + C#，MIT）：全仓库镜像 968 节点（108 目录 / 860 文件），toc-md 一次 PUT 7.3s。prep 原始 1527 节点；剥 527 张 png（119.7MB，YuWanCard/{images,scenes} 下全套美术资源，21 个 md 里 0 处图片语法引用、仅 README/README_EN 各 1 处 HTML `<img src=\"YuWanCard\\\\mod_image.png\">`属反斜杠写法）→ 该 1 张用 yuque_rewrite_images.py 传 CDN 并重写（html5 io），其余 526 张按硬规则 10 删图 + 清空 32 个空目录，1527-527-32=968。create-book 带 --stack-id 57939054 一步入组「开源项目/文档移植」。同仓库另有 2026-10-07 老库 84300733「Sts2-YuWanCard（2026年10月7日）」仍在「游戏 / Mod」分组，未动。六查：①TOC 968==本地 968；②路径 968 唯一 968、与本地树双向差集 0；③深层路径抽查通过（最深 YuWanCard/scenes/backgrounds/ignis_boss/ignis_boss_background.tscn 等）；④无超限分片（多分片文件 0）；⑤幽灵 3 篇（292970617 TenYearBamboo.cs / 292969752 CharacterSkinSelectionManager.cs / 292968497 ancients.json，逐个比对正文与 TOC 真身逐字相同即 toc-md 收尾重排前的双写残留）→ DELETE 3 篇 + 回查 404，docs total 860==TOC DOC 860、幽灵 0；⑥word_count=0 共 14 篇，逐篇拉 body 确认首行为 `<!-- 二进制文件 …-->`（9 mp3 + 2 skel）或 `<!-- 源仓库中该文件为空 -->`（3 .gdignore），全部属预期占位，非丢正文。内容抽查：README.md CDN 图已内嵌、无残留本地相对引用；.cs 落 ```csharp 围栏、md 首行标题正常。（2026-11-23 语雀 book_stacks 实测 id：开源项目/文档移植=57939054、游戏/Mod=36659766。）"
   }
 }
