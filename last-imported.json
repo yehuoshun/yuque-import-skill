@@ -1,17 +1,17 @@
 {
   "https://github.com/morluto/rea": {
-    "commit": "df2d018b3",
-    "book_id": 85493830,
-    "book_url": "https://www.yuque.com/yehuoshun/rea-root-df2d018b",
-    "imported_at": "2026-11-09T23:22:50+0800",
-    "note": "第 8 版重导（03a3fcbce → df2d018b3，2026-11-09 20:53 核对 HEAD，距上版一天内巨型 squash「feat(desktop): read gzip documents #9111」）。7773 文件/90.6MB 仍超 5000 节点上限 → 沿用**按顶层目录拆 6 库**口径（slug 全带 commit，描述互指；root 描述 235 字符列出五库 slug）：root=85493830（rea-root-df2d018b，TOC 245=244+1，188 文件，含根级 34 文件 + .agents/.github/.husky/.claude-plugin/.codex-plugin/assets/bridge/examples/licenses/native/patches/third_party）、docs=85493834（rea-docs-df2d018b，494 节点/402 文件，releases/6.8.0.contributions.json 分片）、src=85493840（rea-src-df2d018b，TOC 4117=4111+6，3929 文件，无分片）、tests=85493843（rea-tests-df2d018b，TOC 2772=2766+6，2597 文件）、scripts=85493845（rea-scripts-df2d018b，TOC 584=578+6，555 文件）、website=85493847（rea-website-df2d018b，TOC 172=146+26，101 文件，19 个 locales messages.po 分片）。取源仍走 codeload.github.com tarball（git clone 代理 exit 128，dead-end）；clean 由 tmp\\rea-df2d018b\\build_clean.py 生成（PLAN 字典）。六库全部 --test 6 → 全量 --toc-md（同 --root，规避账本双前缀），0 失败，PUT 结构核对全 PASS：root 245 行/9370B/1.8s、docs 494 行/20586B/3.0s、src 4117 行/213516B/18.6s、tests 2772 行/151049B/16.5s、scripts 584 行/28740B/3.7s、website 172 行/6105B/1.2s。耗时：root 3m22s(21:01-21:04)、docs 7m16s(21:13-21:20)、src 67m(21:20-22:27)、tests 42m(22:28-23:10)、scripts 8m(23:10-23:18)、website 3.5m(23:19-23:22)，全程串行单并发。本轮新细节：① tree_import 的 toc-md 模式在 Windows 控制台必须 PYTHONIOENCODING=utf-8（GBK 下 20586B 目录树 PUT 会炸）；② 图片自动上传未启用（无 cookie/ctoken）→ 全树 3 个图片文件（assets\\rea-plugin.png 1147KB、docs\\assets\\rea-hopper-analysis.png 1323KB）按上版先例留二进制占位，未重写引用；③ 20 个 website locales messages.po（617-822KB）走文本分片，website 节点 153→172。move-stack 仍挂账：--cookie-config C:\\Users\\yehuoshun\\.yuque\\config.json 已给，9 轮 PUT 全返 {} 验证未过，与 last-imported 记录的服务端回归同款，用户明确不用管；空转后台任务已 kill。历史库全保留：03a3fcbce=rea-root/docs/src/tests/scripts/website 85462072/85462066/85462068/85462069/85462070/85462071（2026-11-09 04:30）、c5301e61=85430146/85430147/85430148、bacc1e384=85404488/85404489/85404490、d7df9df33=85318784/85318788、9ebbe67、d48e472fa 等。",
+    "commit": "836cb8a01",
+    "book_id": 85967691,
+    "book_url": "https://www.yuque.com/yehuoshun/rea-836cb8a0",
+    "imported_at": "2026-11-23T13:34:31+0800",
+    "note": "第 9 版重导（df2d018b3 → 836cb8a01，HEAD 836cb8a01e1610844a710373e5a495864b476b2e，pushed 2026-11-23T03:31:43Z）。9293 文件/118.7MB（上版 7773/90.6MB）超 5000 节点上限 → 沿用**按顶层目录拆 6 库**口径（slug 全带 commit，描述互指）：root=85967691（rea-836cb8a0，TOC 279=63 目录+214 文档+2 分片：CHANGELOG.md 2 片、licenses/npm-runtime-notices.txt 2 片）、docs=85967692（rea-docs-836cb8a0，272=26+232+14，releases/6.8.0 5 片·6.9.0 6 片·6.10.0 6 片）、src=85967693（rea-src-836cb8a0，4962=240+4722，距上限仅 38，无分片）、tests=85967696（rea-tests-836cb8a0，3283=191+3092）、scripts=85967697（rea-scripts-836cb8a0，955=32+923）、website=85967698（rea-website-836cb8a0，183=54+110+19，19 个 locales messages.po 各 2 片）。取源仍走 codeload tarball（git clone 代理 exit 128=dead-end），clean 由 tmp\\rea-836cb8a\\build_clean.py 硬链接生成（9293 链接/0 拷贝）；建库走 v2 POST /users/yehuoshun/repos（账号无分组、book_stacks=0；public=0）。账本里第 8 版那 6 个 book_id（85493830/34/40/43/45/47）已全部 404（线上被 -r2 半重建库取代，items 远低于 TOC 数）→ 本轮另建干净 slug 库，旧库一个没动。**本轮首次整库真并发**：6 库各用独立 progress.json 同时跑，root 4m(11:43→11:47)、website 4m(→11:48)、docs 6m(→11:50)、scripts 14m(→11:58)、tests 52m(→12:36)、src 106m(11:43→13:30，中途 12:36:49→13:01 撞小时配额停等 24m)；0 失败，PUT 结构核对全 PASS：root 279 行/10728B/3.3s、docs 272/13035B/2.3s、src 4962/256577B/30.0s、tests 3283/178537B/19.5s、scripts 955/49108B/5.8s、website 183/6511B/1.7s。新细节：① 有 cookie（C:\\Users\\yehuoshun\\.yuque\\config.json）→ 5 个二进制 PNG 全部真传 CDN 并嵌 ![名](cdn) 引用（第 8 版无 cookie 留占位），SVG 按文本导入；② 验收口径更新：verify_all.py（TOC+幽灵+占位扫描，1.5s/请求限速）+ yuque_import_verify + yuque_toc_reconcile + yuque_verify_shards，**别用 yuque_verify_readback 跑全库**（scripts 923 篇 / src 4722 篇逐篇拉→输出爆炸+吃上千配额，且对分片文件拿整文件比单片会假报警 3xxx-4xxxx 行）；抽样回读 tests 6 篇 + src 8 篇剥围栏后逐字符一致；③ 并发红线仍是账号级 5000 请求/小时：11:43→13:31 两小时约 9900 请求，src+tests 合计在 12 点窗口撞 429 停等 24m 后 13:01 续跑。六查全绿：root 279 节点/幽灵 0/非图占位 0/图占位 1、docs 272/0/0/1、src 4962/0/0/0、tests 3283/0/0/0、scripts 955/0/0/0、website 183/0/0/3；分片逐字符相等（root 2 文件·docs 3 文件·website 19 文件）。历史库全保留（-r2 那批与更早 9ebbe67/d48e472fa 等均未动）。",
     "books": {
-      "root": 85493830,
-      "docs": 85493834,
-      "src": 85493840,
-      "tests": 85493843,
-      "scripts": 85493845,
-      "website": 85493847
+      "root": 85967691,
+      "docs": 85967692,
+      "src": 85967693,
+      "tests": 85967696,
+      "scripts": 85967697,
+      "website": 85967698
     }
   },
   "https://github.com/aoaostar/legado": {
