@@ -2260,5 +2260,12 @@
     "book_url": "https://www.yuque.com/yeuhoshun/vp-beginners-zh-20261103",
     "imported_at": "2026-11-03T05:00:00+0800",
     "note": "PDF 口径：《A Beginners Guide to Visual Prolog》中文版 PDF（207 页）目录解析 13 章 + wiki 落地页。六查全绿"
+  },
+  "https://github.com/Alchyr/BaseLib-StS2": {
+    "commit": "6fc4adb",
+    "book_id": 85969340,
+    "book_url": "https://www.yuque.com/yehuoshun/baselib-sts2-6fc4adb",
+    "imported_at": "2026-11-23T14:49:00+0800",
+    "note": "开源项目口径（默认分支 master @ 6fc4adb，杀戮尖塔2 基础库 Mod，Godot 4 + C#，MIT 类社区库）：全仓库镜像 381 节点（50 目录 / 331 文件），toc-md 一次 PUT 4.4s。剥 10 张 png（BaseLib/images/** 全部未被 3 个 md 引用，且无 cookie 传图 → 按硬规则 10 整棵删除，381 = 剥图后口径；原始 397）。create-book 带 stack_id 一步入组「开源项目/文档移植」57939054（回查 stack_id 字段已落、组内 152→153）。六查全绿：TOC 381==本地 381（50 TITLE/331 DOC）、全路径唯一 381/381、reconcile 错位 0、幽灵 0（docs 331==TOC DOC 331）、word_count 0 篇 <=0（5 篇 <10 均为本地 50-75B 小文件）、回读 331/331 无正文丢失（全部 2-4 行小差异=代码围栏包裹，坑 101；抽查 4 篇首尾逐字为 ```csharp 包裹）。回读按 1.35s 节流跑（硬规则 15 WAF）。耗时：prep+建库+导入 6 分 40 秒，六查约 12 分钟。"
   }
 }
