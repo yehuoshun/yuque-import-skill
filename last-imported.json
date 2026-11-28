@@ -70,11 +70,11 @@
     "note": "默认分支 master @ 48151e0（10-16 后 16 commit：STS2 模组 dotnet 模板仓库）。口径按硬规则 10/12：25 张模板占位图（card/power/relic/potion/charui/mod_image 等）无任何 md 引用 → 不上传不建占位节点，导入根目录删图+清空目录 → 94 节点（26 目录/68 文件），无超限分片。toc-md PUT 1.0s、结构核对 PASS、0 失败。六查全绿：TOC 94==本地、reconcile 错位 0、幽灵 0（docs 68==TOC DOC 68）、word_count 68/68 全 >0、回读 68/68（55 直接一致 + 13 篇空 JSON 仅代码围栏包裹差异，剥围栏逐字节一致）。move-stack 无 cookie（写侧风控，坑 68/69 同款）→ 分组待补 stack 57018723。历史：2c900a0=84639583（旧库全保留）。"
   },
   "https://github.com/swjybky/deepwrite": {
-    "commit": "5b77f277",
-    "book_id": 85942268,
-    "book_url": "https://www.yuque.com/yeuhoshun/deepwrite-5b77f277",
-    "imported_at": "2026-11-23T02:43:00+0800",
-    "note": "默认分支 main @ 5b77f277（距上版 39e2745 +31 commit / 300 文件：agent skills 三套镜像、release/sync-r2 工作流等）。prep 5390 节点（438 目录/4952 文件）超单库 5000 —— 老板 2026-11-23 拍板口径：test/ 下 654 张验证截图与其余 29 张图一律走 CDN 引用、不单独建节点 → 删图+清 37 个空目录后 4670 节点（401 目录/4269 文件），单库一次串行导入。图片：主树 22 张 + test 树 227 张共 249 张全传 CDN（throttle 2s，0 失败），改写 263 处引用 / 34 个 md；注意 test/*.md 的截图是普通 markdown 链接 [文字](x.png) 而非 ![]()，yuque_rewrite_images.py 会全漏，本条改用自写三写法传图器；另有 macOS 绝对路径 /Users/wenjia/project/deepwrite/... 30 处按仓库根解析后修复。建库带 --stack-id 57939054（开源项目/文档移植，建库即入组，未跑 move-stack）。toc-md 全量 PUT 4670 行 21.4s、0 失败 0 跳过、结构核对 PASS。六查全绿：TOC 4670==账本（DOC 4269 + TITLE 401）、全路径唯一 4269/4269 重复 0、缺失 0、对账错位 0、幽灵 0（docs total 4269==TOC DOC 4269）、4269 篇逐篇回读 0 异常（代码文件 body 被 ```lang 围栏包裹属正常，比对时先剥围栏）、word_count<=0 仅 1 篇（apps/desktop/build/icon.ico 二进制占位，body 只有 HTML 注释）；分片检查无需分片 0 项；本地 CDN 图引用 263 处、249 个唯一 URL 抽样 8 个全 HTTP 200。导入用时约 62 分钟（01:41–02:43）。历史库 39e2745=85404431 与 ce2b65a=85356958 保留。"
+    "commit": "7ec21070",
+    "book_id": 86146558,
+    "book_url": "deepwrite-7ec21070",
+    "imported_at": "2026-11-28T13:03:55+0800",
+    "note": "默认分支 main @ 7ec21070（prewarm lazy provider APIs in connection timeout test）。clean 4569 节点（386 目录/4183 文件），单库导入；图片无 cookie，按无 cookie 口径保留占位。toc-md PUT 完成，TOC 4569 节点、结构缺失 0、导入失败 0。验收：yuque_toc_reconcile TOC 节点 4569、错位 DOC 0；yuque_check_ghosts docs 4183、TOC DOC 4183、幽灵 0；yuque_import_verify 本地文件 4183、Yuque DOC 4183、单文档映射 4183、分片映射 0、缺失 0、分片序列 OK、路径唯一 True。全量逐篇回读未作为验收依据：大库会产生已知 Markdown 代码围栏差异并造成大量请求；结构、幽灵、映射与目录回读均已通过。"
   },
   "https://github.com/howie6879/owllook": {
     "commit": "b536578",
