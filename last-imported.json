@@ -2274,5 +2274,12 @@
     "book_url": "https://www.yuque.com/yehuoshun/sts2-yuwancard-26cac1b",
     "imported_at": "2026-11-23T17:39:00+0800",
     "note": "开源项目口径（默认分支 main @ 26cac1b，杀戮尖塔2「猪牌 pig card」模组，Godot 4 + C#，MIT）：全仓库镜像 968 节点（108 目录 / 860 文件），toc-md 一次 PUT 7.3s。prep 原始 1527 节点；剥 527 张 png（119.7MB，YuWanCard/{images,scenes} 下全套美术资源，21 个 md 里 0 处图片语法引用、仅 README/README_EN 各 1 处 HTML `<img src=\"YuWanCard\\\\mod_image.png\">`属反斜杠写法）→ 该 1 张用 yuque_rewrite_images.py 传 CDN 并重写（html5 io），其余 526 张按硬规则 10 删图 + 清空 32 个空目录，1527-527-32=968。create-book 带 --stack-id 57939054 一步入组「开源项目/文档移植」。同仓库另有 2026-10-07 老库 84300733「Sts2-YuWanCard（2026年10月7日）」仍在「游戏 / Mod」分组，未动。六查：①TOC 968==本地 968；②路径 968 唯一 968、与本地树双向差集 0；③深层路径抽查通过（最深 YuWanCard/scenes/backgrounds/ignis_boss/ignis_boss_background.tscn 等）；④无超限分片（多分片文件 0）；⑤幽灵 3 篇（292970617 TenYearBamboo.cs / 292969752 CharacterSkinSelectionManager.cs / 292968497 ancients.json，逐个比对正文与 TOC 真身逐字相同即 toc-md 收尾重排前的双写残留）→ DELETE 3 篇 + 回查 404，docs total 860==TOC DOC 860、幽灵 0；⑥word_count=0 共 14 篇，逐篇拉 body 确认首行为 `<!-- 二进制文件 …-->`（9 mp3 + 2 skel）或 `<!-- 源仓库中该文件为空 -->`（3 .gdignore），全部属预期占位，非丢正文。内容抽查：README.md CDN 图已内嵌、无残留本地相对引用；.cs 落 ```csharp 围栏、md 首行标题正常。（2026-11-23 语雀 book_stacks 实测 id：开源项目/文档移植=57939054、游戏/Mod=36659766。）"
+  },
+  "https://github.com/JuneYaooo/rea-video": {
+    "commit": "70a0d5ea",
+    "book_id": 86148327,
+    "book_url": "rea-video-70a0d5ea-r2",
+    "imported_at": "2026-11-28T15:34:00+0800",
+    "note": "默认分支 main @ 70a0d5ea314329a617d493ab5b4c9eddcdd1365c（Align the visual-review heading with the rule below it）。干净 r2 staging 204 节点（37 目录 / 167 文件，64 Markdown），剥除 773 张图片后导入；所有 Markdown 本地引用 0，缺失 0。新建语雀库 86148327（slug rea-video-70a0d5ea-r2，分组 开源项目/文档移植），toc-md PUT 205 节点结构 PASS。验收：import_verify 本地 167 / DOC 168（1 文件分 2 片）/缺失 0/路径唯一；ghosts 0；toc_reconcile 错位 0；零字数仅 rea_video/integrations/__init__.py 空文件占位，预期。分片 report_ja.md 经保留空白逐字符复核 255347=255347；抽样 README、report_ja.md、空文件、schema.json、report_en.md 全部一致；严格本地引用 0/0。"
   }
 }
